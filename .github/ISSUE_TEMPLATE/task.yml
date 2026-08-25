@@ -1,0 +1,48 @@
+name: Task
+description: A piece of work someone needs to do, with a clear "done" line. Use for docs, semester folders, funding paperwork, comms, or repo upkeep.
+title: "[task] "
+labels: ["task"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Evergreen docs (docs/)
+        - Semester folder (semesters/<term>/)
+        - Event or workshop
+        - Funding or reimbursement
+        - Communications (Discord, Instagram, announcements)
+        - Repo upkeep (templates, scripts, CI)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What needs to happen
+      description: Plain description. Link the doc, folder, or event it belongs to.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: The observable result. "room-booking.md has the 25Live lead time" beats "update the doc".
+    validations:
+      required: true
+  - type: input
+    id: due
+    attributes:
+      label: Due date (YYYY-MM-DD)
+      placeholder: "[TBD] if there is no deadline"
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: GitHub handle or officer role. Leave blank if you are asking for a volunteer.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Blockers, related issues, who to ask.

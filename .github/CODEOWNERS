@@ -1,0 +1,20 @@
+# Code owners are auto-requested as reviewers on PRs that touch matching paths.
+# Rules: owners must have write access; the last matching line wins; with the branch
+# protection "Require review from Code Owners" on, any one listed owner's approval is enough.
+#
+# Keep this file in sync with MAINTAINERS.md. When the second repo admin is known,
+# append their handle to every line below (space-separated).
+
+# Default: everything
+*                       @Sam-T-G
+
+# Charter, governance, templates, and tooling change rarely and need an admin's eyes.
+/docs/00-charter/       @Sam-T-G
+/docs/01-governance/    @Sam-T-G
+/templates/             @Sam-T-G
+/semesters/_template/   @Sam-T-G
+/scripts/               @Sam-T-G
+/.github/               @Sam-T-G
+/MAINTAINERS.md         @Sam-T-G
+/CODE_OF_CONDUCT.md     @Sam-T-G
+/LICENSE                @Sam-T-G

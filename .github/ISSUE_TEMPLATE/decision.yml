@@ -1,0 +1,63 @@
+name: Decision
+description: Propose a binding choice (budget, policy, event go/no-go, template change). The outcome gets logged in the decision log.
+title: "[decision] "
+labels: ["decision"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when the club needs to pick one option and live with it. Once decided, open a PR that adds the entry to [docs/01-governance/decision-log.md](https://github.com/Sam-T-G/rcc-acm/blob/main/docs/01-governance/decision-log.md) using [templates/decision-record.md](https://github.com/Sam-T-G/rcc-acm/blob/main/templates/decision-record.md), and link that PR here.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Budget
+        - Policy
+        - Event go/no-go
+        - Template change
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and problem statement
+      description: What situation forces a choice? Two to five sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Considered options
+      description: One line each. Include "do nothing" if it is a real option.
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Recommendation and why
+      description: Which option you would pick and the main reason. It is fine to have none yet.
+  - type: dropdown
+    id: decider
+    attributes:
+      label: Who decides
+      options:
+        - Officer vote at a meeting
+        - President / lead
+        - Treasurer (budget only)
+        - Advisor
+        - Other (say who in the notes)
+    validations:
+      required: true
+  - type: input
+    id: decide_by
+    attributes:
+      label: Decide by (YYYY-MM-DD)
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Deadlines this depends on, people to consult, links.

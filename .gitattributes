@@ -1,0 +1,20 @@
+# Normalize line endings to LF on commit so diffs stay clean across macOS, Windows, and Linux.
+* text=auto eol=lf
+
+# Text formats
+*.md    text diff=markdown
+*.yml   text
+*.yaml  text
+*.toml  text
+*.txt   text
+*.svg   text
+*.sh    text eol=lf
+
+# Binary formats (no line-ending changes, no text diffs)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.webp  binary

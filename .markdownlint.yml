@@ -1,0 +1,25 @@
+# markdownlint rules. Read by markdownlint-cli2 (locally and in CI) from the repo root.
+# Rule list: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+default: true
+
+# Line length. Tables and long URLs make this rule fight the content.
+MD013: false
+
+# Duplicate headings. Templates repeat headings like "## Notes" under different parents;
+# only flag duplicates that are siblings under the same parent heading.
+MD024:
+  siblings_only: true
+
+# Inline HTML. Allowed for <details> blocks and the occasional badge.
+MD033: false
+
+# First line must be a top-level heading. Off so templates and snippets can start with a comment or a note.
+MD041: false
+
+# Table column style. Off so tables pasted from anywhere (with or without spaces around pipes) pass;
+# the docs-check CI uses a markdownlint version that enforces this by default.
+MD060: false
+
+# Bare URLs. Off because GitHub autolinks them and officers paste rcc.edu links straight into prose.
+MD034: false

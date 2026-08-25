@@ -1,0 +1,84 @@
+name: Event proposal
+description: Propose an event (guest speaker, trip, competition, social, outreach). Creates the paper trail before anyone books a room or spends money.
+title: "[event] "
+labels: ["event"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill in what you know and write `[TBD]` for the rest. Read the [event checklist](https://github.com/Sam-T-G/rcc-acm/blob/main/docs/02-operations/event-checklist.md) first. For a workshop, use the workshop proposal form instead.
+  - type: input
+    id: name
+    attributes:
+      label: Event name
+      placeholder: Short and specific
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Guest speaker
+        - Trip or travel
+        - Competition
+        - Social or outreach
+        - Club Rush table
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Proposed date (YYYY-MM-DD)
+      placeholder: "2026-10-15 or [TBD]"
+    validations:
+      required: true
+  - type: input
+    id: semester
+    attributes:
+      label: Semester folder
+      description: The folder under `semesters/` where this event's plan, run sheet, and retro will live.
+      placeholder: 2026-fall
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal and audience
+      description: Who is this for, what should they leave with, and how does it fit this semester's goals?
+    validations:
+      required: true
+  - type: textarea
+    id: room
+    attributes:
+      label: Room, time, and headcount
+      description: On-campus rooms are requested by the advisor in 25Live at least two weeks ahead. Students cannot submit 25Live requests, so say early if you need a room.
+      placeholder: "BLCIS A-210, 12:50 to 1:50 PM, about 25 people"
+  - type: textarea
+    id: budget
+    attributes:
+      label: Budget estimate and funding source
+      description: Rough line items and where the money comes from (ASRCC allocation, club trust account, free). Write $0 if the event is free.
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: GitHub handle or officer role. This person creates the event folder and keeps it updated.
+    validations:
+      required: true
+  - type: checkboxes
+    id: readiness
+    attributes:
+      label: Before this goes on the calendar
+      options:
+        - label: Advisor knows about this event
+        - label: Room request submitted through the advisor in 25Live, or no room needed
+        - label: Student Activities Event Form submitted, or not needed
+        - label: Budget line exists in `semesters/<term>/budget.md`, or the event is free
+        - label: Event folder created with `scripts/new-event.sh`
+  - type: input
+    id: decide_by
+    attributes:
+      label: Go/no-go date (YYYY-MM-DD)
+      description: The go/no-go call is logged in `docs/01-governance/decision-log.md`.

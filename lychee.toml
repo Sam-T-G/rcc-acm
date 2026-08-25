@@ -1,0 +1,41 @@
+# lychee link-checker config. lychee reads ./lychee.toml from the working directory by default.
+# Key names verified against https://raw.githubusercontent.com/lycheeverse/lychee/master/lychee.example.toml
+#
+# CI (.github/workflows/docs-check.yml) passes --offline on pull requests, which checks only
+# relative links between files in this repo. A non-blocking external check runs on pushes to main.
+#
+# Local use:
+#   lychee --offline './**/*.md'   relative links only, fast, no network
+#   lychee './**/*.md'             relative and external links
+
+no_progress = true
+
+# mailto: links are skipped unless include_mail is true.
+include_mail = false
+
+# Skip localhost, 127.0.0.1, and private IP ranges.
+exclude_all_private = true
+
+# Regexes. Any link matching one of these is not checked.
+exclude = [
+  '^mailto:',
+  '^https?://localhost',
+  '^https?://127\.0\.0\.1',
+  # These hosts block or rate-limit non-browser clients and would report false failures.
+  '^https?://(www\.)?linkedin\.com',
+  '^https?://(www\.)?instagram\.com',
+  '^https?://help\.bevy\.com',
+]
+
+# Paths (regexes) not to scan for links.
+exclude_path = [
+  'node_modules',
+  '\.git/',
+]
+
+# Status codes that count as a working link. 429 (rate limited) means the site is alive but busy;
+# a busy site is not a broken link.
+accept = ["200", "204", "429"]
+
+max_retries = 2
+timeout = 20

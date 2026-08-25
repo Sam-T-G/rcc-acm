@@ -1,0 +1,86 @@
+name: Workshop proposal
+description: Propose a hands-on session for members. Gets the outline, level, and setup needs written down before the date is announced.
+title: "[workshop] "
+labels: ["workshop"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill in what you know and write `[TBD]` for the rest. Outlines start from [templates/workshop-outline.md](https://github.com/Sam-T-G/rcc-acm/blob/main/templates/workshop-outline.md); the general how-to is [docs/03-playbooks/workshop.md](https://github.com/Sam-T-G/rcc-acm/blob/main/docs/03-playbooks/workshop.md).
+  - type: input
+    id: title
+    attributes:
+      label: Workshop title
+      placeholder: What members will see on the announcement
+    validations:
+      required: true
+  - type: input
+    id: facilitator
+    attributes:
+      label: Facilitator
+      description: GitHub handle or officer role of the person running it. Guests are fine; name the club-side contact too.
+    validations:
+      required: true
+  - type: dropdown
+    id: level
+    attributes:
+      label: Audience level
+      options:
+        - Beginner (no prior experience assumed)
+        - Intermediate (some coding experience)
+        - Mixed
+    validations:
+      required: true
+  - type: dropdown
+    id: length
+    attributes:
+      label: Length
+      options:
+        - Fits in the weekly meeting slot
+        - 60 minutes
+        - 90 minutes
+        - Longer (say how long below)
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What attendees leave with
+      description: One or two sentences. A thing they built, a skill they practiced, an account they set up.
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: Setup before the session
+      description: Accounts to create, software to install, laptop required or not, anything to read. This gets sent to members ahead of time.
+  - type: textarea
+    id: outline
+    attributes:
+      label: Rough outline
+      description: Timed blocks are best. Paste a draft or link a branch with the filled-in outline template.
+  - type: input
+    id: date
+    attributes:
+      label: Proposed date (YYYY-MM-DD)
+      placeholder: "[TBD] is fine"
+  - type: textarea
+    id: room
+    attributes:
+      label: Room and headcount
+      description: The weekly meeting room is BLCIS A-210. A different room is requested by the advisor in 25Live at least two weeks ahead.
+  - type: textarea
+    id: materials
+    attributes:
+      label: Materials and cost
+      description: Printouts, hardware, food, licenses. Write $0 if free.
+  - type: checkboxes
+    id: readiness
+    attributes:
+      label: Before this is announced
+      options:
+        - label: Outline drafted from `templates/workshop-outline.md`
+        - label: Facilitator has done a dry run or has run this before
+        - label: Setup instructions are ready to send to members
+        - label: Room and date confirmed with the advisor
+        - label: Event folder created with `scripts/new-event.sh`

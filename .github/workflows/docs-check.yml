@@ -1,0 +1,67 @@
+# Docs checks for pull requests and pushes to main.
+#
+# Jobs:
+#   markdownlint    lint every Markdown file with markdownlint-cli2 (config: .markdownlint.yml)
+#   links           check relative links between files in this repo, offline (config: lychee.toml)
+#   external-links  on pushes to main only, check external links; reports but never fails
+#
+# Branch protection on main should require "markdownlint" and "links".
+# Action versions verified 2026-08-24 (see MAINTAINERS.md for who bumps them).
+
+name: docs-check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  markdownlint:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v24
+        with:
+          # .markdownlint.yml at the repo root is picked up automatically.
+          globs: |
+            **/*.md
+            !node_modules/**
+
+  links:
+    name: links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check relative links (offline)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Reads ./lychee.toml. --offline checks only links between files in this repo,
+          # so a slow or blocked external site never fails a PR.
+          args: --offline --no-progress --root-dir "${{ github.workspace }}" './**/*.md'
+          fail: true
+          # A PR that adds no links is not a failure.
+          failIfEmpty: false
+
+  external-links:
+    name: external-links (report only)
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check external links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Same lychee.toml: mailto and localhost excluded, 429 accepted as alive.
+          args: --no-progress --root-dir "${{ github.workspace }}" './**/*.md'
+          fail: false
+          failIfEmpty: false

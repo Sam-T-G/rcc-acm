@@ -1,0 +1,32 @@
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Tool output
+node_modules/
+lychee/
+.lycheecache
+*.log
+
+# Local scratch. Drafts you are not ready to share stay here.
+scratch/
+*.draft.md
+
+# Secrets. Never commit these, even in a private fork.
+.env
+.env.*
+*.pem
+*.key
+
+# Attendee, roster, and form exports carry names and emails.
+# Keep them in the club's shared drive; this repo records counts only.
+*.csv
+*.xlsx
+*.xls
