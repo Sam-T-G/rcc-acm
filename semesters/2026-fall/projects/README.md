@@ -24,4 +24,8 @@ Every project folder has a final status. Anything still `active` goes into [hand
 
 ## This semester
 
-No project folders yet. Known ongoing work: the club website (Next.js single page) at <https://github.com/ACM-RCC/ACMWebsite>, GitHub org ACM-RCC. If members are working on it this semester, add a `website/` folder here with a README in the shape above and set its status.
+| Project | Goal in one line | Owner (role) | Status |
+|---|---|---|---|
+| [microcontroller-lab/](microcontroller-lab/README.md) | Six lab days of four parallel 30-minute hardware stations, one per competency tier, plus a showcase on 2026-12-10 | Lab lead (an officer the Chair assigns) | proposed |
+
+Known ongoing work with no folder yet: the club website (Next.js single page) at <https://github.com/ACM-RCC/ACMWebsite>, GitHub org ACM-RCC. If members are working on it this semester, add a `website/` folder here with a README in the shape above and set its status.

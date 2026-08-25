@@ -17,6 +17,7 @@ Academic dates are from the RCCD 2026-2027 academic calendar and the RCC dates-a
 | [TBD] (August 2026 onward) | Clubs not in the ASRCC budget may approach the ASRCC Senate for funding (window opens in August; fall only); applies only if the FY 2026-27 allocation is zero or short | milestone | Treasurer | [TBD] |
 | [TBD] | ACM chapter annual report for the fiscal year ending 2026-06-30 (ACM sets the deadline, historically end of August; confirm in the Chapter Administrative Interface) | deadline | Treasurer | [TBD] |
 | [TBD] | ICPC Southern California Regional 2026-27 registration opens (September 1 in 2025; season dates to be announced; check <https://scl.na.icpc.global/> in early September) | deadline | Advisor (coach), Chair | planned |
+| 2026-09-03 | Microcontroller lab kit order-by date (proposed); 3 weeks before lab day 1 because the overseas vendor line ships in 7 to 14 working days. See [projects/microcontroller-lab/](projects/microcontroller-lab/README.md) | event | Lab lead (an officer the Chair assigns) | planned |
 | 2026-09-07 | Holiday (no classes); the Thursday meeting that week is unaffected | break | | planned |
 | [TBD] | Club Rush (date set by Student Activities each term) | event | Vice President | planned |
 | [TBD] | Club renewal packet due to Student Activities (within the first six weeks of the fall term per the RCC clubs page; confirm the exact date) | deadline | President | planned |
@@ -25,13 +26,20 @@ Academic dates are from the RCCD 2026-2027 academic calendar and the RCC dates-a
 | [TBD] | Mid-semester goals check (update goals.md; about week 8, mid October) | milestone | President | planned |
 | [TBD] | ICPC online rehearsal (around October 25 in 2025) | milestone | Advisor (coach) | planned |
 | [TBD] | ICPC team registration closes (November 1 in 2025) | deadline | Advisor (coach) | planned |
+| 2026-09-24 | Microcontroller lab day 1 (proposed); 4 parallel stations, tiers T0 to T3, in the regular meeting slot | event | Lab lead (an officer the Chair assigns) | planned |
+| 2026-10-08 | Microcontroller lab day 2 (proposed); 4 parallel stations, tiers T0 to T3, in the regular meeting slot | event | Lab lead (an officer the Chair assigns) | planned |
+| 2026-10-22 | Microcontroller lab day 3 (proposed); 4 parallel stations, tiers T0 to T3, in the regular meeting slot | event | Lab lead (an officer the Chair assigns) | planned |
+| 2026-11-05 | Microcontroller lab day 4 (proposed); 4 parallel stations, tiers T0 to T3, in the regular meeting slot | event | Lab lead (an officer the Chair assigns) | planned |
 | 2026-11-11 | Holiday, no classes | break | | planned |
 | [TBD] | ICPC Southern California Regional Contest, RCC site (November 15 in 2025; venue then was the Martin Luther King Jr. Teaching and Learning Center) | event | Chair, Advisor | planned |
 | [TBD] | ACM AI Hackathon (pick a date at least 10 weeks out; avoid the ICPC weekend, Thanksgiving week, and finals) | event | Event lead | planned |
+| 2026-11-19 | Microcontroller lab day 5 (proposed); 4 parallel stations, tiers T0 to T3, in the regular meeting slot | event | Lab lead (an officer the Chair assigns) | planned |
 | 2026-11-23 | Classes not in session November 23 to 29 (holiday November 26); no Thursday meeting that week | break | | planned |
 | [TBD] | Officer elections (month set by the constitution; [TBD]) | milestone | President | planned |
 | [TBD] | Retrospective and handoff PR opened (2 weeks before the last day, so about December 4) | deadline | President | planned |
+| 2026-12-03 | Microcontroller lab day 6 (proposed); 4 parallel stations, tiers T0 to T3, in the regular meeting slot | event | Lab lead (an officer the Chair assigns) | planned |
 | 2026-12-10 | Last weekly meeting (last Thursday before finals; confirm) | meeting | President | planned |
+| 2026-12-10 | Microcontroller lab showcase (proposed); demos by tier lane, ladder relay, awards, in the last weekly meeting slot | event | Lab lead (an officer the Chair assigns) | planned |
 | 2026-12-12 | Finals week, December 12 to 18 | break | | planned |
 | 2026-12-18 | Last day of the semester (full-term classes end) | milestone | President | planned |
 | n/a | ASRCC funding request packet released (early February; spring only) | milestone | Treasurer | n/a |
