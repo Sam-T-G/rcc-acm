@@ -13,10 +13,11 @@ Drafted 2026-08-24 from the themes of the FY 2026-27 ASRCC funding request (Buil
 | 3 | Compete: send a member group to one collegiate hackathon (Cal Hacks 13.0 is Fall 2026 in San Francisco; date [TBD]) | go/no-go logged by [TBD]; members who travel (target [TBD]); retro filed with actual costs within a week | Trip lead, Treasurer | not started |
 | 4 | Build and Learn: run the ACM AI Hackathon on campus | date set at least 10 weeks out; registrations (target [TBD]); teams that submit (target [TBD]); retro filed | Event lead, Advisor | not started |
 | 5 | Connect: grow active members from 22 (Spring 2026 funding-request count) | active-member count at close vs 22; Discord member count at close | Vice Chair | not started (target [TBD]) |
+| 6 | Build and Learn: run the microcontroller lab program (proposed 2026-08-25, $1,000 cap, pending officer meeting approval) | six lab days held (2026-09-24, 10-08, 10-22, 11-05, 11-19, 12-03); 24 station cards run at least once, 4 per lab day; an attendance count filed for each lab day and for the 2026-12-10 showcase | Lab lead (an officer the Chair assigns), Treasurer | not started |
 
 Status: `not started`, `on track`, `at risk`, `done`, `dropped`. Update this table at the mid-semester meeting and again in the last two weeks.
 
-Goals 2 to 4 each need a go/no-go entry in the [decision log](../../docs/01-governance/decision-log.md) once the date and money are known. Playbooks: [icpc-regional-site.md](../../docs/03-playbooks/icpc-regional-site.md), [hackathon-trip.md](../../docs/03-playbooks/hackathon-trip.md), [acm-ai-hackathon.md](../../docs/03-playbooks/acm-ai-hackathon.md).
+Goals 2 to 4 each need a go/no-go entry in the [decision log](../../docs/01-governance/decision-log.md) once the date and money are known. Goal 6 is proposed, not approved: if the officer meeting turns the lab program down, mark it `dropped` and this file is back to five goals. Plan and budget: [projects/microcontroller-lab/](projects/microcontroller-lab/README.md). Playbooks: [icpc-regional-site.md](../../docs/03-playbooks/icpc-regional-site.md), [hackathon-trip.md](../../docs/03-playbooks/hackathon-trip.md), [acm-ai-hackathon.md](../../docs/03-playbooks/acm-ai-hackathon.md), [microcontroller-lab-day.md](../../docs/03-playbooks/microcontroller-lab-day.md).
 
 ## Carried over from last semester
 

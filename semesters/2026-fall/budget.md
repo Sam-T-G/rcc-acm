@@ -37,8 +37,11 @@ One row per line item. Copy the line-item wording from the funding request so th
 | ICPC team registration, $175 per team at the 2025 rate | ICPC Southern California Regional 2026-27 (date TBA) | [TBD] (on the packet or not: [TBD]) | [TBD] | 0 | planned |
 | Hackathon trip | Cal Hacks 13.0 (Fall 2026, San Francisco; date [TBD]) | [TBD] | [TBD] | 0 | planned |
 | ACM AI Hackathon | on campus, date [TBD] | [TBD] | [TBD] | 0 | planned |
+| Microcontroller lab kits (cap $1,000) | Six lab days plus a showcase, Fall 2026; see [projects/microcontroller-lab/](projects/microcontroller-lab/README.md) | [TBD: which ASRCC line or the trust account] | [TBD] | 0 | planned |
 
 Status: `planned`, `approved`, `spent`, `cancelled`.
+
+The microcontroller lab row has a hard cap of $1,000 including tax and shipping, proposed on 2026-08-25 and pending officer meeting approval (see the [decision log](../../docs/01-governance/decision-log.md)). Two quotes were priced against that cap: a base order at $624.65 covering everything the 24 written station challenges need, and a max order at $929.64 that adds backlog parts and holds a $150 restock reserve until after lab day 2. Both totals include 8.75% sales tax and a shipping estimate. Per-part prices, vendors, and dates checked: [docs/kit.md in the lab repo](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/blob/main/docs/kit.md). Order-by date is 2026-09-03 (see [calendar.md](calendar.md)).
 
 Cost reference for a hackathon trip: the Cal Hacks 12.0 model in [2025-fall/budget.md](../2025-fall/budget.md) ($180 flight, $332.98 lodging, about $29 ground transit per person, per diem $69 travel day and $92 full day).
 

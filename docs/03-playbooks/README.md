@@ -15,6 +15,7 @@ Playbooks are evergreen. Dates, names, and budgets for a specific run live in `s
 | [ICPC regional site](icpc-regional-site.md) | RCC as a host site and as a competing school for the Southern California ICPC regional | Chair plus faculty coach | Registration in early fall, contest in November |
 | [ACM AI Hackathon](acm-ai-hackathon.md) | The club's own hackathon | Event lead plus Treasurer | Date [TBD] |
 | [Guest speaker](guest-speaker.md) | Hosting an alumni, faculty, or industry speaker | Chair or assigned officer | 1 to 2 per semester; invite 6 weeks out |
+| [Microcontroller lab day](microcontroller-lab-day.md) | Four parallel 30-minute hardware stations, one per competency tier, inside the regular meeting hour | Lab lead (an officer the Chair assigns) | Roughly every other week; kit ordered 3 or more weeks before the first one |
 
 ## How to use a playbook
 
