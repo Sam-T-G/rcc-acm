@@ -52,6 +52,7 @@ The Treasurer owns the kit purchase and the restock reserve. The Chair signs off
 - Every card names the skill it builds and carries one 60-second check the facilitator asks the non-driver. "It works" is not the check.
 - Power rule: one servo with its capacitor, or one small LED ring at capped brightness, never both on the same board. USB current is the limit and brownouts read as mystery bugs.
 - Safety: no mains voltage, no soldering during the session, no lithium cells outside a protected board.
+- A card may also have an extended workshop form that fills the whole meeting instead of running as one of four 30-minute stations: teams of 3 or 4 on one board, everyone on the same problem, and a shared benchmark at the end that makes the results comparable. Run it in a meeting slot, not a station slot, and only after the 30-minute version of that card has already run. Four parallel tiers stays the default, because self-selected difficulty is what a lab day is for.
 - Anything a facilitator learns goes back into the challenge repo the same day, so the cards carry the knowledge after the officer who ran that station graduates.
 
 ## T-minus checklist

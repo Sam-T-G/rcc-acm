@@ -2,7 +2,7 @@
 
 ## Goal
 
-Run six microcontroller lab days at the weekly meeting this semester, four parallel 30-minute stations each (one per competency tier), so members build fundamental programming skills on hardware they can see respond. Done means: six lab days held, all 24 written station challenges run at least once, attendance counted for each one, and a showcase on the last meeting where pairs demo what they built.
+Run six microcontroller lab days at the weekly meeting this semester, four parallel 30-minute stations each (one per competency tier), so members build fundamental programming skills on hardware they can see respond. Done means: six lab days held, all 24 scheduled station challenges run at least once, attendance counted for each one, and a showcase on the last meeting where pairs demo what they built.
 
 ## Owner
 
@@ -85,7 +85,11 @@ Tiers: T0 brand new, T1 intro programming (CIS-5), T2 programming II (CIS-17A), 
 | T0 | [Sunflower: a servo that turns toward the light](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/tree/main/challenges/t0-06-sunflower-servo) | MicroPython | comparing two sensor readings in one conditional |
 | T1 | [Reaction Duel: First Press Wins](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/tree/main/challenges/t1-03-reaction-timer) | Arduino C++ | millis() as a stopwatch, unsigned long subtraction |
 | T2 | [Interrupt Theremin](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/tree/main/challenges/t2-05-interrupt-theremin) | Arduino C++ | external interrupts, a CHANGE-mode ISR that stamps micros() |
-| T3 | [G-code Lite: a serial command parser drives the rig](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/tree/main/challenges/t3-06-gcode-lite-parser) | Arduino C++ | non-blocking line assembly from serial bytes |
+| T3 | [Elevator scheduler: one car, eight floors](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/tree/main/challenges/t3-07-elevator-scheduler) | Arduino C++ | scheduling policy as code, chosen from a measured benchmark under a fairness bound |
+
+The T3 station on this day has a second, longer form. [The two-car elevator dispatch workshop](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/blob/main/challenges/t3-07-elevator-scheduler/workshop.md) takes a whole 60-minute meeting instead of a 30-minute station: a second car goes into the same simulation, teams write the policy that decides which car answers each call, and every team runs the same benchmark so the scores compare. It uses the same board, the same wiring, and no new parts. It is proposed, it is not on the six days above, and running it would mean using a meeting that is not a lab day, or a block at the showcase. Officer meeting decides.
+
+[G-code Lite: a serial command parser drives the rig](https://github.com/Sam-T-G/rcc-acm-microcontroller-lab/tree/main/challenges/t3-06-gcode-lite-parser) was the original day 6 T3 station and is written, compiled, and ready. The elevator card took the slot, so G-code Lite is now the T3 spare: it needs no new parts either, and it is the card to swap in if the elevator station has to come out.
 
 ### Showcase: 2026-12-10
 
@@ -99,7 +103,7 @@ Six identical station kits plus a shared pool box, built around the Raspberry Pi
 
 | Order | Pre-tax | Tax (8.75%, City of Riverside) | Shipping | Reserve | Total |
 |---|---|---|---|---|---|
-| Base: everything the 24 written challenges need | $533.01 | $46.64 | $45.00 [TBD, estimate] | none | **$624.65** |
+| Base: everything the 24 scheduled challenges need | $533.01 | $46.64 | $45.00 [TBD, estimate] | none | **$624.65** |
 | Max: base plus backlog parts and a restock reserve | $661.74 | $57.90 | $60.00 [TBD, estimate] | $150.00 | **$929.64** |
 
 Headroom under the $1,000 cap: $375.35 on the base order, $70.36 on the max order. The backlog parts in the max order (temperature and humidity sensor, RFID reader, 4-digit display, continuous servo, DC motors and driver, battery holders) serve challenges that are written but not scheduled this semester; nothing on the six lab days above needs them.
@@ -143,4 +147,4 @@ Not a risk: campus WiFi. Every station runs over USB from a laptop, the boards a
 
 ## Log
 
-- 2026-08-25: Program proposed. Board chosen (Raspberry Pi Pico 2 W), 24 station challenges written and compiled in the lab repo, kit priced at $624.65 base and $929.64 max. Logged in the [decision log](../../../../docs/01-governance/decision-log.md). Pending officer meeting approval.
+- 2026-08-25: Program proposed. Board chosen (Raspberry Pi Pico 2 W), 25 station challenges written and compiled in the lab repo (24 scheduled plus one spare), kit priced at $624.65 base and $929.64 max. The elevator scheduler card holds the lab day 6 T3 slot and adds no parts. Logged in the [decision log](../../../../docs/01-governance/decision-log.md). Pending officer meeting approval.
