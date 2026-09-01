@@ -1,6 +1,6 @@
 # Brand
 
-What the chapter's public materials should look like, and which rules from ACM apply. Colors and fonts are not yet decided; see the `[TBD]` rows.
+What the chapter's public materials should look like, and which rules from ACM apply. Colors and fonts are not yet decided; the working values below are provisional and the decision is still open. Last checked against ACM's Visual Identity Standards (guide version 1.0, 2007, `identitystandards.acm.org`): 2026-09-01.
 
 ## Names
 
@@ -20,7 +20,9 @@ What the chapter's public materials should look like, and which rules from ACM a
 | `assets/rcc-acm-qr-code.png` | 500 x 500 | Chapter QR code, light. Target link: [TBD: confirm which URL it encodes] |
 | `assets/rcc-acm-qr-dark.png` | 500 x 500 | Chapter QR code, dark. Target link: [TBD] |
 
-Chapter logo: [TBD]. There is no chapter logo file in `assets/` yet. The ACM AI Hackathon poster (PDF and PNG), the hackathon poster PSD, and the promo files live in the club's shared drive, not here, because they are large or not final. Anything over 1 MB stays out of the repo (maintenance rule 10).
+Chapter logo: [TBD]. There is no chapter logo file in `assets/` yet. ACM publishes a chapter logo matrix at `identitystandards.acm.org/matrix3.html`; the site blocks automated fetches, so someone opens it in a browser, pulls the chapter lockup, and records its rules here. Until then, no artifact carries a logo.
+
+The two AI Hackathon files assemble Google's blue, red, yellow, and green in a watercolor treatment. They read as Google rather than as the chapter, use none of the chapter's colors, and the sibling GDG on Campus chapter (same officers, same room) lives under a rule that no four-color composition may exist. New artifacts do not use that quartet; the files stay until the Spring 2027 hackathon materials are rebuilt under the design system ([design-system/bright-lines.md](design-system/bright-lines.md)). Retiring them is a decision-log entry, not a delete. The ACM AI Hackathon poster (PDF and PNG), the hackathon poster PSD, and the promo files live in the club's shared drive, not here, because they are large or not final. Anything over 1 MB stays out of the repo (maintenance rule 10).
 
 ## ACM rules that apply
 
@@ -37,15 +39,23 @@ Source: [ACM chapter policies](https://www.acm.org/chapters/chapter-policies).
 
 ## Colors
 
-[TBD]. Until decided, the website's colors are the reference: see the source in [ACM-RCC/ACMWebsite](https://github.com/ACM-RCC/ACMWebsite). When decided, record hex values here and log the decision.
+[TBD: the decision]. Until decided, the website's colors are the reference: see the source in [ACM-RCC/ACMWebsite](https://github.com/ACM-RCC/ACMWebsite). When decided, record hex values here and log the decision.
+
+Working values, provisional as of 2026-09-01. The design system read the website source (`src/app/globals.css`) and derived a measured light and dark palette from it: the accent `#ff4d00` (the site's "racing orange") leads; the site's own provisional blue `#4d9fff` marks cross-references out; its live green `#22c55e` marks the live state; a derived red carries errors. Every text pair is measured in [design-system/foundations.md](design-system/foundations.md). Orange sits inside ACM's own secondary palette (ACM Orange, PANTONE 138C) and is deliberately not ACM Blue (PANTONE Process Blue C, R1 G130 B172), which is the parent's logo color and never appears as a chapter UI color. Making these the decided colors needs a decision-log entry; the entry that adopted the design system says so.
 
 ## Typography
 
-[TBD]. Same rule as colors.
+[TBD: the decision]. Same rule as colors.
+
+Working values, provisional as of 2026-09-01: Inter for everything and JetBrains Mono for code, which is what the website already loads (`src/app/layout.tsx`). Both are OFL and served by Google Fonts. ACM's standards name Myriad Pro for ACM's own communications and permit Arial or Helvetica for digital use; the chapter's materials are not ACM communications, and Myriad Pro is a paid Adobe face. Detail and the loading snippet: [design-system/foundations.md](design-system/foundations.md).
 
 ## Voice in public copy
 
 Same rules as this repo ([CONTRIBUTING.md](../../CONTRIBUTING.md)): plain, direct, short. Say what, when, where, and what to bring. Lead with the thing a student needs to decide whether to show up.
+
+## Design system
+
+How docs pages, exported assets (Instagram, share cards, slides, print, the lab's station cards), and any future club page build from these colors and faces: [design-system/](design-system/README.md). It holds the token stylesheet, component specs, page archetypes, the design-doc template, the accessibility rules, and the export sizes in [design-system/assets.md](design-system/assets.md). This document outranks it; where they disagree, fix the design system.
 
 ## Templates
 
