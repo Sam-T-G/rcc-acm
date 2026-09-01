@@ -1,0 +1,742 @@
+/* ===========================================================================
+   ACM @ RCC. Design tokens and base layer.
+   v1.0, 2026-09-01. One prefix: --acm-.
+   Contrast audited light and dark; see docs/04-brand/design-system/foundations.md §2.5.
+   Provisional until brand.md logs the color and type decision.
+   =========================================================================== */
+
+/* --- Reset. The system depends on both of these. ------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+img, svg, video { max-width: 100%; height: auto; }
+
+:root {
+  color-scheme: light;
+
+  /* =========================== COLOR: LIGHT =============================== */
+  /* Page surfaces and ink: neutral tinted toward the lead hue (OKLCh 37.0)
+     at chroma 0.005. Container fills at 0.012, so a card reads as warm paper. */
+  --acm-surface:                   #fdf8f7;
+  --acm-surface-container-lowest:  #ffffff;
+  --acm-surface-container-low:     #fcf1ee;
+  --acm-surface-container:         #f6ece9;
+  --acm-surface-container-high:    #f0e6e3;
+  --acm-surface-container-highest: #ebe0dd;
+
+  --acm-on-surface:                #221f1e;
+  --acm-on-surface-variant:        #5c5958;
+  --acm-outline:                   #7e7572;   /* boundaries that carry meaning */
+  --acm-outline-variant:           #dacfcc;   /* dividers only. 1.45:1 by design */
+
+  /* Primary: racing orange #ff4d00 derived. The lead. */
+  --acm-primary:                   #ae3200;
+  --acm-on-primary:                #ffffff;
+  --acm-primary-container:         #ffdbd0;
+  --acm-on-primary-container:      #661900;
+
+  /* Secondary: electric blue #4d9fff derived. Cross-references out. Nothing else. */
+  --acm-secondary:                 #005eb4;
+  --acm-on-secondary:              #ffffff;
+  --acm-secondary-container:       #d9eaff;
+  --acm-on-secondary-container:    #003469;
+
+  /* Live: green #22c55e derived. Live-now, confirmed, passing, the Check callout.
+     Unlike a yellow highlight it clears 6.10:1 as a bare mark on the light surface. */
+  --acm-live:                      #006e2e;
+  --acm-on-live:                   #ffffff;
+  --acm-live-container:            #c9f2d0;
+  --acm-on-live-container:         #003e17;
+
+  /* Error: derived on a reference red hue (OKLCh 23.0); the website ships no red.
+     Failure and destruction only, and always labeled: orange and red are 14
+     degrees apart and confusable. */
+  --acm-error:                     #ba162a;
+  --acm-on-error:                  #ffffff;
+  --acm-error-container:           #ffe9e7;
+  --acm-on-error-container:        #6c0d16;
+
+  --acm-code-surface:              #fcf1ee;
+  --acm-code-on-surface:           #33302f;
+  --acm-inverse-surface:           #33302f;
+  --acm-inverse-on-surface:        #f7f3f1;
+  --acm-inverse-primary:           #ffb59f;
+
+  --acm-focus-ring:                #ae3200;
+  --acm-focus-gap:                 var(--acm-surface);
+
+  /* The two sanctioned raw fills, straight from the website. Both hold 4.5:1
+     with --acm-on-surface (orange 4.92, green 7.18). Blue and red ship no fill
+     token: see §2.2. */
+  --acm-fill-orange:               #ff4d00;
+  --acm-fill-green:                #22c55e;
+
+  /* Diagram marks that work on BOTH GitHub canvases (#ffffff and #0d1117).
+     Each clears 4.32:1 on both. The theoretical ceiling is 4.350:1. */
+  --acm-mark-lead:      #dd4201;
+  --acm-mark-xref:      #247ad6;
+  --acm-mark-live:      #008c3d;
+  --acm-mark-failure:   #dc3f46;
+  --acm-mark-neutral:   #7b7877;
+
+  /* State layers: the content's own color at these opacities. */
+  --acm-state-hover:   0.08;
+  --acm-state-focus:   0.10;
+  --acm-state-pressed: 0.10;
+  --acm-state-row:     0.04;
+  --acm-state-dragged: 0.16;
+  --acm-scrim:         #000000;
+  --acm-scrim-opacity: 0.32;
+
+  /* ============================ TYPOGRAPHY =============================== */
+  /* Inter carries both the brand and text slots; its opsz axis (14 to 32)
+     does the optical split. Two tokens so the system can reface one slot
+     without touching a component. */
+  --acm-font-brand: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --acm-font-text:  "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --acm-font-code:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --acm-weight-body:   400;
+  --acm-weight-strong: 500;
+  --acm-weight-loud:   700;
+
+  /* Fluid roles interpolate 360px -> 1440px viewport. Ordering is strictly
+     monotonic at every width. Fixed roles never move. */
+  --acm-size-display-lg:  clamp(2.25rem,  1.8125rem + 1.944vw, 3.5625rem); /* 36->57 */
+  --acm-size-display-sm:  clamp(1.75rem,  1.5rem    + 1.111vw, 2.5rem);    /* 28->40 */
+  --acm-size-headline-lg: clamp(1.5rem,   1.3333rem + 0.741vw, 2rem);      /* 24->32 */
+  --acm-size-headline-sm: clamp(1.25rem,  1.1667rem + 0.370vw, 1.5rem);    /* 20->24 */
+  --acm-size-title-lg:    1.125rem;   /* 18 */
+  --acm-size-title-sm:    0.9375rem;  /* 15 */
+  --acm-size-body-lg:     1.0625rem;  /* 17 */
+  --acm-size-body-md:     0.9375rem;  /* 15 */
+  --acm-size-body-sm:     0.8125rem;  /* 13 */
+  --acm-size-label-lg:    0.9375rem;  /* 15 */
+  --acm-size-label-md:    0.8125rem;  /* 13 */
+  --acm-size-label-sm:    0.6875rem;  /* 11 */
+  --acm-size-code-lg:     0.9375rem;  /* 15 */
+  --acm-size-code-md:     0.875rem;   /* 14 */
+  --acm-size-code-sm:     0.8125rem;  /* 13 */
+
+  --acm-lh-display-lg:  1.05;
+  --acm-lh-display-sm:  1.12;
+  --acm-lh-headline-lg: 1.25;
+  --acm-lh-headline-sm: 1.30;
+  --acm-lh-title-lg:    1.5rem;   /* 24 */
+  --acm-lh-title-sm:    1.25rem;  /* 20 */
+  --acm-lh-body-lg:     1.75rem;  /* 28 */
+  --acm-lh-body-md:     1.5rem;   /* 24 */
+  --acm-lh-body-sm:     1.25rem;  /* 20 */
+  --acm-lh-label-lg:    1.25rem;  /* 20 */
+  --acm-lh-label-md:    1rem;     /* 16 */
+  --acm-lh-label-sm:    1rem;     /* 16 */
+  --acm-lh-code-lg:     1.5rem;   /* 24 */
+  --acm-lh-code-md:     1.5rem;   /* 24 */
+  --acm-lh-code-sm:     1.25rem;  /* 20 */
+
+  /* Tracking flips sign around 20px: negative above, zero at title-lg,
+     positive below. */
+  --acm-track-display-lg:  -0.02em;
+  --acm-track-display-sm:  -0.015em;
+  --acm-track-headline-lg: -0.01em;
+  --acm-track-headline-sm: -0.005em;
+  --acm-track-title-lg:     0;
+  --acm-track-title-sm:     0.005em;
+  --acm-track-body-lg:      0.005em;
+  --acm-track-body-md:      0.008em;
+  --acm-track-body-sm:      0.01em;
+  --acm-track-label-lg:     0.01em;
+  --acm-track-label-md:     0.015em;
+  --acm-track-label-sm:     0.06em;
+  --acm-track-code:         0;
+  --acm-track-code-sm:      0.02em;
+  --acm-track-ledger:       0.08em;
+
+  --acm-measure-prose:   68ch;
+  --acm-measure-narrow:  46ch;
+  --acm-measure-display: 20ch;
+
+  /* ============================== SPACE ================================== */
+  --acm-space-0:    0;
+  --acm-space-0-5:  0.125rem;  /*   2 */
+  --acm-space-1:    0.25rem;   /*   4 */
+  --acm-space-2:    0.5rem;    /*   8 */
+  --acm-space-3:    0.75rem;   /*  12 */
+  --acm-space-4:    1rem;      /*  16 */
+  --acm-space-5:    1.25rem;   /*  20 */
+  --acm-space-6:    1.5rem;    /*  24 */
+  --acm-space-8:    2rem;      /*  32 */
+  --acm-space-10:   2.5rem;    /*  40 */
+  --acm-space-12:   3rem;      /*  48 */
+  --acm-space-16:   4rem;      /*  64 */
+  --acm-space-20:   5rem;      /*  80 */
+  --acm-space-30:   7.5rem;    /* 120 */
+
+  /* Section rhythm. The only fluid space tokens; nothing aligns across a
+     section gap, so intermediate drift is invisible. */
+  --acm-rhythm-block:   clamp(2rem,   4vw,  3rem);    /*  32 ->  48 */
+  --acm-rhythm-section: clamp(3rem,   7vw,  5rem);    /*  48 ->  80 */
+  --acm-rhythm-band:    clamp(4.5rem, 10vw, 7.5rem);  /*  72 -> 120 */
+
+  /* Prose flow. Heading space is 2:1, above to below, at every level. */
+  --acm-flow-paragraph: var(--acm-space-4);
+  --acm-flow-list-item: var(--acm-space-2);
+  --acm-flow-block:     var(--acm-space-6);
+  --acm-flow-h1-above:  var(--acm-space-16);
+  --acm-flow-h1-below:  var(--acm-space-8);
+  --acm-flow-h2-above:  var(--acm-space-12);
+  --acm-flow-h2-below:  var(--acm-space-6);
+  --acm-flow-h3-above:  var(--acm-space-8);
+  --acm-flow-h3-below:  var(--acm-space-4);
+  --acm-flow-h4-above:  var(--acm-space-6);
+  --acm-flow-h4-below:  var(--acm-space-3);
+
+  /* ============================== GRID =================================== */
+  --acm-grid-cols:    4;
+  --acm-grid-gutter:  var(--acm-space-4);
+  --acm-page-margin:  var(--acm-space-4);
+  --acm-span-half:    2;
+  --acm-span-third:   4;
+  --acm-span-quarter: 2;
+
+  --acm-container-prose:   40rem;  /*  640 */
+  --acm-container-doc:     56rem;  /*  896 */
+  --acm-container-content: 75rem;  /* 1200 */
+  --acm-container-wide:    90rem;  /* 1440 */
+
+  --acm-target-min:  3rem;      /* 48, hit area floor */
+  --acm-control:     2.5rem;    /* 40, visible control */
+  --acm-control-sm:  2.25rem;   /* 36, dense control */
+  --acm-icon:        1.5rem;    /* 24 */
+  --acm-icon-sm:     1.25rem;   /* 20 */
+  --acm-icon-stroke: 1.5;
+
+  --acm-card-padding:         var(--acm-space-6);
+  --acm-card-padding-compact: var(--acm-space-4);
+  --acm-row-padding:          var(--acm-space-3);
+  --acm-row-padding-compact:  var(--acm-space-2);
+
+  /* ============================== SHAPE ================================== */
+  --acm-radius-none: 0;
+  --acm-radius-xs:   0.25rem;  /*  4 */
+  --acm-radius-sm:   0.5rem;   /*  8 */
+  --acm-radius-md:   0.75rem;  /* 12 */
+  --acm-radius-lg:   1rem;     /* 16 */
+  --acm-radius-xl:   1.5rem;   /* 24 */
+  --acm-radius-full: 9999px;   /* actions and avatars only */
+  --acm-hairline:    1px;
+
+  /* ============================ ELEVATION ================================ */
+  /* Ink is --acm-on-surface (#221f1e) so shadows carry the same cast as the
+     greys. Level 0 is a ZERO-ALPHA shadow so it interpolates. */
+  --acm-elevation-ink:     34 31 30;
+  --acm-elevation-key:     0.30;
+  --acm-elevation-ambient: 0.15;
+
+  --acm-elevation-0:
+    0 0 0 0 rgb(var(--acm-elevation-ink) / 0),
+    0 0 0 0 rgb(var(--acm-elevation-ink) / 0);
+  --acm-elevation-1:
+    0 1px 2px 0   rgb(var(--acm-elevation-ink) / var(--acm-elevation-key)),
+    0 1px 3px 1px rgb(var(--acm-elevation-ink) / var(--acm-elevation-ambient));
+  --acm-elevation-2:
+    0 1px 2px 0   rgb(var(--acm-elevation-ink) / var(--acm-elevation-key)),
+    0 2px 6px 2px rgb(var(--acm-elevation-ink) / var(--acm-elevation-ambient));
+  --acm-elevation-3:
+    0 1px 3px 0   rgb(var(--acm-elevation-ink) / var(--acm-elevation-key)),
+    0 4px 8px 3px rgb(var(--acm-elevation-ink) / var(--acm-elevation-ambient));
+  --acm-elevation-4:                       /* interaction only, never at rest */
+    0 2px 3px 0    rgb(var(--acm-elevation-ink) / var(--acm-elevation-key)),
+    0 6px 10px 4px rgb(var(--acm-elevation-ink) / var(--acm-elevation-ambient));
+
+  /* ============================== MOTION ================================= */
+  --acm-dur-fast-effects:    90ms;
+  --acm-dur-default-effects: 140ms;
+  --acm-dur-slow-effects:    220ms;
+  --acm-dur-fast-spatial:    200ms;
+  --acm-dur-default-spatial: 320ms;
+  --acm-dur-slow-spatial:    480ms;
+
+  /* The two working curves are the website's own (--ease-automotive and
+     --ease-premium in its globals.css), so docs and site move as one club. */
+  --acm-ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+  --acm-ease-spatial:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --acm-ease-exit:     cubic-bezier(0.4, 0, 1, 1);
+
+  /* ============================== THE RAIL =============================== */
+  --acm-rail-w:   var(--acm-space-2);   /* 8px on screen; 24px on a 1200 card; 0.25in in print */
+  --acm-rail-gap: var(--acm-space-3);   /* the Break's height */
+}
+
+/* ============================== DARK ====================================
+   System preference, guarded so an explicit light choice still wins.
+   Dark surface is CIE L* 7, not the website's #050505 (L* 1.4): the ladder
+   above it needs the room, and the A-210 projector flattens anything deeper. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  :root:not([data-theme="light"]) {
+    --acm-surface:                   #181514;
+    --acm-surface-container-lowest:  #100e0d;
+    --acm-surface-container-low:     #211a18;
+    --acm-surface-container:         #251e1c;
+    --acm-surface-container-high:    #302826;
+    --acm-surface-container-highest: #3b3331;
+
+    --acm-on-surface:                #ebe7e6;
+    --acm-on-surface-variant:        #bfbbb9;
+    --acm-outline:                   #9d9491;
+    --acm-outline-variant:           #4d4543;
+
+    --acm-primary:                   #ffb59f;
+    --acm-on-primary:                #5e1700;
+    --acm-primary-container:         #852400;
+    --acm-on-primary-container:      #ffdbd0;
+
+    --acm-secondary:                 #9fcaff;
+    --acm-on-secondary:              #003061;
+    --acm-secondary-container:       #004689;
+    --acm-on-secondary-container:    #cfe5ff;
+
+    --acm-live:                      #88d898;
+    --acm-on-live:                   #003915;
+    --acm-live-container:            #005321;
+    --acm-on-live-container:         #beeec6;
+
+    --acm-error:                     #ffb3af;
+    --acm-on-error:                  #640b14;
+    --acm-error-container:           #8d1320;
+    --acm-on-error-container:        #ffdad7;
+
+    --acm-code-surface:              #251e1c;
+    --acm-code-on-surface:           #e0dcdb;
+    --acm-inverse-surface:           #e6e1e0;
+    --acm-inverse-on-surface:        #33302f;
+    --acm-inverse-primary:           #ae3200;
+
+    --acm-focus-ring:                #ffb59f;
+
+    --acm-elevation-ink:     0 0 0;
+    --acm-elevation-key:     0.44;
+    --acm-elevation-ambient: 0.24;
+  }
+}
+
+/* Explicit toggle, so it wins in both directions. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --acm-surface:                   #181514;
+  --acm-surface-container-lowest:  #100e0d;
+  --acm-surface-container-low:     #211a18;
+  --acm-surface-container:         #251e1c;
+  --acm-surface-container-high:    #302826;
+  --acm-surface-container-highest: #3b3331;
+
+  --acm-on-surface:                #ebe7e6;
+  --acm-on-surface-variant:        #bfbbb9;
+  --acm-outline:                   #9d9491;
+  --acm-outline-variant:           #4d4543;
+
+  --acm-primary:                   #ffb59f;
+  --acm-on-primary:                #5e1700;
+  --acm-primary-container:         #852400;
+  --acm-on-primary-container:      #ffdbd0;
+
+  --acm-secondary:                 #9fcaff;
+  --acm-on-secondary:              #003061;
+  --acm-secondary-container:       #004689;
+  --acm-on-secondary-container:    #cfe5ff;
+
+  --acm-live:                      #88d898;
+  --acm-on-live:                   #003915;
+  --acm-live-container:            #005321;
+  --acm-on-live-container:         #beeec6;
+
+  --acm-error:                     #ffb3af;
+  --acm-on-error:                  #640b14;
+  --acm-error-container:           #8d1320;
+  --acm-on-error-container:        #ffdad7;
+
+  --acm-code-surface:              #251e1c;
+  --acm-code-on-surface:           #e0dcdb;
+  --acm-inverse-surface:           #e6e1e0;
+  --acm-inverse-on-surface:        #33302f;
+  --acm-inverse-primary:           #ae3200;
+
+  --acm-focus-ring:                #ffb59f;
+
+  --acm-elevation-ink:     0 0 0;
+  --acm-elevation-key:     0.44;
+  --acm-elevation-ambient: 0.24;
+}
+
+/* ============================ GRID TIERS ================================
+   Three breakpoints. Never a fourth. 4 / 8 / 12 share divisors, so a span
+   of 4 is full at the base tier, half at 8, and a third at 12. */
+@media (min-width: 600px) {
+  :root {
+    --acm-grid-cols:    8;
+    --acm-grid-gutter:  var(--acm-space-6);
+    --acm-page-margin:  var(--acm-space-8);
+    --acm-span-half:    4;
+    --acm-span-quarter: 2;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --acm-grid-cols:    12;
+    --acm-grid-gutter:  var(--acm-space-6);
+    --acm-page-margin:  var(--acm-space-12);
+    --acm-span-half:    6;
+    --acm-span-quarter: 3;
+  }
+}
+
+/* ============================== BASE ==================================== */
+html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--acm-surface);
+  color: var(--acm-on-surface);
+  font-family: var(--acm-font-text);
+  font-optical-sizing: auto;                       /* drives Inter's opsz 14..32 */
+  font-synthesis: weight;                          /* real 500 in fallback, no fake italics */
+  font-size: var(--acm-size-body-lg);
+  line-height: var(--acm-lh-body-lg);
+  letter-spacing: var(--acm-track-body-lg);
+  font-weight: var(--acm-weight-body);
+  text-wrap: pretty;
+}
+
+/* --- Headings. Same result whether they arrive as markdown or as markup. -- */
+h1, h2, h3, h4 {
+  font-family: var(--acm-font-brand);
+  font-weight: var(--acm-weight-strong);
+  text-wrap: balance;
+  max-width: var(--acm-measure-display);
+}
+h1 { font-size: var(--acm-size-display-sm);  line-height: var(--acm-lh-display-sm);  letter-spacing: var(--acm-track-display-sm);
+     margin-block: 0 var(--acm-flow-h1-below); }
+h2 { font-size: var(--acm-size-headline-lg); line-height: var(--acm-lh-headline-lg); letter-spacing: var(--acm-track-headline-lg);
+     margin-block: var(--acm-flow-h2-above) var(--acm-flow-h2-below); }
+h3 { font-size: var(--acm-size-headline-sm); line-height: var(--acm-lh-headline-sm); letter-spacing: var(--acm-track-headline-sm);
+     margin-block: var(--acm-flow-h3-above) var(--acm-flow-h3-below); }
+h4 { font-size: var(--acm-size-title-lg);    line-height: var(--acm-lh-title-lg);    letter-spacing: var(--acm-track-title-lg);
+     margin-block: var(--acm-flow-h4-above) var(--acm-flow-h4-below); }
+
+/* h5 and h6 change FACE and CASE rather than shrinking below body size.
+   This is the ledger line (foundations.md §3.4) doing structural work. */
+h5, h6 {
+  font-family: var(--acm-font-code);
+  font-weight: var(--acm-weight-strong);
+  text-transform: uppercase;
+  letter-spacing: var(--acm-track-ledger);
+  color: var(--acm-on-surface-variant);
+  margin-block: var(--acm-flow-h4-above) var(--acm-flow-h4-below);
+  max-width: var(--acm-measure-prose);
+}
+h5 { font-size: var(--acm-size-label-lg); line-height: var(--acm-lh-label-lg); }
+h6 { font-size: var(--acm-size-label-md); line-height: var(--acm-lh-label-md); }
+
+/* --- Prose flow. Margins live here and nowhere else. --------------------- */
+p, ul, ol, blockquote, table, pre, figure { max-width: var(--acm-measure-prose); }
+p  { margin-block: 0 var(--acm-flow-paragraph); }
+ul, ol { margin-block: 0 var(--acm-flow-paragraph); padding-inline-start: var(--acm-space-6); }
+li + li { margin-block-start: var(--acm-flow-list-item); }
+pre, table, figure, blockquote { margin-block: var(--acm-flow-block); }
+strong, b { font-weight: var(--acm-weight-strong); }
+
+/* --- Links carry a non-color cue. primary vs body ink is 2.54:1 light,
+       1.38:1 dark, both below the 3:1 that colour-alone needs. ------------ */
+a { color: var(--acm-primary); text-decoration: underline;
+    text-underline-offset: 0.15em; text-decoration-thickness: from-font; }
+a[data-xref] { color: var(--acm-secondary); }
+nav a, .acm-button, a.acm-button { text-decoration: none; }
+
+/* --- Focus. Shadow for the ring, transparent outline so forced-colors
+       substitutes a system colour. :focus-visible only. ------------------- */
+:focus-visible {
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--acm-focus-gap), 0 0 0 5px var(--acm-focus-ring);
+  border-radius: inherit;
+}
+
+/* --- Code. Ligatures off so a student sees the characters they will type;
+       JetBrains Mono ships coding ligatures by default. §2.8. ------------- */
+code, kbd, samp, pre {
+  font-family: var(--acm-font-code);
+  font-variant-ligatures: none;
+  letter-spacing: var(--acm-track-code);
+}
+:not(pre) > code {
+  font-size: 0.9375em; line-height: inherit;
+  font-weight: var(--acm-weight-strong);
+  background: var(--acm-code-surface); color: var(--acm-code-on-surface);
+  padding: 0.1em 0.35em; border-radius: var(--acm-radius-xs);
+}
+pre { overflow-x: auto; background: var(--acm-code-surface);
+      color: var(--acm-code-on-surface); padding: var(--acm-space-4);
+      border-radius: var(--acm-radius-sm);
+      box-shadow: inset 0 0 0 var(--acm-hairline) var(--acm-outline-variant); }
+pre code { font-size: var(--acm-size-code-md); line-height: var(--acm-lh-code-md);
+           font-weight: var(--acm-weight-body); background: none; padding: 0; }
+
+/* --- Tables. Horizontal rules only. No verticals, no zebra, no merges. --- */
+table { border-collapse: collapse; width: 100%;
+        font-size: var(--acm-size-body-md); line-height: var(--acm-lh-body-md);
+        font-variant-numeric: tabular-nums lining-nums; }
+th, td { text-align: start; padding: var(--acm-space-2);
+         border-block-end: var(--acm-hairline) solid var(--acm-outline-variant); }
+thead th { background: var(--acm-surface-container-high);
+           font-size: var(--acm-size-label-lg); font-weight: var(--acm-weight-strong);
+           letter-spacing: var(--acm-track-label-lg); }
+.acm-table-scroll { overflow-x: auto; }
+
+/* --- Numerals that change, and clock columns. Inter has no time-colon
+       feature, so a clock is plain tabular figures. -------------------- */
+.acm-tabular, time, .acm-stat, .acm-time { font-variant-numeric: tabular-nums lining-nums; }
+
+/* --- The ledger line: the club's voice for metadata. foundations.md §3.4. -- */
+.acm-ledger {
+  font-family: var(--acm-font-code);
+  font-size: var(--acm-size-code-sm);
+  line-height: var(--acm-lh-code-sm);
+  letter-spacing: var(--acm-track-ledger);
+  font-weight: var(--acm-weight-strong);
+  text-transform: uppercase;
+  color: var(--acm-on-surface-variant);
+}
+
+/* --- Emphasized tier. One weight step up at identical size, so applying it
+       to a container can never reflow a layout. --------------------------- */
+[data-emphasis="on"],
+[data-emphasis="on"] p,
+[data-emphasis="on"] li            { font-weight: var(--acm-weight-strong); }
+[data-emphasis="on"] h1, [data-emphasis="on"] h2,
+[data-emphasis="on"] h3, [data-emphasis="on"] h4,
+[data-emphasis="on"] .acm-ledger,
+[data-emphasis="on"] [class*="acm-label"] { font-weight: var(--acm-weight-loud); }
+
+/* ========================== LAYOUT PRIMITIVES =========================== */
+.acm-container {
+  width: 100%;
+  max-width: calc(var(--acm-container, var(--acm-container-content))
+                  + var(--acm-page-margin) * 2);
+  margin-inline: auto;
+  padding-inline: var(--acm-page-margin);
+}
+.acm-container--prose { --acm-container: var(--acm-container-prose); }
+.acm-container--doc   { --acm-container: var(--acm-container-doc); }
+.acm-container--wide  { --acm-container: var(--acm-container-wide); }
+
+/* minmax(0, 1fr), not 1fr: one long unbroken string otherwise blows the
+   whole track out. */
+.acm-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--acm-grid-cols), minmax(0, 1fr));
+  gap: var(--acm-grid-gutter);
+}
+.acm-col-full    { grid-column: 1 / -1; }
+.acm-col-half    { grid-column: span var(--acm-span-half); }
+.acm-col-third   { grid-column: span var(--acm-span-third); }
+.acm-col-quarter { grid-column: span var(--acm-span-quarter); }
+
+.acm-stack   { display: flex; flex-direction: column; gap: var(--acm-rhythm-block); }
+.acm-section { padding-block: var(--acm-rhythm-section); }
+.acm-band    { padding-block: var(--acm-rhythm-band); }
+
+.acm-measure-prose   { max-width: var(--acm-measure-prose); }
+.acm-measure-narrow  { max-width: var(--acm-measure-narrow); }
+.acm-measure-display { max-width: var(--acm-measure-display); }
+
+/* ============================= CONTROLS ================================= */
+.acm-button {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--acm-space-2);
+  min-block-size: var(--acm-target-min);
+  padding-inline: var(--acm-space-6);
+  border: 0; border-radius: var(--acm-radius-full);
+  font-family: var(--acm-font-text);
+  font-size: var(--acm-size-label-lg); line-height: 1;
+  font-weight: var(--acm-weight-strong);
+  letter-spacing: var(--acm-track-label-lg);
+  cursor: pointer;
+  background: var(--acm-primary); color: var(--acm-on-primary);
+  transition: border-radius var(--acm-dur-fast-spatial) var(--acm-ease-spatial),
+              background-color var(--acm-dur-fast-effects) var(--acm-ease-standard);
+}
+.acm-button:has(> .acm-icon:first-child) { padding-inline-start: var(--acm-space-5); }
+.acm-button:active { border-radius: var(--acm-radius-sm); }
+.acm-button--secondary {
+  background: transparent; color: var(--acm-on-surface);
+  box-shadow: 0 0 0 var(--acm-hairline) var(--acm-outline);
+}
+.acm-button--text { background: transparent; color: var(--acm-primary);
+                    padding-inline: var(--acm-space-3); }
+.acm-button[disabled] { opacity: 0.38; cursor: not-allowed; }
+.acm-button--secondary:focus-visible {
+  box-shadow: 0 0 0 var(--acm-hairline) var(--acm-outline),
+              0 0 0 3px var(--acm-focus-gap), 0 0 0 6px var(--acm-focus-ring);
+}
+
+/* State layer: the content's own colour, so it needs no per-theme tuning. */
+.acm-state { position: relative; isolation: isolate; }
+.acm-state::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: currentColor; opacity: 0; pointer-events: none; z-index: -1;
+  transition: opacity var(--acm-dur-fast-effects) var(--acm-ease-standard);
+}
+.acm-state:hover::before  { opacity: var(--acm-state-hover); }
+.acm-state:active::before { opacity: var(--acm-state-pressed); }
+
+/* ============================== CARD ==================================== */
+.acm-card {
+  position: relative;
+  padding: var(--acm-card-padding);
+  border-radius: var(--acm-radius-md);
+  background: var(--acm-surface-container-lowest);
+  box-shadow: var(--acm-elevation-0);
+  container-type: inline-size;
+  transition: box-shadow var(--acm-dur-default-effects) var(--acm-ease-standard),
+              transform  var(--acm-dur-default-spatial) var(--acm-ease-spatial);
+}
+.acm-card::after {                       /* hairline drawn on top of media */
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--acm-hairline) var(--acm-outline-variant);
+  pointer-events: none;
+}
+.acm-card:hover { box-shadow: var(--acm-elevation-1); transform: translateY(-2px); }
+.acm-card--status::after {               /* any card carrying status */
+  box-shadow: inset 0 0 0 var(--acm-hairline) var(--acm-outline);
+}
+/* Nesting: 12px outer minus 8px of inlay leaves 4px inside. */
+.acm-card__media {
+  border-radius: var(--acm-radius-xs);
+  margin: calc(var(--acm-card-padding) * -1 + var(--acm-space-2));
+  margin-block-end: var(--acm-space-4);
+  overflow: hidden;
+}
+.acm-card__link { position: absolute; inset: 0; z-index: 1; }
+.acm-card__actions { position: relative; z-index: 9; }
+
+/* ============================= CALLOUTS ================================= */
+/* Closed set of three. Note is neutral, so a doc page carries at most two
+   hues. Every status container pairs with an --acm-outline hairline,
+   because container fills measure 1.10:1 to 1.22:1 against the ground.
+   Warning and Check carry a short solid Rail as their inline-start edge. */
+.acm-callout {
+  position: relative;
+  padding: var(--acm-space-3) var(--acm-space-5) var(--acm-space-3)
+           calc(var(--acm-space-5) + var(--acm-space-8));
+  border-radius: var(--acm-radius-lg);
+  font-size: var(--acm-size-body-md); line-height: var(--acm-lh-body-md);
+  max-width: var(--acm-measure-prose);
+  box-shadow: inset 0 0 0 var(--acm-hairline) var(--acm-outline);
+  overflow: hidden;                        /* clips the Rail to the radius */
+}
+.acm-callout--note    { background: var(--acm-surface-container-high); color: var(--acm-on-surface); }
+.acm-callout--warning { background: var(--acm-primary-container);      color: var(--acm-on-primary-container); }
+.acm-callout--check   { background: var(--acm-live-container);         color: var(--acm-on-live-container); }
+.acm-callout--warning::before, .acm-callout--check::before {
+  content: ""; position: absolute; inset-block: 0; inset-inline-start: 0;
+  width: var(--acm-rail-w); background: currentColor;   /* solid; no Break inside a callout */
+}
+.acm-callout + .acm-callout { margin-block-start: var(--acm-rhythm-block); }
+
+/* ============================ TIMELINE ================================== */
+.acm-phase {
+  display: grid;
+  grid-template-columns: 5.5ch 1fr;      /* fits "12:50" with no reflow */
+  gap: var(--acm-space-4);
+  padding-block: var(--acm-space-4);
+}
+.acm-phase:not(:last-child)::after {
+  content: ""; grid-column: 1 / -1;
+  border-block-end: var(--acm-hairline) solid var(--acm-outline-variant);
+  margin-block-start: var(--acm-space-4);
+}
+.acm-phase__time { font-variant-numeric: tabular-nums; }
+
+/* ============================= FOOTER =================================== */
+.acm-footer { background: var(--acm-surface-container); padding-block: var(--acm-space-12); }
+.acm-footer__credit {                    /* "Funded by ASRCC" where required */
+  max-width: var(--acm-measure-prose);
+  margin-block-start: var(--acm-rhythm-band);
+  font-size: var(--acm-size-body-md);
+  color: var(--acm-on-surface-variant);
+}
+
+/* ======================= REDUCED MOTION: the two lines ================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --acm-dur-fast-spatial: 0ms;
+    --acm-dur-default-spatial: 0ms;
+    --acm-dur-slow-spatial: 0ms;
+  }
+  html { scroll-behavior: auto; }
+  .acm-card:hover { transform: none; }
+}
+
+/* ============================ FORCED COLORS ============================= */
+@media (forced-colors: active) {
+  .acm-card, .acm-callout, .acm-button--secondary { border: 1px solid CanvasText; }
+  .acm-card::after { display: none; }
+  .acm-rail::before, .acm-callout--warning::before, .acm-callout--check::before {
+    background: CanvasText;
+  }
+}
+
+/* ================================ PRINT ================================= */
+/* Flyers and station cards print in colour, so the Rail keeps --acm-primary;
+   text drops to black for the copier. */
+@media print {
+  :root { color-scheme: light; }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  nav, .acm-skip, .acm-theme-toggle, .acm-copy { display: none; }
+  a { color: #000; }
+  a[href^="http"]::after { content: " (" attr(href) ")";
+                           font-size: 9pt; word-break: break-all; }
+  .acm-card, .acm-callout { box-shadow: none; border: 1px solid #999;
+                            break-inside: avoid; }
+  h1, h2, h3, h4 { break-after: avoid; }
+  table, figure, pre { break-inside: avoid; }
+  .acm-rail::before { width: 0.25in; }
+  .acm-footer__credit { border-top: 1px solid #999;
+                        padding-top: 8pt; margin-top: 12pt; }
+}
+
+/* ===========================================================================
+   THE RAIL  -  the club's own signature device.
+   A solid vertical bar in --acm-primary, flush to the inline-start edge of a
+   block, full block height. Derived from the website's share card (a 24px
+   #ff4d00 left border on a 1200 x 630 card), not from anything ACM owns.
+   Its one variable is the Break: a gap whose position encodes the pillar.
+   =========================================================================== */
+
+/* The pillar is set ONCE per page on the root element. Do not set
+   --acm-rail-break on .acm-rail itself; a value declared on the element
+   shadows the inherited one and the page-level switch stops working.
+   With no data-pillar the variable is unset and the fallback (200%) puts
+   the gap off the end of the element, so the Rail renders solid. */
+:root[data-pillar="build"]   { --acm-rail-break: 20%; }
+:root[data-pillar="compete"] { --acm-rail-break: 40%; }
+:root[data-pillar="learn"]   { --acm-rail-break: 60%; }
+:root[data-pillar="connect"] { --acm-rail-break: 80%; }
+
+.acm-rail {
+  position: relative;
+  padding-inline-start: calc(var(--acm-rail-w) + var(--acm-space-4));
+}
+.acm-rail::before {
+  content: "";
+  position: absolute; inset-block: 0; inset-inline-start: 0;
+  width: var(--acm-rail-w);
+  color: var(--acm-primary);
+  --b: var(--acm-rail-break, 200%);
+  --g: calc(var(--acm-rail-gap) / 2);
+  background: linear-gradient(to bottom,
+    currentColor 0 calc(var(--b) - var(--g)),
+    transparent calc(var(--b) - var(--g)) calc(var(--b) + var(--g)),
+    currentColor calc(var(--b) + var(--g)) 100%);
+}
