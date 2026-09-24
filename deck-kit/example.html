@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deck kit example</title>
+<!--
+  Every archetype the ACM deck kit supports, working, with copy about the kit
+  itself so nothing here makes a claim about the club. Check it with
+  node deck-kit/check.mjs deck-kit/example.html
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="deck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="deck.js" defer></script>
+</head>
+<body>
+<main class="deck" data-deck="kit-example" data-ledger="ACM @ RCC · Deck kit">
+
+<!-- cover: the Rail, the club name as text, one h1, a sub whose last clause is bold. -->
+<section class="slide" data-kind="cover" aria-label="The deck kit">
+  <div class="cover__rail" aria-hidden="true"></div>
+  <p class="cover__name">ACM @ RCC</p>
+  <p class="eyebrow">Deck kit</p>
+  <h1>Every slide, one idea</h1>
+  <p class="sub">Eleven kinds of slide, one engine, <strong>and a check that walks it.</strong></p>
+</section>
+
+<section class="slide" data-kind="statement" data-section="Rules" data-ground="orange" aria-label="One idea">
+  <p class="eyebrow">The rule</p>
+  <h2>One idea per slide, and the <span class="hl">Rail</span> only once.</h2>
+</section>
+
+<section class="slide" data-kind="contrast" data-ground="warm" aria-label="Floors">
+  <h2>Type floors on the wall</h2>
+  <div class="contrast">
+    <div class="is-weak"><p class="label">Under the floor</p><p>Body at 24 px reads fine on a laptop and vanishes from the back row.</p></div>
+    <div class="is-strong" data-beat><p class="label">At the floor</p><p>Titles 72, body 40, ledger 32. The check fails anything smaller.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-kind="beats" data-section="Engine" aria-label="How it moves">
+  <h2>How a press moves the deck</h2>
+  <ol class="beats">
+    <li data-beat>Land whatever is still moving<span class="detail">A fast clicker never loses a press.</span></li>
+    <li data-beat>Work out the next slide or beat</li>
+    <li data-beat>Animate over the top, then set the state from nothing</li>
+  </ol>
+</section>
+
+<section class="slide" data-kind="board" aria-label="Keys">
+  <h2>Keys worth knowing</h2>
+  <ol class="board">
+    <li><time>Arrow keys</time><span>Next and back, beat by beat</span></li>
+    <li><time>T and R</time><span>Start and reset the clock</span></li>
+    <li><time>N</time><span>Speaker notes</span></li>
+    <li><time>5</time><span>Room mode</span></li>
+  </ol>
+</section>
+
+<section class="slide" data-kind="photo" data-section="Pictures" aria-label="A photo that bleeds">
+  <div class="photo__text">
+    <p class="eyebrow">Photos</p>
+    <h2>Name a thing, show the thing</h2>
+    <p class="sub">The fetch script finds an open-licensed photo and writes the credit for you.</p>
+  </div>
+  <figure class="photo">
+    <img src="example-images/arduino-uno-r4-wifi.jpg" width="1600" height="1214" alt="An Arduino UNO R4 WiFi board seen from above, with its grid of small LEDs.">
+    <figcaption class="credit"><a href="https://commons.wikimedia.org/wiki/File:Arduino_UNO_R4_WiFi.jpg">Photo: Lomrjyo, CC BY-SA 4.0</a></figcaption>
+  </figure>
+</section>
+
+<section class="slide" data-kind="photo" data-layout="framed" data-ground="tint" aria-label="A framed photo">
+  <div class="photo__text">
+    <p class="eyebrow">Framed</p>
+    <h2>Or sit it inside the margins</h2>
+  </div>
+  <figure class="photo">
+    <img src="example-images/raspberry-pi-pico.jpg" width="1600" height="1372" alt="A Raspberry Pi Pico board at an angle, showing its pin edges.">
+    <figcaption class="credit"><a href="https://commons.wikimedia.org/wiki/File:Raspberry_Pi_Pico_oblique.jpg">Photo: Phiarc, CC BY-SA 4.0</a></figcaption>
+  </figure>
+</section>
+
+<section class="slide" data-kind="grid" aria-label="Side by side">
+  <h2>Two boards, side by side</h2>
+  <ul class="grid">
+    <li><img src="example-images/arduino-uno-r4-wifi.jpg" width="1600" height="1214" alt="An Arduino UNO R4 WiFi board seen from above."><b>Arduino UNO R4 WiFi</b><span class="credit"><a href="https://commons.wikimedia.org/wiki/File:Arduino_UNO_R4_WiFi.jpg">Photo: Lomrjyo, CC BY-SA 4.0</a></span></li>
+    <li><img src="example-images/raspberry-pi-pico.jpg" width="1600" height="1372" alt="A Raspberry Pi Pico board at an angle."><b>Raspberry Pi Pico</b><span class="credit"><a href="https://commons.wikimedia.org/wiki/File:Raspberry_Pi_Pico_oblique.jpg">Photo: Phiarc, CC BY-SA 4.0</a></span></li>
+  </ul>
+</section>
+
+<section class="slide" data-kind="photo" data-layout="bleed-left" data-ground="warm" aria-label="A photo on the left">
+  <div class="photo__text">
+    <h2>Either side works</h2>
+    <p class="sub">The words never sit on the photo.</p>
+  </div>
+  <figure class="photo">
+    <img src="example-images/raspberry-pi-pico.jpg" width="1600" height="1372" alt="A Raspberry Pi Pico board at an angle, showing its pin edges.">
+    <figcaption class="credit"><a href="https://commons.wikimedia.org/wiki/File:Raspberry_Pi_Pico_oblique.jpg">Photo: Phiarc, CC BY-SA 4.0</a></figcaption>
+  </figure>
+</section>
+
+<section class="slide" data-kind="code" data-section="Markup" aria-label="A slide in markup">
+  <h2>A slide is two attributes</h2>
+<pre class="code"><span class="k">section</span> class="slide"
+        data-kind="statement"
+        data-section="Rules"
+  <span class="k">h2</span> One idea per slide.</pre>
+  <aside class="notes"><p>Say that the angle brackets are left off on purpose so the slide reads as prose.</p></aside>
+</section>
+
+<section class="slide" data-kind="figure" data-section="Numbers" data-ground="orange" aria-label="Margins">
+  <p class="figure"><span class="figure__num" data-from="0" data-to="96">96</span><span class="figure__unit">px of margin</span></p>
+  <h2>On every side, every slide</h2>
+</section>
+
+<section class="slide" data-kind="statement" data-layout="giant" aria-label="Giant">
+  <h2>Go big once.</h2>
+</section>
+
+<section class="slide" data-kind="clock" data-room data-timer="60" aria-label="A timer">
+  <p class="eyebrow">Try it</p>
+  <h2>Press T and watch this count down</h2>
+  <div class="clock"><p class="clock__digits">1:00</p><span class="clock__track"><span class="clock__fill"></span></span><p class="clock__hint">T to start, R to reset.</p></div>
+</section>
+
+<section class="slide" data-kind="ask" data-section="Close" data-room aria-label="Run the check">
+  <div class="ask__main">
+    <p class="eyebrow">Before you present</p>
+    <h2>Run the check, then walk it once</h2>
+    <p class="callout callout--check"><b>Check:</b> node deck-kit/check.mjs on your deck, zero failures.</p>
+  </div>
+  <div class="ask__foot">
+    <p class="ask__name">ACM @ RCC</p>
+    <p class="ask__stamp">Updated <time datetime="2026-09-24">2026-09-24</time></p>
+  </div>
+</section>
+
+</main>
+</body>
+</html>

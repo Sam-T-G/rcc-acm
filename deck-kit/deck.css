@@ -1,0 +1,517 @@
+/* ===========================================================================
+   ACM @ RCC. Deck kit stylesheet.
+   Ported 2026-09-24 from the GDG chapter's deck kit (rcc-gdg/deck-kit) onto the
+   ACM design system. The rules it implements: docs/04-brand/design-system/
+   assets.md §10.5 (the slide spec) and accessibility.md §2.4 (the Rail). Where
+   this file and those disagree, they win. Where it goes past them on purpose,
+   docs/01-governance/decision-log.md has the row.
+
+   The stage is 1920 x 1080 in STAGE UNITS. --u is one stage pixel, computed from
+   the width of .deck with container query units, so one stylesheet renders the
+   presenting stage, the phone stack, the no-script fallback, and print-to-PDF,
+   with text rasterized at native size rather than transform-scaled.
+   Light theme only: A-210 projects onto a wall in daylight (assets.md §10.5).
+   =========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* --- Tokens. Copied from docs/04-brand/design-system/tokens.css; check.mjs
+       fails if any value here drifts from the source. ---------------------- */
+:root {
+  color-scheme: light;
+  --acm-surface:                   #fdf8f7;
+  --acm-surface-container-lowest:  #ffffff;
+  --acm-surface-container-low:     #fcf1ee;
+  --acm-surface-container:         #f6ece9;
+  --acm-surface-container-high:    #f0e6e3;
+  --acm-surface-container-highest: #ebe0dd;
+  --acm-on-surface:                #221f1e;
+  --acm-on-surface-variant:        #5c5958;
+  --acm-outline:                   #7e7572;
+  --acm-outline-variant:           #dacfcc;
+  --acm-primary:                   #ae3200;
+  --acm-on-primary:                #ffffff;
+  --acm-primary-container:         #ffdbd0;
+  --acm-on-primary-container:      #661900;
+  --acm-live:                      #006e2e;
+  --acm-live-container:            #c9f2d0;
+  --acm-on-live-container:         #003e17;
+  --acm-code-surface:              #fcf1ee;
+  --acm-code-on-surface:           #33302f;
+  --acm-inverse-surface:           #33302f;
+  --acm-inverse-on-surface:        #f7f3f1;
+  --acm-focus-ring:                #ae3200;
+  --acm-fill-orange:               #ff4d00;
+
+  --acm-dur-fast-effects:    90ms;
+  --acm-dur-default-effects: 140ms;
+  --acm-dur-slow-effects:    220ms;
+  --acm-dur-fast-spatial:    200ms;
+  --acm-dur-default-spatial: 320ms;
+  --acm-dur-slow-spatial:    480ms;
+  --acm-ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+  --acm-ease-exit:     cubic-bezier(0.4, 0, 1, 1);
+
+  /* Slide-scale motion. Not in tokens.css: the system's slow tier (480 ms) is
+     sized for a dialog on a laptop, and a line rising across a 1920 stage needs
+     longer to read as a move. Decision log, 2026-09-24. */
+  --acm-dur-beat: 700ms;
+  --acm-dur-move: 1100ms;
+  --acm-ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --acm-font-brand: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --acm-font-code:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* The Rail on a slide: 40 px, as on the 2026-09-03 deck. */
+  --acm-rail-w: 40px;
+}
+
+/* Reduced motion: zero the spatial track, leave effects alone (foundations.md §5.4). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --acm-dur-fast-spatial: 0ms;
+    --acm-dur-default-spatial: 0ms;
+    --acm-dur-slow-spatial: 0ms;
+    --acm-dur-beat: 0ms;
+    --acm-dur-move: 0ms;
+  }
+}
+
+/* --- Page ----------------------------------------------------------------- */
+html, body { margin: 0; background: var(--acm-surface); color: var(--acm-on-surface); }
+body {
+  font-family: var(--acm-font-brand);
+  font-optical-sizing: auto;
+  font-synthesis: weight;
+  font-weight: 400;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+:focus-visible {
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--acm-surface), 0 0 0 5px var(--acm-focus-ring);
+}
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* --- The deck and its unit ------------------------------------------------ */
+.deck {
+  container-type: inline-size;
+  --u: calc(100cqw / 1920);
+  --s-title:   calc(128 * var(--u));
+  --s-head:    calc(88 * var(--u));
+  --s-body:    calc(48 * var(--u));
+  --s-body-sm: calc(40 * var(--u));
+  --s-ledger:  calc(32 * var(--u));
+  --s-margin:  calc(96 * var(--u));
+  --s-top:     calc(144 * var(--u));
+  --s-bottom:  calc(144 * var(--u));
+  --s-gap:     calc(40 * var(--u));
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Stacked: the default with no script, and what a phone gets. Every slide in
+   order, full width, 16:9, nothing animated, every beat showing. */
+.deck { display: grid; gap: 12px; padding: 12px 16px; }
+.slide {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--acm-surface);
+  box-shadow: 0 0 0 1px var(--acm-outline-variant);
+  padding: var(--s-top) var(--s-margin) var(--s-bottom);
+  display: flex; flex-direction: column; justify-content: center; gap: var(--s-gap);
+}
+.chrome { display: none; }
+
+/* Presenting: one slide at a time on a letterboxed stage. */
+.deck-live.is-presenting body { overflow: hidden; }
+.deck-live.is-presenting .deck {
+  position: fixed; inset: 0; margin: auto; padding: 0; gap: 0;
+  width: min(100vw, calc(100dvh * 16 / 9));
+  height: min(100dvh, calc(100vw * 9 / 16));
+  display: block;
+}
+.deck-live.is-presenting .slide {
+  position: absolute; inset: 0; box-shadow: none; visibility: hidden;
+}
+.deck-live.is-presenting .slide.is-current { visibility: visible; }
+.deck-live.is-presenting .chrome { display: block; }
+
+/* --- Type roles ----------------------------------------------------------- */
+/* Element defaults sit under :where(), so any single class outranks them. */
+:where(.slide) :where(h1, h2, h3, p, ol, ul, figure, blockquote, pre) { margin: 0; }
+:where(.slide) h1 {
+  font-size: var(--s-title); line-height: 1.02; letter-spacing: -0.03em;
+  font-weight: 700; text-wrap: balance; max-width: calc(1500 * var(--u));
+}
+:where(.slide) h2 {
+  font-size: var(--s-head); line-height: 1.06; letter-spacing: -0.025em;
+  font-weight: 700; text-wrap: balance; max-width: calc(1560 * var(--u));
+}
+:where(.slide) :where(p, li) { font-size: var(--s-body); line-height: 1.3; text-wrap: pretty; }
+.slide .sub { color: var(--acm-on-surface-variant); max-width: 40ch; }
+.slide .small { font-size: var(--s-body-sm); }
+.slide strong { font-weight: 700; }
+.slide em { font-style: italic; }
+.eyebrow, .ledger, .counter, .label {
+  font-family: var(--acm-font-code);
+  font-size: var(--s-ledger); line-height: 1.25; letter-spacing: 0.06em;
+  font-weight: 500; text-transform: uppercase;
+  font-variant-ligatures: none;
+  color: var(--acm-on-surface-variant);
+}
+/* The font shorthand is never used here, but a role class could still reset
+   numerals, so tabular figures are declared after every role (09-03 lesson). */
+.eyebrow, .ledger, .counter, .label, time { font-variant-numeric: tabular-nums lining-nums; }
+.eyebrow { color: var(--acm-primary); }
+.slide .notes { display: none; }
+
+/* --- Masks: content rises through them ------------------------------------ */
+/* The padding and negative margin grow the clip box to cover ascenders and
+   descenders without moving the line, so a mask never shaves a g or a y. */
+.w {
+  display: inline-block; overflow: hidden; vertical-align: top;
+  padding-block: 0.08em 0.16em; margin-block: -0.08em -0.16em;
+}
+.w__in { display: inline-block; }
+.blk { display: block; overflow: hidden; padding-block: calc(24 * var(--u)); margin-block: calc(-24 * var(--u)); }
+.blk__in { display: block; }
+
+/* CSS-only entrance, used when GSAP is absent. The JS sets --i per unit;
+   under reduced motion the duration token is 0ms. */
+@keyframes deck-rise { from { transform: translateY(110%); } to { transform: none; } }
+.deck-live.no-gsap .slide.is-entering .w__in,
+.deck-live.no-gsap .slide.is-entering .blk__in,
+.deck-live.no-gsap .is-revealing .w__in,
+.deck-live.no-gsap .is-revealing .blk__in {
+  animation: deck-rise var(--acm-dur-beat) var(--acm-ease-arrive) both;
+  animation-delay: calc(var(--i, 0) * 56ms);
+}
+
+/* Beats not yet reached. Hidden, not removed. */
+.deck-live.is-presenting [data-beat].is-pending { visibility: hidden; }
+.beats li.is-past, .board li.is-past { color: var(--acm-on-surface-variant); transition: color var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+
+/* --- Chrome: ledger, counter, progress. Still across every transition. ---- */
+.chrome { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.chrome .ledger { position: absolute; top: calc(52 * var(--u)); left: var(--s-margin); margin: 0; max-width: calc(1300 * var(--u)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chrome .counter { position: absolute; top: calc(52 * var(--u)); right: var(--s-margin); margin: 0; }
+.deck.on-cover .chrome .ledger { visibility: hidden; }
+/* Progress: the "On this page" rail laid flat (components.md §7.8): section
+   names in the ledger line, the current one at weight 500 in primary. The
+   hairline under them is neutral and 3 px, so it never reads as the Rail. */
+.progress { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.progress__track { fill: var(--acm-outline-variant); }
+.progress__fill { fill: var(--acm-on-surface-variant); }
+.progress__label {
+  font-family: var(--acm-font-code); font-size: 32px; font-weight: 400; letter-spacing: 0.06em;
+  font-variant-ligatures: none; fill: var(--acm-on-surface-variant);
+}
+.progress__label.is-past { fill: var(--acm-on-surface); }
+.progress__label.is-current { fill: var(--acm-primary); font-weight: 500; }
+.progress__label.is-hidden { visibility: hidden; }
+
+/* --- cover: type as the image, the Rail at the inline-start edge ---------- */
+.slide[data-kind="cover"] {
+  justify-content: flex-end; gap: 0;
+  padding: var(--s-margin) var(--s-margin) var(--s-margin) calc(var(--s-margin) + 88 * var(--u));
+}
+/* The Rail, once, on the title slide. Solid: a meeting deck has no single
+   pillar, so --acm-rail-break stays unset (accessibility.md §2.4). */
+.cover__rail {
+  position: absolute; left: var(--s-margin); top: var(--s-margin); bottom: var(--s-margin);
+  width: calc(40 * var(--u)); background: var(--acm-primary);
+  transform-origin: 50% 0;
+}
+.cover__name { font-size: var(--s-body-sm); font-weight: 500; color: var(--acm-on-surface); margin-block-end: auto; }
+.slide[data-kind="cover"] .eyebrow { margin-block-end: calc(28 * var(--u)); }
+.slide[data-kind="cover"] h1 { font-size: calc(168 * var(--u)); line-height: 0.96; letter-spacing: -0.04em; max-width: calc(1540 * var(--u)); }
+.slide[data-kind="cover"] .sub { margin-block-start: calc(36 * var(--u)); max-width: 44ch; }
+.slide[data-kind="cover"] .sub strong { color: var(--acm-on-surface); font-weight: 700; }
+.cover__meta { margin-block-start: calc(40 * var(--u)); }
+.cover__starts { margin-block-end: calc(12 * var(--u)); }
+
+/* --- statement ------------------------------------------------------------ */
+.slide[data-kind="statement"] h2 { max-width: calc(1500 * var(--u)); font-size: calc(104 * var(--u)); }
+.slide[data-kind="statement"] .sub { max-width: 36ch; }
+/* One word or phrase in a heading can carry the lead hue. Once per slide. */
+.slide .hl { color: var(--acm-primary); }
+
+/* --- contrast ------------------------------------------------------------- */
+.contrast { display: grid; grid-template-columns: 1fr 1fr; gap: calc(96 * var(--u)); align-items: start; }
+.contrast > div { display: flex; flex-direction: column; gap: calc(24 * var(--u)); }
+.contrast > div > p:not(.label) { font-size: var(--s-body); line-height: 1.28; }
+/* Both sides the same size, weight, and ink: the words win, not the styling. */
+.contrast .is-strong > .label { color: var(--acm-primary); }
+
+/* --- beats ---------------------------------------------------------------- */
+.beats { list-style: none; padding: 0; display: grid; gap: calc(36 * var(--u)); counter-reset: beat; }
+.beats li {
+  display: grid; grid-template-columns: calc(96 * var(--u)) 1fr; gap: calc(28 * var(--u)); align-items: baseline;
+  max-width: calc(1480 * var(--u));
+}
+.beats li::before {
+  counter-increment: beat; content: counter(beat, decimal-leading-zero);
+  font-family: var(--acm-font-code); font-weight: 500; font-size: var(--s-body-sm); line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--acm-primary);
+}
+.beats li > .body { display: block; }
+.beats li .detail { display: block; font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); margin-top: calc(8 * var(--u)); }
+
+/* --- board: every dated thing in the next four weeks, one line each ------- */
+.board { list-style: none; padding: 0; display: grid; max-width: calc(1600 * var(--u)); }
+.board li {
+  display: grid; grid-template-columns: calc(420 * var(--u)) 1fr; gap: calc(40 * var(--u)); align-items: baseline;
+  padding-block: calc(22 * var(--u));
+}
+.board li:not(:last-child) { border-block-end: calc(2 * var(--u)) solid var(--acm-outline-variant); }
+.board time { font-family: var(--acm-font-code); font-size: var(--s-body-sm); font-weight: 500; font-variant-ligatures: none; }
+
+/* --- code ----------------------------------------------------------------- */
+.code {
+  font-family: var(--acm-font-code); font-size: var(--s-body-sm); line-height: 1.4;
+  font-variant-ligatures: none; font-variant-numeric: tabular-nums;
+  color: var(--acm-code-on-surface); background: var(--acm-code-surface);
+  border-radius: calc(12 * var(--u)); padding: calc(40 * var(--u)) calc(48 * var(--u));
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
+  white-space: pre; overflow: hidden; max-width: calc(1728 * var(--u));
+}
+.code .c { color: var(--acm-on-surface-variant); }
+.code .k { color: var(--acm-primary); font-weight: 500; }
+
+/* --- figure --------------------------------------------------------------- */
+.figure { display: flex; align-items: baseline; gap: calc(40 * var(--u)); }
+.figure__num { font-size: calc(320 * var(--u)); line-height: 0.85; font-weight: 700; letter-spacing: -0.05em; color: var(--acm-primary); font-variant-numeric: tabular-nums lining-nums; }
+.figure__unit { font-size: var(--s-head); line-height: 1; font-weight: 700; letter-spacing: -0.02em; }
+.slide[data-kind="figure"] .sub { max-width: 44ch; }
+
+/* --- clock ---------------------------------------------------------------- */
+.clock { display: grid; gap: calc(28 * var(--u)); margin-block-start: calc(24 * var(--u)); }
+.clock__digits { font-size: calc(240 * var(--u)); line-height: 0.9; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums lining-nums; }
+.clock__track { height: calc(12 * var(--u)); background: var(--acm-surface-container-highest); overflow: hidden; }
+.clock__fill { display: block; height: 100%; background: var(--acm-primary); transform-origin: left center; }
+.clock__hint { font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); }
+/* Last ten seconds: the digits take the primary container and hold it. Never blinks. */
+.clock[data-state="ending"] .clock__digits, .clock[data-state="done"] .clock__digits {
+  background: var(--acm-primary-container); color: var(--acm-on-primary-container);
+  justify-self: start; padding-inline: calc(24 * var(--u)); border-radius: calc(12 * var(--u));
+}
+
+/* --- callout: Check or Warning, one per slide, short solid Rail ----------- */
+.callout {
+  position: relative; overflow: hidden; max-width: calc(1500 * var(--u));
+  padding: calc(28 * var(--u)) calc(40 * var(--u)) calc(28 * var(--u)) calc(88 * var(--u));
+  border-radius: calc(16 * var(--u));
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline);
+  font-size: var(--s-body-sm); line-height: 1.3;
+}
+.callout::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: calc(24 * var(--u)); background: currentColor; }
+.callout--check { background: var(--acm-live-container); color: var(--acm-on-live-container); }
+.callout--warning { background: var(--acm-primary-container); color: var(--acm-on-primary-container); }
+.callout b { font-weight: 700; }
+
+/* --- ask: the last slide, with the club name as text ---------------------- */
+.slide[data-kind="ask"] { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; column-gap: calc(96 * var(--u)); row-gap: calc(40 * var(--u)); align-items: center; }
+.ask__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.ask__meta { font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); }
+.qr { display: flex; flex-direction: column; align-items: center; gap: calc(16 * var(--u)); color: inherit; text-decoration: none; }
+.qr__tile {
+  width: calc(320 * var(--u)); height: calc(320 * var(--u)); padding: calc(12 * var(--u)); display: block;
+  border-radius: calc(12 * var(--u)); background: #ffffff;
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
+}
+.qr__tile svg, .qr__tile img { width: 100%; height: 100%; display: block; }
+.qr .label { text-align: center; text-transform: none; letter-spacing: 0.02em; }
+.ask__foot { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: calc(64 * var(--u)); }
+.ask__name { font-size: var(--s-body-sm); font-weight: 500; }
+.ask__stamp { font-family: var(--acm-font-code); font-size: var(--s-ledger); color: var(--acm-on-surface-variant); font-variant-numeric: tabular-nums; }
+
+/* --- Grounds: data-ground on a slide ---------------------------------------
+   paper (default) --acm-surface. warm: the highest surface container. tint: the
+   primary container with its own ink. orange: the sanctioned raw fill, a large
+   area only, with ink text and nothing in primary on it (accessibility.md §1.1
+   rule 3: white on #ff4d00 is 3.33:1, ink is 4.92:1). The check measures every
+   text pair against its ground. Chrome follows the ground through .deck[data-ground]. */
+.slide[data-ground="warm"]   { background: var(--acm-surface-container-highest); }
+.slide[data-ground="tint"]   { background: var(--acm-primary-container); color: var(--acm-on-primary-container); }
+.slide[data-ground="orange"] { background: var(--acm-fill-orange); color: var(--acm-on-surface); }
+.slide[data-ground="tint"] :is(.eyebrow, .label, .sub, .detail, .hl, .figure__num, .credit, .credit a, .beats li::before),
+.slide[data-ground="tint"] .beats li::before { color: var(--acm-on-primary-container); }
+.slide[data-ground="orange"] :is(.eyebrow, .label, .sub, .detail, .hl, .figure__num, .credit, .credit a, .clock__hint, .ask__meta, .ask__stamp),
+.slide[data-ground="orange"] .beats li::before { color: var(--acm-on-surface); }
+.slide[data-ground="orange"] .hl { text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.12em; }
+.slide[data-ground="orange"] .clock__fill { background: var(--acm-on-surface); }
+.slide[data-ground="orange"] .clock__track { background: rgb(34 31 30 / 0.18); }
+.slide[data-ground="orange"] .board li:not(:last-child), .slide[data-ground="tint"] .board li:not(:last-child) { border-color: currentColor; }
+.deck[data-ground="orange"] .chrome :is(.ledger, .counter),
+.deck[data-ground="tint"] .chrome :is(.ledger, .counter) { color: var(--acm-on-surface); }
+.deck[data-ground="orange"] .progress__label, .deck[data-ground="orange"] .progress__label.is-current,
+.deck[data-ground="tint"] .progress__label, .deck[data-ground="tint"] .progress__label.is-current { fill: var(--acm-on-surface); }
+.deck[data-ground="orange"] .progress__fill, .deck[data-ground="tint"] .progress__fill { fill: var(--acm-on-surface); }
+.deck[data-ground="orange"] .progress__track { fill: rgb(34 31 30 / 0.25); }
+
+/* --- Layouts: data-layout on a slide -------------------------------------- */
+/* statement: left (default), center, or giant (one short line, set huge and low). */
+.slide[data-layout="center"] { align-items: center; text-align: center; }
+.slide[data-layout="center"] :is(h2, .sub) { margin-inline: auto; }
+.slide[data-kind="statement"][data-layout="giant"] { justify-content: flex-end; padding-bottom: calc(176 * var(--u)); }
+.slide[data-kind="statement"][data-layout="giant"] h2 { font-size: calc(184 * var(--u)); line-height: 0.95; letter-spacing: -0.045em; max-width: none; }
+
+/* --- photo: one photograph and the words beside it, never over it --------- */
+/* Layouts: bleed-right (default) and bleed-left run the photo off the stage
+   edge, from the top down to the progress band; framed sits it inside the
+   margins. The credit is a link, on the slide, in the ledger face. */
+.slide[data-kind="photo"] { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(96 * var(--u)); align-items: center; }
+.photo__text { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.photo { margin: 0; }
+.photo img { display: block; object-fit: cover; }
+.credit { font-family: var(--acm-font-code); font-size: var(--s-ledger); line-height: 1.25; color: var(--acm-on-surface-variant); font-variant-ligatures: none; }
+.credit a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+.slide[data-kind="photo"]:not([data-layout="framed"]) .photo img {
+  position: absolute; top: 0; width: calc(50% - 48 * var(--u)); height: calc(960 * var(--u));
+}
+.slide[data-kind="photo"]:not([data-layout]) .photo img, .slide[data-kind="photo"][data-layout="bleed-right"] .photo img { right: 0; }
+.slide[data-kind="photo"][data-layout="bleed-left"] .photo img { left: 0; }
+.slide[data-kind="photo"][data-layout="bleed-left"] .photo__text { grid-column: 2; grid-row: 1; }
+.slide[data-kind="photo"]:not([data-layout="framed"]) .credit { position: absolute; bottom: calc(136 * var(--u)); left: var(--s-margin); max-width: calc(760 * var(--u)); }
+.slide[data-kind="photo"][data-layout="bleed-left"] .credit { left: calc(50% + 48 * var(--u)); }
+.slide[data-kind="photo"][data-layout="framed"] .photo { display: grid; gap: calc(16 * var(--u)); }
+.slide[data-kind="photo"][data-layout="framed"] .photo img { width: 100%; height: auto; max-height: calc(640 * var(--u)); border-radius: calc(12 * var(--u)); }
+/* The photo is the only thing that bleeds, so the chrome over its corner steps aside. */
+.deck.on-bleed-right .chrome .counter, .deck.on-bleed-left .chrome .ledger { visibility: hidden; }
+/* Entrance: the photo wipes in from the stage edge and settles, each time its
+   slide becomes current. Spatial track, so reduced motion makes it a cut. */
+@keyframes photo-in-right { from { clip-path: inset(0 0 0 100%); transform: scale(1.06); } to { clip-path: inset(0); transform: none; } }
+@keyframes photo-in-left  { from { clip-path: inset(0 100% 0 0); transform: scale(1.06); } to { clip-path: inset(0); transform: none; } }
+@keyframes photo-in-up    { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+.deck-live.is-presenting .slide.is-current[data-kind="photo"] .photo img { animation: photo-in-right var(--acm-dur-move) var(--acm-ease-arrive) both; animation-delay: 120ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="photo"][data-layout="bleed-left"] .photo img { animation-name: photo-in-left; }
+.deck-live.is-presenting .slide.is-current[data-kind="photo"][data-layout="framed"] .photo img,
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid img { animation-name: photo-in-up; animation-duration: var(--acm-dur-move); animation-timing-function: var(--acm-ease-arrive); animation-fill-mode: both; }
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(2) img { animation-delay: 90ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(3) img { animation-delay: 180ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(4) img { animation-delay: 270ms; }
+
+/* --- grid: two to four things side by side, each with an optional photo --- */
+.grid { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: calc(40 * var(--u)); }
+.grid li { display: flex; flex-direction: column; gap: calc(16 * var(--u)); font-size: var(--s-body-sm); }
+.grid img { display: block; width: 100%; height: calc(var(--img-h, 420) * var(--u)); object-fit: cover; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-lowest); }
+.grid b { font-size: var(--s-body); font-weight: 700; letter-spacing: -0.01em; }
+.grid p { font-size: var(--s-body-sm); line-height: 1.25; }
+.grid .code { padding: calc(20 * var(--u)) calc(24 * var(--u)); }
+
+/* --- Ground crossfade ------------------------------------------------------
+   Presenting, the ground lives on the stage, not the slide, and fades between
+   slides. Effects track (opacity and color never overshoot), so it survives
+   reduced motion, which zeroes only the spatial track (foundations.md §5.4). */
+.deck-live.is-presenting .slide { background: transparent; }
+.deck-live.is-presenting .deck {
+  background-color: var(--acm-surface);
+  transition: background-color calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard);
+}
+.deck-live.is-presenting .deck[data-ground="warm"]   { background-color: var(--acm-surface-container-highest); }
+.deck-live.is-presenting .deck[data-ground="tint"]   { background-color: var(--acm-primary-container); }
+.deck-live.is-presenting .deck[data-ground="orange"] { background-color: var(--acm-fill-orange); }
+.chrome :is(.ledger, .counter) { transition: color calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard); }
+.progress__label, .progress__fill, .progress__track { transition: fill calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard); }
+
+/* --- signup: one form, its QR code, and its URL as text ------------------- */
+.slide[data-kind="signup"] { display: grid; grid-template-columns: 1fr auto; column-gap: calc(96 * var(--u)); align-items: center; }
+.signup__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="signup"] .qr__tile { width: calc(420 * var(--u)); height: calc(420 * var(--u)); }
+.slide[data-ground="orange"] .qr .label, .slide[data-ground="tint"] .qr .label { color: var(--acm-on-surface); }
+.qrs { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.qrs .qr { flex-direction: row; gap: calc(28 * var(--u)); }
+.qrs .qr .label { text-align: left; }
+.qrs .qr__tile { width: calc(232 * var(--u)); height: calc(232 * var(--u)); }
+.qrs .label { font-size: var(--s-ledger); line-height: 1.25; }
+
+/* --- collage: the club's own photos, up to six ----------------------------- */
+.slide[data-kind="collage"] { justify-content: flex-start; }
+.collage { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(236 * var(--u)); gap: calc(16 * var(--u)); flex: 1; }
+.collage li { overflow: hidden; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-highest); }
+.collage li:nth-child(1) { grid-column: span 3; grid-row: span 2; }
+.collage li:nth-child(2), .collage li:nth-child(3) { grid-column: span 3; }
+.collage li:nth-child(n+4) { grid-column: span 2; }
+.collage:has(li:nth-child(4)) { grid-template-rows: repeat(3, calc(172 * var(--u))); grid-auto-rows: calc(172 * var(--u)); }
+.collage:not(:has(li:nth-child(4))) li:nth-child(1) { grid-row: span 2; }
+.collage img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Two photos: side by side, full height. */
+.collage:not(:has(li:nth-child(3))) li { grid-column: span 3; grid-row: span 2; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage :is(img, video) { animation: photo-in-up var(--acm-dur-move) var(--acm-ease-arrive) both; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(2) :is(img, video) { animation-delay: 80ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(3) :is(img, video) { animation-delay: 160ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(4) :is(img, video) { animation-delay: 240ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(5) :is(img, video) { animation-delay: 320ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(6) :is(img, video) { animation-delay: 400ms; }
+
+/* --- Video: a <video> goes anywhere an <img> does -------------------------
+   Contract shared with the GDG kit: src on the element, poster, width, height,
+   muted, loop, playsinline, no autoplay attribute. data-play="auto" plays while
+   its slide is current; "press" waits for the next forward press; V toggles.
+   Reduced motion never autoplays; the poster shows. */
+.photo video { display: block; object-fit: cover; background: #000; }
+.slide[data-kind="photo"]:not([data-layout="framed"]) .photo video { position: absolute; top: 0; width: calc(50% - 48 * var(--u)); height: calc(960 * var(--u)); }
+.slide[data-kind="photo"]:not([data-layout]) .photo video, .slide[data-kind="photo"][data-layout="bleed-right"] .photo video { right: 0; }
+.slide[data-kind="photo"][data-layout="bleed-left"] .photo video { left: 0; }
+.slide[data-kind="photo"][data-layout="framed"] .photo video { width: 100%; height: auto; max-height: calc(640 * var(--u)); border-radius: calc(12 * var(--u)); }
+.grid video { display: block; width: 100%; height: calc(var(--img-h, 420) * var(--u)); object-fit: cover; border-radius: calc(12 * var(--u)); background: #000; }
+.collage video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+/* A row collage: one justified row, each tile as wide as its media's shape
+   (--ar = width / height, which ingest-photos.mjs prints), so nothing crops much. */
+.collage.is-row { display: flex; gap: calc(16 * var(--u)); }
+.collage.is-row { flex: 1 1 0; min-height: 0; }
+.collage.is-row li { flex: var(--ar, 1) 1 0; min-width: 0; position: relative; }
+.collage.is-row :is(img, video) { position: absolute; inset: 0; }
+
+/* --- Overlays: notes, help, toast. Viewport pixels, outside the stage. ---- */
+.deck-notes, .deck-help, .deck-toast { font-family: var(--acm-font-brand); }
+.deck-notes {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 10; max-height: 40vh; overflow: auto;
+  background: var(--acm-inverse-surface); color: var(--acm-inverse-on-surface);
+  padding: 20px 32px 28px; font-size: 18px; line-height: 1.5;
+}
+.deck-notes[hidden], .deck-help[hidden] { display: none; }
+.deck-notes h2 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 8px; font-family: var(--acm-font-code); font-weight: 500; opacity: 0.8; }
+.deck-notes p { margin: 0 0 10px; max-width: 80ch; }
+.deck-help {
+  position: fixed; z-index: 11; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: var(--acm-surface-container-lowest); color: var(--acm-on-surface);
+  border-radius: 12px; padding: 28px 32px; box-shadow: 0 0 0 1px var(--acm-outline-variant), 0 4px 8px 3px rgb(34 31 30 / 0.15);
+  font-size: 16px; min-width: 360px;
+}
+.deck-help h2 { font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+.deck-help table { border-collapse: collapse; }
+.deck-help td { padding: 6px 16px 6px 0; border-bottom: 1px solid var(--acm-outline-variant); }
+.deck-help kbd { font-family: var(--acm-font-code); font-size: 14px; font-variant-ligatures: none; padding: 2px 8px; border-radius: 4px; background: var(--acm-surface-container-high); }
+.deck-toast {
+  position: fixed; z-index: 12; left: 50%; top: 24px; transform: translate(-50%, -8px);
+  background: var(--acm-inverse-surface); color: var(--acm-inverse-on-surface);
+  padding: 10px 18px; border-radius: 8px; font-size: 15px; font-weight: 500;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--acm-dur-default-effects) var(--acm-ease-standard), transform var(--acm-dur-default-spatial) var(--acm-ease-standard);
+}
+.deck-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+/* --- Forced colors and print ---------------------------------------------- */
+@media (forced-colors: active) {
+  .cover__rail, .callout::before, .clock__fill { background: CanvasText; }
+  .progress__fill { fill: Highlight; }
+  .callout, .code { border: 1px solid CanvasText; }
+}
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { background: #fff; }
+  .slide { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .deck { display: block !important; position: static !important; width: 1920px !important; height: auto !important; padding: 0 !important; }
+  .slide { position: relative !important; inset: auto !important; visibility: visible !important; box-shadow: none !important; break-after: page; width: 1920px; height: 1080px; }
+  .chrome, .deck-notes, .deck-help, .deck-toast { display: none !important; }
+  [data-beat] { visibility: visible !important; }
+  .w__in, .blk__in, .cover__rail { transform: none !important; }
+  .photo :is(img, video), .grid :is(img, video), .collage :is(img, video) { animation: none !important; clip-path: none !important; }
+}
