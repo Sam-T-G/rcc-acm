@@ -507,29 +507,43 @@ body {
 .disk__legend p { display: flex; justify-content: space-between; margin: 0; font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.06em; color: #d8ccc8; text-transform: uppercase; }
 /* The stations: a flowing list with no scene; one card at a time with it. */
 .stations { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: calc(24 * var(--u)); }
-.stations li { background: var(--acm-surface); color: var(--acm-on-surface); border-radius: calc(16 * var(--u)); padding: calc(36 * var(--u)) calc(40 * var(--u)); display: grid; gap: calc(12 * var(--u)); }
-.stations h3 { margin: 0; font-size: calc(60 * var(--u)); line-height: 1.02; letter-spacing: -0.025em; font-weight: 700; }
-.stations p { margin: 0; font-size: var(--s-body-sm); line-height: 1.25; }
-.stations .majors { font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.06em; color: var(--acm-primary); text-transform: uppercase; font-weight: 500; }
-.stations .source { font-family: var(--acm-font-code); font-size: var(--s-ledger); line-height: 1.3; color: var(--acm-on-surface-variant); }
-.stations .skills { display: grid; gap: calc(10 * var(--u)); margin-block: calc(4 * var(--u)); }
-.stations .skills p { display: flex; flex-wrap: wrap; align-items: center; gap: calc(10 * var(--u)); }
-.stations .skills b { font-family: var(--acm-font-code); font-size: var(--s-ledger); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--acm-on-surface-variant); min-width: 3.4em; }
+.stations > li {
+  position: relative; background: var(--acm-surface); color: var(--acm-on-surface);
+  border-radius: calc(20 * var(--u)); overflow: hidden;
+  padding: calc(40 * var(--u)) calc(44 * var(--u)) calc(28 * var(--u));
+  display: grid; gap: calc(12 * var(--u));
+}
+/* The station's own color from the disk, as a top rule: the card and its beacon match. */
+.stations > li::before { content: ""; position: absolute; inset: 0 0 auto 0; height: calc(10 * var(--u)); background: var(--st, var(--acm-primary)); }
+.stations h3 { margin: 0; font-size: calc(54 * var(--u)); line-height: 1.02; letter-spacing: -0.025em; font-weight: 700; }
+.stations p, .stations ul { margin: 0; }
+.st__head { display: flex; justify-content: space-between; align-items: flex-start; gap: calc(24 * var(--u)); }
+.st__tier, .st__label, .st__majors, .st__src { font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.06em; text-transform: uppercase; font-variant-ligatures: none; line-height: 1.2; }
+.st__tier { flex: none; margin-top: calc(10 * var(--u)); padding: calc(8 * var(--u)) calc(16 * var(--u)); border-radius: 9999px; background: var(--acm-surface-container-high); box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant); color: var(--acm-on-surface-variant); }
+.st__majors { color: var(--acm-primary); font-weight: 500; margin-top: calc(-4 * var(--u)); }
+.st__do { font-size: var(--s-body-sm); line-height: 1.28; text-wrap: pretty; }
+.st__skills { display: grid; grid-template-columns: 1.25fr 1fr; gap: calc(28 * var(--u)); margin-top: calc(6 * var(--u)); }
+.st__label { color: var(--acm-on-surface-variant); margin-bottom: calc(10 * var(--u)) !important; }
+.st__chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: calc(10 * var(--u)); }
 /* Chips (components.md §7.5): neutral fill, an outline hairline, no hue. */
-.stations .chip { font-size: var(--s-ledger); line-height: 1; padding: calc(9 * var(--u)) calc(18 * var(--u)); border-radius: 9999px; background: var(--acm-surface-container-high); box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant); color: var(--acm-on-surface); }
+.st__chips li { all: unset; font-size: var(--s-ledger); line-height: 1; padding: calc(10 * var(--u)) calc(18 * var(--u)); border-radius: 9999px; background: var(--acm-surface-container-high); box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant); color: var(--acm-on-surface); }
+.st__foot { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: calc(28 * var(--u)); row-gap: calc(8 * var(--u)); border-top: calc(2 * var(--u)) solid var(--acm-outline-variant); padding-top: calc(18 * var(--u)); margin-top: calc(6 * var(--u)); }
+.st__foot p { font-size: var(--s-body-sm); }
+.st__foot .st__label { margin: 0 calc(8 * var(--u)) 0 0 !important; }
+.st__outlook { font-size: var(--s-body-sm); font-weight: 600; }
+.st__src { margin-left: auto; color: var(--acm-on-surface-variant); }
 .stations a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
-.stations .try b, .stations .hire b { font-weight: 700; }
-.deck-live.is-presenting .slide.has-scene .stations { position: absolute; left: var(--s-margin); bottom: calc(112 * var(--u)); width: calc(880 * var(--u)); display: block; }
-.deck-live.is-presenting .slide.has-scene .stations li {
+.deck-live.is-presenting .slide.has-scene .stations { position: absolute; left: var(--s-margin); bottom: calc(112 * var(--u)); width: calc(940 * var(--u)); display: block; }
+.deck-live.is-presenting .slide.has-scene .stations > li {
   position: absolute; left: 0; bottom: 0; width: 100%;
   opacity: 0; transform: translateY(calc(40 * var(--u))); visibility: hidden;
   transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard), transform var(--acm-dur-slow-spatial) var(--acm-ease-standard), visibility 0s linear var(--acm-dur-slow-effects);
   box-shadow: 0 calc(24 * var(--u)) calc(80 * var(--u)) rgb(0 0 0 / 0.45);
 }
 /* Leaving the disk, its cards drop out at once: no fade to catch mid-way. */
-.deck-live.is-presenting .slide.has-scene:not(.is-current) .stations li { visibility: hidden; transition: none; }
+.deck-live.is-presenting .slide.has-scene:not(.is-current) .stations > li { visibility: hidden; transition: none; }
 /* .is-current matters: a visible child shows through a hidden slide. */
-.deck-live.is-presenting .slide.has-scene.is-current .stations li.is-on { opacity: 1; transform: none; visibility: visible; transition-delay: 0s, 0s, 0s; }
+.deck-live.is-presenting .slide.has-scene.is-current .stations > li.is-on { opacity: 1; transform: none; visibility: visible; transition-delay: 0s, 0s, 0s; }
 /* The HUD arrives after the portal; the overview and finale lines swap by beat. */
 .deck-live.is-presenting .slide.has-scene .disk__hud, .deck-live.is-presenting .slide.has-scene .disk__legend, .deck-live.is-presenting .slide.has-scene .disk__name { opacity: 0; transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard); }
 .deck-live.is-presenting .slide.has-scene.is-arrived :is(.disk__hud, .disk__legend, .disk__name) { opacity: 1; }
@@ -542,8 +556,8 @@ body {
 /* No scene (no WebGL or no CDN), presenting: the stations become beats, one card at a time. */
 .deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) { padding: var(--s-top) var(--s-margin) var(--s-bottom); }
 .deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations { position: relative; display: block; margin-top: calc(40 * var(--u)); }
-.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations li { position: absolute; top: 0; left: 0; width: calc(900 * var(--u)); }
-.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations li.is-past { visibility: hidden; }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations > li { position: absolute; top: 0; left: 0; width: calc(900 * var(--u)); }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations > li.is-past { visibility: hidden; }
 .deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) :is(.disk__legend) { display: none; }
 /* Stacked (phone, no script): the disk slide grows to hold its list. */
 .slide[data-kind="disk"] { aspect-ratio: auto; min-height: 56.25cqw; }
@@ -818,6 +832,7 @@ function build(slide, api) {
     label.position.y = H + 0.62; g.add(label);
     const hit = new THREE.Mesh(new THREE.SphereGeometry(0.7, 8, 8), new THREE.MeshBasicMaterial({ visible: false }));
     hit.position.y = H * 0.6; hit.userData.beat = st.i + 1; g.add(hit); pick.push(hit);
+    st.li.style.setProperty('--st', '#' + col.getHexString());
     Object.assign(st, { g, beam, node, halo, label, H, col, pos: p });
   });
 
@@ -925,7 +940,7 @@ function build(slide, api) {
     // Looking outward, `side` is the camera's right; stand a little left of the
     // beacon and aim left of it, so it sits right of center, clear of the card.
     const pos = st.pos.clone().addScaledVector(out, -3.6).addScaledVector(side, -1.8).add(new THREE.Vector3(0, st.H + 3.4, 0));
-    const target = st.pos.clone().add(new THREE.Vector3(0, st.H * 0.5, 0)).addScaledVector(side, -2.8).addScaledVector(out, 1.2);
+    const target = st.pos.clone().add(new THREE.Vector3(0, st.H * 0.5, 0)).addScaledVector(side, -2.9).addScaledVector(out, 1.2);
     return { pos, target, fov: 42 };
   }
   const cam = { pos: VIEW_OVER.pos.clone(), target: VIEW_OVER.target.clone(), fov: 45 };
@@ -1875,354 +1890,260 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="disk__hud">
     <p class="eyebrow">Careers</p>
     <h2>Where can your major take you?</h2>
-    <p class="sub">43 real jobs. Theory on one side, the physical world on the other. The outer ring is the newest.</p>
-    <p class="sub disk__finale">The soft skills that show up most across all 43 stations: critical thinking, attention to detail, and adaptability. Those travel with any major.</p>
+    <p class="sub">25 real jobs. Theory on one side, the physical world on the other. The outer ring is the newest.</p>
+    <p class="sub disk__finale">The soft skills that show up most across these 25 jobs: critical thinking, adaptability, and attention to detail. Those travel with any major.</p>
   </div>
   <div class="disk__legend" aria-hidden="true"><canvas width="520" height="10"></canvas><p><span>Theory</span><span>Physical</span></p></div>
   <ol class="stations">
     <li data-majors="CS:0.9,CompE:0.1" data-tier="classic">
-      <h3>Software engineer</h3>
-      <p class="majors">CS · CompE · classic</p>
-      <p>Writes and fixes the code behind an app or website, usually with a team.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Git</span><span class="chip">React</span><span class="chip">TypeScript</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Adaptability</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1252.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://stripe.com/careers/listing/software-engineer-new-grad/8130930">Stripe</a></p>
-      <p class="source">BLS projects software jobs to grow 10% from 2025 to 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Software engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">CS · Comp E</p>
+      <p class="st__do">You write the code that makes apps and websites work, and fix it when something breaks.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Git</li><li>React</li><li>TypeScript</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Critical thinking</li><li>Adaptability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://stripe.com/careers/listing/software-engineer-new-grad/8130930">Stripe</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">+10% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1252.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CS:0.9,CompE:0.1" data-tier="classic">
-      <h3>Frontend developer</h3>
-      <p class="majors">CS · CompE · classic</p>
-      <p>Builds the parts of a website people click, and makes them fast and easy to use.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Git</span></p><p><b>Soft</b><span class="chip">Active learning</span><span class="chip">Adaptability</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1254.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/avochato/jobs/4500844003">Avochato</a></p>
-      <p class="source">BLS projects web developer jobs to grow 5% by 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="CS:0.9,CompE:0.1" data-tier="growing">
-      <h3>Design engineer (UX)</h3>
-      <p class="majors">CS · CompE · growing</p>
-      <p>Designs screens in Figma, then builds them in real front-end code.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Figma</span><span class="chip">React</span><span class="chip">Git</span></p><p><b>Soft</b><span class="chip">Active listening</span><span class="chip">Innovation</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1255.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/assemblyai">AssemblyAI</a></p>
-      <p class="source">BLS projects web developer and digital designer jobs to grow 5% by 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Frontend developer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">CS · Comp E</p>
+      <p class="st__do">You build the part of a website people actually see and click: pages, buttons, menus.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>React</li><li>TypeScript</li><li>Git</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Active learning</li><li>Adaptability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/avochato/jobs/4500844003">Avochato</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm">+5% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1254.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CS:0.85,CompE:0.15" data-tier="classic">
-      <h3>iOS engineer</h3>
-      <p class="majors">CS · CompE · classic</p>
-      <p>Builds and ships features in a phone app that millions of people open every day.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Swift</span><span class="chip">iOS</span><span class="chip">Android</span></p><p><b>Soft</b><span class="chip">Innovation</span><span class="chip">Adaptability</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1252.00">O*NET and posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/thenewyorktimes/jobs/4714695005">The New York Times</a></p>
-      <p class="source">BLS projects software developer jobs to grow 10% by 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>iOS engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">CS · Comp E</p>
+      <p class="st__do">You build features inside iPhone apps, like a new screen or a faster way to post.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Swift</li><li>iOS</li><li>Android</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Innovation</li><li>Adaptability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/thenewyorktimes/jobs/4714695005">The New York Times</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">+10% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1252.00">Skills: O*NET and posting</a></footer>
     </li>
     <li data-majors="CS:0.6,CompE:0.3,DS:0.1" data-tier="growing">
-      <h3>SOC analyst</h3>
-      <p class="majors">CS · CompE · Data sci · growing</p>
-      <p>Watches security alerts, digs into the suspicious ones, and shuts down real attacks.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Splunk</span><span class="chip">Python</span><span class="chip">Bash</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Cautiousness</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1212.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/idme/jobs/7808011003">ID.me</a></p>
-      <p class="source">BLS projects information security analyst jobs to grow 21% by 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/information-security-analysts.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>SOC analyst</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">CS · Comp E · Data science</p>
+      <p class="st__do">You watch for hackers. When an alert goes off, you figure out if it&#x27;s real and stop it.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Splunk</li><li>Python</li><li>Bash</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Critical thinking</li><li>Cautiousness</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/idme/jobs/7808011003">ID.me</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/information-security-analysts.htm">+21% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1212.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CS:0.75,CompE:0.25" data-tier="classic">
-      <h3>QA automation engineer</h3>
-      <p class="majors">CS · CompE · classic</p>
-      <p>Writes code that tests other code, so bugs get caught before users ever see them.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Selenium</span><span class="chip">JUnit</span><span class="chip">Jira</span></p><p><b>Soft</b><span class="chip">Attention to detail</span><span class="chip">Curiosity</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1253.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/coderoad/jobs/4164242009">CodeRoad</a></p>
-      <p class="source">BLS projects software and QA jobs to grow 10% by 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>QA automation engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">CS · Comp E</p>
+      <p class="st__do">You write small programs that test the app for you, so bugs get caught before users see them.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Selenium</li><li>JUnit</li><li>Jira</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Attention to detail</li><li>Curiosity</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/coderoad/jobs/4164242009">CodeRoad</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">+10% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1253.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CS:0.7,CompE:0.3" data-tier="growing">
-      <h3>Site reliability engineer</h3>
-      <p class="majors">CS · CompE · growing</p>
-      <p>Keeps the servers up when millions of people use an app, and fixes it when it breaks.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Linux</span><span class="chip">Terraform</span><span class="chip">Prometheus</span></p><p><b>Soft</b><span class="chip">Active listening</span><span class="chip">Dependability</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1299.08">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://lifeattiktok.com/search/7531164305472358663">TikTok</a></p>
-      <p class="source">BLS projects computing infrastructure jobs to grow 25.1% by 2035, citing AI. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Site reliability engineer</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">CS · Comp E</p>
+      <p class="st__do">You keep a huge app online for millions of people, and you&#x27;re first to fix it when it goes down.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Linux</li><li>Terraform</li><li>Prometheus</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Active listening</li><li>Dependability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://lifeattiktok.com/search/7531164305472358663">TikTok</a></p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">Its industry: +25% by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1299.08">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CS:0.65,CompE:0.35" data-tier="growing">
-      <h3>Cloud engineer</h3>
-      <p class="majors">CS · CompE · growing</p>
-      <p>Sets up and automates the cloud servers, networks, and permissions that apps run on.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">CloudFormation</span><span class="chip">Terraform</span><span class="chip">Docker</span></p><p><b>Soft</b><span class="chip">Problem solving</span><span class="chip">Dependability</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1241.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/accenturefederalservices/jobs/4703608006">Accenture Federal</a></p>
-      <p class="source">BLS projects network architect jobs to grow 8% by 2035, driven by cloud and AI. <a href="https://www.bls.gov/ooh/computer-and-information-technology/computer-network-architects.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="CS:0.6,CompE:0.35,EE:0.05" data-tier="classic">
-      <h3>Systems administrator</h3>
-      <p class="majors">CS · CompE · classic</p>
-      <p>Keeps the company&#x27;s servers patched, backed up, and running, and fixes them when they break.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Red Hat Linux</span><span class="chip">PowerShell</span><span class="chip">VMware</span></p><p><b>Soft</b><span class="chip">Monitoring</span><span class="chip">Integrity</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1244.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/rampanttechnologies">Rampant Technologies</a></p>
-      <p class="source">BLS projects a 4% decline in these jobs by 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/network-and-computer-systems-administrators.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Cloud engineer</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">CS · Comp E</p>
+      <p class="st__do">You set up the rented computers that apps run on, so they stay online and grow when needed.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>CloudFormation</li><li>Terraform</li><li>Docker</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Problem solving</li><li>Dependability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/accenturefederalservices/jobs/4703608006">Accenture Federal</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/computer-network-architects.htm">Network architects: +8% by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1241.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CompE:0.5,CS:0.4,EE:0.1" data-tier="new">
-      <h3>GPU infrastructure engineer</h3>
-      <p class="majors">CompE · CS · EE · new</p>
-      <p>Keeps thousands of GPUs healthy and busy so giant AI models can train.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Linux</span><span class="chip">PCIe</span><span class="chip">NVIDIA GPUs</span></p><p><b>Soft</b><span class="chip">Ownership</span><span class="chip">Curiosity</span> <a class="source" href="https://job-boards.greenhouse.io/embed/job_app?for=nebius&amp;token=4765401101">posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://openai.com/careers/software-engineer-gpu-infrastructure-san-francisco/">OpenAI</a></p>
-      <p class="source">BLS expects 120,400 new computing infrastructure jobs by 2035, driven by AI. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>GPU infrastructure engineer</h3><span class="st__tier">new</span></header>
+      <p class="st__majors">Comp E · CS · EE</p>
+      <p class="st__do">You keep giant rooms of AI chips running so AI models can train without crashing.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Linux</li><li>PCIe</li><li>NVIDIA GPUs</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Ownership</li><li>Curiosity</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://openai.com/careers/software-engineer-gpu-infrastructure-san-francisco/">OpenAI</a></p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">120,400 new jobs in its industry by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://job-boards.greenhouse.io/embed/job_app?for=nebius&amp;token=4765401101">Skills: posting</a></footer>
     </li>
     <li data-majors="CompE:0.7,EE:0.2,CS:0.1" data-tier="classic">
-      <h3>Embedded firmware engineer</h3>
-      <p class="majors">CompE · EE · CS · classic</p>
-      <p>Writes the low-level code that runs right on a car&#x27;s chips and makes the hardware work.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">C</span><span class="chip">C++</span><span class="chip">Linux</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Adaptability</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2061.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://ev.careers/jobs/456637882-internship-embedded-software-engineer-firmware-platforms-fall-2026">Tesla</a></p>
-      <p class="source">BLS names IoT devices and EVs as drivers for software jobs. <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Embedded firmware engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">Comp E · EE · CS</p>
+      <p class="st__do">You write the code that lives inside devices, like a car, a watch, or a microwave.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>C</li><li>C++</li><li>Linux</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Critical thinking</li><li>Adaptability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://ev.careers/jobs/456637882-internship-embedded-software-engineer-firmware-platforms-fall-2026">Tesla</a></p><a class="st__src" href="https://www.onetonline.org/link/summary/17-2061.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CompE:0.6,EE:0.4" data-tier="growing">
-      <h3>Chip design verification</h3>
-      <p class="majors">CompE · EE · growing</p>
-      <p>Tries to break a chip design in simulation before it gets built, because fixing it later costs millions.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">RTL</span><span class="chip">Python</span><span class="chip">Shell script</span></p><p><b>Soft</b><span class="chip">Attention to detail</span><span class="chip">Critical thinking</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2061.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://jobs.nvidia.com/careers/job/893392585259">NVIDIA</a></p>
-      <p class="source">SIA projects a US chip-industry shortfall of 67,000 workers by 2030. <a href="https://www.semiconductors.org/wp-content/uploads/2023/07/SIA_July2023_ChippingAway_website.pdf">SIA, 2023</a></p>
+      <header class="st__head"><h3>Chip design verification</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">Comp E · EE</p>
+      <p class="st__do">Before a chip gets made, you try everything to break its design, so the real chip works.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>RTL</li><li>Python</li><li>Shell script</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Attention to detail</li><li>Critical thinking</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://jobs.nvidia.com/careers/job/893392585259">NVIDIA</a></p><a class="st__outlook" href="https://www.semiconductors.org/wp-content/uploads/2023/07/SIA_July2023_ChippingAway_website.pdf">67,000 more US chip workers needed by 2030<span class="visually-hidden">, source: SIA, 2023</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2061.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="EE:0.65,CompE:0.3,ME:0.05" data-tier="classic">
-      <h3>PCB design engineer</h3>
-      <p class="majors">EE · CompE · classic</p>
-      <p>Lays out circuit boards, routing every trace so the board works and can be built.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Altium Designer</span><span class="chip">PSpice</span><span class="chip">LabVIEW</span></p><p><b>Soft</b><span class="chip">Attention to detail</span><span class="chip">Active listening</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2072.00">O*NET and posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/planetlabs/jobs/8140278">Planet</a></p>
-      <p class="source">BLS projects electrical engineer jobs to grow 8% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="EE:0.5,CompE:0.3,ME:0.2" data-tier="classic">
-      <h3>Hardware test engineer</h3>
-      <p class="majors">EE · CompE · ME · classic</p>
-      <p>Builds the rigs and scripts that test real hardware before it flies to space.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">LabVIEW</span><span class="chip">Python</span><span class="chip">Linux</span></p><p><b>Soft</b><span class="chip">Monitoring</span><span class="chip">Cautiousness</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2072.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/spacex/jobs/8497592002">SpaceX</a></p>
-      
-    </li>
-    <li data-majors="EE:0.9,CompE:0.1" data-tier="classic">
-      <h3>RF engineer</h3>
-      <p class="majors">EE · CompE · classic</p>
-      <p>Designs the radio parts that let satellites talk to dishes on the ground.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Physics</span><span class="chip">Mathematics</span><span class="chip">MATLAB</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Innovation</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2072.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/spacex/jobs/8369901002">SpaceX</a></p>
-      <p class="source">Orbital launches set another yearly record in 2025. <a href="https://spacenews.com/spacex-china-drive-new-record-for-orbital-launches-in-2025/">SpaceNews, 2026</a></p>
-    </li>
-    <li data-majors="EE:0.35,ME:0.3,CompE:0.25,CS:0.1" data-tier="growing">
-      <h3>Hardware program manager</h3>
-      <p class="majors">EE · ME · CompE · CS · growing</p>
-      <p>Keeps a hardware build on schedule, tracking parts, tests, and teams from prototype to production.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Jira</span><span class="chip">Confluence</span><span class="chip">Excel</span></p><p><b>Soft</b><span class="chip">Coordination</span><span class="chip">Time management</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1299.09">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/redwoodmaterials/jobs/5737915004">Redwood Materials</a></p>
-      <p class="source">BLS projects computer and information systems manager jobs to grow 16% by 2035. <a href="https://www.bls.gov/ooh/management/computer-and-information-systems-managers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>PCB design engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">EE · Comp E</p>
+      <p class="st__do">You design the circuit boards inside electronics, deciding where every part and wire goes.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Altium Designer</li><li>PSpice</li><li>LabVIEW</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Attention to detail</li><li>Active listening</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/planetlabs/jobs/8140278">Planet</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">+8% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2072.00">Skills: O*NET and posting</a></footer>
     </li>
     <li data-majors="EE:0.95,DS:0.05" data-tier="growing">
-      <h3>Power systems engineer</h3>
-      <p class="majors">EE · growing</p>
-      <p>Models how big loads like data centers hit the grid, and proves the connection holds.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">PSCAD</span><span class="chip">MATLAB</span><span class="chip">Simulink</span></p><p><b>Soft</b><span class="chip">Writing</span><span class="chip">Monitoring</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2071.00">O*NET and posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/olsson/jobs/5170143008">Olsson</a></p>
-      <p class="source">BLS projects electrical engineer jobs to grow 8% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="EE:0.9,ME:0.1" data-tier="new">
-      <h3>Data center electrical engineer</h3>
-      <p class="majors">EE · ME · new</p>
-      <p>Plans how huge amounts of power safely get into a data center and out to every rack.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">ETAP</span><span class="chip">AutoCAD</span><span class="chip">Revit</span></p><p><b>Soft</b><span class="chip">Writing</span><span class="chip">Cautiousness</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2071.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://www.google.com/about/careers/applications/jobs/results/137116335984255686-data-center-electrical-engineer/">Google</a></p>
-      <p class="source">BLS expects electricity demand to rise, in large part from AI and data centers. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Power systems engineer</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">EE</p>
+      <p class="st__do">You make sure the power grid can safely deliver enough electricity to places like data centers.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>PSCAD</li><li>MATLAB</li><li>Simulink</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Writing</li><li>Monitoring</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/olsson/jobs/5170143008">Olsson</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">+8% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2071.00">Skills: O*NET and posting</a></footer>
     </li>
     <li data-majors="EE:0.5,ME:0.3,CompE:0.15,CS:0.05" data-tier="classic">
-      <h3>Controls engineer</h3>
-      <p class="majors">EE · ME · CompE · classic</p>
-      <p>Programs the PLCs and screens that make conveyors, pumps, and machines run on their own.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Allen-Bradley PLCs</span><span class="chip">Studio 5000</span><span class="chip">FactoryTalk</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Cautiousness</span> <a class="source" href="https://job-boards.greenhouse.io/laporteusa/jobs/5122145008">posting and O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/laporteusa/jobs/5122145008">LAPORTE</a></p>
-      <p class="source">BLS projects electrical engineer jobs to grow 8% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="EE:0.6,ME:0.2,DS:0.1,CompE:0.1" data-tier="growing">
-      <h3>Semiconductor process engineer</h3>
-      <p class="majors">EE · ME · Data sci · CompE · growing</p>
-      <p>Tunes one chip-making step, like etch, and chases data until wafer yield goes up.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">MATLAB</span><span class="chip">SAS</span><span class="chip">LabVIEW</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Cautiousness</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2199.06">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://careers.tsmc.com/en_US/careers/JobDetail/Module-Process-Engineer/13635">TSMC Arizona</a></p>
-      <p class="source">SIA projects a US chip-industry shortfall of 67,000 workers by 2030. <a href="https://www.semiconductors.org/america-faces-significant-shortage-of-tech-workers-in-semiconductor-industry-and-throughout-u-s-economy/">SIA, 2023</a></p>
+      <header class="st__head"><h3>Controls engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">EE · ME · Comp E</p>
+      <p class="st__do">You program the brains of factory machines, so conveyors, pumps, and robots run on their own.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Allen-Bradley PLCs</li><li>Studio 5000</li><li>FactoryTalk</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Critical thinking</li><li>Cautiousness</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/laporteusa/jobs/5122145008">LAPORTE</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">+8% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://job-boards.greenhouse.io/laporteusa/jobs/5122145008">Skills: posting and O*NET</a></footer>
     </li>
     <li data-majors="ME:0.4,CompE:0.3,EE:0.3" data-tier="new">
-      <h3>Robotics integration engineer</h3>
-      <p class="majors">ME · CompE · EE · new</p>
-      <p>Gets a humanoid robot&#x27;s sensors, wiring, code, and motors all working together.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">C++</span><span class="chip">Python</span><span class="chip">Gazebo</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Adaptability</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2199.08">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://www.builtinsf.com/job/robotics-integration-engineer/9222146">Figure AI</a></p>
-      <p class="source">542,000 industrial robots were installed worldwide in 2024. <a href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years">IFR, 2025</a></p>
-    </li>
-    <li data-majors="EE:0.5,ME:0.35,CompE:0.15" data-tier="classic">
-      <h3>Field service engineer</h3>
-      <p class="majors">EE · ME · CompE · classic</p>
-      <p>Travels to customer sites to install, fix, and tune the machines your company sells.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">PLC software</span><span class="chip">CMMS</span><span class="chip">RSLogix</span></p><p><b>Soft</b><span class="chip">Monitoring</span><span class="chip">Dependability</span> <a class="source" href="https://www.onetonline.org/link/summary/49-2094.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/carbon">Carbon</a></p>
-      <p class="source">BLS projects 2% growth for installers and repairers, slower than average. <a href="https://www.bls.gov/ooh/installation-maintenance-and-repair/electrical-and-electronics-installers-and-repairers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="EE:0.7,ME:0.25,DS:0.05" data-tier="growing">
-      <h3>Solar applications engineer</h3>
-      <p class="majors">EE · ME · growing</p>
-      <p>Sizes solar and battery systems, models their output, and helps installers make them work.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">PVsyst</span><span class="chip">AutoCAD</span><span class="chip">SketchUp</span></p><p><b>Soft</b><span class="chip">Speaking</span><span class="chip">Active learning</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2199.11">O*NET and posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/smaamerica/jobs/5167838007">SMA America</a></p>
-      
-    </li>
-    <li data-majors="ME:0.5,EE:0.3,CompE:0.2" data-tier="growing">
-      <h3>Mechatronics engineer</h3>
-      <p class="majors">ME · EE · CompE · growing</p>
-      <p>Designs the joints, motors, and control loops that make a robot move smoothly and safely.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">SolidWorks</span><span class="chip">LabVIEW</span><span class="chip">C++</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Innovation</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2199.05">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://www.tesla.com/careers/search/job/mechatronics-engineer-optimus-223011">Tesla, Optimus</a></p>
-      <p class="source">Factory robot installs have more than doubled in ten years. <a href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years">IFR, 2025</a></p>
+      <header class="st__head"><h3>Robotics integration engineer</h3><span class="st__tier">new</span></header>
+      <p class="st__majors">ME · Comp E · EE</p>
+      <p class="st__do">You get a robot&#x27;s motors, sensors, wires, and code working together as one machine.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>C++</li><li>Python</li><li>Gazebo</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Critical thinking</li><li>Adaptability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://www.builtinsf.com/job/robotics-integration-engineer/9222146">Figure AI</a></p><a class="st__outlook" href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years">542,000 robots installed worldwide in 2024<span class="visually-hidden">, source: IFR, 2025</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2199.08">Skills: O*NET</a></footer>
     </li>
     <li data-majors="EE:0.6,ME:0.4" data-tier="growing">
-      <h3>Battery systems engineer</h3>
-      <p class="majors">EE · ME · growing</p>
-      <p>Designs and debugs big battery packs so they stay safe, cool, and last for years.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">HV battery packs</span><span class="chip">CANalyzer</span><span class="chip">MATLAB</span></p><p><b>Soft</b><span class="chip">Problem solving</span><span class="chip">Communication</span> <a class="source" href="https://job-boards.greenhouse.io/lucidmotors/jobs/5213600007">posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://careers.rivian.com/careers-home/jobs/30892">Rivian</a></p>
-      <p class="source">BLS projects battery and energy storage manufacturing to grow 25.9% by 2035. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="ME:0.65,EE:0.2,CS:0.05,DS:0.05,CompE:0.05" data-tier="classic">
-      <h3>Vehicle test engineer</h3>
-      <p class="majors">ME · EE · classic</p>
-      <p>Plans tests that shake, heat, and drive vehicle parts until you know when they fail.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">MATLAB</span><span class="chip">Simulink</span><span class="chip">Minitab</span></p><p><b>Soft</b><span class="chip">Adaptability</span><span class="chip">Attention to detail</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2141.02">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/gokenamericallc">Goken America</a></p>
-      <p class="source">BLS projects mechanical engineer jobs to grow 11% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/mechanical-engineers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="ME:0.9,EE:0.1" data-tier="classic">
-      <h3>HVAC mechanical engineer</h3>
-      <p class="majors">ME · EE · classic</p>
-      <p>Designs the heating, cooling, and airflow for buildings, then checks the drawings match the math.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Revit MEP</span><span class="chip">Trane Trace</span><span class="chip">AutoCAD</span></p><p><b>Soft</b><span class="chip">Active learning</span><span class="chip">Attention to detail</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2199.03">O*NET and posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/gigaenergy/jobs/5231674008">Giga Energy</a></p>
-      <p class="source">BLS projects mechanical engineer jobs to grow 11% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/mechanical-engineers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="ME:0.9,EE:0.1" data-tier="classic">
-      <h3>Mechanical designer (CAD)</h3>
-      <p class="majors">ME · EE · classic</p>
-      <p>Turns engineers&#x27; sketches into clean 3D models and drawings a shop can build from.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">SolidWorks</span><span class="chip">Siemens NX</span><span class="chip">EPLAN</span></p><p><b>Soft</b><span class="chip">Attention to detail</span><span class="chip">Dependability</span> <a class="source" href="https://www.onetonline.org/link/summary/17-3013.00">O*NET and posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/spacex/jobs/8767266002">SpaceX</a></p>
-      <p class="source">BLS projects drafter jobs to grow 1% by 2035, slower than average. <a href="https://www.bls.gov/ooh/architecture-and-engineering/drafters.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Battery systems engineer</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">EE · ME</p>
+      <p class="st__do">You design big battery packs, like the ones in electric cars, so they stay safe and last.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>HV battery packs</li><li>CANalyzer</li><li>MATLAB</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Problem solving</li><li>Communication</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://careers.rivian.com/careers-home/jobs/30892">Rivian</a></p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">Its industry: +26% by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://job-boards.greenhouse.io/lucidmotors/jobs/5213600007">Skills: posting</a></footer>
     </li>
     <li data-majors="ME:0.9,EE:0.1" data-tier="new">
-      <h3>Data center cooling engineer</h3>
-      <p class="majors">ME · EE · new</p>
-      <p>Figures out how to keep rooms full of hot AI chips cool, with air and liquid.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">AutoCAD</span><span class="chip">MATLAB</span><span class="chip">Physics</span></p><p><b>Soft</b><span class="chip">Active listening</span><span class="chip">Attention to detail</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2141.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://www.google.com/about/careers/applications/jobs/results/126994228717724358-data-center-mechanical-cooling-engineer/">Google</a></p>
-      <p class="source">AI data centers are pulling in mechanical and electrical engineers. <a href="https://spectrum.ieee.org/ai-data-centers-engineers-jobs">IEEE Spectrum, 2026</a></p>
+      <header class="st__head"><h3>Data center cooling engineer</h3><span class="st__tier">new</span></header>
+      <p class="st__majors">ME · EE</p>
+      <p class="st__do">AI chips run hot. You design the air and liquid systems that keep them from overheating.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>AutoCAD</li><li>MATLAB</li><li>Physics</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Active listening</li><li>Attention to detail</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://www.google.com/about/careers/applications/jobs/results/126994228717724358-data-center-mechanical-cooling-engineer/">Google</a></p><a class="st__outlook" href="https://spectrum.ieee.org/ai-data-centers-engineers-jobs">AI data centers want more MEs<span class="visually-hidden">, source: IEEE Spectrum, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2141.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="ME:0.95,EE:0.05" data-tier="classic">
-      <h3>Mechanical design engineer</h3>
-      <p class="majors">ME · classic</p>
-      <p>Turns ideas into CAD models, runs the numbers, and builds prototypes that actually fit together.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">SolidWorks</span><span class="chip">MATLAB</span><span class="chip">Python</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Attention to detail</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2141.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/andurilindustries/jobs/5136984007">Anduril</a></p>
-      <p class="source">BLS projects mechanical engineer jobs to grow 11% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/mechanical-engineers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Mechanical design engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">ME</p>
+      <p class="st__do">You design physical parts in 3D software, check the math, and build prototypes that fit.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>SolidWorks</li><li>MATLAB</li><li>Python</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Critical thinking</li><li>Attention to detail</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/andurilindustries/jobs/5136984007">Anduril</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/mechanical-engineers.htm">+11% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2141.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="ME:0.85,EE:0.1,DS:0.05" data-tier="classic">
-      <h3>Manufacturing engineer</h3>
-      <p class="majors">ME · EE · classic</p>
-      <p>Figures out how the factory builds a part faster, cheaper, and with fewer mistakes.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">SolidWorks</span><span class="chip">Minitab</span><span class="chip">SAP</span></p><p><b>Soft</b><span class="chip">Monitoring</span><span class="chip">Adaptability</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2112.03">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/rebuildmanufacturing/jobs/4659401005">Re:Build Manufacturing</a></p>
-      <p class="source">BLS projects industrial engineer jobs, manufacturing included, to grow 12% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/industrial-engineers.htm">bls.gov, 2026</a></p>
-    </li>
-    <li data-majors="ME:0.75,EE:0.15,DS:0.1" data-tier="classic">
-      <h3>Quality engineer</h3>
-      <p class="majors">ME · EE · Data sci · classic</p>
-      <p>Measures parts, tracks down why defects happen, and fixes the process so they stop.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">FMEA</span><span class="chip">SPC</span><span class="chip">CMM programming</span></p><p><b>Soft</b><span class="chip">Monitoring</span><span class="chip">Attention to detail</span> <a class="source" href="https://job-boards.greenhouse.io/divergent/jobs/5397121008">posting and O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/divergent/jobs/5397121008">Divergent</a></p>
-      <p class="source">BLS projects industrial engineer jobs to grow 12% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/industrial-engineers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Manufacturing engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">ME · EE</p>
+      <p class="st__do">You figure out how a factory can build something faster, cheaper, and with fewer mistakes.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>SolidWorks</li><li>Minitab</li><li>SAP</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Monitoring</li><li>Adaptability</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/rebuildmanufacturing/jobs/4659401005">Re:Build Manufacturing</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/industrial-engineers.htm">Industrial engineers: +12% by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2112.03">Skills: O*NET</a></footer>
     </li>
     <li data-majors="ME:1" data-tier="classic">
-      <h3>Aerospace structures engineer</h3>
-      <p class="majors">ME · classic</p>
-      <p>Checks that airframes and rockets survive the loads, then helps redesign whatever cracks.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">NASTRAN</span><span class="chip">ANSYS</span><span class="chip">CATIA</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Cautiousness</span> <a class="source" href="https://www.onetonline.org/link/summary/17-2011.00">O*NET and posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/andurilindustries/jobs/5055631007">Anduril</a></p>
-      <p class="source">BLS projects aerospace engineer jobs to grow 8% by 2035. <a href="https://www.bls.gov/ooh/architecture-and-engineering/aerospace-engineers.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Aerospace structures engineer</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">ME</p>
+      <p class="st__do">You make sure planes and rockets are strong enough to fly, and redesign whatever breaks.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>NASTRAN</li><li>ANSYS</li><li>CATIA</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Critical thinking</li><li>Cautiousness</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/andurilindustries/jobs/5055631007">Anduril</a></p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/aerospace-engineers.htm">+8% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/17-2011.00">Skills: O*NET and posting</a></footer>
     </li>
     <li data-majors="DS:0.5,ME:0.5" data-tier="growing">
-      <h3>Perception engineer</h3>
-      <p class="majors">Data sci · ME · growing</p>
-      <p>Teaches a self-driving car to recognize people, cars, and signs from its cameras and lidar.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Python</span><span class="chip">PyTorch</span><span class="chip">Sensor fusion</span></p><p><b>Soft</b><span class="chip">Communication</span><span class="chip">Mentoring</span> <a class="source" href="https://job-boards.greenhouse.io/embed/job_app?for=motional&amp;token=7834591003">posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://careers.withwaymo.com/jobs/software-engineer-perception-scaling-evaluation-mountain-view-california-united-states-san-francisco">Waymo</a></p>
-      <p class="source">Waymo opened robotaxi rides in four more US cities in 2026. <a href="https://www.cnbc.com/2026/02/24/waymo-opens-robotaxi-service-to-select-riders-in-4-more-us-cities.html">CNBC, 2026</a></p>
+      <header class="st__head"><h3>Perception engineer</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">Data science · ME</p>
+      <p class="st__do">You teach self-driving cars to see people, cars, and signs using cameras and sensors.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Python</li><li>PyTorch</li><li>Sensor fusion</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Communication</li><li>Mentoring</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://careers.withwaymo.com/jobs/software-engineer-perception-scaling-evaluation-mountain-view-california-united-states-san-francisco">Waymo</a></p><a class="st__outlook" href="https://www.cnbc.com/2026/02/24/waymo-opens-robotaxi-service-to-select-riders-in-4-more-us-cities.html">Robotaxis in 4 more US cities<span class="visually-hidden">, source: CNBC, 2026</span></a><a class="st__src" href="https://job-boards.greenhouse.io/embed/job_app?for=motional&amp;token=7834591003">Skills: posting</a></footer>
     </li>
     <li data-majors="DS:0.9,CS:0.1" data-tier="classic">
-      <h3>Data scientist</h3>
-      <p class="majors">Data sci · CS · classic</p>
-      <p>Digs through app data to tell the team which features are working and which aren&#x27;t.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">PyTorch</span><span class="chip">PostgreSQL</span><span class="chip">Mathematics</span></p><p><b>Soft</b><span class="chip">Curiosity</span><span class="chip">Critical thinking</span> <a class="source" href="https://www.onetonline.org/link/summary/15-2051.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://www.metacareers.com/profile/job_details/1321789282873925/">Meta</a></p>
-      <p class="source">BLS projects data scientist jobs to grow 34.6% by 2035. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Data scientist</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">Data science · CS</p>
+      <p class="st__do">You dig through data to answer questions like: is this new feature actually helping?</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>PyTorch</li><li>PostgreSQL</li><li>Mathematics</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Curiosity</li><li>Critical thinking</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://www.metacareers.com/profile/job_details/1321789282873925/">Meta</a></p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">+35% jobs by 2035<span class="visually-hidden">, source: bls.gov, 2026</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-2051.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="DS:0.8,CS:0.2" data-tier="classic">
-      <h3>Data analyst</h3>
-      <p class="majors">Data sci · CS · classic</p>
-      <p>Pulls data with SQL, builds dashboards, and tells the team what the numbers mean.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">SQL</span><span class="chip">Tableau</span><span class="chip">Power BI</span></p><p><b>Soft</b><span class="chip">Active listening</span><span class="chip">Attention to detail</span> <a class="source" href="https://www.onetonline.org/link/summary/15-2051.01">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/nmi/jobs/5323410008">NMI</a></p>
-      <p class="source">WEF&#x27;s 2025 survey ranks big data specialists the fastest-growing job. <a href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">WEF, 2025</a></p>
-    </li>
-    <li data-majors="DS:0.6,CS:0.4" data-tier="growing">
-      <h3>Data engineer</h3>
-      <p class="majors">Data sci · CS · growing</p>
-      <p>Builds the pipes that move huge amounts of data so analysts and AI teams can use it.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Apache Spark</span><span class="chip">Airflow</span><span class="chip">Snowflake</span></p><p><b>Soft</b><span class="chip">Critical thinking</span><span class="chip">Attention to detail</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1243.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://lifeattiktok.com/search/7533292448483920136">TikTok</a></p>
-      <p class="source">WEF&#x27;s 2025 survey ranks big data specialists the fastest-growing job. <a href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">WEF, 2025</a></p>
-    </li>
-    <li data-majors="DS:0.6,CS:0.4" data-tier="new">
-      <h3>Evals engineer</h3>
-      <p class="majors">Data sci · CS · new</p>
-      <p>Builds the tests that grade an AI model, so the team knows if it actually got better.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Python</span><span class="chip">Statistics</span><span class="chip">Experiment design</span></p><p><b>Soft</b><span class="chip">Rigor</span><span class="chip">Cross-team influence</span> <a class="source" href="https://job-boards.greenhouse.io/anthropic/jobs/5198255008">posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://www.metacareers.com/profile/job_details/1061625146845555/">Meta</a></p>
-      
+      <header class="st__head"><h3>Data analyst</h3><span class="st__tier">classic</span></header>
+      <p class="st__majors">Data science · CS</p>
+      <p class="st__do">You pull numbers from a database and turn them into charts that help a team decide.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>SQL</li><li>Tableau</li><li>Power BI</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Active listening</li><li>Attention to detail</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/nmi/jobs/5323410008">NMI</a></p><a class="st__outlook" href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">Big data jobs: fastest-growing, per WEF<span class="visually-hidden">, source: WEF, 2025</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-2051.01">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CS:0.55,DS:0.45" data-tier="growing">
-      <h3>Machine learning engineer</h3>
-      <p class="majors">CS · Data sci · growing</p>
-      <p>Trains the models that decide what you see, then makes them run fast in the real app.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">PyTorch</span><span class="chip">TensorFlow</span><span class="chip">Kubernetes</span></p><p><b>Soft</b><span class="chip">Innovation</span><span class="chip">Perseverance</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1221.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://lifeattiktok.com/search/7537244549992417543">TikTok</a></p>
-      <p class="source">WEF lists AI and ML specialists among the three fastest-growing jobs. <a href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">WEF, 2025</a></p>
-    </li>
-    <li data-majors="CS:0.7,DS:0.3" data-tier="growing">
-      <h3>Solutions engineer</h3>
-      <p class="majors">CS · Data sci · growing</p>
-      <p>Helps customers get the product working in their own code, and debugs it with them.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Salesforce</span><span class="chip">Docker</span></p><p><b>Soft</b><span class="chip">Speaking</span><span class="chip">Active listening</span> <a class="source" href="https://www.onetonline.org/link/summary/41-9031.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://stripe.com/careers/listing/technical-solutions-engineer/7377101">Stripe</a></p>
-      
+      <header class="st__head"><h3>Machine learning engineer</h3><span class="st__tier">growing</span></header>
+      <p class="st__majors">CS · Data science</p>
+      <p class="st__do">You train models that learn from data, like the one picking which video you see next.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>PyTorch</li><li>TensorFlow</li><li>Kubernetes</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Innovation</li><li>Perseverance</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://lifeattiktok.com/search/7537244549992417543">TikTok</a></p><a class="st__outlook" href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">AI and ML: top-3 fastest-growing, per WEF<span class="visually-hidden">, source: WEF, 2025</span></a><a class="st__src" href="https://www.onetonline.org/link/summary/15-1221.00">Skills: O*NET</a></footer>
     </li>
     <li data-majors="CS:0.7,DS:0.3" data-tier="new">
-      <h3>AI enablement engineer</h3>
-      <p class="majors">CS · Data sci · new</p>
-      <p>Builds AI helpers and bots so coworkers in HR, sales, and finance get their work done faster.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Python</span><span class="chip">Kubernetes</span><span class="chip">AWS</span></p><p><b>Soft</b><span class="chip">Mentorship</span><span class="chip">Collaboration</span> <a class="source" href="https://careers.nordstrom.com/senior-engineer-ai-enablement/job/0F4FD6BE79FBACEC328D59412D8B8807">posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://dynamitejobs.com/company/phorest/remote-job/ai-enablement-engineer">Phorest</a></p>
-      <p class="source">LinkedIn ranked AI engineer the fastest-growing US job for 2026. <a href="https://www.linkedin.com/pulse/linkedin-jobs-rise-2026-25-fastest-growing-roles-us-linkedin-news-dlb1c">LinkedIn, 2026</a></p>
+      <header class="st__head"><h3>AI enablement engineer</h3><span class="st__tier">new</span></header>
+      <p class="st__majors">CS · Data science</p>
+      <p class="st__do">You build AI helpers for your own coworkers, so teams like HR and sales work faster.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Python</li><li>Kubernetes</li><li>AWS</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Mentorship</li><li>Collaboration</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://dynamitejobs.com/company/phorest/remote-job/ai-enablement-engineer">Phorest</a></p><a class="st__outlook" href="https://www.linkedin.com/pulse/linkedin-jobs-rise-2026-25-fastest-growing-roles-us-linkedin-news-dlb1c">AI engineer: LinkedIn&#x27;s #1 rising job<span class="visually-hidden">, source: LinkedIn, 2026</span></a><a class="st__src" href="https://careers.nordstrom.com/senior-engineer-ai-enablement/job/0F4FD6BE79FBACEC328D59412D8B8807">Skills: posting</a></footer>
     </li>
     <li data-majors="CS:0.7,DS:0.3" data-tier="new">
-      <h3>Forward deployed engineer</h3>
-      <p class="majors">CS · Data sci · new</p>
-      <p>Goes to a customer&#x27;s company and builds software there so they can actually use your product.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">Python</span><span class="chip">vLLM</span><span class="chip">Fine-tuning</span></p><p><b>Soft</b><span class="chip">Judgment</span><span class="chip">Collaboration</span> <a class="source" href="https://job-boards.greenhouse.io/togetherai/jobs/5131941007">posting</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://jobs.lever.co/palantir/dab396d4-2f14-4796-aac0-0d82883dccf0">Palantir</a></p>
-      <p class="source">US postings went from about 1,200 in 2025 to over 5,200 by July 2026. <a href="https://lightcast.io/resources/blog/forward-deployed-engineer-ai-job">Lightcast, 2026</a></p>
-    </li>
-    <li data-majors="CS:0.6,DS:0.3,CompE:0.1" data-tier="classic">
-      <h3>Database administrator</h3>
-      <p class="majors">CS · Data sci · CompE · classic</p>
-      <p>Keeps databases fast, backed up, and secure, and tunes the slow queries.</p>
-      <div class="skills"><p><b>Hard</b><span class="chip">PostgreSQL</span><span class="chip">T-SQL</span><span class="chip">Snowflake</span></p><p><b>Soft</b><span class="chip">Integrity</span><span class="chip">Attention to detail</span> <a class="source" href="https://www.onetonline.org/link/summary/15-1242.00">O*NET</a></p></div>
-      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/accuweather/jobs/8153403">AccuWeather</a></p>
-      <p class="source">BLS projects 4% growth, about average, by 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/database-administrators.htm">bls.gov, 2026</a></p>
+      <header class="st__head"><h3>Forward deployed engineer</h3><span class="st__tier">new</span></header>
+      <p class="st__majors">CS · Data science</p>
+      <p class="st__do">You work right alongside a customer, building what they need so your product works for them.</p>
+      <div class="st__skills">
+        <div><p class="st__label">Hard skills</p><ul class="st__chips"><li>Python</li><li>vLLM</li><li>Fine-tuning</li></ul></div>
+        <div><p class="st__label">Soft skills</p><ul class="st__chips"><li>Judgment</li><li>Collaboration</li></ul></div>
+      </div>
+      <footer class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://jobs.lever.co/palantir/dab396d4-2f14-4796-aac0-0d82883dccf0">Palantir</a></p><a class="st__outlook" href="https://lightcast.io/resources/blog/forward-deployed-engineer-ai-job">5,200+ US postings by July 2026<span class="visually-hidden">, source: Lightcast, 2026</span></a><a class="st__src" href="https://job-boards.greenhouse.io/togetherai/jobs/5131941007">Skills: posting</a></footer>
     </li>
   </ol>
   <p class="disk__name">ACM @ RCC</p>
