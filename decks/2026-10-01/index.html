@@ -1,0 +1,2039 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACM @ RCC, 2026-10-01</title>
+<!--
+  ACM @ RCC meeting deck, Thursday 2026-10-01, 1:30 to 2:30 PM, BLCIS A-210.
+  Built on deck-kit/ (README.md, CLAUDE.md). The last slide is the career disk (deck-kit/disk.js, Three.js).
+  Careers: researched 2026-09-29 from job postings and BLS, LinkedIn, WEF, IFR, IEEE Spectrum, Lightcast,
+  SpaceNews, CNBC, SIA; sources on each station. Majors weights are judgment, not sourced; "Try" lines are suggestions.
+  Publish: scripts/publish-deck.sh semesters/2026-fall/meetings/2026-10-01-deck.html 2026-10-01 --push
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap">
+<style>
+/* ===========================================================================
+   ACM @ RCC. Deck kit stylesheet.
+   Ported 2026-09-24 from the GDG chapter's deck kit (rcc-gdg/deck-kit) onto the
+   ACM design system. The rules it implements: docs/04-brand/design-system/
+   assets.md §10.5 (the slide spec) and accessibility.md §2.4 (the Rail). Where
+   this file and those disagree, they win. Where it goes past them on purpose,
+   docs/01-governance/decision-log.md has the row.
+
+   The stage is 1920 x 1080 in STAGE UNITS. --u is one stage pixel, computed from
+   the width of .deck with container query units, so one stylesheet renders the
+   presenting stage, the phone stack, the no-script fallback, and print-to-PDF,
+   with text rasterized at native size rather than transform-scaled.
+   Light theme only: A-210 projects onto a wall in daylight (assets.md §10.5).
+   =========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* --- Tokens. Copied from docs/04-brand/design-system/tokens.css; check.mjs
+       fails if any value here drifts from the source. ---------------------- */
+:root {
+  color-scheme: light;
+  --acm-surface:                   #fdf8f7;
+  --acm-surface-container-lowest:  #ffffff;
+  --acm-surface-container-low:     #fcf1ee;
+  --acm-surface-container:         #f6ece9;
+  --acm-surface-container-high:    #f0e6e3;
+  --acm-surface-container-highest: #ebe0dd;
+  --acm-on-surface:                #221f1e;
+  --acm-on-surface-variant:        #5c5958;
+  --acm-outline:                   #7e7572;
+  --acm-outline-variant:           #dacfcc;
+  --acm-primary:                   #ae3200;
+  --acm-on-primary:                #ffffff;
+  --acm-primary-container:         #ffdbd0;
+  --acm-on-primary-container:      #661900;
+  --acm-live:                      #006e2e;
+  --acm-live-container:            #c9f2d0;
+  --acm-on-live-container:         #003e17;
+  --acm-code-surface:              #fcf1ee;
+  --acm-code-on-surface:           #33302f;
+  --acm-inverse-surface:           #33302f;
+  --acm-inverse-on-surface:        #f7f3f1;
+  --acm-focus-ring:                #ae3200;
+  --acm-fill-orange:               #ff4d00;
+
+  --acm-dur-fast-effects:    90ms;
+  --acm-dur-default-effects: 140ms;
+  --acm-dur-slow-effects:    220ms;
+  --acm-dur-fast-spatial:    200ms;
+  --acm-dur-default-spatial: 320ms;
+  --acm-dur-slow-spatial:    480ms;
+  --acm-ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+  --acm-ease-exit:     cubic-bezier(0.4, 0, 1, 1);
+
+  /* Slide-scale motion. Not in tokens.css: the system's slow tier (480 ms) is
+     sized for a dialog on a laptop, and a line rising across a 1920 stage needs
+     longer to read as a move. Decision log, 2026-09-24. */
+  --acm-dur-beat: 700ms;
+  --acm-dur-move: 1100ms;
+  --acm-ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --acm-font-brand: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --acm-font-code:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* The Rail on a slide: 40 px, as on the 2026-09-03 deck. */
+  --acm-rail-w: 40px;
+}
+
+/* Reduced motion: zero the spatial track, leave effects alone (foundations.md §5.4). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --acm-dur-fast-spatial: 0ms;
+    --acm-dur-default-spatial: 0ms;
+    --acm-dur-slow-spatial: 0ms;
+    --acm-dur-beat: 0ms;
+    --acm-dur-move: 0ms;
+  }
+}
+
+/* --- Page ----------------------------------------------------------------- */
+html, body { margin: 0; background: var(--acm-surface); color: var(--acm-on-surface); }
+body {
+  font-family: var(--acm-font-brand);
+  font-optical-sizing: auto;
+  font-synthesis: weight;
+  font-weight: 400;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+:focus-visible {
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--acm-surface), 0 0 0 5px var(--acm-focus-ring);
+}
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* --- The deck and its unit ------------------------------------------------ */
+.deck {
+  container-type: inline-size;
+  --u: calc(100cqw / 1920);
+  --s-title:   calc(128 * var(--u));
+  --s-head:    calc(88 * var(--u));
+  --s-body:    calc(48 * var(--u));
+  --s-body-sm: calc(40 * var(--u));
+  --s-ledger:  calc(32 * var(--u));
+  --s-margin:  calc(96 * var(--u));
+  --s-top:     calc(144 * var(--u));
+  --s-bottom:  calc(144 * var(--u));
+  --s-gap:     calc(40 * var(--u));
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Stacked: the default with no script, and what a phone gets. Every slide in
+   order, full width, 16:9, nothing animated, every beat showing. */
+.deck { display: grid; gap: 12px; padding: 12px 16px; }
+.slide {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--acm-surface);
+  box-shadow: 0 0 0 1px var(--acm-outline-variant);
+  padding: var(--s-top) var(--s-margin) var(--s-bottom);
+  display: flex; flex-direction: column; justify-content: center; gap: var(--s-gap);
+}
+.chrome { display: none; }
+
+/* Presenting: one slide at a time on a letterboxed stage. */
+.deck-live.is-presenting body { overflow: hidden; }
+.deck-live.is-presenting .deck {
+  position: fixed; inset: 0; margin: auto; padding: 0; gap: 0;
+  width: min(100vw, calc(100dvh * 16 / 9));
+  height: min(100dvh, calc(100vw * 9 / 16));
+  display: block;
+}
+.deck-live.is-presenting .slide {
+  position: absolute; inset: 0; box-shadow: none; visibility: hidden;
+}
+.deck-live.is-presenting .slide.is-current { visibility: visible; }
+.deck-live.is-presenting .chrome { display: block; }
+
+/* --- Type roles ----------------------------------------------------------- */
+/* Element defaults sit under :where(), so any single class outranks them. */
+:where(.slide) :where(h1, h2, h3, p, ol, ul, figure, blockquote, pre) { margin: 0; }
+:where(.slide) h1 {
+  font-size: var(--s-title); line-height: 1.02; letter-spacing: -0.03em;
+  font-weight: 700; text-wrap: balance; max-width: calc(1500 * var(--u));
+}
+:where(.slide) h2 {
+  font-size: var(--s-head); line-height: 1.06; letter-spacing: -0.025em;
+  font-weight: 700; text-wrap: balance; max-width: calc(1560 * var(--u));
+}
+:where(.slide) :where(p, li) { font-size: var(--s-body); line-height: 1.3; text-wrap: pretty; }
+.slide .sub { color: var(--acm-on-surface-variant); max-width: 40ch; }
+.slide .small { font-size: var(--s-body-sm); }
+.slide strong { font-weight: 700; }
+.slide em { font-style: italic; }
+.eyebrow, .ledger, .counter, .label {
+  font-family: var(--acm-font-code);
+  font-size: var(--s-ledger); line-height: 1.25; letter-spacing: 0.06em;
+  font-weight: 500; text-transform: uppercase;
+  font-variant-ligatures: none;
+  color: var(--acm-on-surface-variant);
+}
+/* The font shorthand is never used here, but a role class could still reset
+   numerals, so tabular figures are declared after every role (09-03 lesson). */
+.eyebrow, .ledger, .counter, .label, time { font-variant-numeric: tabular-nums lining-nums; }
+.eyebrow { color: var(--acm-primary); }
+.slide .notes { display: none; }
+
+/* --- Masks: content rises through them ------------------------------------ */
+/* The padding and negative margin grow the clip box to cover ascenders and
+   descenders without moving the line, so a mask never shaves a g or a y. */
+.w {
+  display: inline-block; overflow: hidden; vertical-align: top;
+  padding-block: 0.08em 0.16em; margin-block: -0.08em -0.16em;
+}
+.w__in { display: inline-block; }
+.blk { display: block; overflow: hidden; padding-block: calc(24 * var(--u)); margin-block: calc(-24 * var(--u)); }
+.blk__in { display: block; }
+
+/* CSS-only entrance, used when GSAP is absent. The JS sets --i per unit;
+   under reduced motion the duration token is 0ms. */
+@keyframes deck-rise { from { transform: translateY(110%); } to { transform: none; } }
+.deck-live.no-gsap .slide.is-entering .w__in,
+.deck-live.no-gsap .slide.is-entering .blk__in,
+.deck-live.no-gsap .is-revealing .w__in,
+.deck-live.no-gsap .is-revealing .blk__in {
+  animation: deck-rise var(--acm-dur-beat) var(--acm-ease-arrive) both;
+  animation-delay: calc(var(--i, 0) * 56ms);
+}
+
+/* Beats not yet reached. Hidden, not removed. */
+.deck-live.is-presenting [data-beat].is-pending { visibility: hidden; }
+.beats li.is-past, .board li.is-past { color: var(--acm-on-surface-variant); transition: color var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+
+/* --- Chrome: ledger, counter, progress. Still across every transition. ---- */
+.chrome { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.chrome .ledger { position: absolute; top: calc(52 * var(--u)); left: var(--s-margin); margin: 0; max-width: calc(1300 * var(--u)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chrome .counter { position: absolute; top: calc(52 * var(--u)); right: var(--s-margin); margin: 0; }
+.deck.on-cover .chrome .ledger { visibility: hidden; }
+/* Progress: the "On this page" rail laid flat (components.md §7.8): section
+   names in the ledger line, the current one at weight 500 in primary. The
+   hairline under them is neutral and 3 px, so it never reads as the Rail. */
+.progress { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.progress__track { fill: var(--acm-outline-variant); }
+.progress__fill { fill: var(--acm-on-surface-variant); }
+.progress__label {
+  font-family: var(--acm-font-code); font-size: 32px; font-weight: 400; letter-spacing: 0.06em;
+  font-variant-ligatures: none; fill: var(--acm-on-surface-variant);
+}
+.progress__label.is-past { fill: var(--acm-on-surface); }
+.progress__label.is-current { fill: var(--acm-primary); font-weight: 500; }
+.progress__label.is-hidden { visibility: hidden; }
+
+/* --- cover: type as the image, the Rail at the inline-start edge ---------- */
+.slide[data-kind="cover"] {
+  justify-content: flex-end; gap: 0;
+  padding: var(--s-margin) var(--s-margin) var(--s-margin) calc(var(--s-margin) + 88 * var(--u));
+}
+/* The Rail, once, on the title slide. Solid: a meeting deck has no single
+   pillar, so --acm-rail-break stays unset (accessibility.md §2.4). */
+.cover__rail {
+  position: absolute; left: var(--s-margin); top: var(--s-margin); bottom: var(--s-margin);
+  width: calc(40 * var(--u)); background: var(--acm-primary);
+  transform-origin: 50% 0;
+}
+.cover__name { font-size: var(--s-body-sm); font-weight: 500; color: var(--acm-on-surface); margin-block-end: auto; }
+.slide[data-kind="cover"] .eyebrow { margin-block-end: calc(28 * var(--u)); }
+.slide[data-kind="cover"] h1 { font-size: calc(168 * var(--u)); line-height: 0.96; letter-spacing: -0.04em; max-width: calc(1540 * var(--u)); }
+.slide[data-kind="cover"] .sub { margin-block-start: calc(36 * var(--u)); max-width: 44ch; }
+.slide[data-kind="cover"] .sub strong { color: var(--acm-on-surface); font-weight: 700; }
+.cover__meta { margin-block-start: calc(40 * var(--u)); }
+.cover__starts { margin-block-end: calc(12 * var(--u)); }
+
+/* --- statement ------------------------------------------------------------ */
+.slide[data-kind="statement"] h2 { max-width: calc(1500 * var(--u)); font-size: calc(104 * var(--u)); }
+.slide[data-kind="statement"] .sub { max-width: 36ch; }
+/* One word or phrase in a heading can carry the lead hue. Once per slide. */
+.slide .hl { color: var(--acm-primary); }
+
+/* --- contrast ------------------------------------------------------------- */
+.contrast { display: grid; grid-template-columns: 1fr 1fr; gap: calc(96 * var(--u)); align-items: start; }
+.contrast > div { display: flex; flex-direction: column; gap: calc(24 * var(--u)); }
+.contrast > div > p:not(.label) { font-size: var(--s-body); line-height: 1.28; }
+/* Both sides the same size, weight, and ink: the words win, not the styling. */
+.contrast .is-strong > .label { color: var(--acm-primary); }
+
+/* --- beats ---------------------------------------------------------------- */
+.beats { list-style: none; padding: 0; display: grid; gap: calc(36 * var(--u)); counter-reset: beat; }
+.beats:has(.detail) { gap: calc(22 * var(--u)); }
+.beats li {
+  display: grid; grid-template-columns: calc(96 * var(--u)) 1fr; gap: calc(28 * var(--u)); align-items: baseline;
+  max-width: calc(1480 * var(--u));
+}
+.beats li::before {
+  counter-increment: beat; content: counter(beat, decimal-leading-zero);
+  font-family: var(--acm-font-code); font-weight: 500; font-size: var(--s-body-sm); line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--acm-primary);
+}
+.beats li > .body { display: block; }
+.beats li .detail { display: block; font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); margin-top: calc(8 * var(--u)); }
+
+/* --- board: every dated thing in the next four weeks, one line each ------- */
+.board { list-style: none; padding: 0; display: grid; max-width: calc(1600 * var(--u)); }
+.board li {
+  display: grid; grid-template-columns: calc(420 * var(--u)) 1fr; gap: calc(40 * var(--u)); align-items: baseline;
+  padding-block: calc(22 * var(--u));
+}
+.board li:not(:last-child) { border-block-end: calc(2 * var(--u)) solid var(--acm-outline-variant); }
+.board time { font-family: var(--acm-font-code); font-size: var(--s-body-sm); font-weight: 500; font-variant-ligatures: none; }
+
+/* --- code ----------------------------------------------------------------- */
+.code {
+  font-family: var(--acm-font-code); font-size: var(--s-body-sm); line-height: 1.4;
+  font-variant-ligatures: none; font-variant-numeric: tabular-nums;
+  color: var(--acm-code-on-surface); background: var(--acm-code-surface);
+  border-radius: calc(12 * var(--u)); padding: calc(40 * var(--u)) calc(48 * var(--u));
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
+  white-space: pre; overflow: hidden; max-width: calc(1728 * var(--u));
+}
+.code .c { color: var(--acm-on-surface-variant); }
+.code .k { color: var(--acm-primary); font-weight: 500; }
+
+/* --- figure --------------------------------------------------------------- */
+.figure { display: flex; align-items: baseline; gap: calc(40 * var(--u)); }
+.figure__num { font-size: calc(320 * var(--u)); line-height: 0.85; font-weight: 700; letter-spacing: -0.05em; color: var(--acm-primary); font-variant-numeric: tabular-nums lining-nums; }
+.figure__unit { font-size: var(--s-head); line-height: 1; font-weight: 700; letter-spacing: -0.02em; }
+.slide[data-kind="figure"] .sub { max-width: 44ch; }
+
+/* --- clock ---------------------------------------------------------------- */
+.clock { display: grid; gap: calc(28 * var(--u)); margin-block-start: calc(24 * var(--u)); }
+.clock__digits { font-size: calc(240 * var(--u)); line-height: 0.9; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums lining-nums; }
+.clock__track { height: calc(12 * var(--u)); background: var(--acm-surface-container-highest); overflow: hidden; }
+.clock__fill { display: block; height: 100%; background: var(--acm-primary); transform-origin: left center; }
+.clock__hint { font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); }
+/* Last ten seconds: the digits take the primary container and hold it. Never blinks. */
+.clock[data-state="ending"] .clock__digits, .clock[data-state="done"] .clock__digits {
+  background: var(--acm-primary-container); color: var(--acm-on-primary-container);
+  justify-self: start; padding-inline: calc(24 * var(--u)); border-radius: calc(12 * var(--u));
+}
+
+/* --- callout: Check or Warning, one per slide, short solid Rail ----------- */
+.callout {
+  position: relative; overflow: hidden; max-width: calc(1500 * var(--u));
+  padding: calc(28 * var(--u)) calc(40 * var(--u)) calc(28 * var(--u)) calc(88 * var(--u));
+  border-radius: calc(16 * var(--u));
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline);
+  font-size: var(--s-body-sm); line-height: 1.3;
+}
+.callout::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: calc(24 * var(--u)); background: currentColor; }
+.callout--check { background: var(--acm-live-container); color: var(--acm-on-live-container); }
+.callout--warning { background: var(--acm-primary-container); color: var(--acm-on-primary-container); }
+.callout b { font-weight: 700; }
+
+/* --- ask: the last slide, with the club name as text ---------------------- */
+.slide[data-kind="ask"] { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; column-gap: calc(96 * var(--u)); row-gap: calc(40 * var(--u)); align-items: center; }
+.ask__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.ask__meta { font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); }
+.qr { display: flex; flex-direction: column; align-items: center; gap: calc(16 * var(--u)); color: inherit; text-decoration: none; }
+.qr__tile {
+  width: calc(320 * var(--u)); height: calc(320 * var(--u)); padding: calc(12 * var(--u)); display: block;
+  border-radius: calc(12 * var(--u)); background: #ffffff;
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
+}
+.qr__tile svg, .qr__tile img { width: 100%; height: 100%; display: block; }
+.qr .label { text-align: center; text-transform: none; letter-spacing: 0.02em; }
+.ask__foot { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: calc(64 * var(--u)); }
+.ask__name { font-size: var(--s-body-sm); font-weight: 500; }
+.ask__stamp { font-family: var(--acm-font-code); font-size: var(--s-ledger); color: var(--acm-on-surface-variant); font-variant-numeric: tabular-nums; }
+
+/* --- Grounds: data-ground on a slide ---------------------------------------
+   paper (default) --acm-surface. warm: the highest surface container. tint: the
+   primary container with its own ink. orange: the sanctioned raw fill, a large
+   area only, with ink text and nothing in primary on it (accessibility.md §1.1
+   rule 3: white on #ff4d00 is 3.33:1, ink is 4.92:1). The check measures every
+   text pair against its ground. Chrome follows the ground through .deck[data-ground]. */
+.slide[data-ground="warm"]   { background: var(--acm-surface-container-highest); }
+.slide[data-ground="tint"]   { background: var(--acm-primary-container); color: var(--acm-on-primary-container); }
+.slide[data-ground="orange"] { background: var(--acm-fill-orange); color: var(--acm-on-surface); }
+.slide[data-ground="tint"] :is(.eyebrow, .label, .sub, .detail, .hl, .figure__num, .credit, .credit a, .beats li::before),
+.slide[data-ground="tint"] .beats li::before { color: var(--acm-on-primary-container); }
+.slide[data-ground="orange"] :is(.eyebrow, .label, .sub, .detail, .hl, .figure__num, .credit, .credit a, .clock__hint, .ask__meta, .ask__stamp),
+.slide[data-ground="orange"] .beats li::before { color: var(--acm-on-surface); }
+.slide[data-ground="orange"] .hl { text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.12em; }
+.slide[data-ground="orange"] .clock__fill { background: var(--acm-on-surface); }
+.slide[data-ground="orange"] .clock__track { background: rgb(34 31 30 / 0.18); }
+.slide[data-ground="orange"] .board li:not(:last-child), .slide[data-ground="tint"] .board li:not(:last-child) { border-color: currentColor; }
+.deck[data-ground="orange"] .chrome :is(.ledger, .counter),
+.deck[data-ground="tint"] .chrome :is(.ledger, .counter) { color: var(--acm-on-surface); }
+.deck[data-ground="orange"] .progress__label, .deck[data-ground="orange"] .progress__label.is-current,
+.deck[data-ground="tint"] .progress__label, .deck[data-ground="tint"] .progress__label.is-current { fill: var(--acm-on-surface); }
+.deck[data-ground="orange"] .progress__fill, .deck[data-ground="tint"] .progress__fill { fill: var(--acm-on-surface); }
+.deck[data-ground="orange"] .progress__track { fill: rgb(34 31 30 / 0.25); }
+
+/* --- Layouts: data-layout on a slide -------------------------------------- */
+/* statement: left (default), center, or giant (one short line, set huge and low). */
+.slide[data-layout="center"] { align-items: center; text-align: center; }
+.slide[data-layout="center"] :is(h2, .sub) { margin-inline: auto; }
+.slide[data-kind="statement"][data-layout="giant"] { justify-content: flex-end; padding-bottom: calc(176 * var(--u)); }
+.slide[data-kind="statement"][data-layout="giant"] h2 { font-size: calc(184 * var(--u)); line-height: 0.95; letter-spacing: -0.045em; max-width: none; }
+
+/* --- photo: one photograph and the words beside it, never over it --------- */
+/* Layouts: bleed-right (default) and bleed-left run the photo off the stage
+   edge, from the top down to the progress band; framed sits it inside the
+   margins. The credit is a link, on the slide, in the ledger face. */
+.slide[data-kind="photo"] { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(96 * var(--u)); align-items: center; }
+.photo__text { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.photo { margin: 0; }
+.photo img { display: block; object-fit: cover; }
+.credit { font-family: var(--acm-font-code); font-size: var(--s-ledger); line-height: 1.25; color: var(--acm-on-surface-variant); font-variant-ligatures: none; }
+.credit a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+.slide[data-kind="photo"]:not([data-layout="framed"]) .photo img {
+  position: absolute; top: 0; width: calc(50% - 48 * var(--u)); height: calc(960 * var(--u));
+}
+.slide[data-kind="photo"]:not([data-layout]) .photo img, .slide[data-kind="photo"][data-layout="bleed-right"] .photo img { right: 0; }
+.slide[data-kind="photo"][data-layout="bleed-left"] .photo img { left: 0; }
+.slide[data-kind="photo"][data-layout="bleed-left"] .photo__text { grid-column: 2; grid-row: 1; }
+.slide[data-kind="photo"]:not([data-layout="framed"]) .credit { position: absolute; bottom: calc(136 * var(--u)); left: var(--s-margin); max-width: calc(760 * var(--u)); }
+.slide[data-kind="photo"][data-layout="bleed-left"] .credit { left: calc(50% + 48 * var(--u)); }
+.slide[data-kind="photo"][data-layout="framed"] .photo { display: grid; gap: calc(16 * var(--u)); }
+.slide[data-kind="photo"][data-layout="framed"] .photo img { width: 100%; height: auto; max-height: calc(640 * var(--u)); border-radius: calc(12 * var(--u)); }
+/* The photo is the only thing that bleeds, so the chrome over its corner steps aside. */
+.deck.on-bleed-right .chrome .counter, .deck.on-bleed-left .chrome .ledger { visibility: hidden; }
+/* Entrance: the photo wipes in from the stage edge and settles, each time its
+   slide becomes current. Spatial track, so reduced motion makes it a cut. */
+@keyframes photo-in-right { from { clip-path: inset(0 0 0 100%); transform: scale(1.06); } to { clip-path: inset(0); transform: none; } }
+@keyframes photo-in-left  { from { clip-path: inset(0 100% 0 0); transform: scale(1.06); } to { clip-path: inset(0); transform: none; } }
+@keyframes photo-in-up    { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+.deck-live.is-presenting .slide.is-current[data-kind="photo"] .photo img { animation: photo-in-right var(--acm-dur-move) var(--acm-ease-arrive) both; animation-delay: 120ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="photo"][data-layout="bleed-left"] .photo img { animation-name: photo-in-left; }
+.deck-live.is-presenting .slide.is-current[data-kind="photo"][data-layout="framed"] .photo img,
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid img { animation-name: photo-in-up; animation-duration: var(--acm-dur-move); animation-timing-function: var(--acm-ease-arrive); animation-fill-mode: both; }
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(2) img { animation-delay: 90ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(3) img { animation-delay: 180ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(4) img { animation-delay: 270ms; }
+
+/* --- grid: two to four things side by side, each with an optional photo --- */
+.grid { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: calc(40 * var(--u)); }
+.grid li { display: flex; flex-direction: column; gap: calc(16 * var(--u)); font-size: var(--s-body-sm); }
+.grid img { display: block; width: 100%; height: calc(var(--img-h, 420) * var(--u)); object-fit: cover; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-lowest); }
+.grid b { font-size: var(--s-body); font-weight: 700; letter-spacing: -0.01em; }
+.grid p { font-size: var(--s-body-sm); line-height: 1.25; }
+.grid .code { padding: calc(20 * var(--u)) calc(24 * var(--u)); }
+
+/* --- Ground crossfade ------------------------------------------------------
+   Presenting, the ground lives on the stage, not the slide, and fades between
+   slides. Effects track (opacity and color never overshoot), so it survives
+   reduced motion, which zeroes only the spatial track (foundations.md §5.4). */
+.deck-live.is-presenting .slide { background: transparent; }
+.deck-live.is-presenting .deck {
+  background-color: var(--acm-surface);
+  transition: background-color calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard);
+}
+.deck-live.is-presenting .deck[data-ground="warm"]   { background-color: var(--acm-surface-container-highest); }
+.deck-live.is-presenting .deck[data-ground="tint"]   { background-color: var(--acm-primary-container); }
+.deck-live.is-presenting .deck[data-ground="orange"] { background-color: var(--acm-fill-orange); }
+.chrome :is(.ledger, .counter) { transition: color calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard); }
+.progress__label, .progress__fill, .progress__track { transition: fill calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard); }
+
+/* --- signup: one form, its QR code, and its URL as text ------------------- */
+.slide[data-kind="signup"] { display: grid; grid-template-columns: 1fr auto; column-gap: calc(96 * var(--u)); align-items: center; }
+.signup__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="signup"] .qr__tile { width: calc(420 * var(--u)); height: calc(420 * var(--u)); }
+.slide[data-ground="orange"] .qr .label, .slide[data-ground="tint"] .qr .label { color: var(--acm-on-surface); }
+.qrs { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.qrs .qr { flex-direction: row; gap: calc(28 * var(--u)); }
+.qrs .qr .label { text-align: left; }
+.qrs .qr__tile { width: calc(232 * var(--u)); height: calc(232 * var(--u)); }
+.qrs .label { font-size: var(--s-ledger); line-height: 1.25; }
+
+/* --- collage: the club's own photos, up to six ----------------------------- */
+.slide[data-kind="collage"] { justify-content: flex-start; }
+.collage { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(236 * var(--u)); gap: calc(16 * var(--u)); flex: 1; }
+.collage li { overflow: hidden; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-highest); }
+.collage li:nth-child(1) { grid-column: span 3; grid-row: span 2; }
+.collage li:nth-child(2), .collage li:nth-child(3) { grid-column: span 3; }
+.collage li:nth-child(n+4) { grid-column: span 2; }
+.collage:has(li:nth-child(4)) { grid-template-rows: repeat(3, calc(172 * var(--u))); grid-auto-rows: calc(172 * var(--u)); }
+.collage:not(:has(li:nth-child(4))) li:nth-child(1) { grid-row: span 2; }
+.collage img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Two photos: side by side, full height. */
+.collage:not(:has(li:nth-child(3))) li { grid-column: span 3; grid-row: span 2; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage :is(img, video) { animation: photo-in-up var(--acm-dur-move) var(--acm-ease-arrive) both; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(2) :is(img, video) { animation-delay: 80ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(3) :is(img, video) { animation-delay: 160ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(4) :is(img, video) { animation-delay: 240ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(5) :is(img, video) { animation-delay: 320ms; }
+.deck-live.is-presenting .slide.is-current[data-kind="collage"] .collage li:nth-child(6) :is(img, video) { animation-delay: 400ms; }
+
+/* --- Video: a <video> goes anywhere an <img> does -------------------------
+   Contract shared with the GDG kit: src on the element, poster, width, height,
+   muted, loop, playsinline, no autoplay attribute. data-play="auto" plays while
+   its slide is current; "press" waits for the next forward press; V toggles.
+   Reduced motion never autoplays; the poster shows. */
+.photo video { display: block; object-fit: cover; background: #000; }
+.slide[data-kind="photo"]:not([data-layout="framed"]) .photo video { position: absolute; top: 0; width: calc(50% - 48 * var(--u)); height: calc(960 * var(--u)); }
+.slide[data-kind="photo"]:not([data-layout]) .photo video, .slide[data-kind="photo"][data-layout="bleed-right"] .photo video { right: 0; }
+.slide[data-kind="photo"][data-layout="bleed-left"] .photo video { left: 0; }
+.slide[data-kind="photo"][data-layout="framed"] .photo video { width: 100%; height: auto; max-height: calc(640 * var(--u)); border-radius: calc(12 * var(--u)); }
+.grid video { display: block; width: 100%; height: calc(var(--img-h, 420) * var(--u)); object-fit: cover; border-radius: calc(12 * var(--u)); background: #000; }
+.collage video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+/* A row collage: one justified row, each tile as wide as its media's shape
+   (--ar = width / height, which ingest-photos.mjs prints), so nothing crops much. */
+.collage.is-row { display: flex; gap: calc(16 * var(--u)); }
+.collage.is-row { flex: 1 1 0; min-height: 0; }
+.collage.is-row li { flex: var(--ar, 1) 1 0; min-width: 0; position: relative; }
+.collage.is-row :is(img, video) { position: absolute; inset: 0; }
+
+/* --- disk: the career disk (deck-kit/disk.js), a 3D scene under a DOM HUD --
+   Its ground is "space", the one dark ground in the kit, and only this kind
+   uses it (decision log, 2026-09-29). Every word is DOM and meets the floors. */
+.deck-live.is-presenting .deck[data-ground="space"] { background-color: #0e0a09; }
+.slide[data-ground="space"] { background: #0e0a09; color: #f7f3f1; }
+.deck[data-ground="space"] .chrome .counter { color: #d8ccc8; }
+.deck.on-custom .chrome :is(.ledger, .progress) { visibility: hidden; }
+.slide[data-kind="disk"] { padding: 0; display: block; }
+.disk__canvas { position: absolute; inset: 0; }
+.disk__canvas canvas { display: block; width: 100% !important; height: 100% !important; cursor: grab; }
+.disk__hud { position: absolute; left: var(--s-margin); top: calc(120 * var(--u)); max-width: calc(900 * var(--u)); pointer-events: none; display: grid; gap: calc(20 * var(--u)); }
+.disk__hud .eyebrow { color: #ff6a26; }
+.disk__hud h2 { color: #fbf6f3; font-size: calc(88 * var(--u)); }
+.disk__hud .sub { color: #d8ccc8; max-width: 30ch; }
+.disk__name { position: absolute; right: var(--s-margin); bottom: calc(100 * var(--u)); margin: 0; font-size: var(--s-body-sm); font-weight: 500; color: #fbf6f3; pointer-events: none; }
+.disk__legend { position: absolute; right: var(--s-margin); top: calc(120 * var(--u)); display: grid; gap: calc(10 * var(--u)); width: calc(520 * var(--u)); pointer-events: none; }
+.disk__legend canvas { width: 100%; height: calc(10 * var(--u)); display: block; border-radius: 2px; }
+.disk__legend p { display: flex; justify-content: space-between; margin: 0; font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.06em; color: #d8ccc8; text-transform: uppercase; }
+/* The stations: a flowing list with no scene; one card at a time with it. */
+.stations { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: calc(24 * var(--u)); }
+.stations li { background: var(--acm-surface); color: var(--acm-on-surface); border-radius: calc(16 * var(--u)); padding: calc(36 * var(--u)) calc(40 * var(--u)); display: grid; gap: calc(12 * var(--u)); }
+.stations h3 { margin: 0; font-size: calc(60 * var(--u)); line-height: 1.02; letter-spacing: -0.025em; font-weight: 700; }
+.stations p { margin: 0; font-size: var(--s-body-sm); line-height: 1.25; }
+.stations .majors { font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.06em; color: var(--acm-primary); text-transform: uppercase; font-weight: 500; }
+.stations .source { font-family: var(--acm-font-code); font-size: var(--s-ledger); line-height: 1.3; color: var(--acm-on-surface-variant); }
+.stations a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+.stations .try b, .stations .hire b { font-weight: 700; }
+.deck-live.is-presenting .slide.has-scene .stations { position: absolute; left: var(--s-margin); bottom: calc(112 * var(--u)); width: calc(780 * var(--u)); display: block; }
+.deck-live.is-presenting .slide.has-scene .stations li {
+  position: absolute; left: 0; bottom: 0; width: 100%;
+  opacity: 0; transform: translateY(calc(40 * var(--u))); visibility: hidden;
+  transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard), transform var(--acm-dur-slow-spatial) var(--acm-ease-standard), visibility 0s linear var(--acm-dur-slow-effects);
+  box-shadow: 0 calc(24 * var(--u)) calc(80 * var(--u)) rgb(0 0 0 / 0.45);
+}
+/* .is-current matters: a visible child shows through a hidden slide. */
+.deck-live.is-presenting .slide.has-scene.is-current .stations li.is-on { opacity: 1; transform: none; visibility: visible; transition-delay: 0s, 0s, 0s; }
+/* The HUD arrives after the portal; the overview and finale lines swap by beat. */
+.deck-live.is-presenting .slide.has-scene .disk__hud, .deck-live.is-presenting .slide.has-scene .disk__legend, .deck-live.is-presenting .slide.has-scene .disk__name { opacity: 0; transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+.deck-live.is-presenting .slide.has-scene.is-arrived :is(.disk__hud, .disk__legend, .disk__name) { opacity: 1; }
+.deck-live.is-presenting .slide.has-scene:not(.is-overview) .disk__hud .sub { visibility: hidden; }
+.disk__hud h2 { transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+.deck-live.is-presenting .slide.has-scene:not(.is-overview):not(.is-finale) .disk__hud h2 { opacity: 0; }
+.disk__finale { display: none; }
+.deck-live.is-presenting .slide.has-scene.is-finale .disk__finale { display: block; color: #fbf6f3; }
+.deck-live.is-presenting .slide.has-scene.is-finale .disk__hud .sub:not(.disk__finale) { display: none; }
+/* No scene (no WebGL or no CDN), presenting: the stations become beats, one card at a time. */
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) { padding: var(--s-top) var(--s-margin) var(--s-bottom); }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations { position: relative; display: block; margin-top: calc(40 * var(--u)); }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations li { position: absolute; top: 0; left: 0; width: calc(900 * var(--u)); }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations li.is-past { visibility: hidden; }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) :is(.disk__legend) { display: none; }
+/* Stacked (phone, no script): the disk slide grows to hold its list. */
+.slide[data-kind="disk"] { aspect-ratio: auto; min-height: 56.25cqw; }
+.deck-live.is-presenting .slide[data-kind="disk"] { min-height: 0; }
+.deck:not(.x) .slide[data-kind="disk"]:not(.has-scene) { padding: var(--s-top) var(--s-margin) var(--s-bottom); }
+
+/* --- Overlays: notes, help, toast. Viewport pixels, outside the stage. ---- */
+.deck-notes, .deck-help, .deck-toast { font-family: var(--acm-font-brand); }
+.deck-notes {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 10; max-height: 40vh; overflow: auto;
+  background: var(--acm-inverse-surface); color: var(--acm-inverse-on-surface);
+  padding: 20px 32px 28px; font-size: 18px; line-height: 1.5;
+}
+.deck-notes[hidden], .deck-help[hidden] { display: none; }
+.deck-notes h2 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 8px; font-family: var(--acm-font-code); font-weight: 500; opacity: 0.8; }
+.deck-notes p { margin: 0 0 10px; max-width: 80ch; }
+.deck-help {
+  position: fixed; z-index: 11; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: var(--acm-surface-container-lowest); color: var(--acm-on-surface);
+  border-radius: 12px; padding: 28px 32px; box-shadow: 0 0 0 1px var(--acm-outline-variant), 0 4px 8px 3px rgb(34 31 30 / 0.15);
+  font-size: 16px; min-width: 360px;
+}
+.deck-help h2 { font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+.deck-help table { border-collapse: collapse; }
+.deck-help td { padding: 6px 16px 6px 0; border-bottom: 1px solid var(--acm-outline-variant); }
+.deck-help kbd { font-family: var(--acm-font-code); font-size: 14px; font-variant-ligatures: none; padding: 2px 8px; border-radius: 4px; background: var(--acm-surface-container-high); }
+.deck-toast {
+  position: fixed; z-index: 12; left: 50%; top: 24px; transform: translate(-50%, -8px);
+  background: var(--acm-inverse-surface); color: var(--acm-inverse-on-surface);
+  padding: 10px 18px; border-radius: 8px; font-size: 15px; font-weight: 500;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--acm-dur-default-effects) var(--acm-ease-standard), transform var(--acm-dur-default-spatial) var(--acm-ease-standard);
+}
+.deck-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+/* --- Forced colors and print ---------------------------------------------- */
+@media (forced-colors: active) {
+  .cover__rail, .callout::before, .clock__fill { background: CanvasText; }
+  .progress__fill { fill: Highlight; }
+  .callout, .code { border: 1px solid CanvasText; }
+}
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { background: #fff; }
+  .slide { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .deck { display: block !important; position: static !important; width: 1920px !important; height: auto !important; padding: 0 !important; }
+  .slide { position: relative !important; inset: auto !important; visibility: visible !important; box-shadow: none !important; break-after: page; width: 1920px; height: 1080px; }
+  .chrome, .deck-notes, .deck-help, .deck-toast { display: none !important; }
+  [data-beat] { visibility: visible !important; }
+  .w__in, .blk__in, .cover__rail { transform: none !important; }
+  .photo :is(img, video), .grid :is(img, video), .collage :is(img, video) { animation: none !important; clip-path: none !important; }
+}
+
+</style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/" } }</script>
+<script type="module">
+/* ===========================================================================
+   ACM @ RCC deck kit. The career disk: a plug-in slide kind (data-kind="disk").
+   Loaded as a module before deck.js; registers window.DeckKinds.disk.
+
+   The slide's HTML is the source of truth: ol.stations > li, one per role, each
+   with data-majors="CS:0.6,DS:0.4" and data-tier (classic, growing, new). The
+   engine places every role on a disk of majors, CS (theory) at one pole and ME
+   (physical) at the other, and flies a camera between them, one station per
+   beat. Beat 0 is the overview, beats 1..N the stations, beat N+1 the finale.
+   Every word on screen stays in the DOM (the station card), so it is crisp,
+   searchable, and held to the type floors; the canvas only draws.
+
+   Entering from the slide before it, the page shatters: that slide is redrawn
+   onto a sheet from its real word positions, cracks, and breaks into shards
+   while the camera punches through into space. Reduced motion is a cut.
+   =========================================================================== */
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const MAJORS = [
+  { key: 'CS', name: 'Computer science', deg: 0 },
+  { key: 'CompE', name: 'Computer engineering', deg: 60 },
+  { key: 'EE', name: 'Electrical engineering', deg: 120 },
+  { key: 'ME', name: 'Mechanical engineering', deg: 180 },
+  { key: 'DS', name: 'Data science', deg: 300 },
+];
+const THEORY = new THREE.Color('#4d9fff'), HOT = new THREE.Color('#fff4ea'), PHYSICAL = new THREE.Color('#ff4d00');
+const SPACE = new THREE.Color('#0e0a09');
+const R_IN = 5.2, R_OUT = 11.2;
+const TIER_R = { classic: 6.6, growing: 8.3, new: 10.0 };
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const smooth = (x) => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
+const ramp = (x, a, b) => smooth((x - a) / (b - a));
+const inOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const outExpo = (t) => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+// Theory to physical: 0 at CS, 1 at ME, along either arc.
+function physicality(deg) { const d = Math.abs(((deg % 360) + 360) % 360); return (d > 180 ? 360 - d : d) / 180; }
+function spectrum(t) {
+  const c = new THREE.Color();
+  return t < 0.5 ? c.copy(THEORY).lerp(HOT, t / 0.5) : c.copy(HOT).lerp(PHYSICAL, (t - 0.5) / 0.5);
+}
+function angleOf(majors) {
+  let x = 0, y = 0;
+  for (const [k, w] of Object.entries(majors)) {
+    const m = MAJORS.find((q) => q.key === k); if (!m) continue;
+    const a = THREE.MathUtils.degToRad(m.deg); x += Math.cos(a) * w; y += Math.sin(a) * w;
+  }
+  if (Math.hypot(x, y) < 1e-3) { const first = MAJORS.find((q) => q.key === Object.keys(majors)[0]); return first ? first.deg + 90 : 0; }
+  return (THREE.MathUtils.radToDeg(Math.atan2(y, x)) + 360) % 360;
+}
+// Disk lies in the XZ plane; CS (0 deg) points away from the overview camera.
+function onDisk(deg, r, y = 0) { const a = THREE.MathUtils.degToRad(deg); return new THREE.Vector3(Math.sin(a) * r, y, -Math.cos(a) * r); }
+
+const SPRITES = [];
+function textSprite(text, opts = {}) {
+  const s = drawSprite(null, text, opts); SPRITES.push([s, text, opts]); return s;
+}
+// Webfonts land after the scene is built; every label is redrawn once they do.
+function drawSprite(into, text, { font = '700 64px Inter', color = '#ffffff', height = 1, pad = 24, letter = 0 } = {}) {
+  const c = document.createElement('canvas'), g = c.getContext('2d');
+  g.font = font; if (letter) g.letterSpacing = letter + 'px';
+  const w = Math.ceil(g.measureText(text).width) + pad * 2, h = Math.ceil(parseInt(font.match(/(\d+)px/)[1], 10) * 1.5) + pad;
+  c.width = w * 2; c.height = h * 2; g.scale(2, 2);
+  g.font = font; if (letter) g.letterSpacing = letter + 'px';
+  g.fillStyle = color; g.textBaseline = 'middle'; g.fillText(text, pad, h / 2);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  if (into) { const old = into.material.map; into.material.map = tex; into.material.needsUpdate = true; if (old) old.dispose(); into.scale.set(height * w / h, height, 1); return into; }
+  // Screen-sized: height is a fraction of the view's height, whatever the distance.
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, sizeAttenuation: false });
+  const s = new THREE.Sprite(mat); s.scale.set(height * w / h, height, 1); s.center.set(0.5, 0.5);
+  return s;
+}
+function glowTexture(inner = 'rgba(255,255,255,1)') {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  r.addColorStop(0, inner); r.addColorStop(0.25, 'rgba(255,255,255,0.35)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, 128, 128);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+function readStations(slide) {
+  return [...slide.querySelectorAll('.stations > li')].map((li, i) => {
+    const majors = {};
+    (li.getAttribute('data-majors') || 'CS:1').split(',').forEach((p) => { const [k, w] = p.split(':'); majors[k.trim()] = parseFloat(w) || 1; });
+    const deg = angleOf(majors);
+    return { li, i, majors, deg, tier: li.getAttribute('data-tier') || 'growing', name: (li.querySelector('h3') || li).textContent.trim() };
+  });
+}
+// Neighbors at the same tier get pushed apart so no two beacons overlap.
+function relax(st) {
+  for (let pass = 0; pass < 60; pass++) {
+    for (let a = 0; a < st.length; a++) for (let b = a + 1; b < st.length; b++) {
+      const A = st[a], B = st[b]; const pa = onDisk(A.deg, A.r), pb = onDisk(B.deg, B.r);
+      const d = pa.distanceTo(pb); if (d > 1.9) continue;
+      let dd = ((B.deg - A.deg + 540) % 360) - 180; if (Math.abs(dd) < 0.01) dd = 0.01;
+      const push = (1.9 - d) * 3.2 * Math.sign(dd);
+      A.deg -= push; B.deg += push;
+    }
+  }
+}
+
+function build(slide, api) {
+  const stations = readStations(slide);
+  if (!stations.length) return null;
+  stations.forEach((s) => { s.r = TIER_R[s.tier] || TIER_R.growing; s.deg0 = s.deg; });
+  relax(stations);
+  const N = stations.length;
+
+  // ---------- DOM: canvas under the HUD
+  const host = document.createElement('div'); host.className = 'disk__canvas'; host.setAttribute('aria-hidden', 'true');
+  slide.insertBefore(host, slide.firstChild);
+  slide.classList.add('has-scene');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' }); }
+  catch (e) { host.remove(); slide.classList.remove('has-scene'); return null; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.9;
+  renderer.setClearColor(SPACE, 1);
+  host.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(SPACE, 0.006);
+  const camera = new THREE.PerspectiveCamera(45, 16 / 9, 0.05, 2000);
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(960, 540), 0.55, 0.45, 0.62); composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+
+  // ---------- Space: stars, streaks for the warp, two faint nebulae
+  const starGeo = new THREE.BufferGeometry(), SN = 5000, sp = new Float32Array(SN * 3), sc = new Float32Array(SN * 3);
+  for (let i = 0; i < SN; i++) {
+    const r = 120 + Math.random() * 500, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+    sp.set([r * Math.sin(ph) * Math.cos(th), r * Math.cos(ph) * 0.6, r * Math.sin(ph) * Math.sin(th)], i * 3);
+    const c = spectrum(Math.random()).lerp(new THREE.Color('#ffffff'), 0.7); sc.set([c.r, c.g, c.b], i * 3);
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(sp, 3)); starGeo.setAttribute('color', new THREE.BufferAttribute(sc, 3));
+  const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 1.6, sizeAttenuation: true, vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false, fog: false }));
+  scene.add(stars);
+  // Warp streaks: short lines along the flight path, shown only while the camera punches through.
+  const WN = 900, wp = new Float32Array(WN * 6);
+  for (let i = 0; i < WN; i++) {
+    const a = Math.random() * Math.PI * 2, rr = 3 + Math.random() * 22, z = 20 + Math.random() * 110, y = 22 + Math.sin(a) * rr, x = Math.cos(a) * rr;
+    wp.set([x, y, z, x, y, z + 2 + Math.random() * 6], i * 6);
+  }
+  const warpGeo = new THREE.BufferGeometry(); warpGeo.setAttribute('position', new THREE.BufferAttribute(wp, 3));
+  const warp = new THREE.LineSegments(warpGeo, new THREE.LineBasicMaterial({ color: '#ffd9c2', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+  scene.add(warp);
+  const glow = glowTexture();
+  [[THEORY, new THREE.Vector3(-60, 10, -120), 170], [PHYSICAL, new THREE.Vector3(70, -20, 110), 190]].forEach(([col, pos, size]) => {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: col, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    s.position.copy(pos); s.scale.set(size, size, 1); scene.add(s);
+  });
+
+  // ---------- The disk
+  const diskGroup = new THREE.Group(); scene.add(diskGroup);
+  const diskMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    uniforms: { uReveal: { value: 1 }, uTime: { value: 0 }, uTheory: { value: THEORY }, uHot: { value: HOT }, uPhys: { value: PHYSICAL }, uFocus: { value: -1 } },
+    vertexShader: 'varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: `
+      varying vec2 vP; uniform float uReveal, uTime, uFocus; uniform vec3 uTheory, uHot, uPhys;
+      const float PI = 3.14159265;
+      void main(){
+        float r = length(vP);
+        float a = atan(vP.x, vP.y); // 0 at CS, clockwise positive
+        float deg = mod(degrees(a) + 360.0, 360.0);
+        float phys = (deg > 180.0 ? 360.0 - deg : deg) / 180.0;
+        vec3 col = phys < 0.5 ? mix(uTheory, uHot, phys / 0.5) : mix(uHot, uPhys, (phys - 0.5) / 0.5);
+        float rn = (r - ${R_IN.toFixed(2)}) / ${(R_OUT - R_IN).toFixed(2)};
+        float bands = smoothstep(0.035, 0.0, abs(fract(rn * 6.0) - 0.5) - 0.465);
+        float ticks = step(0.985, fract(deg / 5.0)) * smoothstep(0.0, 0.1, rn) * (1.0 - smoothstep(0.9, 1.0, rn));
+        float edge = smoothstep(0.03, 0.0, rn) + smoothstep(0.97, 1.0, rn);
+        float body = 0.025 + 0.035 * (1.0 - rn);
+        float sweep = step(deg, uReveal * 360.0 + 0.001) * smoothstep(uReveal * 360.0 + 0.001, uReveal * 360.0 - 12.0, deg + (1.0 - uReveal) * 0.0);
+        float head = uReveal < 1.0 ? smoothstep(10.0, 0.0, abs(deg - uReveal * 360.0)) : 0.0;
+        float focus = uFocus >= 0.0 ? 0.55 + 0.45 * smoothstep(40.0, 0.0, min(abs(deg - uFocus), 360.0 - abs(deg - uFocus))) : 1.0;
+        float pulse = 0.5 + 0.5 * sin(uTime * 1.2 - rn * 6.0);
+        float alpha = (body + bands * 0.22 + ticks * 0.35 + edge * 0.75) * focus * (0.85 + 0.15 * pulse);
+        alpha = alpha * max(sweep, 0.0) + head * 0.9;
+        gl_FragColor = vec4(col * alpha, alpha);
+      }`,
+  });
+  const diskMesh = new THREE.Mesh(new THREE.RingGeometry(R_IN, R_OUT, 360, 12), diskMat);
+  diskMesh.rotation.x = -Math.PI / 2; diskGroup.add(diskMesh);
+  // Floor grid far below, fading with distance.
+  const grid = new THREE.GridHelper(260, 104, '#3a2a24', '#22181' + '5');
+  grid.position.y = -3.2; grid.material.transparent = true; grid.material.opacity = 0.35; grid.material.depthWrite = false; diskGroup.add(grid);
+  // Major labels just outside the rim, and the two ends named.
+  const majorSprites = MAJORS.map((m) => {
+    const col = '#' + spectrum(physicality(m.deg)).getHexString();
+    const s = textSprite(m.name.toUpperCase(), { font: '600 56px "JetBrains Mono"', color: col, height: 0.036, letter: 6 });
+    s.position.copy(onDisk(m.deg, R_OUT + 2.6, 0.6)); diskGroup.add(s);
+    return s;
+  });
+  const ends = [['THEORY', 0], ['PHYSICAL', 180]].map(([t, deg]) => {
+    const s = textSprite(t, { font: '500 44px "JetBrains Mono"', color: '#b9aba6', height: 0.03, letter: 10 });
+    s.position.copy(onDisk(deg, R_OUT + 2.6, -0.45)); diskGroup.add(s); return s;
+  });
+
+  // ---------- Stations
+  const pick = [];
+  stations.forEach((st) => {
+    const col = spectrum(physicality(st.deg)), p = onDisk(st.deg, st.r);
+    const g = new THREE.Group(); g.position.copy(p); diskGroup.add(g);
+    const H = st.tier === 'new' ? 3.4 : st.tier === 'growing' ? 2.6 : 1.9;
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, H, 8, 1, true), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false }));
+    beam.position.y = H / 2; g.add(beam);
+    const node = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 16), new THREE.MeshBasicMaterial({ color: col.clone().multiplyScalar(1.15), transparent: true }));
+    node.position.y = H; g.add(node);
+    const halo = new THREE.Mesh(new THREE.RingGeometry(0.34, 0.42, 48), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.8, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false }));
+    halo.rotation.x = -Math.PI / 2; halo.position.y = 0.02; g.add(halo);
+    const label = textSprite(st.name, { font: '600 52px Inter', color: '#fbf6f3', height: 0.032 });
+    label.position.y = H + 0.62; g.add(label);
+    const hit = new THREE.Mesh(new THREE.SphereGeometry(0.7, 8, 8), new THREE.MeshBasicMaterial({ visible: false }));
+    hit.position.y = H * 0.6; hit.userData.beat = st.i + 1; g.add(hit); pick.push(hit);
+    Object.assign(st, { g, beam, node, halo, label, H, col, pos: p });
+  });
+
+  if (document.fonts && document.fonts.load) {
+    Promise.all(['600 56px "JetBrains Mono"', '500 44px "JetBrains Mono"', '600 52px Inter'].map((f) => document.fonts.load(f)))
+      .then(() => SPRITES.forEach(([sp, text, opts]) => drawSprite(sp, text, opts))).catch(() => {});
+  }
+
+  // ---------- The shatter sheet: the previous slide redrawn, cut into shards
+  const SHEET_Z = 104, SHEET_Y = 26, CAM0 = new THREE.Vector3(0, SHEET_Y, SHEET_Z + 10);
+  let sheet = null;
+  function makeSheet(from) {
+    if (sheet) { scene.remove(sheet); sheet.geometry.dispose(); sheet.material.map && sheet.material.map.dispose(); sheet.material.dispose(); sheet = null; }
+    const fov = THREE.MathUtils.degToRad(camera.fov), Hs = 2 * 10 * Math.tan(fov / 2), Ws = Hs * camera.aspect;
+    // Texture: paper, then every visible word of the slide at its real position.
+    const cw = 1920, ch = Math.round(1920 / camera.aspect), c = document.createElement('canvas'); c.width = cw; c.height = ch;
+    const g = c.getContext('2d'), dr = api.deck.getBoundingClientRect(), k = cw / dr.width;
+    const bg = getComputedStyle(api.deck).backgroundColor; g.fillStyle = bg && bg !== 'rgba(0, 0, 0, 0)' ? bg : '#fdf8f7'; g.fillRect(0, 0, cw, ch);
+    if (from) {
+      from.querySelectorAll('.w__in, .eyebrow, .label').forEach((el) => {
+        if (el.closest('.notes') || (el.querySelector && el.querySelector('.w__in'))) return;
+        const r = el.getBoundingClientRect(); if (!r.width) return;
+        const cs = getComputedStyle(el); g.font = `${cs.fontStyle} ${cs.fontWeight} ${parseFloat(cs.fontSize) * k}px ${cs.fontFamily}`;
+        if (cs.letterSpacing !== 'normal') g.letterSpacing = parseFloat(cs.letterSpacing) * k + 'px'; else g.letterSpacing = '0px';
+        g.fillStyle = cs.color; g.textBaseline = 'alphabetic';
+        const txt = cs.textTransform === 'uppercase' ? el.textContent.toUpperCase() : el.textContent;
+        const lh = parseFloat(cs.fontSize) * k;
+        g.fillText(txt, (r.left - dr.left) * k, (r.top - dr.top) * k + lh * 0.95);
+      });
+    }
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+    // Jittered grid, two triangles a cell, each triangle its own shard.
+    const CX = 18, CY = 10, pts = [];
+    for (let y = 0; y <= CY; y++) for (let x = 0; x <= CX; x++) {
+      const edge = x === 0 || y === 0 || x === CX || y === CY;
+      pts.push([x / CX + (edge ? 0 : (Math.random() - 0.5) * 0.7 / CX), y / CY + (edge ? 0 : (Math.random() - 0.5) * 0.7 / CY)]);
+    }
+    const P = [], UV = [], BA = [], CEN = [], RND = [];
+    const at = (x, y) => pts[y * (CX + 1) + x];
+    const tri = (a, b, cc) => {
+      const cx = (a[0] + b[0] + cc[0]) / 3, cy = (a[1] + b[1] + cc[1]) / 3;
+      const rnd = [Math.random(), Math.random(), Math.random(), Math.random()];
+      [[a, [1, 0, 0]], [b, [0, 1, 0]], [cc, [0, 0, 1]]].forEach(([q, bary]) => {
+        P.push((q[0] - 0.5) * Ws, (0.5 - q[1]) * Hs, 0); UV.push(q[0], 1 - q[1]); BA.push(...bary);
+        CEN.push((cx - 0.5) * Ws, (0.5 - cy) * Hs, 0); RND.push(...rnd);
+      });
+    };
+    for (let y = 0; y < CY; y++) for (let x = 0; x < CX; x++) {
+      const a = at(x, y), b = at(x + 1, y), cc = at(x, y + 1), d = at(x + 1, y + 1);
+      if ((x + y) % 2) { tri(a, b, d); tri(a, d, cc); } else { tri(a, b, cc); tri(b, d, cc); }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); geo.setAttribute('uv', new THREE.Float32BufferAttribute(UV, 2));
+    geo.setAttribute('bary', new THREE.Float32BufferAttribute(BA, 3)); geo.setAttribute('cen', new THREE.Float32BufferAttribute(CEN, 3)); geo.setAttribute('rnd', new THREE.Float32BufferAttribute(RND, 4));
+    const mat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, side: THREE.DoubleSide, toneMapped: false,
+      uniforms: { map: { value: tex }, uCrack: { value: 0 }, uT: { value: 0 }, uW: { value: Ws }, uH: { value: Hs }, uCrackCol: { value: new THREE.Color('#ff6a1a') } },
+      vertexShader: `
+        attribute vec3 bary; attribute vec3 cen; attribute vec4 rnd; varying vec2 vUv; varying vec3 vB; varying float vFade;
+        uniform float uCrack, uT, uW, uH;
+        mat3 rot(vec3 ax, float an){ ax = normalize(ax); float s = sin(an), c = cos(an), o = 1.0 - c;
+          return mat3(o*ax.x*ax.x + c, o*ax.x*ax.y + ax.z*s, o*ax.z*ax.x - ax.y*s,
+                      o*ax.x*ax.y - ax.z*s, o*ax.y*ax.y + c, o*ax.y*ax.z + ax.x*s,
+                      o*ax.z*ax.x + ax.y*s, o*ax.y*ax.z - ax.x*s, o*ax.z*ax.z + c); }
+        void main(){
+          vUv = uv; vB = bary;
+          vec3 local = position - cen;
+          float d = length(cen.xy / vec2(uW, uH));            // 0 center, ~0.7 corner
+          float delay = d * 0.35 + rnd.w * 0.12;
+          float t = clamp((uT - delay) / (1.0 - delay * 0.6), 0.0, 1.0);
+          float e = t * t;
+          vec3 dir = normalize(vec3(cen.xy + (rnd.xy - 0.5) * 0.6, 0.0) + vec3(0.0, 0.0, 0.001));
+          vec3 vel = dir * (6.0 + rnd.x * 10.0) + vec3(0.0, 0.0, 9.0 + rnd.y * 14.0);
+          local = rot(vec3(rnd.x - 0.5, rnd.y - 0.5, rnd.z - 0.5), e * (4.0 + rnd.z * 8.0)) * local * (1.0 - 0.35 * e);
+          vec3 p = cen + local + vel * e;
+          p.z += uCrack * (0.18 * (1.0 - d)) * (0.5 + rnd.z);  // the page bows toward you as it cracks
+          vFade = 1.0 - smoothstep(0.35, 0.95, t);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }`,
+      fragmentShader: `
+        uniform sampler2D map; uniform float uCrack, uT; uniform vec3 uCrackCol; varying vec2 vUv; varying vec3 vB; varying float vFade;
+        void main(){
+          vec4 c = texture2D(map, vUv);
+          float edge = 1.0 - smoothstep(0.0, 0.035, min(vB.x, min(vB.y, vB.z)));
+          vec3 col = mix(c.rgb, uCrackCol * 3.0, edge * uCrack);
+          col += uCrackCol * edge * uT * 2.0;
+          gl_FragColor = vec4(col, vFade);
+        }`,
+    });
+    sheet = new THREE.Mesh(geo, mat); sheet.position.set(0, SHEET_Y, SHEET_Z); scene.add(sheet);
+  }
+
+  // ---------- Views
+  const tmp = new THREE.Vector3();
+  const VIEW_OVER = { pos: new THREE.Vector3(3, 24, 25), target: new THREE.Vector3(-7, -2, 0), fov: 46 };
+  const VIEW_END = { pos: new THREE.Vector3(0, 34, 16), target: new THREE.Vector3(-5, 0, 0), fov: 44 };
+  function viewFor(b) {
+    if (b <= 0) return VIEW_OVER;
+    if (b > N) return VIEW_END;
+    const st = stations[b - 1], out = tmp.set(st.pos.x, 0, st.pos.z).normalize().clone();
+    const side = new THREE.Vector3(-out.z, 0, out.x);
+    // From the center side, high, looking outward over the beacon: the hole in the
+    // middle of the disk is empty, so nothing stands between, and the rest of the
+    // ring and the sky are the background.
+    // Looking outward, `side` is the camera's right; stand a little left of the
+    // beacon and aim left of it, so it sits right of center, clear of the card.
+    const pos = st.pos.clone().addScaledVector(out, -3.6).addScaledVector(side, -1.8).add(new THREE.Vector3(0, st.H + 3.4, 0));
+    const target = st.pos.clone().add(new THREE.Vector3(0, st.H * 0.5, 0)).addScaledVector(side, -2.2).addScaledVector(out, 1.2);
+    return { pos, target, fov: 42 };
+  }
+  const cam = { pos: VIEW_OVER.pos.clone(), target: VIEW_OVER.target.clone(), fov: 45 };
+  function applyCam(orbit = 0) {
+    const p = cam.pos.clone();
+    if (orbit) { const rel = p.clone().sub(cam.target); rel.applyAxisAngle(new THREE.Vector3(0, 1, 0), orbit); p.copy(cam.target).add(rel); }
+    camera.position.copy(p); camera.fov = cam.fov; camera.updateProjectionMatrix(); camera.lookAt(cam.target);
+  }
+
+  // ---------- State and animation
+  const S = { beat: 0, awake: false, anim: null, t0: 0, raf: 0, frames: 0, reveal: 1, pop: 1, drag: 0, dragV: 0, idle: 0 };
+  function setFocus(b) {
+    const cur = b >= 1 && b <= N ? b - 1 : -1;
+    diskMat.uniforms.uFocus.value = cur >= 0 ? stations[cur].deg : -1;
+    stations.forEach((st, k) => {
+      const on = cur < 0 || k === cur;
+      // Overview and finale show beacons and majors; a station's name shows when you visit it.
+      st.label.material.opacity = k === cur ? 1 : 0;
+      st.beam.material.opacity = on ? 0.9 : 0.14;
+      st.halo.material.opacity = on ? 0.9 : 0.16;
+      st.node.material.opacity = on ? 1 : 0.3;
+      st.node.scale.setScalar(k === cur ? 1.6 : 1);
+    });
+    stations.forEach((st, k) => st.li.classList.toggle('is-on', k === cur));
+    slide.classList.toggle('is-overview', cur < 0);
+    slide.classList.toggle('is-finale', b > N);
+  }
+  function applyPop(p) {
+    stations.forEach((st, k) => {
+      const t = clamp(p * (N + 4) - k * 0.9, 0, 1), s = t <= 0 ? 0.0001 : outBack(t);
+      st.g.scale.set(s, s, s);
+    });
+    majorSprites.concat(ends).forEach((s) => { s.material.opacity = ramp(p, 0.05, 0.5); });
+  }
+  function outBack(t) { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); }
+
+  function snapTo(b) {
+    S.anim = null; S.beat = b;
+    const v = viewFor(b); cam.pos.copy(v.pos); cam.target.copy(v.target); cam.fov = v.fov;
+    S.reveal = 1; S.pop = 1; diskMat.uniforms.uReveal.value = 1; applyPop(1);
+    if (sheet) sheet.visible = false; warp.material.opacity = 0; bloom.strength = 0.85;
+    slide.classList.add('is-arrived'); setFocus(b);
+  }
+  function fly(b) {
+    const from = { pos: cam.pos.clone(), target: cam.target.clone(), fov: cam.fov }, to = viewFor(b);
+    const long = (S.beat === 0 || b === 0 || b > N || S.beat > N);
+    const d = from.pos.distanceTo(to.pos), D = clamp(0.9 + d * 0.045, 1.1, long ? 2.2 : 1.7);
+    S.beat = b; setFocus(b);
+    S.anim = { kind: 'fly', from, to, D, t0: performance.now(), lift: clamp(d * 0.18, 0.6, 4.5) };
+  }
+  function portal(from) {
+    makeSheet(from);
+    S.beat = 0; setFocus(0); slide.classList.remove('is-arrived');
+    S.reveal = 0; S.pop = 0; diskMat.uniforms.uReveal.value = 0; applyPop(0);
+    cam.pos.copy(CAM0); cam.target.set(0, SHEET_Y, SHEET_Z); cam.fov = 45; sheet.visible = true;
+    S.anim = { kind: 'portal', D: 4.2, t0: performance.now() };
+  }
+  const flight = new THREE.CatmullRomCurve3([CAM0.clone(), new THREE.Vector3(0, SHEET_Y + 1, SHEET_Z - 18), new THREE.Vector3(0, 24, 58), new THREE.Vector3(0, 19, 32), VIEW_OVER.pos.clone()]);
+  const aimFrom = new THREE.Vector3(0, SHEET_Y, SHEET_Z - 40);
+  function step(now) {
+    const A = S.anim;
+    if (A && A.kind === 'fly') {
+      const t = clamp((now - A.t0) / (A.D * 1000), 0, 1), e = inOut(t);
+      cam.pos.lerpVectors(A.from.pos, A.to.pos, e); cam.pos.y += Math.sin(Math.PI * e) * A.lift;
+      cam.target.lerpVectors(A.from.target, A.to.target, inOut(clamp(t * 1.15, 0, 1)));
+      cam.fov = A.from.fov + (A.to.fov - A.from.fov) * e;
+      if (t >= 1) S.anim = null;
+    } else if (A && A.kind === 'portal') {
+      const s = (now - A.t0) / 1000, u = sheet.material.uniforms;
+      u.uCrack.value = ramp(s, 0.05, 0.5);
+      u.uT.value = clamp((s - 0.5) / 1.5, 0, 1);
+      bloom.strength = 0.85 + 1.6 * Math.exp(-Math.pow((s - 0.62) / 0.18, 2));
+      const shake = s < 0.55 ? 0.03 * ramp(s, 0.1, 0.5) : 0;
+      const f = inOut(clamp((s - 0.45) / 3.1, 0, 1));
+      cam.pos.copy(flight.getPointAt(f)); cam.pos.x += (Math.random() - 0.5) * shake; cam.pos.y += (Math.random() - 0.5) * shake;
+      cam.target.lerpVectors(new THREE.Vector3(0, SHEET_Y, SHEET_Z), aimFrom, ramp(s, 0.4, 1.4)).lerp(VIEW_OVER.target, ramp(s, 1.4, 3.4));
+      cam.fov = 45 + 26 * Math.sin(Math.PI * clamp((s - 0.45) / 2.2, 0, 1)) - 0 * s;
+      warp.material.opacity = 0.9 * Math.sin(Math.PI * clamp((s - 0.55) / 1.9, 0, 1));
+      S.reveal = ramp(s, 2.0, 3.6); diskMat.uniforms.uReveal.value = S.reveal;
+      S.pop = clamp((s - 2.6) / 1.6, 0, 1); applyPop(S.pop);
+      if (s > 2.2) sheet.visible = false;
+      if (s > 3.2) slide.classList.add('is-arrived');
+      if (s >= A.D) { S.anim = null; bloom.strength = 0.85; warp.material.opacity = 0; }
+    }
+    // Idle life: slow drift of the sky, beacons breathing, gentle orbit on the overview.
+    diskMat.uniforms.uTime.value = now / 1000;
+    stars.rotation.y = now / 1000 * 0.004;
+    stations.forEach((st, k) => { st.halo.scale.setScalar(1 + 0.18 * Math.sin(now / 520 + k)); });
+    if (!S.anim && (S.beat === 0 || S.beat > N)) S.idle += 0.00018 * 16; else S.idle *= 0.94;
+    S.drag += S.dragV; S.dragV *= 0.9; if (!dragging) S.drag *= 0.93;
+    applyCam(S.idle * (S.beat > N ? 1 : 0.35) + S.drag);
+  }
+  function loop(now) {
+    if (!S.awake) return;
+    step(now); composer.render(); S.frames++;
+    S.raf = requestAnimationFrame(loop);
+  }
+  function wake() { if (S.awake) return; S.awake = true; resize(); S.raf = requestAnimationFrame(loop); }
+  function sleep() { S.awake = false; cancelAnimationFrame(S.raf); }
+  function resize() {
+    const r = slide.getBoundingClientRect(); if (!r.width) return;
+    renderer.setSize(r.width, r.height, false); composer.setSize(r.width, r.height);
+    bloom.resolution.set(r.width / 2, r.height / 2);
+    camera.aspect = r.width / r.height; camera.updateProjectionMatrix();
+  }
+
+  // ---------- Pointer: drag to look around, click a beacon to fly to it
+  let dragging = false, down = null;
+  host.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; dragging = true; host.setPointerCapture(e.pointerId); });
+  host.addEventListener('pointermove', (e) => { if (!dragging || !down) return; const dx = e.movementX || 0; S.dragV = clamp(S.dragV - dx * 0.0009, -0.05, 0.05); });
+  host.addEventListener('pointerup', (e) => {
+    dragging = false;
+    if (!down) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null;
+    if (moved > 6) return;
+    const r = renderer.domElement.getBoundingClientRect();
+    const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
+    const hit = ray.intersectObjects(pick, false)[0];
+    if (hit) api.beat(hit.object.userData.beat);
+  });
+
+  // ---------- Spectrum legend (a canvas, drawn once, no CSS gradient)
+  const legend = slide.querySelector('.disk__legend canvas');
+  if (legend) {
+    const g = legend.getContext('2d'), w = legend.width, h = legend.height;
+    for (let x = 0; x < w; x++) { g.fillStyle = '#' + spectrum(x / (w - 1)).getHexString(); g.fillRect(x, 0, 1, h); }
+  }
+
+  window.__disk = { stats: () => ({ frames: S.frames, beat: S.beat, awake: S.awake, busy: !!S.anim, N, reveal: S.reveal, anim: S.anim && S.anim.kind,
+    camToView: cam.pos.distanceTo(viewFor(S.beat).pos), camera: camera.position.toArray().map((v) => Math.round(v * 10) / 10), idle: S.idle, stations: stations.map((s) => ({ name: s.name, deg: Math.round(s.deg), r: s.r })) }) };
+
+  return {
+    beats: N + 1,
+    set(b) { wake(); snapTo(b); },
+    go(b) { wake(); if (api.reduce.matches) snapTo(b); else fly(b); },
+    enter(b, dir, animate, from) {
+      wake();
+      if (animate && dir > 0 && b === 0) portal(from);
+      else if (animate) { snapTo(b); } else snapTo(b);
+    },
+    leave() {},
+    busy() { return !!S.anim; },
+    finish() { const b = S.beat; snapTo(b); },
+    sleep() { sleep(); },
+    resize() { if (S.awake) resize(); },
+  };
+}
+
+window.DeckKinds = window.DeckKinds || {};
+window.DeckKinds.disk = build;
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+/* ===========================================================================
+   ACM @ RCC. Deck kit engine.
+   Ported 2026-09-24 from the GDG chapter's deck kit (rcc-gdg/deck-kit/deck.js).
+   What changed in the port: the cover's device is the Rail, drawn down its
+   edge and retracted when the deck leaves the cover; the bottom progress line
+   is section names in the ledger line (components.md §7.8), not a bar; the
+   GDG-only archetypes (card, compress, the semester rung) are gone.
+
+   No build step. GSAP is optional: when it loads (cdnjs, pinned, SRI) the full
+   motion score runs; when it does not, content still rises through its masks
+   by CSS and everything else lands in its end state. Reduced motion, room mode,
+   and a running timer make every transition a cut.
+
+   The one architectural rule: every transition ends by calling applyState(i, b),
+   which sets the whole deck to "slide i, beat b" from nothing. Animation is
+   decoration laid over a state machine, so a clicker pressed six times in a
+   second lands on the right slide in the right state, every time.
+   =========================================================================== */
+(function () {
+  'use strict';
+
+  var root = document.documentElement;
+  var deck = document.querySelector('.deck');
+  if (!deck) return;
+  var slides = Array.prototype.filter.call(deck.children, function (el) { return el.classList.contains('slide'); });
+  if (!slides.length) return;
+
+  var KEY = 'acm-deck:' + (deck.getAttribute('data-deck') || location.pathname) + ':';
+  var gsap = window.gsap || null;
+  var reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+  var NS = 'http://www.w3.org/2000/svg';
+  var STAGGER = 0.056;              // 8% of the beat
+  var STAGGER_CAP = 5;              // six groups: 0..5
+
+  root.classList.add('deck-live');
+  root.setAttribute('data-theme', 'light');
+  if (!gsap) root.classList.add('no-gsap');
+
+  /* ---------- Utilities --------------------------------------------------- */
+  function store(k, v) { try { localStorage.setItem(KEY + k, v); } catch (e) { /* private window */ } }
+  function recall(k) { try { return localStorage.getItem(KEY + k); } catch (e) { return null; } }
+  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ramp(x, a, b) { var t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function one(sel, el) { return (el || document).querySelector(sel); }
+  function all(sel, el) { return Array.prototype.slice.call((el || document).querySelectorAll(sel)); }
+  function make(tag, cls, parent) { var el = document.createElement(tag); if (cls) el.className = cls; if (parent) parent.appendChild(el); return el; }
+  function svgEl(tag, attrs, parent) {
+    var el = document.createElementNS(NS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(el);
+    return el;
+  }
+  function r2(n) { return Math.round(n * 100) / 100; }
+
+  /* ---------- Tokens: one source for CSS and GSAP ------------------------- */
+  function token(name) { return getComputedStyle(root).getPropertyValue(name).trim(); }
+  function seconds(name) {
+    var v = token(name); if (!v) return 0;
+    var n = parseFloat(v); return /ms$/.test(v) ? n / 1000 : n;
+  }
+  // Solve a cubic-bezier for y at x by bisection. x(t) is monotonic for any
+  // curve whose x control points sit in [0, 1], which every token here does.
+  function cubicBezier(x1, y1, x2, y2) {
+    function at(t, a, b) { return ((1 - 3 * b + 3 * a) * t + (3 * b - 6 * a)) * t * t + 3 * a * t; }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var lo = 0, hi = 1, t = x;
+      for (var i = 0; i < 28; i++) {
+        var cx = at(t, x1, x2);
+        if (Math.abs(cx - x) < 1e-6) break;
+        if (cx < x) lo = t; else hi = t;
+        t = (lo + hi) / 2;
+      }
+      return at(t, y1, y2);
+    };
+  }
+  function curve(name, fallback) {
+    var m = /cubic-bezier\(([^)]+)\)/.exec(token(name));
+    var p = m ? m[1].split(',').map(parseFloat) : fallback;
+    return cubicBezier(p[0], p[1], p[2], p[3]);
+  }
+  var EASE = {
+    arrive: curve('--acm-ease-arrive', [0.16, 1, 0.3, 1]),
+    exit: curve('--acm-ease-exit', [0.4, 0, 1, 1]),
+    standard: curve('--acm-ease-standard', [0.32, 0.72, 0, 1])
+  };
+  function motionOn() { return !!gsap && !reduceMQ.matches; }
+  function dur(kind) { return seconds(kind === 'move' ? '--acm-dur-move' : '--acm-dur-beat'); }
+
+  /* ---------- Units: what rises through a mask ---------------------------- */
+  var TEXT = 'h1, h2, h3, p, li, .eyebrow, .label';
+  var BLOCK = '.clock, .figure, .code, .callout, .qr';
+  var NOSPLIT = '.notes, .qr, .cover__starts, .clock, .figure, .code, .callout, [data-static], svg, script, style';
+
+  function splitWords(el) {
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), nodes = [], words = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function (node) {
+      if (!node.nodeValue.trim()) return;
+      var host = node.parentNode;
+      if (host !== el && host.closest && host.closest(NOSPLIT)) return;
+      var frag = document.createDocumentFragment();
+      node.nodeValue.split(/(\s+)/).forEach(function (part) {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+        var w = make('span', 'w'), inner = make('span', 'w__in', w);
+        inner.textContent = part;
+        frag.appendChild(w); words.push(inner);
+      });
+      host.replaceChild(frag, node);
+    });
+    return words;
+  }
+  function wrapBlock(el) {
+    var mask = make('div', 'blk'), inner = make('div', 'blk__in', mask);
+    el.parentNode.insertBefore(mask, el); inner.appendChild(el);
+    return inner;
+  }
+  function ensureBody(li) {
+    if (one(':scope > .body', li)) return;
+    var body = make('span', 'body');
+    while (li.firstChild) body.appendChild(li.firstChild);
+    li.appendChild(body);
+  }
+
+  // Collect a slide's units in document order: {el, beat, target}. Groups
+  // (stagger indexes) are assigned by measure(), because they depend on lines.
+  function buildUnits(slide) {
+    var beats = all('[data-beat]', slide), units = [];
+    var targets = all(TEXT + ', ' + BLOCK, slide).filter(function (el) {
+      if (el.matches(BLOCK)) return !el.parentNode.closest(BLOCK);
+      if (el.closest(NOSPLIT)) return false;
+      var up = el.parentNode.closest(TEXT + ', ' + BLOCK);
+      return !up || !slide.contains(up);
+    });
+    targets.forEach(function (t) {
+      var host = t.closest('[data-beat]'), beat = host && slide.contains(host) ? beats.indexOf(host) + 1 : 0;
+      var els = t.matches(BLOCK) ? [wrapBlock(t)] : splitWords(t);
+      els.forEach(function (el) { units.push({ el: el, beat: beat, target: t }); });
+    });
+    return units;
+  }
+  // Words in the same line of the same element share a group, so a line rises
+  // as one. Groups count up in reading order and stop at six.
+  function measure(slide) {
+    var groups = {}, last = {};
+    slide._units.forEach(function (u) {
+      var top = Math.round(u.el.parentNode.getBoundingClientRect().top), b = u.beat;
+      if (groups[b] === undefined) { groups[b] = -1; last[b] = null; }
+      var sig = last[b];
+      if (!sig || sig.target !== u.target || Math.abs(sig.top - top) > 2) { groups[b]++; last[b] = { target: u.target, top: top }; }
+      u.k = Math.min(groups[b], STAGGER_CAP);
+      u.el.style.setProperty('--i', u.k);
+    });
+  }
+  function unitsFor(slide, beatFrom, beatTo) {
+    return slide._units.filter(function (u) { return u.beat >= beatFrom && u.beat <= beatTo; });
+  }
+
+  /* ---------- Figure: a count arriving ------------------------------------ */
+  function makeFigure(slide) {
+    var el = one('.figure__num', slide);
+    if (!el) return null;
+    var to = parseFloat(el.getAttribute('data-to') || el.textContent);
+    var from = parseFloat(el.getAttribute('data-from') || '0');
+    // Reserve the measured width of the end value, so a growing count never
+    // pushes the unit and the end state sits flush.
+    el.style.display = 'inline-block'; el.style.textAlign = 'right';
+    function render(p) { el.textContent = Math.round(lerp(from, to, clamp(p, 0, 1))).toLocaleString('en-US'); }
+    function reserve() {
+      el.style.minWidth = ''; render(1);
+      var u = deck.clientWidth / 1920 || 1;
+      el.style.minWidth = 'calc(' + r2(el.getBoundingClientRect().width / u) + ' * var(--u))';
+    }
+    return { render: render, reserve: reserve, state: { p: 1 } };
+  }
+
+  /* ---------- Clock -------------------------------------------------------- */
+  function fmt(ms) { var s = Math.ceil(ms / 1000), m = Math.floor(s / 60); s %= 60; return m + ':' + (s < 10 ? '0' : '') + s; }
+  function makeClock(slide) {
+    var secs = parseInt(slide.getAttribute('data-timer'), 10);
+    if (!secs) return null;
+    var el = one('.clock', slide);
+    if (!el) {
+      el = make('div', 'clock');
+      make('p', 'clock__digits', el); make('span', 'clock__fill', make('span', 'clock__track', el)); make('p', 'clock__hint', el);
+      (one('[data-clock-slot]', slide) || slide).appendChild(el);
+    }
+    var digits = one('.clock__digits', el), fill = one('.clock__fill', el), hint = one('.clock__hint', el);
+    var hint0 = hint.textContent.trim() || 'T to start';
+    hint.textContent = hint0;
+    var c = { total: secs * 1000, left: secs * 1000, running: false, last: 0, raf: 0 };
+    function paint() {
+      var state = c.left <= 0 ? 'done' : c.running ? (c.left <= 10000 ? 'ending' : 'running') : (c.left === c.total ? 'idle' : 'paused');
+      digits.textContent = state === 'done' ? 'Time' : fmt(c.left);
+      fill.style.transform = 'scaleX(' + (c.left / c.total) + ')';
+      el.setAttribute('data-state', state);
+      hint.textContent = state === 'done' ? 'R to reset' : state === 'paused' ? 'Paused. T to resume' : state === 'idle' ? hint0 : 'T to pause';
+    }
+    function tick() {
+      var now = performance.now();
+      c.left = Math.max(0, c.left - (now - c.last)); c.last = now; paint();
+      if (c.left > 0 && c.running) c.raf = requestAnimationFrame(tick); else c.running = false;
+    }
+    c.toggle = function () {
+      if (c.left <= 0) return;
+      c.running = !c.running;
+      if (c.running) { c.last = performance.now(); c.raf = requestAnimationFrame(tick); } else cancelAnimationFrame(c.raf);
+      paint();
+    };
+    c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); c.left = c.total; paint(); };
+    c.pause = function () { if (c.running) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
+    paint();
+    return c;
+  }
+
+  /* ---------- Chrome: ledger, counter, progress ---------------------------- */
+  var chrome = make('div', 'chrome', deck); chrome.setAttribute('aria-hidden', 'true');
+  var ledger = make('p', 'ledger', chrome), counter = make('p', 'counter', chrome);
+  var prog = svgEl('svg', { class: 'progress', viewBox: '0 0 1920 1080', focusable: 'false' }, chrome);
+  var progSegs = svgEl('g', { class: 'progress__segs' }, prog);
+  var live = make('p', 'visually-hidden', document.body); live.setAttribute('aria-live', 'polite');
+
+  // One value, R.t, runs the cover's device: 0 is the cover with its Rail full
+  // height, 1 is any other slide with the Rail gone and the progress line up.
+  // R.draw draws the Rail down on the opening; R.fill is how far the progress
+  // line has filled, in slides.
+  var BAR = { left: 96, right: 1824, y: 1026, h: 3, label: 1006, gap: 24 };
+  var P = { segs: [] };
+  var R = { t: 1, fill: 0, draw: 1 };
+  var coverRail = null;
+
+  function layoutProgress() {
+    var V = visible(), n = V.length, runs = [];
+    V.forEach(function (i, j) {
+      var m = slides[i]._section, last = runs[runs.length - 1];
+      if (last && last.section === m) last.n++; else runs.push({ section: m, n: 1, start: j });
+    });
+    var unit = (BAR.right - BAR.left - BAR.gap * (runs.length - 1)) / n, x = BAR.left;
+    progSegs.textContent = '';
+    P.segs = runs.map(function (r) {
+      var w = r.n * unit, g = svgEl('g', {}, progSegs);
+      // The cover has no section; its slot stays blank rather than a stray line.
+      if (!r.section) g.style.visibility = 'hidden';
+      svgEl('rect', { x: r2(x), y: BAR.y, width: r2(w), height: BAR.h, class: 'progress__track' }, g);
+      var fill = svgEl('rect', { x: r2(x), y: BAR.y, width: 0, height: BAR.h, class: 'progress__fill' }, g);
+      var label = svgEl('text', { x: r2(x), y: BAR.label, class: 'progress__label' }, g);
+      label.textContent = r.section;
+      var s = { x: x, w: w, n: r.n, start: r.start, fill: fill, label: label, fits: true };
+      x += w + BAR.gap;
+      return s;
+    });
+    P.segs.forEach(function (s) { try { s.fits = s.label.getComputedTextLength() <= s.w - 8; } catch (e) { s.fits = true; } });
+  }
+  function progressTarget(i) {
+    if (slides[i]._kind === 'cover') return { t: 0, fill: 0 };
+    var V = visible(), j = V.indexOf(i);
+    return { t: 1, fill: j < 0 ? R.fill : j + 1 };
+  }
+  function renderProgress() {
+    // The Rail draws down from the top on the opening, and on leaving the cover
+    // it retracts to its foot, over the first 60% of the move.
+    if (coverRail) {
+      var leave = clamp(R.t / 0.6, 0, 1), s = clamp(R.draw, 0, 1) * (1 - EASE.standard(leave));
+      coverRail.style.transformOrigin = R.t > 0 ? '50% 100%' : '50% 0';
+      coverRail.style.transform = s >= 0.9999 ? '' : 'scaleY(' + r2(s * 10000) / 10000 + ')';
+    }
+    progSegs.style.opacity = ramp(R.t, 0.45, 1);
+    var at = -1;
+    P.segs.forEach(function (s, k) {
+      var part = clamp((R.fill - s.start) / s.n, 0, 1);
+      s.fill.setAttribute('width', r2(s.w * part));
+      if (R.fill > s.start && R.fill <= s.start + s.n + 1e-6) at = k;
+    });
+    P.segs.forEach(function (s, k) {
+      s.label.classList.toggle('is-past', at >= 0 && k < at);
+      s.label.classList.toggle('is-current', k === at);
+      // A label too wide for its segment shows only while it is the current one.
+      s.label.classList.toggle('is-hidden', !s.fits && k !== at);
+    });
+    // A current label that overflows its segment hides the labels it would run into.
+    var cur = P.segs[at];
+    if (cur && !cur.fits) {
+      var end = cur.x; try { end += cur.label.getComputedTextLength() + 16; } catch (e) {}
+      P.segs.forEach(function (s, k) { if (k > at && s.x < end) s.label.classList.add('is-hidden'); });
+    }
+  }
+
+  /* ---------- Build every slide ------------------------------------------- */
+  // The countdown line goes in before anything is measured, so the cover lays
+  // out once with it in place. Hidden until the start is under 30 minutes away.
+  slides.forEach(function (s) {
+    if (s.getAttribute('data-kind') !== 'cover' || !s.hasAttribute('data-starts') || one('.cover__starts', s)) return;
+    var el = make('p', 'eyebrow cover__starts'); el.style.visibility = 'hidden'; el.textContent = 'Starts in 0:00';
+    var eb = one('.eyebrow', s); s.insertBefore(el, eb || s.firstChild);
+  });
+  function customAPI(slide) {
+    return {
+      deck: deck, root: root, gsap: gsap, ease: EASE, reduce: reduceMQ,
+      dur: dur, token: token, say: function (m) { say(m); },
+      // Jump to a beat of this slide as if the presenter had pressed toward it.
+      beat: function (b) { if (S.i !== slide._i || b === S.b) return; finish(); go(S.i, b, b > S.b ? 1 : -1); },
+      presenting: function () { return S.presenting; },
+      current: function () { return S.i === slide._i; }
+    };
+  }
+  var section = '';
+  slides.forEach(function (slide, i) {
+    slide._i = i;
+    slide._kind = slide.getAttribute('data-kind') || 'statement';
+    // A slide without data-section belongs to the section before it.
+    if (slide.hasAttribute('data-section')) section = slide.getAttribute('data-section');
+    slide._section = slide._kind === 'cover' ? '' : section;
+    all('.beats li, .board li', slide).forEach(function (li) { if (li.closest('.beats')) ensureBody(li); });
+    slide._clock = makeClock(slide);
+    slide._figure = makeFigure(slide);
+    // A plug-in kind (window.DeckKinds[kind], e.g. deck-kit/disk.js) drives its
+    // own animation; the state machine still owns slide and beat.
+    var K = window.DeckKinds && window.DeckKinds[slide._kind];
+    if (K) { try { slide._custom = K(slide, customAPI(slide)); } catch (e) { slide._custom = null; if (window.console) console.warn('deck: ' + slide._kind + ' failed to start', e); } }
+    slide._units = slide._custom ? [] : buildUnits(slide);
+    slide._beatEls = all('[data-beat]', slide);
+    slide._videos = all('video', slide);
+    // A "press" video is one more beat: the press after the last reveal plays it.
+    slide._press = slide._videos.filter(function (v) { return v.getAttribute('data-play') === 'press'; });
+    // A disk with no scene (no WebGL, no CDN) steps through its stations as beats.
+    if (slide._kind === 'disk' && !slide._custom) { all('.stations > li', slide).forEach(function (li) { li.setAttribute('data-beat', ''); }); slide._beatEls = all('[data-beat]', slide); }
+    slide._beats = slide._custom ? slide._custom.beats : slide._beatEls.length + (slide._press.length ? 1 : 0);
+  });
+  coverRail = one('.slide[data-kind="cover"] .cover__rail', deck);
+
+  /* ---------- State -------------------------------------------------------- */
+  var S = { i: 0, b: 0, room: recall('room') === '1', tl: null, last: 'none', presenting: false };
+  function visible() {
+    if (!S.room) return slides.map(function (s, i) { return i; });
+    var v = slides.map(function (s, i) { return s.hasAttribute('data-room') ? i : -1; }).filter(function (i) { return i >= 0; });
+    return v.length ? v : slides.map(function (s, i) { return i; });
+  }
+
+  function setBeats(slide, b) {
+    slide._beatEls.forEach(function (el, k) {
+      el.classList.toggle('is-pending', k >= b);
+      el.classList.toggle('is-past', k < b - 1 && el.matches('.beats li, .board li'));
+    });
+  }
+  function resetUnits(list) { if (gsap) gsap.set(list.map(function (u) { return u.el; }), { yPercent: 0 }); }
+
+  // The whole deck, set to "slide i, beat b", from nothing. Idempotent.
+  function applyState(i, b) {
+    var slide = slides[i];
+    S.i = i; S.b = b;
+    slides.forEach(function (s, k) {
+      var on = k === i;
+      s.classList.toggle('is-current', on);
+      if (!on && s._clock) s._clock.pause();
+    });
+    setBeats(slide, b);
+    resetUnits(unitsFor(slide, 0, b));
+    if (slide._figure) { slide._figure.state.p = 1; slide._figure.render(1); }
+    slides.forEach(function (s) { if (s._custom) { if (s === slide && S.presenting) s._custom.set(b); else s._custom.sleep(); } });
+    var pt = progressTarget(i); R.t = pt.t; R.fill = pt.fill; R.draw = 1; renderProgress();
+    chromeText();
+    if (slide !== S.lastSlide) { slides.forEach(function (s) { s._videos.forEach(function (v) { v._held = false; }); }); S.lastSlide = slide; }
+    syncVideos(slide, b);
+  }
+  function chromeText() {
+    var slide = slides[S.i], V = visible(), pos = V.indexOf(S.i);
+    deck.classList.toggle('on-cover', slide._kind === 'cover');
+    deck.classList.toggle('on-custom', !!slide._custom);
+    // The chrome takes its ink from the ground, and steps aside from a bleeding photo.
+    deck.setAttribute('data-ground', slide.getAttribute('data-ground') || 'paper');
+    var bleed = slide._kind === 'photo' ? (slide.getAttribute('data-layout') || 'bleed-right') : '';
+    deck.classList.toggle('on-bleed-right', bleed === 'bleed-right');
+    deck.classList.toggle('on-bleed-left', bleed === 'bleed-left');
+    ledger.textContent = slide.getAttribute('data-ledger') || deck.getAttribute('data-ledger') || '';
+    var text = pad(pos + 1) + ' / ' + pad(V.length);
+    if (S.room) text += ' · Room';
+    else if (pos === 0) text += ' · ? for keys';
+    counter.textContent = text;
+    if (history.replaceState) { try { history.replaceState(null, '', '#' + (S.i + 1)); } catch (e) { /* sandboxed frame */ } }
+    renderNotes();
+  }
+  function announce(slide, b) {
+    var V = visible(), pos = V.indexOf(slide._i), label = slide.getAttribute('aria-label');
+    if (!label) { var h = one('h1, h2', slide); label = h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; }
+    if (b > 0 && slide._beatEls[b - 1]) live.textContent = slide._beatEls[b - 1].textContent.replace(/\s+/g, ' ').trim();
+    else live.textContent = 'Slide ' + (pos + 1) + ' of ' + V.length + (label ? ': ' + label : '');
+  }
+
+  /* ---------- Video ------------------------------------------------------------ */
+  // Only the current slide's videos ever run. "auto" plays on arrival (never
+  // under reduced motion or in the stack); "press" plays once its beat is
+  // reached. Leaving pauses everything and rewinds press videos.
+  function playOK(v) { var p = v.play(); if (p && p.catch) p.catch(function () { /* blocked; the poster stays */ }); }
+  function syncVideos(slide, b) {
+    slides.forEach(function (s) {
+      s._videos.forEach(function (v) {
+        if (s !== slide || !S.presenting) {
+          if (!v.paused) v.pause();
+          if (v.getAttribute('data-play') === 'press' && v.currentTime) { try { v.currentTime = 0; } catch (e) {} }
+          return;
+        }
+        var want = v.getAttribute('data-play') === 'press' ? b > s._beatEls.length : !reduceMQ.matches;
+        if (v._held) want = false;
+        if (want && v.paused) playOK(v); else if (!want && !v.paused) v.pause();
+      });
+    });
+  }
+  function toggleVideos() {
+    var vs = slides[S.i]._videos;
+    if (!vs.length) { say('No video on this slide'); return; }
+    var anyPlaying = vs.some(function (v) { return !v.paused; });
+    vs.forEach(function (v) { v._held = anyPlaying; if (anyPlaying) v.pause(); else playOK(v); });
+  }
+
+  /* ---------- Transitions -------------------------------------------------- */
+  // cut: no motion. hold: a beat on the same slide. unfold: to or from the
+  // cover. ascend: within a section. turn: into a new section, at the slower tier.
+  function timerRunning() { var c = slides[S.i]._clock; return !!(c && c.running); }
+  function kindOf(i, ni) {
+    if (!S.presenting || reduceMQ.matches || S.room || timerRunning()) return 'cut';
+    if (ni === i) return 'hold';
+    var a = slides[i], z = slides[ni];
+    if (a._kind === 'cover' || z._kind === 'cover') return 'unfold';
+    return a._section === z._section ? 'ascend' : 'turn';
+  }
+  function finish() {
+    if (S.tl) { var tl = S.tl; S.tl = null; tl.progress(1); tl.kill(); }
+    slides.forEach(function (s) { if (s._custom && s._custom.busy()) s._custom.finish(); });
+  }
+  function customBusy() { return slides.some(function (s) { return s._custom && s._custom.busy(); }); }
+
+  function go(ni, nb, dir) {
+    finish();
+    var i = S.i, b = S.b, kind = kindOf(i, ni);
+    S.last = kind + (dir < 0 ? '-back' : '');
+    var from = slides[i], to = slides[ni];
+    // Start the ground crossfade with the move, not at the swap halfway through.
+    if (kind !== 'hold') deck.setAttribute('data-ground', to.getAttribute('data-ground') || 'paper');
+    if (kind === 'cut') { applyState(ni, nb); announce(to, ni === i ? nb : 0); return; }
+    // A plug-in slide animates its own beats and its own entrance.
+    if (to._custom && (ni === i || S.presenting)) {
+      if (ni === i) { S.b = nb; to._custom.go(nb, dir); chromeText(); announce(to, nb); return; }
+      var outList = unitsFor(from, 0, b).map(function (u) { return u.el; });
+      if (motionOn() && outList.length) gsap.to(outList, { yPercent: -110 * (dir < 0 ? -1 : 1), duration: 0.3 * dur('beat'), ease: EASE.exit });
+      if (from._clock) from._clock.pause();
+      var pt0 = progressTarget(ni); R.t = pt0.t; R.fill = pt0.fill; renderProgress();
+      slides.forEach(function (s, k) { s.classList.toggle('is-current', k === ni); if (s._custom && s !== to) s._custom.sleep(); });
+      S.i = ni; S.b = nb; setBeats(to, nb); chromeText(); syncVideos(to, nb);
+      to._custom.enter(nb, dir, motionOn() && kind !== 'cut', from);
+      announce(to, 0);
+      return;
+    }
+    if (from._custom && from._custom.leave) from._custom.leave();
+    if (!motionOn()) { applyState(ni, nb); cssEntrance(to, ni === i ? b : -1, nb, dir); announce(to, ni === i ? nb : 0); return; }
+
+    var beat = dur('beat'), move = dur('move'), back = dir < 0 ? 0.6 : 1;
+    var tl = gsap.timeline({ onComplete: function () { if (S.tl === tl) S.tl = null; applyState(ni, nb); } });
+    S.tl = tl;
+
+    if (kind === 'hold') {
+      if (dir > 0) {
+        setBeats(from, nb);
+        var inU = unitsFor(from, nb, nb).map(function (u) { return u.el; });
+        var ks = unitsFor(from, nb, nb).map(function (u) { return u.k; });
+        tl.fromTo(inU, { yPercent: 110 }, { yPercent: 0, duration: beat, ease: EASE.arrive, delay: 0, stagger: function (q) { return ks[q] * STAGGER; } });
+      } else {
+        var outU = unitsFor(from, b, b).map(function (u) { return u.el; });
+        tl.to(outU, { yPercent: 110, duration: 0.3 * beat, ease: EASE.exit });
+      }
+      if (from._press.length) syncVideos(from, nb);
+      announce(from, nb);
+      return;
+    }
+
+    // Ascend, Turn, Unfold. Forward climbs: out goes up, in rises from below.
+    // Backward runs the other way, faster.
+    var D = (kind === 'ascend' ? beat : move) * back;
+    var outEls = unitsFor(from, 0, b).map(function (u) { return u.el; });
+    var inList = unitsFor(to, 0, nb), inEls = inList.map(function (u) { return u.el; }), inK = inList.map(function (u) { return u.k; });
+    var sign = dir < 0 ? -1 : 1;
+    tl.to(outEls, { yPercent: -110 * sign, duration: 0.3 * beat, ease: EASE.exit });
+    // Leaving the cover, the Rail retracts while the words exit, so the first
+    // content slide arrives onto an empty stage.
+    var pt = progressTarget(ni);
+    tl.to(R, { t: pt.t, fill: pt.fill, duration: D, ease: EASE.arrive, onUpdate: renderProgress }, 0);
+    tl.add(function () {
+      gsap.set(inEls, { yPercent: 110 * sign });
+      slides.forEach(function (s, k) { s.classList.toggle('is-current', k === ni); });
+      setBeats(to, nb);
+      S.i = ni; S.b = nb;
+      if (to._figure) to._figure.render(dir > 0 ? 0 : 1);
+      chromeText();
+      syncVideos(to, nb);
+      if (from._clock) from._clock.pause();
+    }, 0.3 * beat);
+    tl.to(inEls, { yPercent: 0, duration: D, ease: EASE.arrive, stagger: function (q) { return inK[q] * STAGGER; } }, 0.3 * beat);
+    if (dir > 0 && to._figure) { to._figure.state.p = 0; tl.to(to._figure.state, { p: 1, duration: move, ease: EASE.arrive, onUpdate: function () { to._figure.render(to._figure.state.p); } }, 0.3 * beat + 0.25); }
+    announce(to, 0);
+  }
+
+  // No GSAP: the same entrances by CSS keyframes, everything else at its end state.
+  function cssEntrance(slide, fromBeat, toBeat, dir) {
+    if (reduceMQ.matches || !S.presenting) return;
+    if (fromBeat >= 0) {                           // a beat on the same slide
+      if (dir < 0 || toBeat < 1) return;
+      var el = slide._beatEls[toBeat - 1]; if (!el) return;
+      el.classList.remove('is-revealing'); void el.offsetWidth; el.classList.add('is-revealing');
+      return;
+    }
+    slide.classList.remove('is-entering'); void slide.offsetWidth; slide.classList.add('is-entering');
+    clearTimeout(slide._enterT);
+    slide._enterT = setTimeout(function () { slide.classList.remove('is-entering'); }, 2000);
+  }
+
+  // Every press first lands the transition in flight, then reads the state.
+  function next() {
+    finish();
+    var slide = slides[S.i];
+    if (S.b < slide._beats) { go(S.i, S.b + 1, 1); return; }
+    var V = visible(), pos = V.indexOf(S.i);
+    if (pos < 0) pos = V.filter(function (k) { return k < S.i; }).length - 1;
+    if (pos + 1 < V.length) go(V[pos + 1], 0, 1);
+  }
+  function prev() {
+    finish();
+    if (S.b > 0) { go(S.i, S.b - 1, -1); return; }
+    var V = visible(), pos = V.indexOf(S.i);
+    if (pos < 0) pos = V.filter(function (k) { return k < S.i; }).length;
+    if (pos - 1 >= 0) { var p = V[pos - 1]; go(p, slides[p]._beats, -1); }
+  }
+  function jump(i) { finish(); S.last = 'cut'; applyState(i, 0); announce(slides[i], 0); }
+
+  /* ---------- Cover: the opening, and the optional countdown ------------- */
+  function coverEntrance() {
+    var cover = slides[S.i];
+    if (cover._kind !== 'cover' || !S.presenting) return;
+    if (!motionOn()) { cssEntrance(cover, -1, 0, 1); return; }
+    var list = unitsFor(cover, 0, 0), els = list.map(function (u) { return u.el; }), ks = list.map(function (u) { return u.k; });
+    var tl = gsap.timeline({ onComplete: function () { if (S.tl === tl) S.tl = null; applyState(S.i, S.b); } });
+    S.tl = tl;
+    R.t = 0; R.fill = 0; R.draw = 0; renderProgress();
+    // The Rail draws first, top to bottom, and lands exactly (ease-standard);
+    // the words rise once it is most of the way down.
+    tl.to(R, { draw: 1, duration: dur('move'), ease: EASE.standard, onUpdate: renderProgress }, 0.1);
+    tl.fromTo(els, { yPercent: 110 }, { yPercent: 0, duration: dur('move'), ease: EASE.arrive, stagger: function (q) { return ks[q] * STAGGER; } }, 0.55);
+    // Backstop on a timer, not on frames: where no animation frames run (a
+    // thumbnail capture, a throttled tab) the cover would otherwise stay blank.
+    setTimeout(function () { if (S.tl === tl) finish(); }, tl.duration() * 1000 + 400);
+  }
+  var countdown = null;
+  function startCountdown() {
+    var cover = slides.filter(function (s) { return s._kind === 'cover' && s.hasAttribute('data-starts'); })[0];
+    var el = cover && one('.cover__starts', cover);
+    if (!el) return;
+    var hm = cover.getAttribute('data-starts').split(':');
+    function paint() {
+      var now = new Date(), at = new Date(now); at.setHours(+hm[0], +hm[1], 0, 0);
+      var ms = at - now;
+      el.style.visibility = ms > 0 && ms < 30 * 60000 ? 'visible' : 'hidden';
+      el.textContent = 'Starts in ' + fmt(ms);
+    }
+    paint(); countdown = setInterval(paint, 1000);
+  }
+
+  /* ---------- Notes, help, toast ------------------------------------------ */
+  var notes = make('aside', 'deck-notes', document.body); notes.hidden = true; notes.setAttribute('aria-label', 'Speaker notes');
+  function renderNotes() {
+    if (notes.hidden) return;
+    var src = one('.notes', slides[S.i]);
+    notes.innerHTML = '<h2>Notes, slide ' + (S.i + 1) + '</h2>' + (src ? src.innerHTML : '<p>No notes on this slide.</p>');
+  }
+  var help = make('div', 'deck-help', document.body); help.hidden = true; help.setAttribute('role', 'dialog'); help.setAttribute('aria-label', 'Keys');
+  help.innerHTML = '<h2>Keys</h2><table><tbody>' + [
+    ['→  Space  Page Down', 'Next beat or slide'], ['←  Page Up', 'Back'], ['Home  End', 'First, last'],
+    ['T', 'Start or pause the clock'], ['V', 'Play or pause the video'], ['R', 'Reset the clock'], ['5', 'Room mode'], ['N', 'Speaker notes'],
+    ['F', 'Fullscreen'], ['?', 'This help']
+  ].map(function (r) { return '<tr><td>' + r[0].split('  ').map(function (k) { return '<kbd>' + k + '</kbd>'; }).join(' ') + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody></table>';
+  var toast = make('p', 'deck-toast', document.body), toastT = 0;
+  function say(msg) { toast.textContent = msg; toast.classList.add('is-on'); clearTimeout(toastT); toastT = setTimeout(function () { toast.classList.remove('is-on'); }, 1600); }
+
+  /* ---------- Modes -------------------------------------------------------- */
+  function setRoom(on) {
+    finish();
+    S.room = on; store('room', on ? '1' : '0');
+    layoutProgress();
+    var V = visible();
+    if (V.indexOf(S.i) < 0) { var after = V.filter(function (k) { return k > S.i; }); jump(after.length ? after[0] : V[V.length - 1]); }
+    else applyState(S.i, S.b);
+    say(on ? 'Room mode: ' + V.length + ' slides' : 'Full deck: ' + V.length + ' slides');
+  }
+  var FORCE_STACK = /[?&]stack\b/.test(location.search);
+  function setMode() {
+    var presenting = !FORCE_STACK && window.innerWidth >= 700;
+    if (presenting === S.presenting) return;
+    finish();
+    S.presenting = presenting;
+    root.classList.toggle('is-presenting', presenting);
+    if (presenting) layoutProgress();
+    if (!presenting) {
+      slides.forEach(function (s) {
+        if (gsap) gsap.set(s._units.map(function (u) { return u.el; }), { clearProps: 'transform' });
+        s._beatEls.forEach(function (el) { el.classList.remove('is-pending', 'is-past'); });
+        s._videos.forEach(function (v) { v.pause(); });
+        if (s._figure) s._figure.render(1);
+      });
+      if (coverRail) coverRail.style.transform = '';
+    } else applyState(S.i, S.b);
+  }
+  function remeasure() {
+    finish();
+    slides.forEach(function (s) { measure(s); if (s._figure) s._figure.reserve(); if (s._custom && s._custom.resize) s._custom.resize(); });
+    layoutProgress();
+    if (S.presenting) applyState(S.i, S.b);
+  }
+
+  /* ---------- Input -------------------------------------------------------- */
+  document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (!S.presenting && e.key !== '?') return;
+    var k = e.key;
+    // Enter and Space belong to a focused link or button (the QR link), not to the deck.
+    if ((k === 'Enter' || k === ' ') && t && t.closest && t.closest('a[href], button')) return;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); next(); }
+    else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); prev(); }
+    else if (k === 'Home') { e.preventDefault(); jump(visible()[0]); }
+    else if (k === 'End') { e.preventDefault(); var V = visible(); jump(V[V.length - 1]); }
+    else if (k === 't' || k === 'T') { var c = slides[S.i]._clock; if (c) { c.toggle(); } else say('No clock on this slide'); }
+    else if (k === 'r' || k === 'R') { var c2 = slides[S.i]._clock; if (c2) { c2.reset(); say('Clock reset'); } }
+    else if (k === '5') setRoom(!S.room);
+    else if (k === 'v' || k === 'V') toggleVideos();
+    else if (k === 'n' || k === 'N') { notes.hidden = !notes.hidden; renderNotes(); }
+    else if (k === 'f' || k === 'F') {
+      // A sandboxed frame may refuse fullscreen; say so rather than throw.
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (root.requestFullscreen) { var fs = root.requestFullscreen(); if (fs && fs.catch) fs.catch(function () { say('Fullscreen is blocked here. Open the page directly.'); }); }
+    }
+    else if (k === '?' || k === '/') { help.hidden = !help.hidden; }
+    else if (k === 'Escape') { help.hidden = true; notes.hidden = true; }
+  });
+  var swipe = null;
+  deck.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') swipe = { x: e.clientX, y: e.clientY }; });
+  deck.addEventListener('pointerup', function (e) {
+    if (!swipe || !S.presenting) return;
+    var dx = e.clientX - swipe.x, dy = e.clientY - swipe.y; swipe = null;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) next(); else prev(); }
+  });
+  var resizeT = 0;
+  window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(function () { setMode(); remeasure(); }, 120); });
+  window.addEventListener('hashchange', function () { var n = parseInt(location.hash.slice(1), 10); if (n >= 1 && n <= slides.length && n - 1 !== S.i) jump(n - 1); });
+
+  /* ---------- Start -------------------------------------------------------- */
+  var n0 = parseInt((location.hash || '').slice(1), 10);
+  S.i = n0 >= 1 && n0 <= slides.length ? n0 - 1 : 0;
+  if (S.room && visible().indexOf(S.i) < 0) S.i = visible()[0];
+  S.presenting = !FORCE_STACK && window.innerWidth >= 700;
+  root.classList.toggle('is-presenting', S.presenting);
+  slides.forEach(measure);
+  layoutProgress();
+  if (S.presenting) {
+    applyState(S.i, 0);
+    // Hold the cover below its masks until fonts land, so lines are measured
+    // against the real face and nothing flashes before it rises.
+    if (slides[S.i]._kind === 'cover' && motionOn()) { gsap.set(unitsFor(slides[S.i], 0, 0).map(function (u) { return u.el; }), { yPercent: 110 }); R.draw = 0; renderProgress(); }
+  }
+  // Start once fonts land or after a second, whichever is first. If the webfont
+  // lands later, measure again (remeasure lands any entrance still running).
+  var begun = false;
+  function begin() {
+    if (begun) return; begun = true;
+    remeasure();
+    if (S.presenting && slides[S.i]._kind === 'cover') coverEntrance();
+    startCountdown();
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (begun) remeasure(); else begin(); });
+  setTimeout(begin, 1000);
+
+  // What the deck is doing, for deck-kit/check.mjs. Read-only.
+  window.__deck = {
+    state: function () {
+      var V = visible();
+      return { i: S.i, b: S.b, pos: V.indexOf(S.i), count: V.length, room: S.room, last: S.last,
+               busy: !!S.tl || customBusy(), presenting: S.presenting, gsap: !!gsap,
+               playing: slides.map(function (s) { return s._videos.filter(function (v) { return !v.paused; }).length; }),
+               rail: { t: R.t, frac: V.length ? R.fill / V.length : 0, draw: R.draw } };
+    },
+    slides: slides.map(function (s) {
+      return { kind: s._kind, section: s._section, videos: s._videos.length, room: s.hasAttribute('data-room'), beats: s._beats, timer: s._clock ? s._clock.total / 1000 : 0 };
+    })
+  };
+})();
+
+});
+</script>
+</head>
+<body>
+<main class="deck" data-deck="acm-2026-10-01" data-ledger="ACM @ RCC · Thu Oct 1 · BLCIS A-210">
+
+<section class="slide" data-kind="cover" data-starts="13:30" aria-label="Cover">
+  <div class="cover__rail" aria-hidden="true"></div>
+  <p class="cover__name">ACM @ RCC</p>
+  <p class="eyebrow">Fall 2026 · <time datetime="2026-10-01T13:30">Thursday, October 1</time></p>
+  <h1>From one app to a hundred careers</h1>
+  <p class="sub">We build Instagram from scratch, <strong>then fly through where your major can go.</strong></p>
+  <aside class="notes"><p>Name the club at the start. Two parts today: a 15-minute build exercise, then the careers disk.</p></aside>
+</section>
+
+<!-- PART ONE: build Instagram from scratch. About 15 minutes. Facts verified 2026-09-29; sources in each slide's notes. -->
+<section class="slide" data-kind="clock" data-section="Build Instagram" data-timer="180" data-room aria-label="Build Instagram">
+  <p class="eyebrow">Warm-up · fifteen minutes</p>
+  <h2>Build Instagram from scratch. What does it need?</h2>
+  <div class="clock"><p class="clock__digits">3:00</p><span class="clock__track"><span class="clock__fill"></span></span><p class="clock__hint">Shout out features. T to start the clock.</p></div>
+  <aside class="notes"><p>Three minutes. Write every answer on the board. Push for the boring stuff too: accounts, passwords, uploading.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-ground="warm" aria-label="Version one">
+  <p class="eyebrow">Version one</p>
+  <h2>The basics you probably said</h2>
+  <ol class="beats">
+    <li data-beat>Post a photo</li>
+    <li data-beat>Follow people</li>
+    <li data-beat>A feed of the people you follow</li>
+    <li data-beat>Likes and comments</li>
+  </ol>
+  <aside class="notes"><p>Check these off against the board. That is roughly the app that launched on October 6, 2010.</p></aside>
+</section>
+
+<section class="slide" data-kind="figure" data-ground="orange" aria-label="Launch day">
+  <p class="eyebrow">October 6, 2010</p>
+  <p class="figure"><span class="figure__num" data-from="0" data-to="25000">25000</span><span class="figure__unit">signups on day one</span></p>
+  <h2>And the servers crashed that night</h2>
+  <aside class="notes"><p>25,000 signed up the first day (TechCrunch, 2012-04-09, techcrunch.com/2012/04/09/instagram-story-facebook-acquisition/). 100,000 in a week, 1 million by December, and the servers crashed on launch night (Systrom interview, TechCrunch, 2011-02-02). Ask: why would a photo app crash?</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" aria-label="Twist one">
+  <p class="eyebrow">Twist one · what breaks?</p>
+  <h2>Now three billion people use it</h2>
+  <ol class="beats">
+    <li data-beat>Photos have to live close to you<span class="detail">Early on, on Amazon S3, served through a CDN</span></li>
+    <li data-beat>Caches, so a post isn't fetched a million times<span class="detail">Memcached and Redis, from the start</span></li>
+    <li data-beat>Moving 20 billion photos into Facebook's data centers<span class="detail">In 2014</span></li>
+    <li data-beat>Video has to get cheaper to process<span class="detail">A 2022 rewrite cut basic encoding compute by 94%</span></li>
+  </ol>
+  <aside class="notes"><p>Take guesses before each press. 3 billion monthly users: announced 2025-09-24 (TechCrunch, CNBC). 2011 stack: Django, PostgreSQL, Redis, Memcached on Amazon EC2, photos on S3 and CloudFront, with three engineers and 14 million users (High Scalability, 2011-12-06, summarizing Instagram Engineering). Move off AWS with 20 billion photos: Data Center Knowledge, 2014-06-27. Video: Engineering at Meta, 2022-11-04, engineering.fb.com/2022/11/04/video-engineering/instagram-video-processing-encoding-reduction/.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-ground="tint" aria-label="Twist two">
+  <p class="eyebrow">Twist two · what do we add?</p>
+  <h2>We get paid when you stay longer</h2>
+  <ol class="beats">
+    <li data-beat>A feed that never ends<span class="detail">Infinite scroll: there is no last post</span></li>
+    <li data-beat>A ranked feed instead of newest first<span class="detail">2016: ranked by interest, relationship, and timeliness</span></li>
+    <li data-beat>More to watch<span class="detail">Stories in 2016, Reels in 2020</span></li>
+    <li data-beat>Recommendations from strangers<span class="detail">Explore makes 90 million predictions a second</span></li>
+  </ol>
+  <aside class="notes"><p>This is the turn. Ask what they would add before each press. Ranked feed and its three signals: Instagram, 2016-03-15, instagram.tumblr.com/post/141107034797/160315-news. Stories: 2016-08-02. Reels: 2020-08-05. Explore narrows 500 candidates to 25 in three passes, 90 million predictions a second (Meta AI, 2019-11-25, ai.meta.com/blog/powered-by-ai-instagrams-explore-recommender-system/). Each of these is a whole team: ranking, recommendations, video, infrastructure.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-ground="warm" aria-label="Twist three">
+  <p class="eyebrow">Twist three</p>
+  <h2>Okay, but is that good for people?</h2>
+  <ol class="beats">
+    <li data-beat>2018: "You're all caught up"<span class="detail">A marker when you've seen every post from the last two days</span></li>
+    <li data-beat>2023: 42 states sued Meta<span class="detail">Alleging features like infinite scroll were built to hook teens</span></li>
+    <li data-beat>2026: a settlement, pending court approval<span class="detail">Time reminders and a daily limit for users under 18</span></li>
+  </ol>
+  <aside class="notes"><p>Keep it neutral: these are allegations and a settlement, not findings, and Meta did not admit fault. Caught up: Instagram, 2018-07-02. Lawsuit: 2023-10-24, Minnesota and Virginia AG releases. Settlement: NY AG, 2026-08-26, up to $17.1 billion; under-18 reminders at 60 and 90 minutes, a 2-hour daily limit, no access midnight to 6 a.m. Ask: if you built it, where would you draw the line?</p></aside>
+</section>
+
+<section class="slide" data-kind="statement" data-layout="giant" aria-label="The bridge">
+  <h2>Every feature you listed is somebody's job.</h2>
+  <aside class="notes"><p>Point at the board. Ranking, video, data centers, trust and safety, the app itself: each one is a team, and a career. That is part two.</p></aside>
+</section>
+
+
+<section class="slide" data-kind="statement" data-section="Careers" data-ground="orange" aria-label="Careers">
+  <p class="eyebrow">Part two</p>
+  <h2>Computer science doesn't just mean software engineer</h2>
+  <p class="sub">Let's see where CS, data science, and computer, electrical, and mechanical engineering really lead.</p>
+  <aside class="notes"><p>Ask the room: what jobs do you picture after your major? Take three answers, then press on. The next press breaks into the disk.</p></aside>
+</section>
+
+<section class="slide" data-kind="disk" data-ground="space" aria-label="The career disk">
+  <div class="disk__hud">
+    <p class="eyebrow">Careers</p>
+    <h2>Where can your major take you?</h2>
+    <p class="sub">Theory on one side, the physical world on the other. The outer ring is the newest jobs.</p>
+    <p class="sub disk__finale">Every station is a real job posted this year. Which one surprised you?</p>
+  </div>
+  <div class="disk__legend" aria-hidden="true"><canvas width="520" height="10"></canvas><p><span>Theory</span><span>Physical</span></p></div>
+  <ol class="stations">
+    <li data-majors="CS:0.9,CompE:0.1" data-tier="classic">
+      <h3>Software engineer</h3>
+      <p class="majors">CS · CompE · classic</p>
+      <p>Writes and fixes the code behind an app or website, usually with a team.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://stripe.com/careers/listing/software-engineer-new-grad/8130930">Stripe</a></p>
+      <p class="source">BLS projects software jobs to grow 10% from 2025 to 2035. <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">bls.gov, 2026</a></p>
+      <p class="try"><b>Try:</b> Ship one full-stack side project that real people use.</p>
+    </li>
+    <li data-majors="CS:0.7,CompE:0.3" data-tier="growing">
+      <h3>Site reliability engineer</h3>
+      <p class="majors">CS · CompE · growing</p>
+      <p>Keeps the servers up when millions of people use an app, and fixes it when it breaks.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://lifeattiktok.com/search/7531164305472358663">TikTok</a></p>
+      <p class="source">BLS projects computing infrastructure jobs to grow 25.1% by 2035, citing AI. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <p class="try"><b>Try:</b> Self-host a small app on Linux, with monitoring and alerts.</p>
+    </li>
+    <li data-majors="CompE:0.5,CS:0.4,EE:0.1" data-tier="new">
+      <h3>GPU infrastructure engineer</h3>
+      <p class="majors">CompE · CS · EE · new</p>
+      <p>Keeps thousands of GPUs healthy and busy so giant AI models can train.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://openai.com/careers/software-engineer-gpu-infrastructure-san-francisco/">OpenAI</a></p>
+      <p class="source">BLS expects 120,400 new computing infrastructure jobs by 2035, driven by AI. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <p class="try"><b>Try:</b> Learn Linux and CUDA basics; benchmark a model on a cloud GPU.</p>
+    </li>
+    <li data-majors="CompE:0.7,EE:0.2,CS:0.1" data-tier="classic">
+      <h3>Embedded firmware engineer</h3>
+      <p class="majors">CompE · EE · CS · classic</p>
+      <p>Writes the low-level code that runs right on a car&#x27;s chips and makes the hardware work.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://ev.careers/jobs/456637882-internship-embedded-software-engineer-firmware-platforms-fall-2026">Tesla</a></p>
+      <p class="source">BLS names IoT devices and EVs as drivers for software jobs. <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">bls.gov, 2026</a></p>
+      <p class="try"><b>Try:</b> Build a bare-metal C project on a microcontroller, like our lab boards.</p>
+    </li>
+    <li data-majors="CompE:0.6,EE:0.4" data-tier="growing">
+      <h3>Chip design verification</h3>
+      <p class="majors">CompE · EE · growing</p>
+      <p>Tries to break a chip design in simulation before it gets built, because fixing it later costs millions.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://jobs.nvidia.com/careers/job/893392585259">NVIDIA</a></p>
+      <p class="source">SIA projects a US chip-industry shortfall of 67,000 workers by 2030. <a href="https://www.semiconductors.org/wp-content/uploads/2023/07/SIA_July2023_ChippingAway_website.pdf">SIA, 2023</a></p>
+      <p class="try"><b>Try:</b> Write Verilog for a tiny CPU, plus a testbench that checks it.</p>
+    </li>
+    <li data-majors="EE:0.5,CompE:0.3,ME:0.2" data-tier="classic">
+      <h3>Hardware test engineer</h3>
+      <p class="majors">EE · CompE · ME · classic</p>
+      <p>Builds the rigs and scripts that test real hardware before it flies to space.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/spacex/jobs/8497592002">SpaceX</a></p>
+      
+      <p class="try"><b>Try:</b> Automate a sensor test in Python, logging data from a microcontroller.</p>
+    </li>
+    <li data-majors="EE:0.9,CompE:0.1" data-tier="classic">
+      <h3>RF engineer</h3>
+      <p class="majors">EE · CompE · classic</p>
+      <p>Designs the radio parts that let satellites talk to dishes on the ground.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://job-boards.greenhouse.io/spacex/jobs/8369901002">SpaceX</a></p>
+      <p class="source">Orbital launches set another yearly record in 2025. <a href="https://spacenews.com/spacex-china-drive-new-record-for-orbital-launches-in-2025/">SpaceNews, 2026</a></p>
+      <p class="try"><b>Try:</b> Build a software-defined radio receiver, or join a CubeSat team.</p>
+    </li>
+    <li data-majors="EE:0.9,ME:0.1" data-tier="new">
+      <h3>Data center electrical engineer</h3>
+      <p class="majors">EE · ME · new</p>
+      <p>Plans how huge amounts of power safely get into a data center and out to every rack.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://www.google.com/about/careers/applications/jobs/results/137116335984255686-data-center-electrical-engineer/">Google</a></p>
+      <p class="source">BLS expects electricity demand to rise, in large part from AI and data centers. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <p class="try"><b>Try:</b> Take circuits early; aim for an intern role at a utility or engineering firm.</p>
+    </li>
+    <li data-majors="EE:0.6,ME:0.4" data-tier="growing">
+      <h3>Battery systems engineer</h3>
+      <p class="majors">EE · ME · growing</p>
+      <p>Designs and debugs big battery packs so they stay safe, cool, and last for years.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://careers.rivian.com/careers-home/jobs/30892">Rivian</a></p>
+      <p class="source">BLS projects battery and energy storage manufacturing to grow 25.9% by 2035. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <p class="try"><b>Try:</b> Build a battery monitor that logs voltage and temperature.</p>
+    </li>
+    <li data-majors="ME:0.5,EE:0.3,CompE:0.2" data-tier="growing">
+      <h3>Mechatronics engineer</h3>
+      <p class="majors">ME · EE · CompE · growing</p>
+      <p>Designs the joints, motors, and control loops that make a robot move smoothly and safely.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://www.tesla.com/careers/search/job/mechatronics-engineer-optimus-223011">Tesla, Optimus</a></p>
+      <p class="source">Factory robot installs have more than doubled in ten years. <a href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years">IFR, 2025</a></p>
+      <p class="try"><b>Try:</b> Build a PID-controlled motor or a balancing robot, and tune it.</p>
+    </li>
+    <li data-majors="ME:0.9,EE:0.1" data-tier="new">
+      <h3>Data center cooling engineer</h3>
+      <p class="majors">ME · EE · new</p>
+      <p>Figures out how to keep rooms full of hot AI chips cool, with air and liquid.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://www.google.com/about/careers/applications/jobs/results/126994228717724358-data-center-mechanical-cooling-engineer/">Google</a></p>
+      <p class="source">AI data centers are pulling in mechanical and electrical engineers. <a href="https://spectrum.ieee.org/ai-data-centers-engineers-jobs">IEEE Spectrum, 2026</a></p>
+      <p class="try"><b>Try:</b> Take thermodynamics early; do a CAD and heat-transfer project.</p>
+    </li>
+    <li data-majors="ME:0.4,CompE:0.3,EE:0.3" data-tier="new">
+      <h3>Robotics integration engineer</h3>
+      <p class="majors">ME · CompE · EE · new</p>
+      <p>Gets a humanoid robot&#x27;s sensors, wiring, code, and motors all working together.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://www.builtinsf.com/job/robotics-integration-engineer/9222146">Figure AI</a></p>
+      <p class="source">542,000 industrial robots were installed worldwide in 2024. <a href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years">IFR, 2025</a></p>
+      <p class="try"><b>Try:</b> Join a robotics team and own the wiring and integration.</p>
+    </li>
+    <li data-majors="DS:0.5,ME:0.5" data-tier="growing">
+      <h3>Perception engineer</h3>
+      <p class="majors">Data sci · ME · growing</p>
+      <p>Teaches a self-driving car to recognize people, cars, and signs from its cameras and lidar.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://careers.withwaymo.com/jobs/software-engineer-perception-scaling-evaluation-mountain-view-california-united-states-san-francisco">Waymo</a></p>
+      <p class="source">Waymo opened robotaxi rides in four more US cities in 2026. <a href="https://www.cnbc.com/2026/02/24/waymo-opens-robotaxi-service-to-select-riders-in-4-more-us-cities.html">CNBC, 2026</a></p>
+      <p class="try"><b>Try:</b> Run an object-detection model on a webcam or a small rover.</p>
+    </li>
+    <li data-majors="DS:0.9,CS:0.1" data-tier="classic">
+      <h3>Data scientist</h3>
+      <p class="majors">Data sci · CS · classic</p>
+      <p>Digs through app data to tell the team which features are working and which aren&#x27;t.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://www.metacareers.com/profile/job_details/1321789282873925/">Meta</a></p>
+      <p class="source">BLS projects data scientist jobs to grow 34.6% by 2035. <a href="https://www.bls.gov/news.release/pdf/ecopro.pdf">bls.gov, 2026</a></p>
+      <p class="try"><b>Try:</b> Analyze a real public dataset and present it at a club meeting.</p>
+    </li>
+    <li data-majors="DS:0.6,CS:0.4" data-tier="growing">
+      <h3>Data engineer</h3>
+      <p class="majors">Data sci · CS · growing</p>
+      <p>Builds the pipes that move huge amounts of data so analysts and AI teams can use it.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://lifeattiktok.com/search/7533292448483920136">TikTok</a></p>
+      <p class="source">WEF&#x27;s 2025 survey ranks big data specialists the fastest-growing job. <a href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">WEF, 2025</a></p>
+      <p class="try"><b>Try:</b> Build a pipeline that pulls public data into SQL every day.</p>
+    </li>
+    <li data-majors="DS:0.6,CS:0.4" data-tier="new">
+      <h3>Evals engineer</h3>
+      <p class="majors">Data sci · CS · new</p>
+      <p>Builds the tests that grade an AI model, so the team knows if it actually got better.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://www.metacareers.com/profile/job_details/1061625146845555/">Meta</a></p>
+      
+      <p class="try"><b>Try:</b> Write a small benchmark for a chatbot task and publish the results.</p>
+    </li>
+    <li data-majors="CS:0.55,DS:0.45" data-tier="growing">
+      <h3>Machine learning engineer</h3>
+      <p class="majors">CS · Data sci · growing</p>
+      <p>Trains the models that decide what you see, then makes them run fast in the real app.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://lifeattiktok.com/search/7537244549992417543">TikTok</a></p>
+      <p class="source">WEF lists AI and ML specialists among the three fastest-growing jobs. <a href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">WEF, 2025</a></p>
+      <p class="try"><b>Try:</b> Train a small model and put it behind a web demo.</p>
+    </li>
+    <li data-majors="CS:0.7,DS:0.3" data-tier="new">
+      <h3>AI enablement engineer</h3>
+      <p class="majors">CS · Data sci · new</p>
+      <p>Builds AI helpers and bots so coworkers in HR, sales, and finance get their work done faster.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://dynamitejobs.com/company/phorest/remote-job/ai-enablement-engineer">Phorest</a></p>
+      <p class="source">LinkedIn ranked AI engineer the fastest-growing US job for 2026. <a href="https://www.linkedin.com/pulse/linkedin-jobs-rise-2026-25-fastest-growing-roles-us-linkedin-news-dlb1c">LinkedIn, 2026</a></p>
+      <p class="try"><b>Try:</b> Automate a club chore with an AI agent, and write it up.</p>
+    </li>
+    <li data-majors="CS:0.7,DS:0.3" data-tier="new">
+      <h3>Forward deployed engineer</h3>
+      <p class="majors">CS · Data sci · new</p>
+      <p>Goes to a customer&#x27;s company and builds software there so they can actually use your product.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://jobs.lever.co/palantir/dab396d4-2f14-4796-aac0-0d82883dccf0">Palantir</a></p>
+      <p class="source">US postings went from about 1,200 in 2025 to over 5,200 by July 2026. <a href="https://lightcast.io/resources/blog/forward-deployed-engineer-ai-job">Lightcast, 2026</a></p>
+      <p class="try"><b>Try:</b> Build a tool for a campus office you actually talk to.</p>
+    </li>
+    <li data-majors="CS:0.7,DS:0.3" data-tier="growing">
+      <h3>Solutions engineer</h3>
+      <p class="majors">CS · Data sci · growing</p>
+      <p>Helps customers get the product working in their own code, and debugs it with them.</p>
+      <p class="hire"><b>Hiring now:</b> <a href="https://stripe.com/careers/listing/technical-solutions-engineer/7377101">Stripe</a></p>
+      
+      <p class="try"><b>Try:</b> Answer setup questions in the club Discord; write clear guides.</p>
+    </li>
+  </ol>
+  <p class="disk__name">ACM @ RCC</p>
+  <aside class="notes"><p>One press per station. Drag to look around; click any beacon to fly to it. Inner ring is classic roles, middle is growing, outer is new. The majors under each title are our judgment of who usually lands there, not a rule.</p></aside>
+</section>
+
+</main>
+</body>
+</html>
