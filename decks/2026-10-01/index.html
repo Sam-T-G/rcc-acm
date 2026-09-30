@@ -521,6 +521,8 @@ body {
   transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard), transform var(--acm-dur-slow-spatial) var(--acm-ease-standard), visibility 0s linear var(--acm-dur-slow-effects);
   box-shadow: 0 calc(24 * var(--u)) calc(80 * var(--u)) rgb(0 0 0 / 0.45);
 }
+/* Leaving the disk, its cards drop out at once: no fade to catch mid-way. */
+.deck-live.is-presenting .slide.has-scene:not(.is-current) .stations li { visibility: hidden; transition: none; }
 /* .is-current matters: a visible child shows through a hidden slide. */
 .deck-live.is-presenting .slide.has-scene.is-current .stations li.is-on { opacity: 1; transform: none; visibility: visible; transition-delay: 0s, 0s, 0s; }
 /* The HUD arrives after the portal; the overview and finale lines swap by beat. */
@@ -974,7 +976,10 @@ function build(slide, api) {
     S.beat = 0; setFocus(0); slide.classList.remove('is-arrived');
     S.reveal = 0; S.pop = 0; diskMat.uniforms.uReveal.value = 0; applyPop(0);
     cam.pos.copy(CAM0); cam.target.set(0, SHEET_Y, SHEET_Z); cam.fov = 45; sheet.visible = true;
-    S.anim = { kind: 'portal', D: 4.2, t0: performance.now() };
+    // Compile the shard shader now, and start the clock on the first drawn frame,
+    // so a compile stall never eats the crack.
+    applyCam(); try { renderer.compile(scene, camera); } catch (e) {}
+    S.anim = { kind: 'portal', D: 4.2, t0: null };
   }
   const flight = new THREE.CatmullRomCurve3([CAM0.clone(), new THREE.Vector3(0, SHEET_Y + 1, SHEET_Z - 18), new THREE.Vector3(0, 24, 58), new THREE.Vector3(0, 19, 32), VIEW_OVER.pos.clone()]);
   const aimFrom = new THREE.Vector3(0, SHEET_Y, SHEET_Z - 40);
@@ -987,6 +992,7 @@ function build(slide, api) {
       cam.fov = A.from.fov + (A.to.fov - A.from.fov) * e;
       if (t >= 1) S.anim = null;
     } else if (A && A.kind === 'portal') {
+      if (A.t0 === null) A.t0 = now;
       const s = (now - A.t0) / 1000, u = sheet.material.uniforms;
       u.uCrack.value = ramp(s, 0.05, 0.5);
       u.uT.value = clamp((s - 0.5) / 1.5, 0, 1);
