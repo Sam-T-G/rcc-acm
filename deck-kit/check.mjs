@@ -474,7 +474,7 @@ if (clockAt >= 0) {
 function fmt(s) { return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
 
 // ---------- Presenter view, run sheet, bridge lines (ported 2026-10-01 from the GDG kit).
-// The phone remote needs the ntfy.sh relay and a second device, so it is checked
+// The phone remote needs the press relay and a second device, so it is checked
 // by hand (README.md); everything it draws comes from the same cue() the
 // presenter view uses, which is checked here.
 console.log('presenter view and run sheet');
@@ -494,7 +494,7 @@ const pvAt = info.findIndex((s) => s.beats > 0);
 await evaluate(`location.hash = '#${pvAt + 1}'`); await sleep(600);
 for (let k = 0; k < info[pvAt].beats; k++) { await press('right'); await settle(); }
 await sleep(400);
-const due = await evaluate(`(() => { const d = document.getElementById('pv-test').contentDocument; return { where: d.querySelector('.pv__where').textContent, next: d.querySelector('.pv__upnext').textContent, due: d.querySelector('.pv__bridgebox').classList.contains('is-due'), bridge: !!d.querySelector('.pv__bridge .tool__bridge') }; })()`);
+const due = await evaluate(`(() => { const d = document.getElementById('pv-test').contentDocument; return { where: d.querySelector('.pv__where').textContent, next: d.querySelector('.pv__upnext').textContent, due: d.querySelector('.pv-bridge').classList.contains('is-due'), bridge: !!d.querySelector('.pv-bridge__text') }; })()`);
 check(due.where.startsWith(`Slide ${pvAt + 1} of`) && due.where.includes(`press ${info[pvAt].beats} of ${info[pvAt].beats}`), `presses in the deck move the presenter view (${due.where})`);
 check(/^Next slide: /.test(due.next), `on the last press, the presenter shows the next slide (${due.next})`);
 check(!due.bridge || due.due, 'on the last press, the bridge line is lit');

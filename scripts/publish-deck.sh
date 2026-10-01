@@ -70,6 +70,13 @@ owner_repo="$(printf '%s' "$remote" | sed -E 's#^(https://github.com/|git@github
 owner="$(printf '%s' "${owner_repo%%/*}" | tr '[:upper:]' '[:lower:]')"
 url="https://$owner.github.io/${owner_repo#*/}/decks/$slug/"
 
+# The remote (deck-kit/presenter.js) loads the published deck, so a deck run from
+# the local file needs its live link. Write it in once, on the first publish.
+if ! grep -q 'data-live-url=' "$deck_rel"; then
+  sed -i.bak -E "s#<main class=\"deck\"#<main class=\"deck\" data-live-url=\"$url\"#" "$deck_rel" && rm -f "$deck_rel.bak"
+  printf 'added data-live-url="%s" to %s\n' "$url" "$deck_rel"
+fi
+
 source_rev="$(git rev-parse --short HEAD)"
 [ -z "$(git status --porcelain -- "$deck_rel" deck-kit)" ] || source_rev="$source_rev with uncommitted changes"
 tmp="$(mktemp -d)"

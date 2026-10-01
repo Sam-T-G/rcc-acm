@@ -26,11 +26,6 @@
   if (!slides.length) return;
 
   var KEY = 'acm-deck:' + (deck.getAttribute('data-deck') || location.pathname) + ':';
-  // ?view= picks a client of the deck: mirror (a preview frame), presenter (S),
-  // remote (the phone, M), runsheet. Unset is the deck itself. Ported from the GDG
-  // kit (presentation.md §13.13 there), 2026-10-01.
-  var VIEW = (/[?&]view=(mirror|presenter|remote|runsheet)\b/.exec(location.search) || [])[1] || '';
-  var TOOL = VIEW === 'presenter' || VIEW === 'remote' || VIEW === 'runsheet';
   var gsap = window.gsap || null;
   var reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
   var NS = 'http://www.w3.org/2000/svg';
@@ -386,14 +381,12 @@
     counter.textContent = text;
     if (history.replaceState) { try { history.replaceState(null, '', '#' + (S.i + 1)); } catch (e) { /* sandboxed frame */ } }
     renderNotes();
-    sync(S.i, S.b);
   }
   function announce(slide, b) {
     var V = visible(), pos = V.indexOf(slide._i), label = slide.getAttribute('aria-label');
     if (!label) { var h = one('h1, h2', slide); label = h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; }
     if (b > 0 && slide._beatEls[b - 1]) live.textContent = slide._beatEls[b - 1].textContent.replace(/\s+/g, ' ').trim();
     else live.textContent = 'Slide ' + (pos + 1) + ' of ' + V.length + (label ? ': ' + label : '');
-    sync(slide._i, b);
   }
 
   /* ---------- Video ------------------------------------------------------------ */
@@ -583,7 +576,6 @@
   help.innerHTML = '<h2>Keys</h2><table><tbody>' + [
     ['→  Space  Page Down', 'Next beat or slide'], ['←  Page Up', 'Back'], ['Home  End', 'First, last'],
     ['T', 'Start or pause the clock'], ['V', 'Play or pause the video'], ['R', 'Reset the clock'], ['5', 'Room mode'], ['N', 'Speaker notes'],
-    ['S', 'Presenter view (second window)'], ['M', 'Phone remote'],
     ['F', 'Fullscreen'], ['?', 'This help']
   ].map(function (r) { return '<tr><td>' + r[0].split('  ').map(function (k) { return '<kbd>' + k + '</kbd>'; }).join(' ') + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody></table>';
   var toast = make('p', 'deck-toast', document.body), toastT = 0;
@@ -599,7 +591,7 @@
     else applyState(S.i, S.b);
     say(on ? 'Room mode: ' + V.length + ' slides' : 'Full deck: ' + V.length + ' slides');
   }
-  var FORCE_STACK = /[?&]stack\b/.test(location.search) || TOOL;
+  var FORCE_STACK = /[?&]stack\b/.test(location.search);
   function setMode() {
     var presenting = !FORCE_STACK && window.innerWidth >= 700;
     if (presenting === S.presenting) return;
@@ -625,31 +617,28 @@
   }
 
   /* ---------- Input -------------------------------------------------------- */
-  // One table of actions for the keyboard, the presenter window, and the phone.
+  // One table of actions for the keyboard. deck-kit/presenter.js drives the deck through the same keys.
   function act(k) {
     if (k === 'ArrowRight' || k === 'PageDown' || k === ' ' || k === 'Enter') next();
     else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') prev();
     else if (k === 'Home') jump(visible()[0]);
     else if (k === 'End') { var V = visible(); jump(V[V.length - 1]); }
-    else if (k === 't' || k === 'T') { var c = slides[S.i]._clock; if (c) { c.toggle(); sync(); } else say('No clock on this slide'); }
-    else if (k === 'r' || k === 'R') { var c2 = slides[S.i]._clock; if (c2) { c2.reset(); say('Clock reset'); sync(); } }
+    else if (k === 't' || k === 'T') { var c = slides[S.i]._clock; if (c) { c.toggle(); } else say('No clock on this slide'); }
+    else if (k === 'r' || k === 'R') { var c2 = slides[S.i]._clock; if (c2) { c2.reset(); say('Clock reset'); } }
     else if (k === '5') setRoom(!S.room);
     else if (k === 'v' || k === 'V') toggleVideos();
     else if (k === 'n' || k === 'N') { notes.hidden = !notes.hidden; renderNotes(); }
-    else if (k === 's' || k === 'S') openPresenter();
-    else if (k === 'm' || k === 'M') startPhone(null);
     else if (k === 'f' || k === 'F') {
       // A sandboxed frame may refuse fullscreen; say so rather than throw.
       if (document.fullscreenElement) document.exitFullscreen();
       else if (root.requestFullscreen) { var fs = root.requestFullscreen(); if (fs && fs.catch) fs.catch(function () { say('Fullscreen is blocked here. Open the page directly.'); }); }
     }
     else if (k === '?' || k === '/') { help.hidden = !help.hidden; }
-    else if (k === 'Escape') { help.hidden = true; notes.hidden = true; hideQr(); }
+    else if (k === 'Escape') { help.hidden = true; notes.hidden = true; }
     else return false;
     return true;
   }
   document.addEventListener('keydown', function (e) {
-    if (VIEW) return;                         // previews take no keys; tools have their own
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var t = e.target;
     if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
@@ -694,322 +683,6 @@
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (begun) remeasure(); else begin(); });
   setTimeout(begin, 1000);
-
-  /* ---------- Presenter view, phone remote, run sheet ----------------------
-     Ported 2026-10-01 from the GDG chapter's kit (rcc-gdg/deck-kit/deck.js; the
-     rules are its presentation.md §13.13). The deck window is the source of truth.
-     The presenter window (S), its two preview frames (?view=mirror), and a phone
-     (M) only send it key presses and draw what it reports. Every message carries
-     the deck's id, so two decks open at once never cross. */
-  var DECK_ID = deck.getAttribute('data-deck') || location.pathname;
-  var LIBS = {
-    qr: ['https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js', 'sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw==']
-  };
-  var libState = {};
-  function lib(name, ok, no) {
-    var st = libState[name];
-    if (st === 'ok') { ok(); return; }
-    if (!st) {
-      st = libState[name] = [];
-      var el = document.createElement('script');
-      el.src = LIBS[name][0]; el.integrity = LIBS[name][1]; el.crossOrigin = 'anonymous'; el.referrerPolicy = 'no-referrer';
-      el.onload = function () { var q = libState[name]; libState[name] = 'ok'; q.forEach(function (f) { f[0](); }); };
-      el.onerror = function () { var q = libState[name]; delete libState[name]; q.forEach(function (f) { if (f[1]) f[1](); }); };
-      document.head.appendChild(el);
-    }
-    st.push([ok, no]);
-  }
-  function msg(t, extra) { var m = { acmDeck: DECK_ID, t: t }; for (var k in extra) m[k] = extra[k]; return m; }
-  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  function toolBase() { return location.href.split('#')[0].split('?')[0]; }
-  function labelOf(s) {
-    var l = s.getAttribute('aria-label'); if (l) return l;
-    var h = one('h1, h2', s); return h ? h.textContent.replace(/\s+/g, ' ').trim() : 'Slide ' + (s._i + 1);
-  }
-  // A beat's main line, without its smaller detail line. On the career disk a
-  // beat is a station: name it, and the last one is the pull-back finale.
-  function beatText(s, k) {
-    if (s._kind === 'disk') {
-      var st = all('.stations > li', s)[k];
-      return st ? (one('h3', st) || st).textContent.replace(/\s+/g, ' ').trim() : 'the finale';
-    }
-    var el = s._beatEls[k]; if (!el) return '';
-    var c = el.cloneNode(true); all('.detail', c).forEach(function (d) { d.parentNode.removeChild(d); });
-    return c.textContent.replace(/\s+/g, ' ').trim();
-  }
-  // A slide's notes, split into the script and its bridge line (the sentence that
-  // carries the room into the next slide).
-  function notesOf(s) {
-    var n = one('.notes', s); if (!n) return { html: '', bridge: '' };
-    var c = n.cloneNode(true), br = one('.bridge', c), bridge = br ? br.innerHTML.trim() : '';
-    if (br) br.parentNode.removeChild(br);
-    return { html: c.innerHTML.trim(), bridge: bridge };
-  }
-  function clockOf(i) { var d = one('.clock__digits', slides[i]); return d ? d.textContent : ''; }
-  // What one more press shows, from slide i at beat b, and what one press back shows.
-  function nextOf(i, b) {
-    if (b < slides[i]._beats) return { i: i, b: b + 1, press: true };
-    var V = visible(), pos = V.indexOf(i);
-    if (pos < 0) pos = V.filter(function (k) { return k < i; }).length - 1;
-    return pos + 1 < V.length ? { i: V[pos + 1], b: 0, press: false } : null;
-  }
-  function prevOf(i, b) {
-    if (b > 0) return { i: i, b: b - 1 };
-    var V = visible(), pos = V.indexOf(i);
-    if (pos < 0) pos = V.filter(function (k) { return k < i; }).length;
-    return pos - 1 >= 0 ? { i: V[pos - 1], b: slides[V[pos - 1]]._beats } : null;
-  }
-  // The phone link is a relay over plain HTTPS (ntfy.sh, no account), so it works on
-  // any network a browser can load a page on, cellular included. The topic is a long
-  // random name, which is the only key, and only slide numbers and key names cross
-  // it: the phone reads the notes from its own copy of the deck. ntfy.sh allows 250
-  // messages a day per network address, so the phone moves its own screen on a tap
-  // and sends only the key; the deck answers only when the result differs.
-  var RELAY = 'https://ntfy.sh/';
-  function rid(n) { var a = new Uint8Array(n), out = ''; crypto.getRandomValues(a); for (var k = 0; k < n; k++) out += 'abcdefghijkmnpqrstuvwxyz23456789'.charAt(a[k] % 32); return out; }
-  function relayPost(topic, m, fail) {
-    fetch(RELAY + topic, { method: 'POST', body: JSON.stringify(m) })
-      .then(function (r) { if (!r.ok && fail) fail(r.status); })
-      .catch(function () { if (fail) fail(0); });
-  }
-  function relayListen(topic, onMsg, onLink) {
-    var es = new EventSource(RELAY + topic + '/sse');
-    es.onmessage = function (e) {
-      var d; try { d = JSON.parse(e.data); } catch (x) { return; }
-      if (d.event !== 'message') return;
-      try { onMsg(JSON.parse(d.message)); } catch (x) { /* not ours */ }
-    };
-    es.onopen = function () { onLink(true); };
-    es.onerror = function () { onLink(false); };      // EventSource reconnects by itself
-    return es;
-  }
-
-  // ----- The deck side: who is listening, and what it tells them.
-  var listeners = [], relay = null, phoneUrl = '', qrBox = null;
-  function sync(i, b) {
-    if (VIEW || !listeners) return;          // also called while the deck starts, before this section runs
-    if (i == null) { i = S.i; b = S.b; }
-    var m = msg('state', { i: i, b: b, room: S.room, clock: clockOf(i), phone: !!(relay && relay.phone) });
-    listeners = listeners.filter(function (w) { if (!w || w.closed) return false; try { w.postMessage(m, '*'); return true; } catch (e) { return false; } });
-    if (relay && relay.phone && !(relay.known && relay.known.i === i && relay.known.b === b && relay.known.room === S.room)) {
-      relay.known = { i: i, b: b, room: S.room };
-      clearTimeout(relay.t);                  // a burst of clicker presses sends once
-      relay.t = setTimeout(function () { relayPost(relay.topic, msg('state', { from: 'deck', i: relay.known.i, b: relay.known.b, room: relay.known.room, seq: relay.seq }), relayFail); }, 300);
-    }
-  }
-  setInterval(function () { if (!VIEW && listeners.length && slides[S.i]._clock) sync(); }, 1000);
-  function relayFail(code) { say(code === 429 ? 'The phone relay is busy. Wait a few seconds.' : 'The phone relay is unreachable. Is this laptop online?'); }
-  function tell(src, text) { if (src) src.postMessage(msg('note', { text: text }), '*'); else say(text); }
-  window.addEventListener('message', function (e) {
-    var d = e.data; if (!d || d.acmDeck !== DECK_ID) return;
-    if (VIEW === 'mirror') { if (d.t === 'show') { finish(); S.room = !!d.room; applyState(d.i, d.b); } return; }
-    if (VIEW) { if (toolOnMessage) toolOnMessage(d, e.source); return; }
-    if (d.t === 'hello' && e.source) { if (listeners.indexOf(e.source) < 0) listeners.push(e.source); sync(); }
-    else if (d.t === 'key') act(d.k);
-    else if (d.t === 'goto' && d.i >= 0 && d.i < slides.length) jump(d.i);
-    else if (d.t === 'phone') startPhone(e.source);
-  });
-  function openPresenter() {
-    var w = window.open(toolBase() + '?view=presenter#' + (S.i + 1), 'acm-presenter', 'popup,width=1440,height=900');
-    if (!w) say('Pop-ups are blocked. Allow them for this page, then press S again.');
-  }
-  // The phone needs a page it can load: the published deck. A local copy says so.
-  function remoteBase() {
-    if (/^https?:$/.test(location.protocol) && !/^(127\.|localhost)/.test(location.hostname)) return toolBase();
-    return deck.getAttribute('data-live-url') || '';
-  }
-  function startPhone(src) {
-    var base = remoteBase();
-    if (!base) { tell(src, 'The phone remote needs the published deck. Add data-live-url or open the live link.'); return; }
-    if (!relay) {
-      if (!window.EventSource || !window.fetch) { tell(src, 'This browser cannot run the phone link.'); return; }
-      relay = { topic: 'acmdeck-' + rid(24), phone: false, known: null, t: 0, seq: 0 };
-      relay.es = relayListen(relay.topic, function (d) {
-        if (!d || d.acmDeck !== DECK_ID || d.from !== 'phone') return;
-        if (d.t === 'hello') {
-          if (!relay.phone) { hideQr(); say('Phone connected'); }
-          relay.phone = true; relay.known = null; sync();
-        } else if (d.t === 'key' && typeof d.k === 'string') {
-          // The phone already shows what it expects; only a different result is sent back.
-          if (typeof d.seq === 'number') relay.seq = d.seq;
-          if (d.expect && typeof d.expect.i === 'number') relay.known = { i: d.expect.i, b: d.expect.b, room: S.room };
-          act(d.k);
-        }
-      }, function (ok) { if (!ok && !relay.phone) tell(src, 'Reaching the phone relay…'); });
-      phoneUrl = base + '?view=remote&relay=' + relay.topic;
-    }
-    showQr(src);
-  }
-  function qrSvg(url, cb) {
-    lib('qr', function () { var q = window.qrcode(0, 'M'); q.addData(url); q.make(); cb(q.createSvgTag({ cellSize: 4, margin: 2, scalable: true, alt: 'QR code for the phone remote' })); },
-        function () { cb(''); });
-  }
-  function showQr(src) {
-    if (src) { src.postMessage(msg('qr', { url: phoneUrl }), '*'); return; }
-    qrSvg(phoneUrl, function (svg) {
-      hideQr();
-      qrBox = make('div', 'deck-qr', document.body); qrBox.setAttribute('data-url', phoneUrl); qrBox.setAttribute('role', 'dialog'); qrBox.setAttribute('aria-label', 'Phone remote');
-      qrBox.innerHTML = '<div class="deck-qr__code">' + svg + '</div><p>Scan with your phone to get notes and a remote.</p><p class="deck-qr__fine">It hides when the phone connects. Esc closes it.</p>';
-    });
-  }
-  function hideQr() { if (qrBox && qrBox.parentNode) qrBox.parentNode.removeChild(qrBox); qrBox = null; }
-
-  // ----- Tool pages: the deck file renders a different page around the same slides.
-  var toolOnMessage = null;
-  function toolShell(cls) {
-    root.classList.add('is-tool', 'is-' + cls);
-    var title = deck.getAttribute('data-ledger') || document.title;
-    document.title = title + ' · ' + { pv: 'Presenter', rv: 'Remote', rs: 'Run sheet' }[cls];
-    return make('div', cls, document.body);
-  }
-  function fmtClock(ms) { var s = Math.floor(ms / 1000), m = Math.floor(s / 60); s %= 60; var h = Math.floor(m / 60); m %= 60; return (h ? h + ':' + pad(m) : m) + ':' + pad(s); }
-  function wall() { return new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
-  // The text both the presenter and the phone show for "where am I, what's next".
-  function cue(st) {
-    var s = slides[st.i], nx = nextOf(st.i, st.b), n = notesOf(s);
-    var V = visible(), pos = V.indexOf(st.i);
-    var where = 'Slide ' + (pos + 1) + ' of ' + V.length + (s._beats ? ' · press ' + st.b + ' of ' + s._beats : '');
-    var upNext = !nx ? 'End of the deck' : nx.press ? 'Next press: ' + (beatText(s, st.b) || 'the next step') : 'Next slide: ' + labelOf(slides[nx.i]);
-    return { slide: s, next: nx, notes: n, where: where, upNext: upNext, due: st.b >= s._beats, label: labelOf(s) };
-  }
-  function bridgeHtml(c) {
-    if (!c.notes.bridge) return '<p class="tool__muted">No bridge line on this slide.</p>';
-    return '<p class="tool__bridge' + (c.due ? ' is-due' : '') + '">' + c.notes.bridge + '</p>';
-  }
-
-  function presenterView() {
-    var pv = toolShell('pv');
-    pv.innerHTML =
-      '<header class="pv__bar"><p class="pv__deck"></p><p class="pv__where"></p><p class="pv__clock" hidden></p>' +
-      '<button type="button" class="pv__elapsed" title="Time since you opened this. Click to reset.">0:00</button><p class="pv__wall"></p>' +
-      '<button type="button" class="pv__btn" data-act="phone">Phone remote</button><a class="pv__btn" target="_blank" rel="noopener">Run sheet</a></header>' +
-      '<section class="pv__now"><p class="tool__label">Now</p><div class="pv__frame"><iframe title="Current slide" tabindex="-1"></iframe></div><div class="pv__notes"></div></section>' +
-      '<section class="pv__next"><p class="tool__label pv__upnext">Next</p><div class="pv__frame"><iframe title="Next" tabindex="-1"></iframe></div>' +
-      '<div class="pv__bridgebox"><p class="tool__label">Bridge</p><div class="pv__bridge"></div></div><div class="pv__qr" hidden></div></section>' +
-      '<p class="pv__status" role="status">Waiting for the deck. Open this with S from the deck window.</p>';
-    var q = function (sel) { return one(sel, pv); };
-    q('.pv__deck').textContent = deck.getAttribute('data-ledger') || document.title;
-    q('a.pv__btn').href = toolBase() + '?view=runsheet';
-    var frames = all('iframe', pv), ready = [false, false], st = null, t0 = Date.now();
-    frames.forEach(function (f, k) {
-      f.addEventListener('load', function () { ready[k] = true; show(); });
-      f.src = toolBase() + '?view=mirror';
-    });
-    function fit() { all('.pv__frame', pv).forEach(function (box) { box.style.setProperty('--fit', String(box.clientWidth / 1920)); }); }
-    window.addEventListener('resize', fit); fit();
-    function show() {
-      if (!st) return;
-      var nx = nextOf(st.i, st.b);
-      if (ready[0]) frames[0].contentWindow.postMessage(msg('show', { i: st.i, b: st.b, room: st.room }), '*');
-      if (ready[1]) frames[1].contentWindow.postMessage(msg('show', nx ? { i: nx.i, b: nx.b, room: st.room } : { i: st.i, b: st.b, room: st.room }), '*');
-    }
-    function host() { return window.opener || (window.parent !== window ? window.parent : null); }
-    function send(m) { var h = host(); if (h) h.postMessage(m, '*'); }
-    function hello() { send(msg('hello')); }
-    hello(); setInterval(hello, 3000);           // re-register if the deck window reloads
-    setInterval(function () { q('.pv__elapsed').textContent = fmtClock(Date.now() - t0); q('.pv__wall').textContent = wall(); }, 500);
-    q('.pv__elapsed').addEventListener('click', function () { t0 = Date.now(); });
-    q('[data-act="phone"]').addEventListener('click', function () { send(msg('phone')); });
-    toolOnMessage = function (d) {
-      if (d.t === 'state') {
-        S.room = !!d.room; st = d;
-        var c = cue(d);
-        q('.pv__status').textContent = d.phone ? 'Phone connected' : '';
-        q('.pv__where').textContent = c.where + ' · ' + c.label;
-        var clk = q('.pv__clock'); clk.hidden = !d.clock; clk.textContent = d.clock ? 'Clock ' + d.clock : '';
-        q('.pv__upnext').textContent = c.upNext;
-        q('.pv__notes').innerHTML = c.notes.html || '<p class="tool__muted">No notes on this slide.</p>';
-        q('.pv__bridge').innerHTML = bridgeHtml(c);
-        q('.pv__bridgebox').classList.toggle('is-due', c.due && !!c.notes.bridge);
-        if (d.phone) q('.pv__qr').hidden = true;
-        show();
-      } else if (d.t === 'qr') {
-        var box = q('.pv__qr'); box.hidden = false; box.innerHTML = '<p class="tool__label">Scan with your phone</p>';
-        qrSvg(d.url, function (svg) { box.innerHTML = '<p class="tool__label">Scan with your phone</p><div class="pv__qrcode">' + svg + '</div><p class="tool__muted">Hides when it connects.</p>'; });
-      } else if (d.t === 'note') q('.pv__status').textContent = d.text;
-    };
-    // A clicker or the arrow keys work with this window focused too.
-    document.addEventListener('keydown', function (e) {
-      if (e.ctrlKey || e.metaKey || e.altKey) return;
-      var k = e.key;
-      if (/^(ArrowRight|ArrowLeft|PageDown|PageUp|Home|End| |Enter|Backspace|t|T|r|R|5|v|V)$/.test(k)) {
-        if (k === ' ' || k === 'Enter') { var t = e.target; if (t && t.closest && t.closest('a[href], button')) return; }
-        e.preventDefault(); send(msg('key', { k: k }));
-      } else if (k === 'm' || k === 'M') send(msg('phone'));
-      else if (k === 'Escape') q('.pv__qr').hidden = true;
-    });
-  }
-
-  function remoteView() {
-    var rv = toolShell('rv');
-    rv.innerHTML =
-      '<p class="rv__status" role="status">Connecting to the deck…</p>' +
-      '<header class="rv__bar"><p class="rv__where"></p><p class="rv__clock"></p></header>' +
-      '<h1 class="rv__title"></h1>' +
-      '<div class="rv__bridgebox"><p class="tool__label">Bridge</p><div class="rv__bridge"></div></div>' +
-      '<p class="rv__next"></p><div class="rv__notes"></div>' +
-      '<nav class="rv__pad"><button type="button" data-k="ArrowLeft">Back</button><button type="button" data-k="ArrowRight">Next</button></nav>';
-    var q = function (sel) { return one(sel, rv); };
-    var topic = (/[?&]relay=([\w-]+)/.exec(location.search) || [])[1], cur = null, lock = null, seq = 0;
-    function status(t) { q('.rv__status').textContent = t; rv.classList.toggle('is-live', !t); }
-    function draw(st) {
-      S.room = !!st.room;
-      var c = cue(st);
-      q('.rv__where').textContent = c.where; q('.rv__clock').textContent = st.clock || '';
-      q('.rv__title').textContent = c.label;
-      q('.rv__next').textContent = c.upNext;
-      q('.rv__bridge').innerHTML = bridgeHtml(c);
-      q('.rv__bridgebox').classList.toggle('is-due', c.due && !!c.notes.bridge);
-      q('.rv__notes').innerHTML = c.notes.html || '<p class="tool__muted">No notes on this slide.</p>';
-    }
-    function fail(code) { status(code === 429 ? 'Too many taps for the relay. Wait a few seconds.' : 'Can’t reach the relay. Check this phone’s connection.'); }
-    if (!topic) { status('This link is missing its code. Scan the QR code on the deck again.'); return; }
-    relayListen(topic, function (d) {
-      if (!d || d.acmDeck !== DECK_ID || d.from !== 'deck' || d.t !== 'state') return;
-      // A reply sent before the deck saw this phone's latest tap is already out of date.
-      if (typeof d.seq === 'number' && d.seq < seq) return;
-      cur = { i: d.i, b: d.b, room: d.room }; status(''); draw(cur);
-    }, function (ok) {
-      // Say hello on every (re)connect; the deck answers with where it is.
-      if (ok) { relayPost(topic, msg('hello', { from: 'phone' }), fail); if (!cur) status('Waiting for the deck…'); }
-      else status('Reconnecting…');
-    });
-    var sendKey = function (k) {
-      if (!cur) return;
-      var exp = k === 'ArrowRight' ? nextOf(cur.i, cur.b) : prevOf(cur.i, cur.b);
-      seq += 1;
-      relayPost(topic, msg('key', { from: 'phone', k: k, seq: seq, expect: exp ? { i: exp.i, b: exp.b } : null }), fail);
-      if (exp) { cur = { i: exp.i, b: exp.b, room: cur.room }; draw(cur); }
-    };
-    all('[data-k]', rv).forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        // Keep the screen awake while presenting, where the browser allows it.
-        if (!lock && navigator.wakeLock) navigator.wakeLock.request('screen').then(function (l) { lock = l; l.addEventListener('release', function () { lock = null; }); }).catch(function () {});
-        sendKey(btn.getAttribute('data-k'));
-      });
-    });
-  }
-
-  function runSheet() {
-    var rs = toolShell('rs'), total = 0, rows = '';
-    slides.forEach(function (s, i) {
-      var n = notesOf(s), sec = s._clock ? s._clock.total / 1000 : 0; total += sec;
-      var nx = slides[i + 1];
-      rows += '<tr><td class="rs__n">' + (i + 1) + (s.hasAttribute('data-room') ? '<span class="rs__room" title="In room mode">R</span>' : '') + '</td>' +
-        '<td><p class="rs__slide">' + esc(labelOf(s)) + '</p><p class="rs__meta">' + esc(s._kind) + (s._beats ? ' · ' + s._beats + (s._beats === 1 ? ' press' : ' presses') : '') + (sec ? ' · clock ' + fmtClock(sec * 1000) : '') + '</p></td>' +
-        '<td>' + (n.bridge ? '<p class="rs__bridge">' + n.bridge + '</p>' : '<p class="tool__muted">No bridge</p>') + (nx ? '<p class="rs__into">Into: ' + esc(labelOf(nx)) + '</p>' : '') + '</td>' +
-        '<td class="rs__notes">' + n.html + '</td></tr>';
-    });
-    rs.innerHTML = '<header class="rs__head"><h1>' + esc(deck.getAttribute('data-ledger') || document.title) + '</h1>' +
-      '<p>' + slides.length + ' slides · ' + fmtClock(total * 1000) + ' on the clocks · R = in room mode</p>' +
-      '<button type="button" class="pv__btn" onclick="print()">Print</button></header>' +
-      '<table class="rs__table"><thead><tr><th>#</th><th>Slide</th><th>Bridge</th><th>Notes</th></tr></thead><tbody>' + rows + '</tbody></table>';
-  }
-
-  if (VIEW === 'presenter') presenterView();
-  else if (VIEW === 'remote') remoteView();
-  else if (VIEW === 'runsheet') runSheet();
-  if (VIEW === 'mirror') root.classList.add('is-mirror');
 
   // What the deck is doing, for deck-kit/check.mjs. Read-only.
   window.__deck = {
