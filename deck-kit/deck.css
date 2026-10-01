@@ -251,6 +251,7 @@ body {
 
 /* --- beats ---------------------------------------------------------------- */
 .beats { list-style: none; padding: 0; display: grid; gap: calc(36 * var(--u)); counter-reset: beat; }
+.beats:has(.detail) { gap: calc(22 * var(--u)); }
 .beats li {
   display: grid; grid-template-columns: calc(96 * var(--u)) 1fr; gap: calc(28 * var(--u)); align-items: baseline;
   max-width: calc(1480 * var(--u));
@@ -469,6 +470,304 @@ body {
 .collage.is-row li { flex: var(--ar, 1) 1 0; min-width: 0; position: relative; }
 .collage.is-row :is(img, video) { position: absolute; inset: 0; }
 
+/* --- split: a clock or beats slide with an animated picture beside it ------
+   data-layout="split" puts .split__head across the top, then .split__main (the
+   clock or the beats) on the left and figure.viz on the right. The viz is an
+   inline SVG, viewBox 0 0 760 560, so one SVG unit is one stage pixel and its
+   32 px labels sit at the ledger floor. On a beats slide, data-stage="k" on an
+   SVG element shows it from beat k on, and data-until="k" shows it only before
+   beat k; with no script or in the stack, the picture is at its last beat.
+   Motion (the deck's own keyframes) runs only on the current slide while
+   presenting, never under reduced motion; every element has a still pose. */
+.slide[data-layout="split"] {
+  display: grid; grid-template-columns: minmax(0, 1fr) calc(760 * var(--u)); grid-template-rows: auto auto;
+  column-gap: calc(96 * var(--u)); row-gap: calc(48 * var(--u)); align-content: center; align-items: center;
+}
+.split__head { grid-column: 1 / -1; display: flex; flex-direction: column; gap: calc(16 * var(--u)); }
+.split__main { min-width: 0; display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-layout="split"] .clock { margin-block-start: 0; gap: calc(20 * var(--u)); }
+.slide[data-layout="split"] .clock__digits { font-size: calc(168 * var(--u)); }
+.slide[data-layout="split"] .sub { max-width: none; }
+.slide[data-layout="split"] .beats { display: grid; }
+.slide[data-layout="split"] .beats li { grid-template-columns: calc(72 * var(--u)) 1fr; gap: calc(20 * var(--u)); }
+.viz { margin: 0; color: var(--acm-on-surface); }
+.viz svg { display: block; width: 100%; height: auto; overflow: visible; }
+.viz text { font-family: var(--acm-font-code); font-size: 32px; font-weight: 500; fill: currentColor; font-variant-ligatures: none; font-variant-numeric: tabular-nums; }
+.viz .ink { fill: currentColor; }
+.viz .acc, .viz .t-acc { fill: var(--acm-primary); }
+.viz .hot { fill: var(--acm-fill-orange); }
+.viz .box { fill: var(--acm-surface); stroke: currentColor; stroke-width: 4; }
+.viz .card { fill: var(--acm-surface); stroke: var(--acm-outline); stroke-width: 2; }
+.viz .ph { fill: var(--acm-surface-container-highest); }
+.viz .chip { fill: var(--acm-on-surface); }
+.viz .chip-t { fill: var(--acm-surface); }
+.viz .line, .viz .ring, .viz .hand, .viz .tick { stroke: currentColor; fill: none; stroke-width: 4; stroke-linecap: round; }
+.viz .ring { stroke-width: 6; }
+.viz .hand { stroke: var(--acm-primary); stroke-width: 8; }
+.viz .acc-stroke { stroke: var(--acm-primary); }
+.viz .dash { stroke: currentColor; fill: none; stroke-width: 3; stroke-dasharray: 6 12; opacity: 0.45; }
+.viz [data-stage], .viz [data-until] { transition: opacity var(--acm-dur-move) var(--acm-ease-arrive); }
+.viz [data-until] { opacity: 0; }
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(1).is-pending) .viz [data-stage="1"],
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(2).is-pending) .viz [data-stage="2"],
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(3).is-pending) .viz [data-stage="3"],
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(4).is-pending) .viz [data-stage="4"] { opacity: 0; }
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(1).is-pending) .viz [data-until="1"],
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(2).is-pending) .viz [data-until="2"],
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(3).is-pending) .viz [data-until="3"],
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(4).is-pending) .viz [data-until="4"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .viz * { animation: none !important; } }
+
+/* --- disk: the career disk (deck-kit/disk.js), a 3D scene under a DOM HUD --
+   Its ground is "space", the one dark ground in the kit, and only this kind
+   uses it (decision log, 2026-09-29). Every word is DOM and meets the floors. */
+.deck-live.is-presenting .deck[data-ground="space"] { background-color: #0e0a09; }
+.slide[data-ground="space"] { background: #0e0a09; color: #f7f3f1; }
+.deck[data-ground="space"] .chrome .counter { color: #d8ccc8; }
+.deck.on-custom .chrome :is(.ledger, .progress) { visibility: hidden; }
+.slide[data-kind="disk"] { padding: 0; display: block; }
+.disk__canvas { position: absolute; inset: 0; }
+.disk__canvas canvas { display: block; width: 100% !important; height: 100% !important; cursor: grab; }
+.disk__hud { position: absolute; left: var(--s-margin); top: calc(120 * var(--u)); max-width: calc(900 * var(--u)); pointer-events: none; display: grid; gap: calc(20 * var(--u)); }
+.disk__hud .eyebrow { color: #ff6a26; }
+.disk__hud h2 { color: #fbf6f3; font-size: calc(88 * var(--u)); }
+.disk__hud .sub { color: #d8ccc8; max-width: 30ch; }
+.disk__name { position: absolute; right: var(--s-margin); top: calc(120 * var(--u)); margin: 0; font-size: var(--s-body-sm); font-weight: 500; color: #fbf6f3; pointer-events: none; }
+.disk__legend { position: absolute; right: var(--s-margin); top: calc(190 * var(--u)); display: grid; gap: calc(10 * var(--u)); width: calc(520 * var(--u)); pointer-events: none; }
+.disk__legend canvas { width: 100%; height: calc(10 * var(--u)); display: block; border-radius: 2px; }
+.disk__legend p { display: flex; justify-content: space-between; margin: 0; font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.06em; color: #d8ccc8; text-transform: uppercase; }
+/* The stations: a flowing list with no scene; one card at a time with it. */
+.stations { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: calc(24 * var(--u)); }
+.stations > li {
+  position: relative; background: var(--acm-surface); color: var(--acm-on-surface);
+  border-radius: calc(20 * var(--u)); overflow: hidden;
+  padding: calc(40 * var(--u)) calc(44 * var(--u)) calc(34 * var(--u));
+  display: grid; gap: calc(20 * var(--u));
+}
+/* The station's own color from the disk, as a top rule: the card and its beacon match. */
+.stations > li::before { content: ""; position: absolute; inset: 0 0 auto 0; height: calc(10 * var(--u)); background: var(--st, var(--acm-primary)); }
+.stations h3 { margin: 0; font-size: calc(56 * var(--u)); line-height: 1.02; letter-spacing: -0.025em; font-weight: 700; text-wrap: balance; }
+.stations p, .stations ul { margin: 0; }
+.st__tier, .st__label, .st__majors { font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.06em; text-transform: uppercase; font-variant-ligatures: none; line-height: 1.2; }
+.st__tier { color: var(--acm-on-surface-variant); }
+.st__majors { color: var(--acm-primary); font-weight: 500; }
+.st__label { color: var(--acm-on-surface-variant); }
+.st__id { display: grid; gap: calc(10 * var(--u)); align-content: start; }
+.st__what { display: grid; gap: calc(12 * var(--u)); align-content: start; }
+.st__do { font-size: var(--s-body-sm); line-height: 1.3; text-wrap: pretty; }
+.st__skills { display: grid; gap: calc(12 * var(--u)); align-content: start; }
+.st__chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: calc(10 * var(--u)); }
+/* Chips (components.md §7.5): neutral fill, an outline hairline, no hue. */
+.st__chips li { font-size: var(--s-ledger); line-height: 1; padding: calc(10 * var(--u)) calc(18 * var(--u)); border-radius: 9999px; background: var(--acm-surface-container-high); box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant); }
+.st__soft li { background: transparent; }
+.st__foot { display: grid; gap: calc(4 * var(--u)); margin-top: auto; padding-top: calc(12 * var(--u)); }
+.st__foot .st__label { margin-right: calc(10 * var(--u)); }
+.st__foot p { font-size: var(--s-body-sm); line-height: 1.25; }
+.st__outlook { font-weight: 700; }
+/* Presenting on the disk: one wide band across the bottom, three zones, so the scene keeps the top of the stage. */
+.deck-live.is-presenting .slide.has-scene .stations > li { grid-template-columns: calc(470 * var(--u)) 1fr calc(470 * var(--u)); column-gap: calc(40 * var(--u)); align-items: stretch; }
+.deck-live.is-presenting .slide.has-scene .st__id { grid-template-rows: auto auto auto 1fr; }
+.deck-live.is-presenting .slide.has-scene :is(.st__what, .st__skills, .st__pay) { padding-left: calc(40 * var(--u)); box-shadow: inset calc(2 * var(--u)) 0 0 var(--acm-outline-variant); }
+.deck-live.is-presenting .slide.has-scene .st__id, .deck-live.is-presenting .slide.has-scene .st__skills { grid-row: 1 / span 2; }
+.deck-live.is-presenting .slide.has-scene .st__what { grid-column: 2; grid-row: 1; }
+.deck-live.is-presenting .slide.has-scene .st__pay { grid-column: 2; grid-row: 2; margin-top: 0; }
+.deck-live.is-presenting .slide.has-scene .st__skills { grid-column: 3; }
+.stations a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+/* Pay ladder: for the US and for Silicon Valley, a bar from entry (10th percentile)
+   to senior (90th), with marks at entry, mid (median), and senior and the figures
+   under them, on one $40k to $380k scale for every card, so a high ceiling shows
+   as a long bar. The deck's generator places the figures so they never touch. */
+.st__pay { display: grid; gap: calc(12 * var(--u)); }
+.pay__head { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: calc(24 * var(--u)); row-gap: calc(4 * var(--u)); }
+.pay__row { display: grid; grid-template-columns: calc(280 * var(--u)) 1fr; grid-template-areas: "where track" ". vals"; column-gap: calc(24 * var(--u)); row-gap: calc(4 * var(--u)); align-items: center; }
+.pay__where { grid-area: where; font-size: var(--s-body-sm); line-height: 1.1; }
+.pay__track { grid-area: track; position: relative; height: calc(18 * var(--u)); background: var(--acm-surface-container-high); }
+.pay__range { position: absolute; top: 0; bottom: 0; left: calc(var(--lo) * 1%); width: calc((var(--hi) - var(--lo)) * 1%); background: var(--acm-outline); }
+.pay__row.is-sv .pay__range { background: var(--acm-primary); }
+.pay__tick { position: absolute; top: calc(-10 * var(--u)); bottom: calc(-10 * var(--u)); left: calc(var(--x) * 1%); width: calc(4 * var(--u)); margin-left: calc(-2 * var(--u)); background: var(--acm-on-surface); }
+.pay__tick.is-mid { width: calc(8 * var(--u)); margin-left: calc(-4 * var(--u)); }
+.pay__vals { grid-area: vals; position: relative; height: calc(40 * var(--u)); }
+.pay__v { position: absolute; top: 0; left: calc(var(--x) * 1%); transform: translateX(-50%); white-space: nowrap; color: var(--acm-on-surface); font-weight: 500; }
+.pay__v.is-mid { font-weight: 700; }
+.st__src { font-family: var(--acm-font-code); font-size: var(--s-ledger); letter-spacing: 0.04em; color: var(--acm-on-surface-variant); line-height: 1.2; }
+.deck-live.is-presenting .slide.has-scene[data-card] .pay__track { background: #2a211e; }
+.deck-live.is-presenting .slide.has-scene[data-card] .pay__range { background: #6b5952; }
+.deck-live.is-presenting .slide.has-scene[data-card] .pay__tick { background: var(--holo-ink); }
+.deck-live.is-presenting .slide.has-scene[data-card] .pay__row.is-sv .pay__range { background: var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card] .pay__v { color: var(--holo-ink); }
+.deck-live.is-presenting .slide.has-scene[data-card] .pay__v:not(.is-mid) { color: var(--holo-dim); }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__src { color: var(--holo-dim); }
+.deck-live.is-presenting .slide.has-scene .stations { position: absolute; left: var(--s-margin); right: var(--s-margin); bottom: calc(96 * var(--u)); display: block; }
+.deck-live.is-presenting .slide.has-scene .stations > li {
+  position: absolute; left: 0; bottom: 0; width: 100%;
+  opacity: 0; transform: translateY(calc(40 * var(--u))); visibility: hidden;
+  transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard), transform var(--acm-dur-slow-spatial) var(--acm-ease-standard), visibility 0s linear var(--acm-dur-slow-effects);
+  box-shadow: 0 calc(24 * var(--u)) calc(80 * var(--u)) rgb(0 0 0 / 0.45);
+}
+/* Leaving the disk, its cards drop out at once: no fade to catch mid-way. */
+.deck-live.is-presenting .slide.has-scene:not(.is-current) .stations > li { visibility: hidden; transition: none; }
+/* .is-current matters: a visible child shows through a hidden slide. */
+.deck-live.is-presenting .slide.has-scene.is-current .stations > li.is-on { opacity: 1; transform: none; visibility: visible; transition-delay: 0s, 0s, 0s; }
+/* The HUD arrives after the portal; the overview and finale lines swap by beat. */
+.deck-live.is-presenting .slide.has-scene .disk__hud, .deck-live.is-presenting .slide.has-scene .disk__legend, .deck-live.is-presenting .slide.has-scene .disk__name { opacity: 0; transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+.deck-live.is-presenting .slide.has-scene.is-arrived :is(.disk__hud, .disk__legend, .disk__name) { opacity: 1; }
+.deck-live.is-presenting .slide.has-scene:not(.is-overview) .disk__hud .sub { visibility: hidden; }
+.disk__hud h2 { transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+.deck-live.is-presenting .slide.has-scene:not(.is-overview):not(.is-finale) .disk__hud h2 { opacity: 0; }
+.disk__finale { display: none; }
+.deck-live.is-presenting .slide.has-scene.is-finale .disk__finale { display: block; color: #fbf6f3; }
+.deck-live.is-presenting .slide.has-scene.is-finale .disk__hud .sub:not(.disk__finale) { display: none; }
+/* No scene (no WebGL or no CDN), presenting: the stations become beats, one card at a time. */
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) { padding: var(--s-top) var(--s-margin) var(--s-bottom); }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations { position: relative; display: block; margin-top: calc(40 * var(--u)); }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations > li { position: absolute; top: 0; left: 0; width: calc(900 * var(--u)); }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) .stations > li.is-past { visibility: hidden; }
+.deck-live.is-presenting .slide[data-kind="disk"]:not(.has-scene) :is(.disk__legend) { display: none; }
+/* Stacked (phone, no script): the disk slide grows to hold its list. */
+.slide[data-kind="disk"] { aspect-ratio: auto; min-height: 56.25cqw; }
+.deck-live.is-presenting .slide[data-kind="disk"] { min-height: 0; }
+.deck:not(.x) .slide[data-kind="disk"]:not(.has-scene) { padding: var(--s-top) var(--s-margin) var(--s-bottom); }
+
+/* --- disk card designs: data-card="dock" | "omni" | "codex" on the disk slide --
+   Under trial (?card= on the URL). Shared: an opaque near-black card (a daylight
+   projector greys out see-through glass), off-white text, orange mono labels,
+   chamfered corners, and an SVG leader from the beacon (disk.js). The card is
+   flat in screen space so text never blurs. It opens from a line when the
+   camera settles and folds back to it when the camera leaves (.is-flying);
+   reduced motion zeroes the spatial tokens, so it cuts. */
+.slide[data-card] {
+  --holo-fill: #120d0b; --holo-ink: #f6f0ec; --holo-dim: #c8bab4; --holo-acc: #ff7a3d; --holo-line: #ff6a26;
+  --chamfer: calc(36 * var(--u));
+}
+.disk__leader { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; display: none; }
+.deck-live.is-presenting .slide.has-scene[data-card]:is([data-card="dock"], [data-card="omni"], [data-card="codex"]) .disk__leader { display: block; }
+.leader__line { fill: none; stroke: var(--holo-line); stroke-width: 3; stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--acm-dur-slow-spatial) var(--acm-ease-standard); }
+.leader__dot, .leader__end { fill: var(--holo-line); opacity: 0; transition: opacity var(--acm-dur-default-effects) var(--acm-ease-standard); }
+.leader__ring { fill: none; stroke: var(--holo-line); stroke-width: 3; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.slide[data-card].is-arrived:not(.is-flying):not(.is-overview):not(.is-finale) .leader__line { stroke-dashoffset: 0; transition-delay: 120ms; }
+.slide[data-card].is-arrived:not(.is-flying):not(.is-overview):not(.is-finale) :is(.leader__dot, .leader__end) { opacity: 1; }
+.slide[data-card].is-arrived:not(.is-flying):not(.is-overview):not(.is-finale) .leader__ring { animation: leader-ring 2.4s var(--acm-ease-standard) infinite; }
+@keyframes leader-ring { 0% { opacity: 0.9; transform: scale(0.4); } 60%, 100% { opacity: 0; transform: scale(1.6); } }
+@media (prefers-reduced-motion: reduce) { .leader__ring { animation: none !important; } }
+
+/* During a visit the card owns the screen: the overview's HUD, legend, and name step back. */
+.deck-live.is-presenting .slide.has-scene[data-card]:not(.is-overview):not(.is-finale) :is(.disk__hud, .disk__legend, .disk__name) { opacity: 0; }
+.st__code, .st__ring { display: none; }
+/* Tier: a ring map and a badge. Outline (classic), half fill (growing), solid with a slow pulse (new). */
+.deck-live.is-presenting .slide.has-scene[data-card] .st__tier { display: flex; align-items: center; gap: calc(14 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__code { display: block; position: absolute; top: calc(30 * var(--u)); right: calc(92 * var(--u)); color: var(--holo-dim); }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__ring { display: block; width: calc(48 * var(--u)); height: calc(48 * var(--u)); flex: none; overflow: visible; }
+.st__ring circle { fill: none; stroke: #6b5952; stroke-width: 1.5; }
+.st__ring circle.is-here { stroke: var(--holo-line, var(--acm-primary)); stroke-width: 4; }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__badge {
+  position: relative; padding: calc(6 * var(--u)) calc(18 * var(--u)); line-height: 1.1;
+  color: var(--holo-ink); font-weight: 700; letter-spacing: 0.1em;
+  box-shadow: inset 0 0 0 calc(3 * var(--u)) var(--holo-line);
+}
+.deck-live.is-presenting .slide.has-scene[data-card] li[data-tier="growing"] .st__badge { background: #4a2a1c; }
+.deck-live.is-presenting .slide.has-scene[data-card] li[data-tier="new"] .st__badge { background: var(--holo-line); color: #120d0b; }
+.deck-live.is-presenting .slide.has-scene[data-card] li[data-tier="new"] .st__badge::after {
+  content: ""; position: absolute; inset: calc(-6 * var(--u)); box-shadow: 0 0 0 calc(3 * var(--u)) var(--holo-line); opacity: 0;
+}
+.deck-live.is-presenting .slide.has-scene.is-current[data-card]:not(.is-flying) li.is-on[data-tier="new"] .st__badge::after { animation: badge-pulse 2.4s var(--acm-ease-standard) 700ms infinite; }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__tierdesc { color: var(--holo-ink); letter-spacing: 0.06em; margin-left: calc(4 * var(--u)); }
+/* The card's edge rule repeats once per ring out: one line, two, three. */
+.deck-live.is-presenting .slide.has-scene[data-card="dock"] li[data-tier="growing"]::before { box-shadow: calc(12 * var(--u)) 0 0 var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card="dock"] li[data-tier="new"]::before { box-shadow: calc(12 * var(--u)) 0 0 var(--holo-line), calc(24 * var(--u)) 0 0 var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] li[data-tier="growing"]::before { box-shadow: 0 calc(12 * var(--u)) 0 var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] li[data-tier="new"]::before { box-shadow: 0 calc(12 * var(--u)) 0 var(--holo-line), 0 calc(24 * var(--u)) 0 var(--holo-line); }
+@keyframes badge-pulse { 0% { opacity: 0.9; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.18, 1.5); } }
+@media (prefers-reduced-motion: reduce) { .st__badge::after { animation: none !important; } }
+/* Shared card skin. Leaving the disk, the card drops at once (as in the band design). */
+.deck-live.is-presenting .slide.has-scene[data-card] .stations > li {
+  background-color: var(--holo-fill); color: var(--holo-ink); border-radius: 0; box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M32 0H0V32' fill='none' stroke='%23ffffff' stroke-opacity='0.045'/%3E%3C/svg%3E");
+  background-size: calc(32 * var(--u)) calc(32 * var(--u));
+  clip-path: var(--shut); visibility: hidden; opacity: 1; transform: none;
+  transition: clip-path var(--acm-dur-slow-spatial) var(--acm-ease-standard), visibility 0s linear var(--acm-dur-slow-spatial);
+}
+.deck-live.is-presenting .slide.has-scene[data-card]:not(.is-current) .stations > li { visibility: hidden; transition: none; }
+.deck-live.is-presenting .slide.has-scene.is-current[data-card] .stations > li.is-on { visibility: visible; transition-delay: 0s; }
+.deck-live.is-presenting .slide.has-scene.is-current[data-card]:not(.is-flying) .stations > li.is-on { clip-path: var(--open); transition-delay: 200ms, 0s; }
+.deck-live.is-presenting .slide.has-scene[data-card] .stations > li::before { background: var(--holo-line); }
+/* A corner tick, top right: the frame is drawn in fragments, never a full box. */
+.deck-live.is-presenting .slide.has-scene[data-card] .stations > li::after { content: ""; position: absolute; top: calc(20 * var(--u)); right: calc(20 * var(--u)); width: calc(44 * var(--u)); height: calc(44 * var(--u)); border-top: calc(3 * var(--u)) solid var(--holo-line); border-right: calc(3 * var(--u)) solid var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] .stations > li::after { top: auto; bottom: calc(20 * var(--u)); border-top: 0; border-bottom: calc(3 * var(--u)) solid var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card] .stations h3 { color: var(--holo-ink); }
+.deck-live.is-presenting .slide.has-scene[data-card] :is(.st__tier, .st__label) { color: var(--holo-dim); }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__majors { color: var(--holo-acc); }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__do { color: var(--holo-ink); }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__chips li { background: #2a211e; color: var(--holo-ink); box-shadow: none; border-radius: 0; }
+.deck-live.is-presenting .slide.has-scene[data-card] .st__soft li { background: transparent; box-shadow: inset 0 0 0 calc(2 * var(--u)) #5a4a44; }
+/* Content rises row by row once the frame is open. */
+.deck-live.is-presenting .slide.has-scene[data-card] .stations > li > * { opacity: 0; transform: translateY(calc(10 * var(--u))); transition: opacity var(--acm-dur-default-effects) var(--acm-ease-standard), transform var(--acm-dur-default-spatial) var(--acm-ease-standard); }
+.deck-live.is-presenting .slide.has-scene.is-current[data-card]:not(.is-flying) .stations > li.is-on > * { opacity: 1; transform: none; }
+.deck-live.is-presenting .slide.has-scene.is-current[data-card]:not(.is-flying) .stations > li.is-on > :nth-child(1) { transition-delay: 380ms; }
+.deck-live.is-presenting .slide.has-scene.is-current[data-card]:not(.is-flying) .stations > li.is-on > :nth-child(2) { transition-delay: 440ms; }
+.deck-live.is-presenting .slide.has-scene.is-current[data-card]:not(.is-flying) .stations > li.is-on > :nth-child(3) { transition-delay: 500ms; }
+.deck-live.is-presenting .slide.has-scene.is-current[data-card]:not(.is-flying) .stations > li.is-on > :nth-child(4) { transition-delay: 560ms; }
+
+/* A. dock: a tall panel docked on the right, the beacon left of center (Galaxy Map). */
+.deck-live.is-presenting .slide.has-scene[data-card="dock"] .stations { left: auto; right: var(--s-margin); bottom: auto; top: calc(104 * var(--u)); width: calc(1360 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene[data-card="dock"] .stations > li {
+  position: absolute; top: 0; left: 0; bottom: auto; width: 100%;
+  display: grid; column-gap: calc(40 * var(--u)); align-items: start;
+  padding: calc(44 * var(--u)) calc(52 * var(--u)) calc(36 * var(--u));
+  --open: polygon(var(--chamfer) 0, 100% 0, 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, 0 100%, 0 var(--chamfer));
+  --shut: polygon(var(--chamfer) 0, 100% 0, 100% 0, 100% 0, 0 0, 0 0);
+}
+.deck-live.is-presenting .slide.has-scene[data-card="dock"] .stations > li::before { inset: 0 auto 0 0; width: calc(6 * var(--u)); height: auto; }
+.deck-live.is-presenting .slide.has-scene[data-card="dock"] .stations h3 { font-size: calc(60 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene[data-card="dock"] .st__foot { padding-top: calc(4 * var(--u)); }
+/* A full-width header (tier, name, majors), then two columns: what and hiring on the
+   left, pay and skills on the right. .st__id dissolves (display: contents) so its
+   lines can sit in the header and the foot in the left column. */
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .stations > li {
+  grid-template-columns: 1.1fr 1.15fr 0.75fr; grid-template-areas: "tier tier tier" "name name name" "what skills foot" "pay pay pay"; row-gap: calc(16 * var(--u));
+}
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__id { display: contents; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) :is(.st__what, .st__pay, .st__skills, .st__foot) { grid-row: auto; grid-column: auto; padding-left: 0; box-shadow: none; border-top: 0; padding-top: 0; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__tier { grid-area: tier; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) h3 { grid-area: name; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__majors { grid-area: name; align-self: center; justify-self: end; white-space: nowrap; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__what { grid-area: what; margin-top: calc(12 * var(--u)); padding-top: calc(20 * var(--u)); border-top: calc(2 * var(--u)) solid #3a2e2a; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__pay { grid-area: pay; margin-top: calc(12 * var(--u)); padding-top: calc(20 * var(--u)); border-top: calc(2 * var(--u)) solid #3a2e2a; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__foot { grid-area: foot; align-self: start; margin-top: calc(12 * var(--u)); padding-top: calc(20 * var(--u)); border-top: calc(2 * var(--u)) solid #3a2e2a; }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__skills { grid-area: skills; margin-top: calc(12 * var(--u)); padding-top: calc(20 * var(--u)); border-top: calc(2 * var(--u)) solid #3a2e2a; align-self: start; }
+/* Chips a little tighter on the billboard. */
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__chips li { padding: calc(6 * var(--u)) calc(14 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__chips { gap: calc(8 * var(--u)); }
+/* The sentence explains itself here; its label would cost a line. */
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__what > .st__label { display: none; }
+/* With .st__id dissolved, its lines rise on their own. */
+.deck-live.is-presenting .slide.has-scene:is([data-card="dock"], [data-card="codex"]) .st__id > * { opacity: 0; transform: translateY(calc(10 * var(--u))); transition: opacity var(--acm-dur-default-effects) var(--acm-ease-standard), transform var(--acm-dur-default-spatial) var(--acm-ease-standard); }
+.deck-live.is-presenting .slide.has-scene.is-current:is([data-card="dock"], [data-card="codex"]):not(.is-flying) .stations > li.is-on .st__id > * { opacity: 1; transform: none; transition-delay: 380ms; }
+
+/* B. omni: a wide low panel that grows from a line (omni-tool); tier is the count of rule segments. */
+.deck-live.is-presenting .slide.has-scene[data-card="omni"] .stations > li {
+  padding: calc(56 * var(--u)) calc(48 * var(--u)) calc(40 * var(--u));
+  --open: polygon(var(--chamfer) 0, 100% 0, 100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%, 0 100%, 0 var(--chamfer));
+  --shut: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+}
+.deck-live.is-presenting .slide.has-scene.is-current[data-card="omni"]:not(.is-flying) .stations > li.is-on { transition-duration: var(--acm-dur-slow-spatial); transition-timing-function: cubic-bezier(0.7, 0, 0.2, 1); }
+.deck-live.is-presenting .slide.has-scene[data-card="omni"] .stations > li::before { inset: calc(18 * var(--u)) auto auto calc(var(--chamfer) + 12 * var(--u)); width: calc(72 * var(--u)); height: calc(8 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene[data-card="omni"] .stations > li[data-tier="growing"]::before { box-shadow: calc(84 * var(--u)) 0 0 var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card="omni"] .stations > li[data-tier="new"]::before { box-shadow: calc(84 * var(--u)) 0 0 var(--holo-line), calc(168 * var(--u)) 0 0 var(--holo-line); }
+.deck-live.is-presenting .slide.has-scene[data-card="omni"] :is(.st__what, .st__skills, .st__pay) { box-shadow: inset calc(2 * var(--u)) 0 0 #3a2e2a; }
+
+/* C. codex: a tall quiet column on the left, the beacon right of center. */
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] .stations { right: auto; bottom: auto; top: var(--s-margin); width: calc(1360 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] .stations > li {
+  position: absolute; top: 0; left: 0; bottom: auto; width: 100%;
+  display: grid; column-gap: calc(40 * var(--u)); align-items: start;
+  padding: calc(44 * var(--u)) calc(52 * var(--u)) calc(36 * var(--u));
+  --open: polygon(0 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% 100%, var(--chamfer) 100%, 0 calc(100% - var(--chamfer)));
+  --shut: polygon(0 0, 0 0, 0 0, 0 100%, 0 100%, 0 calc(100% - var(--chamfer)));
+}
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] .stations > li::before { inset: 0 0 auto 0; height: calc(6 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] .stations h3 { font-size: calc(60 * var(--u)); }
+.deck-live.is-presenting .slide.has-scene[data-card="codex"] .st__foot { padding-top: calc(4 * var(--u)); }
+
 /* --- Overlays: notes, help, toast. Viewport pixels, outside the stage. ---- */
 .deck-notes, .deck-help, .deck-toast { font-family: var(--acm-font-brand); }
 .deck-notes {
@@ -498,6 +797,94 @@ body {
 }
 .deck-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
 
+/* --- Presenter view, phone remote, run sheet ------------------------------
+   Ported 2026-10-01 from the GDG kit (its presentation.md §13.13). GDG's
+   highlight role maps to the ACM primary (orange) here. */
+/* The same deck file, opened as ?view=presenter, remote, or runsheet, draws one
+   of these instead of the stage. ?view=mirror is a preview frame: the deck with
+   no keys, no pointer, no toasts. */
+.is-tool .deck, .is-tool .deck-notes, .is-tool .deck-help { display: none !important; }
+.is-tool body { margin: 0; background: var(--acm-surface); color: var(--acm-on-surface); font-family: var(--acm-font-brand); }
+.is-mirror .deck-toast, .is-mirror .deck-notes, .is-mirror .deck-help { display: none !important; }
+.is-mirror .deck { pointer-events: none; cursor: none; }
+.tool__label { margin: 0 0 8px; font-family: var(--acm-font-code); font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--acm-on-surface-variant); }
+.tool__muted { color: var(--acm-on-surface-variant); margin: 0; }
+.tool__bridge { margin: 0; }
+
+.pv { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); grid-template-rows: auto minmax(0, 1fr); gap: 16px 20px; height: 100vh; padding: 16px 20px; box-sizing: border-box; }
+.pv__bar { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
+.pv__bar p { margin: 0; }
+.pv__deck { font-family: var(--acm-font-code); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--acm-on-surface-variant); }
+.pv__where { font-size: 18px; font-weight: 500; flex: 1 1 auto; }
+.pv__clock { font-family: var(--acm-font-code); font-size: 18px; color: var(--acm-primary); }
+.pv__elapsed, .pv__wall { font-family: var(--acm-font-code); font-size: 22px; font-variant-numeric: tabular-nums; }
+.pv__elapsed { border: 0; background: none; color: inherit; padding: 4px 6px; border-radius: 6px; cursor: pointer; }
+.pv__elapsed:hover { background: var(--acm-surface-container-high); }
+.pv__btn { font: 500 15px var(--acm-font-brand); color: var(--acm-primary); background: none; border: 1px solid var(--acm-outline); border-radius: 999px; padding: 6px 14px; text-decoration: none; cursor: pointer; }
+.pv__btn:hover { background: var(--acm-surface-container-high); }
+.pv__btn:focus-visible, .pv__elapsed:focus-visible, .rv__pad button:focus-visible { outline: 3px solid var(--acm-focus-ring); outline-offset: 2px; }
+.pv__now, .pv__next { display: flex; flex-direction: column; min-height: 0; }
+.pv__frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 1px var(--acm-outline-variant); background: var(--acm-surface-container); flex: none; }
+.pv__frame iframe { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; border: 0; transform: scale(var(--fit, 0.3)); transform-origin: 0 0; pointer-events: none; }
+.pv__notes { margin-top: 14px; overflow: auto; font-size: 20px; line-height: 1.5; padding-right: 8px; }
+.pv__notes p { margin: 0 0 12px; max-width: 70ch; }
+.pv__upnext { text-transform: none; letter-spacing: 0; font-family: var(--acm-font-brand); font-size: 17px; color: var(--acm-on-surface); }
+.pv__bridgebox, .rv__bridgebox { margin-top: 14px; padding: 14px 16px; border-radius: 12px; background: var(--acm-surface-container); transition: background-color var(--acm-dur-default-effects) var(--acm-ease-standard), box-shadow var(--acm-dur-default-effects) var(--acm-ease-standard); }
+.pv__bridge { font-size: 22px; line-height: 1.4; }
+/* On the slide's last press the bridge is the next thing to say. */
+.pv__bridgebox.is-due, .rv__bridgebox.is-due { background: var(--acm-primary-container); color: var(--acm-on-primary-container); box-shadow: 0 0 0 2px var(--acm-primary); }
+.pv__bridgebox.is-due .pv__bridge { font-size: 28px; font-weight: 500; }
+.pv__bridgebox.is-due .tool__label, .rv__bridgebox.is-due .tool__label { color: inherit; }
+.pv__qr { margin-top: 14px; padding: 14px; border-radius: 12px; box-shadow: 0 0 0 1px var(--acm-outline-variant); }
+.pv__qr[hidden] { display: none; }
+.pv__qrcode svg { width: 220px; height: 220px; display: block; }
+.pv__status { position: fixed; left: 20px; bottom: 12px; margin: 0; font-size: 14px; color: var(--acm-on-surface-variant); }
+.pv__status:empty { display: none; }
+
+.rv { padding: 16px 16px calc(120px + env(safe-area-inset-bottom)); max-width: 640px; margin: 0 auto; }
+.rv__status { margin: 0 0 12px; padding: 10px 12px; border-radius: 8px; background: var(--acm-surface-container-high); font-size: 16px; }
+.rv__status:empty { display: none; }
+.rv__bar { display: flex; justify-content: space-between; gap: 12px; font-family: var(--acm-font-code); font-size: 14px; color: var(--acm-on-surface-variant); }
+.rv__bar p { margin: 0; }
+.rv__clock { color: var(--acm-primary); font-size: 18px; }
+.rv__title { font-size: 24px; line-height: 1.25; font-weight: 500; margin: 8px 0 0; }
+.rv__bridge { font-size: 20px; line-height: 1.4; }
+.rv__bridgebox.is-due .rv__bridge { font-weight: 500; }
+.rv__next { margin: 14px 0 0; font-size: 17px; font-weight: 500; }
+.rv__notes { margin-top: 12px; font-size: 18px; line-height: 1.5; }
+.rv__notes p { margin: 0 0 12px; }
+.rv__pad { position: fixed; inset-inline: 0; bottom: 0; display: grid; grid-template-columns: 1fr 2fr; gap: 10px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--acm-surface); box-shadow: 0 -1px 0 var(--acm-outline-variant); }
+.rv__pad button { min-height: 88px; border-radius: 16px; font: 500 22px var(--acm-font-brand); border: 0; touch-action: manipulation; }
+.rv__pad [data-k="ArrowLeft"] { background: var(--acm-surface-container-highest); color: var(--acm-on-surface); }
+.rv__pad [data-k="ArrowRight"] { background: var(--acm-primary); color: var(--acm-on-primary); }
+.rv__pad button:active { transform: scale(0.98); }
+
+.rs { padding: 24px 32px; page: runsheet; }
+.rs__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 16px; }
+.rs__head h1 { font-size: 24px; font-weight: 500; margin: 0; }
+.rs__head p { margin: 0; color: var(--acm-on-surface-variant); }
+.rs__table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 1.45; }
+.rs__table th { text-align: left; font-family: var(--acm-font-code); font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--acm-on-surface-variant); padding: 6px 10px; border-bottom: 2px solid var(--acm-outline); }
+.rs__table td { vertical-align: top; padding: 10px; border-bottom: 1px solid var(--acm-outline-variant); }
+.rs__table td:nth-child(2) { width: 22%; }
+.rs__table td:nth-child(3) { width: 30%; }
+.rs__n { font-family: var(--acm-font-code); white-space: nowrap; }
+.rs__room { margin-left: 4px; padding: 0 4px; border-radius: 4px; background: var(--acm-primary-container); color: var(--acm-on-primary-container); font-size: 11px; }
+.rs__slide { margin: 0; font-weight: 500; }
+.rs__meta, .rs__into { margin: 2px 0 0; color: var(--acm-on-surface-variant); font-size: 12px; }
+.rs__bridge { margin: 0; font-weight: 500; }
+.rs__notes p { margin: 0 0 6px; }
+.rs tr { break-inside: avoid; }
+@page runsheet { size: letter; margin: 0.5in; }
+@media print { .is-runsheet .rs__head button { display: none; } .is-runsheet html, .is-runsheet body { background: #fff; } }
+
+.deck-qr { position: fixed; z-index: 11; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--acm-surface-container-lowest); color: var(--acm-on-surface); border-radius: 16px; padding: 24px 28px; box-shadow: 0 0 0 1px var(--acm-outline-variant), 0 4px 8px 3px rgb(34 31 30 / 0.15); text-align: center; font-family: var(--acm-font-brand); font-size: 18px; }
+.deck-qr__code svg { width: 260px; height: 260px; display: block; margin: 0 auto 12px; }
+.deck-qr p { margin: 0 0 4px; }
+.deck-qr__fine { font-size: 14px; color: var(--acm-on-surface-variant); }
+.deck-notes .bridge { font-weight: 500; border-left: 4px solid var(--acm-primary); padding-left: 12px; }
+.deck-notes .bridge::before { content: 'Bridge: '; font-family: var(--acm-font-code); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.8; }
+
 /* --- Forced colors and print ---------------------------------------------- */
 @media (forced-colors: active) {
   .cover__rail, .callout::before, .clock__fill { background: CanvasText; }
@@ -510,7 +897,7 @@ body {
   .slide { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .deck { display: block !important; position: static !important; width: 1920px !important; height: auto !important; padding: 0 !important; }
   .slide { position: relative !important; inset: auto !important; visibility: visible !important; box-shadow: none !important; break-after: page; width: 1920px; height: 1080px; }
-  .chrome, .deck-notes, .deck-help, .deck-toast { display: none !important; }
+  .chrome, .deck-notes, .deck-help, .deck-toast, .deck-qr { display: none !important; }
   [data-beat] { visibility: visible !important; }
   .w__in, .blk__in, .cover__rail { transform: none !important; }
   .photo :is(img, video), .grid :is(img, video), .collage :is(img, video) { animation: none !important; clip-path: none !important; }

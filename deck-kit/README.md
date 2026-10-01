@@ -14,6 +14,7 @@ Ported on 2026-09-24 from the GDG chapter's kit (`rcc-gdg/deck-kit`) onto this r
 | [fetch-image.mjs](fetch-image.mjs) | Finds and saves an openly licensed photo with its credit. The same file is in the GDG kit |
 | [ingest-photos.mjs](ingest-photos.mjs) | Brings the club's own photos in: 1600 px, every bit of metadata (GPS included) stripped, collage markup printed |
 | [encode-video.swift](encode-video.swift) | Makes a slide clip: upright H.264 MP4 at a fixed size and bitrate, no audio, no metadata, plus a poster. `swift deck-kit/encode-video.swift <in.mov> <dir> <name>` |
+| [disk.js](disk.js) | The career disk: a plug-in slide kind in Three.js. Loads as a module before `deck.js` and registers `window.DeckKinds.disk` |
 | [CLAUDE.md](CLAUDE.md) | The calls an agent building a deck makes without asking: photos, variety, copy |
 
 ## Make a deck
@@ -57,6 +58,8 @@ node deck-kit/fetch-image.mjs search "arduino uno r4"
 node deck-kit/fetch-image.mjs get "commons:Arduino UNO R4 WiFi.jpg" semesters/2026-fall/meetings/2026-09-24-deck-images arduino-uno-r4 --alt "An Arduino UNO R4 WiFi board seen from above."
 ```
 
+**Split layout.** A `clock` or `beats` slide with `data-layout="split"` puts `.split__head` (`.eyebrow`, `h2`) across the top, `.split__main` (the clock with its `.sub`, or the `ol.beats`) on the left, and `figure.viz` holding an inline SVG with `viewBox="0 0 760 560"` on the right; one SVG unit is one stage pixel, so write labels at 32. On a beats slide, `data-stage="k"` shows an SVG part from beat k and `data-until="k"` shows it only before beat k. Loops are the deck's own CSS keyframes, scoped to `.is-presenting .slide.is-current`; the attributes are the still pose, which is what reduced motion, the stack, and print show. The 2026-10-01 deck has six examples.
+
 Every slide takes a `data-ground`: `paper` (default), `warm`, `tint` (the primary container), or `orange` (the raw `#ff4d00` fill with ink text). Statements take `data-layout="center"` or `"giant"`. The check measures every text pair against its ground at 4.5:1, fails text over a photo, and fails three slides in a row with the same kind, ground, and layout.
 
 Presenting, the ground lives on the stage and crossfades from slide to slide on the effects track, so it survives reduced motion; the check samples it mid-fade.
@@ -65,9 +68,34 @@ Presenting, the ground lives on the stage and crossfades from slide to slide on 
 
 A `<video>` goes anywhere an `<img>` does: a photo slide, a grid tile, a collage tile. The markup is shared with the GDG kit: `src` on the element, `poster`, `width`, `height`, `muted`, `loop`, `playsinline`, `preload="auto"`, an `aria-label`, and never an `autoplay` attribute. `data-play="auto"` plays while its slide is current; `data-play="press"` waits for the next forward press, like one more beat. `V` plays or pauses the current slide's video. Leaving a slide pauses its video (a press video also rewinds). Under reduced motion or on a phone, an auto video stays on its poster. Encode clips with `encode-video.swift`; its defaults keep a 25-second phone clip under 1 MB, so the bundler inlines it and it plays with no network. The check fails a clip over 1 MB and tests real playback in every mode. For a collage that mixes shapes, `ul.collage.is-row` with `style="--ar: w/h"` on each `li` lays them out as one row with almost no crop.
 
+## The career disk
+
+`data-kind="disk"` with `data-ground="space"` is a 3D scene: a disk of majors, CS (theory) at one pole and ME (physical) at the other, CompE and EE down one side, data science and the autonomy arc down the other. Every role is an `li` in `ol.stations` with `data-majors="CS:0.6,DS:0.4"` (weights, any of CS, DS, CompE, EE, ME) and `data-tier` (`classic` inner ring, `growing` middle, `new` outer); the engine places it at the weighted angle of its majors. Beat 0 is the overview, each press flies to the next station in list order and shows its card, and the last beat pulls back for the finale. Drag to look around; click a beacon to fly to it. Entering from the slide before it, that slide shatters and the camera breaks through into the scene; reduced motion makes it a cut.
+
+The page needs an import map for Three.js and the module before `deck.js`:
+
+```html
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/" } }</script>
+<script type="module" src="../../../deck-kit/disk.js"></script>
+```
+
+Every word is DOM (the HUD and the station cards), so the type floors and contrast checks cover it. With no WebGL or no CDN, the stations step through as plain cards, one per press. Other plug-in kinds follow the same contract: `window.DeckKinds[kind] = (slide, api) => ({ beats, set, go, enter, leave, busy, finish, sleep, resize })`.
+
+## Presenter view, phone remote, run sheet
+
+Ported 2026-10-01 from the GDG chapter's kit, where the rules are [its presentation.md §13.13](https://github.com/Sam-T-G/rcc-gdg). The deck window is always the source of truth: the presenter view, its two preview frames (`?view=mirror`), and the phone only send key presses and draw what the deck reports.
+
+- **`S`, presenter view.** A second window: the current slide, a preview of what one more press shows (the next beat, the next station on the career disk, or the next slide), the notes, the bridge line, a timer since it opened (click to reset), the time of day, and the slide's clock. A clicker works with either window focused. It needs the projector to **extend** the laptop; on a mirrored display the room sees it, so use the phone instead.
+- **`M`, phone remote.** Shows a QR code (in the presenter view if it is open, otherwise on the stage). The phone gets the notes, the bridge line, what's next, and big Back and Next buttons, and keeps its screen awake. Presses travel through ntfy.sh over plain HTTPS (no account), so it works on cellular. The topic is a long random name and only slide numbers and key names cross it. ntfy.sh allows 250 messages a day per network address, about one per press. The phone loads the **published** deck, so the deck needs `data-live-url="https://sam-t-g.github.io/rcc-acm/decks/<slug>/"` on `main.deck`, and the live copy must be the same version as the one on the projector.
+- **`?view=runsheet`.** Every slide in one printable table: title, kind, presses, clock, bridge line, the slide it leads into, and the notes. Bring it as the backup.
+- **Bridge lines.** End a slide's notes with `<p class="bridge">One sentence into the next slide.</p>`. The presenter lights it on the slide's last press. The check reports the count.
+- **The career disk** builds no 3D scene on the phone or the run sheet, and the presenter's two previews draw it at half resolution a few times a second and cut between stations, so the projector keeps the GPU.
+
+`check.mjs` tests the presenter view, the run sheet, and the phone page's no-code message with real key presses. It cannot test the phone itself, which needs the relay and a second device. Before a meeting that will use the phone: press `M` on the live deck, scan, tap Next twice, and watch the deck move.
+
 ## Running it
 
-Open the file in Chrome. Arrows, Space, or a clicker move; `T` and `R` run the clock; `5` is room mode; `V` plays or pauses a video; `N` shows notes; `F` is fullscreen; `?` lists the keys. On a phone, or with `?stack` on the URL, the deck is a scrolling stack. Printing to PDF gives one 1920 x 1080 page per slide with every beat showing.
+Open the file in Chrome. Arrows, Space, or a clicker move; `T` and `R` run the clock; `5` is room mode; `V` plays or pauses a video; `N` shows notes; `S` opens the presenter view; `M` shows the phone remote's QR code; `F` is fullscreen; `?` lists the keys. On a phone, or with `?stack` on the URL, the deck is a scrolling stack. Printing to PDF gives one 1920 x 1080 page per slide with every beat showing.
 
 **Offline:** GSAP and the fonts come from CDNs. Without a network the deck still runs, with CSS-only motion and the fallback face; walk it once offline before relying on that.
 

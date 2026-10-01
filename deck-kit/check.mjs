@@ -77,7 +77,9 @@ const URL0 = `http://127.0.0.1:${server.address().port}/${relative(ROOT, DECK).s
 // ---------- Chrome.
 const port = 9400 + Math.floor(Math.random() * 400);
 const chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'deck-cdp-'))}`,
-  '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb', 'about:blank'], { stdio: 'ignore' });
+  '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb',
+  // Software WebGL, so a disk slide (Three.js) renders headless.
+  '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', 'about:blank'], { stdio: 'ignore' });
 let target;
 for (let i = 0; i < 60 && !target; i++) {
   try { target = (await (await fetch(`http://127.0.0.1:${port}/json/list`)).json()).find((t) => t.type === 'page'); } catch { await sleep(200); }
@@ -130,7 +132,7 @@ async function key(k, code, vk) {
 }
 const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84] };
 const press = (name) => key(...KEYS[name]);
-async function settle() { for (let i = 0; i < 60; i++) { if (!(await evaluate('window.__deck && window.__deck.state().busy'))) return; await sleep(50); } }
+async function settle() { for (let i = 0; i < 140; i++) { if (!(await evaluate('window.__deck && window.__deck.state().busy'))) return; await sleep(50); } }
 async function shot(name) {
   if (!SHOTS) return;
   const r = await send('Page.captureScreenshot', { format: 'png' });
@@ -175,15 +177,15 @@ const info = await evaluate(`(() => {
       play: v.getAttribute('data-play') || 'auto', wh: v.hasAttribute('width') && v.hasAttribute('height'),
       label: v.getAttribute('aria-label') || '', own: !!v.closest('.collage'), faces: v.getAttribute('data-faces') || '',
       bytes: /^data:/.test(v.getAttribute('src') || '') ? v.getAttribute('src').length * 0.75 : -1 })),
-    name: [...s.querySelectorAll('.cover__name, .ask__name')].some((n) => n.textContent.trim() === ${JSON.stringify(NAME)}),
+    name: [...s.querySelectorAll('.cover__name, .ask__name, .disk__name')].some((n) => n.textContent.trim() === ${JSON.stringify(NAME)}),
     text: text(s),
   }));
 })()`);
-const KINDS = ['cover', 'statement', 'contrast', 'beats', 'board', 'code', 'figure', 'clock', 'photo', 'grid', 'signup', 'collage', 'ask'];
+const KINDS = ['cover', 'statement', 'contrast', 'beats', 'board', 'code', 'figure', 'clock', 'photo', 'grid', 'signup', 'collage', 'disk', 'ask'];
 check(info.every((s) => KINDS.includes(s.kind)), `every slide has a known data-kind (${info.length} slides)`);
 check(info.reduce((a, s) => a + s.h1, 0) === 1 && info[0].h1 === 1, 'exactly one h1, on the cover (accessibility.md §1.5)');
 check(info.every((s) => s.kind === 'cover' || s.h2 === 1), 'every other slide has one h2');
-check(info[0].kind === 'cover' && info[info.length - 1].kind === 'ask', 'opens on the cover and ends on the ask');
+check(info[0].kind === 'cover' && ['ask', 'disk'].includes(info[info.length - 1].kind), 'opens on the cover and ends on the ask or the career disk');
 check(info[0].name && info[info.length - 1].name, `"${NAME}" as text on the first and last slide (bright-lines.md §1.4)`);
 check(info.reduce((a, s) => a + s.rails, 0) === 1 && info[0].rails === 1, 'the Rail once, on the title slide (assets.md §10.5)');
 check(info.every((s) => s.callouts <= 1), 'at most one callout per slide');
@@ -228,7 +230,10 @@ console.log('floors and overflow (1920 x 1080, every beat revealed)');
 const layout = await evaluate(`(() => {
   const deck = document.querySelector('.deck'), u = deck.clientWidth / 1920, dr = deck.getBoundingClientRect();
   const slides = [...deck.querySelectorAll(':scope > .slide')], out = [];
-  const LEDGER = '.eyebrow, .label, .ledger, .counter, .ask__stamp, .credit';
+  // Measure end states: a card still easing into place would be measured mid-slide.
+  const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; }'; document.head.appendChild(still);
+  // Chips are labels (components.md §7.5): the 32 px floor, like the ledger line.
+  const LEDGER = '.eyebrow, .label, .ledger, .counter, .ask__stamp, .credit, .source, .majors, .disk__legend, .chip, .skills b, .st__tier, .st__label, .st__majors, .st__chips, .st__src';
   const cv = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
   const rgba = (c) => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = '#000'; cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); return [...cv.getImageData(0, 0, 1, 1).data]; };
   const lum = (c) => { const m = rgba(c); return [0, 1, 2].map((k) => { const v = m[k] / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((a, v, k) => a + v * [0.2126, 0.7152, 0.0722][k], 0); };
@@ -239,6 +244,9 @@ const layout = await evaluate(`(() => {
     // Presenting, the ground is on the stage: set it for this slide, with no fade.
     deck.style.transition = 'none'; deck.setAttribute('data-ground', s.getAttribute('data-ground') || 'paper');
     s.querySelectorAll('[data-beat]').forEach((b) => b.classList.remove('is-pending'));
+    // A disk's station cards are measured too: show them all for the pass.
+    s.querySelectorAll('.stations > li').forEach((li) => li.classList.add('is-on'));
+    if (s.dataset.kind === 'disk') s.classList.add('is-arrived');
     const low = [], outside = [], band = [], dim = [], over = [];
     const photos = [...s.querySelectorAll('img, video')].filter((im) => !im.closest('.qr')).map((im) => im.getBoundingClientRect());
     for (const el of s.querySelectorAll('*')) {
@@ -261,15 +269,21 @@ const layout = await evaluate(`(() => {
       const y1 = (r.bottom - dr.top) / u, x1 = (r.right - dr.left) / u, y0 = (r.top - dr.top) / u, x0 = (r.left - dr.left) / u;
       if (x0 < 95 || x1 > 1825 || y0 < 95 || y1 > 985) outside.push((el.getAttribute('class') || el.tagName) + ' [' + x0.toFixed(0) + ',' + y0.toFixed(0) + ' ' + x1.toFixed(0) + ',' + y1.toFixed(0) + ']');
       // The progress line sits at 970 to 1030; the cover has none.
-      if (s.dataset.kind !== 'cover' && y1 > 960) band.push((el.getAttribute('class') || el.tagName) + ' bottom ' + y1.toFixed(0));
+      if (s.dataset.kind !== 'cover' && s.dataset.kind !== 'disk' && y1 > 960) band.push((el.getAttribute('class') || el.tagName) + ' bottom ' + y1.toFixed(0));
     }
-    out.push({ i, kind: s.dataset.kind, low, outside, band, dim, over });
+    s.querySelectorAll('.stations > li').forEach((li) => li.classList.remove('is-on'));
+    // Nothing from another slide may show through: a child set visible inside a hidden slide does.
+    const leak = [];
+    slides.forEach((o) => { if (o === s) return; for (const el of o.querySelectorAll('*')) { if (getComputedStyle(el).visibility === 'visible' && el.getClientRects().length && !el.closest('.notes')) { leak.push((o.dataset.kind || '') + ' ' + (el.getAttribute('class') || el.tagName)); break; } } });
+    out.push({ i, kind: s.dataset.kind, low, outside, band, dim, over, leak });
   });
+  still.remove();
   return out;
 })()`);
 layout.forEach((s) => {
   check(!s.low.length, `slide ${s.i + 1} (${s.kind}): type at or above the floors${s.low.length ? ': ' + s.low.slice(0, 3).join('; ') : ''}`);
   check(!s.outside.length, `slide ${s.i + 1} (${s.kind}): inside the 96 px margins${s.outside.length ? ': ' + s.outside.slice(0, 3).join('; ') : ''}`);
+  check(!s.leak.length, `slide ${s.i + 1} (${s.kind}): nothing from another slide shows through${s.leak.length ? ': ' + s.leak.slice(0, 3).join('; ') : ''}`);
   check(!s.dim.length, `slide ${s.i + 1} (${s.kind}): every text pair at 4.5:1 or better${s.dim.length ? ': ' + s.dim.slice(0, 3).join('; ') : ''}`);
   check(!s.over.length, `slide ${s.i + 1} (${s.kind}): no text over a photo${s.over.length ? ': ' + s.over.slice(0, 3).join('; ') : ''}`);
   check(!s.band.length, `slide ${s.i + 1} (${s.kind}): clear of the progress band${s.band.length ? ': ' + s.band.slice(0, 3).join('; ') : ''}`);
@@ -326,6 +340,37 @@ async function walk(label, opts, expect) {
       const z = await evaluate('getComputedStyle(document.querySelector(".deck")).backgroundColor');
       check(a !== z && m !== a && m !== z, `grounds crossfade (slide ${pair + 1} to ${pair + 2}: ${a} -> ${m} -> ${z})`);
       await press('home'); await settle(); await sleep(900);
+    }
+  }
+  const dAt = info.findIndex((s) => s.kind === 'disk');
+  if (dAt > 0 && expect.presenting) {
+    const scene = await evaluate('!!window.__disk');
+    if (opts.block && opts.block.some((b) => /jsdelivr/.test(b))) {
+      check(!scene, 'Three.js blocked: the disk falls back to station cards');
+      await evaluate(`location.hash = '#${dAt + 1}'`); await sleep(400); await settle();
+      await press('right'); await settle();
+      const vis = await evaluate(`[...document.querySelectorAll('.deck > .slide')[${dAt}].querySelectorAll('.stations > li')].filter((li) => getComputedStyle(li).visibility !== 'hidden').length`);
+      check(vis === 1, `no scene: one station card shows per press (${vis})`);
+    } else {
+      check(scene, 'the disk scene started (WebGL and Three.js loaded)');
+      await evaluate(`location.hash = '#${dAt}'`); await sleep(400); await settle();
+      await press('right');
+      await sleep(700);
+      const mid = await evaluate('__disk.stats()');
+      if (SHOTS) { await shot(label.replace(/\W+/g, '-') + '-portal-a'); await sleep(700); await shot(label.replace(/\W+/g, '-') + '-portal-b'); await sleep(900); await shot(label.replace(/\W+/g, '-') + '-portal-c'); }
+      if (!opts.reduce && expect.gsap !== false) check(mid.anim === 'portal' && mid.busy, `entering the disk breaks through the page (${mid.anim}, busy ${mid.busy})`);
+      await settle(); await sleep(300);
+      const arrived = await evaluate('__disk.stats()');
+      check(arrived.reveal === 1 && arrived.frames > 3 && arrived.camToView < 0.01, `the disk arrives: revealed, ${arrived.frames} frames drawn, camera on the overview`);
+      await press('right'); await settle();
+      const at1 = await evaluate('__disk.stats()');
+      const card = await evaluate(`(() => { const li = document.querySelectorAll('.deck > .slide')[${dAt}].querySelector('.stations > li.is-on'); return li ? li.querySelector('h3').textContent : null; })()`);
+      check(at1.beat === 1 && at1.camToView < 0.01 && card === at1.stations[0].name, `one press flies to station one and shows its card (${card})`);
+      if (SHOTS) await shot(label.replace(/\W+/g, '-') + '-disk-station1');
+      await press('home'); await settle(); await sleep(500);
+      // After a visit, nothing from the disk (or any slide) may show through the one in front.
+      const leak = await evaluate(`[...document.querySelectorAll('.deck > .slide:not(.is-current) *')].filter((el) => getComputedStyle(el).visibility === 'visible' && el.getClientRects().length && !el.closest('.notes')).map((el) => el.getAttribute('class') || el.tagName).slice(0, 3)`);
+      check(!leak.length, `after visiting the disk, nothing shows through other slides${leak.length ? ': ' + leak.join('; ') : ''}`);
     }
   }
   const vAt = info.findIndex((s) => s.vids.some((v) => v.play === 'auto'));
@@ -409,6 +454,7 @@ async function walk(label, opts, expect) {
 await walk('motion (GSAP, 1920 x 1080)', { w: 1920, h: 1080 }, { presenting: true, gsap: true, kinds: ['unfold', 'ascend', 'turn', 'hold'], shots: true, midflight: true });
 await walk('reduced motion', { w: 1440, h: 900, reduce: true }, { presenting: true, gsap: true, onlyCut: true });
 await walk('GSAP blocked (offline fallback)', { w: 1280, h: 800, block: ['*cdnjs.cloudflare.com*'] }, { presenting: true, gsap: false });
+await walk('Three.js blocked', { w: 1280, h: 800, block: ['*cdn.jsdelivr.net*'] }, { presenting: true, gsap: true });
 await walk('no script', { w: 1280, h: 800, js: false }, {});
 await walk('phone 390', { w: 390, h: 844 }, { presenting: false });
 
@@ -426,6 +472,73 @@ if (clockAt >= 0) {
   check((await evaluate('__deck.state()')).last.startsWith('cut'), 'leaving a slide with a running clock is a cut');
 }
 function fmt(s) { return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+
+// ---------- Presenter view, run sheet, bridge lines (ported 2026-10-01 from the GDG kit).
+// The phone remote needs the ntfy.sh relay and a second device, so it is checked
+// by hand (README.md); everything it draws comes from the same cue() the
+// presenter view uses, which is checked here.
+console.log('presenter view and run sheet');
+const bridges = await evaluate(`[...document.querySelectorAll('.deck > .slide')].filter((s) => s.querySelector('.notes .bridge')).length`);
+pass(`bridge lines on ${bridges} of ${info.length} slides (informational)`);
+await load();
+await evaluate(`location.hash = '#1'`); await sleep(400);
+// The presenter, framed full-window inside the deck: the deck is its parent, the
+// same role window.opener plays when S opens it as a pop-up.
+await evaluate(`(() => { const f = document.createElement('iframe'); f.id = 'pv-test'; f.src = location.pathname + '?view=presenter';
+  f.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:99;background:#fff'; document.body.appendChild(f); })()`);
+const pvRead = `(() => { const d = document.getElementById('pv-test').contentDocument; return d && d.querySelector('.pv__where') ? d.querySelector('.pv__where').textContent : ''; })()`;
+let where = '';
+for (let i = 0; i < 60 && !/^Slide 1 /.test(where); i++) { await sleep(150); where = await evaluate(pvRead); }
+check(/^Slide 1 of/.test(where), `the presenter view reports the deck's slide (${where || 'nothing'})`);
+const pvAt = info.findIndex((s) => s.beats > 0);
+await evaluate(`location.hash = '#${pvAt + 1}'`); await sleep(600);
+for (let k = 0; k < info[pvAt].beats; k++) { await press('right'); await settle(); }
+await sleep(400);
+const due = await evaluate(`(() => { const d = document.getElementById('pv-test').contentDocument; return { where: d.querySelector('.pv__where').textContent, next: d.querySelector('.pv__upnext').textContent, due: d.querySelector('.pv__bridgebox').classList.contains('is-due'), bridge: !!d.querySelector('.pv__bridge .tool__bridge') }; })()`);
+check(due.where.startsWith(`Slide ${pvAt + 1} of`) && due.where.includes(`press ${info[pvAt].beats} of ${info[pvAt].beats}`), `presses in the deck move the presenter view (${due.where})`);
+check(/^Next slide: /.test(due.next), `on the last press, the presenter shows the next slide (${due.next})`);
+check(!due.bridge || due.due, 'on the last press, the bridge line is lit');
+// A clicker plugged into the laptop types into whichever window has focus: a
+// press with the presenter focused must move the deck.
+await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: 960, y: 1060, button: 'left', clickCount: 1 });
+await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: 960, y: 1060, button: 'left', clickCount: 1 });
+await sleep(200);
+const before = (await evaluate('__deck.state()')).i;
+// The deck's own key handler would also move it, so first prove the key goes to the presenter.
+const focused = await evaluate(`document.activeElement && document.activeElement.id`);
+await press('right'); await sleep(900); await settle();
+check(focused === 'pv-test' && (await evaluate('__deck.state()')).i === before + 1, `a press in the presenter window moves the deck (focus: ${focused || 'deck'})`);
+// On the career disk, the presenter names the next station.
+const dAt2 = info.findIndex((s) => s.kind === 'disk');
+if (dAt2 >= 0) {
+  await evaluate(`location.hash = '#${dAt2 + 1}'`); await sleep(1500);
+  const first = await evaluate(`document.querySelector('.deck > .slide[data-kind="disk"] .stations > li h3').textContent`);
+  let up = '';
+  for (let i = 0; i < 40 && !up.includes(first); i++) { await sleep(150); up = await evaluate(`document.getElementById('pv-test').contentDocument.querySelector('.pv__upnext').textContent`); }
+  check(up === 'Next press: ' + first, `on the disk, the presenter names the next station (${up})`);
+}
+check(!errors().length, 'no console errors with the presenter open' + (errors().length ? ': ' + errors()[0] : ''));
+if (SHOTS) await shot('presenter');
+// The run sheet: one row per slide, the stage hidden.
+events.length = 0;
+await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
+await send('Page.navigate', { url: URL0 + '?view=runsheet' });
+for (let i = 0; i < 60; i++) { await sleep(100); try { if ((await evaluate('document.readyState')) === 'complete') break; } catch {} }
+await sleep(800);
+const rs = await evaluate(`({ rows: document.querySelectorAll('.rs__table tbody tr').length, deck: getComputedStyle(document.querySelector('.deck')).display, gl: !!document.querySelector('.disk__canvas') })`);
+check(rs.rows === info.length && rs.deck === 'none', `the run sheet lists every slide (${rs.rows} of ${info.length}) without the stage`);
+check(!rs.gl, 'the run sheet builds no 3D scene');
+check(!errors().length, 'no console errors on the run sheet' + (errors().length ? ': ' + errors()[0] : ''));
+if (SHOTS) await shot('runsheet');
+// The phone page, opened without a relay code, says so instead of failing.
+events.length = 0;
+await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
+await send('Page.navigate', { url: URL0 + '?view=remote' });
+for (let i = 0; i < 60; i++) { await sleep(100); try { if ((await evaluate('document.readyState')) === 'complete') break; } catch {} }
+await sleep(600);
+const rv = await evaluate(`({ status: (document.querySelector('.rv__status') || {}).textContent || '', pad: document.querySelectorAll('.rv__pad button').length })`);
+check(/missing its code/.test(rv.status) && rv.pad === 2, `the phone page without a code says so (${rv.status})`);
+check(!errors().length, 'no console errors on the phone page' + (errors().length ? ': ' + errors()[0] : ''));
 
 ws.close(); chrome.kill(); server.close();
 console.log(`\n${passes.length} passed, ${fails.length} failed${SHOTS ? '. Screenshots in ' + SHOTS : ''}`);

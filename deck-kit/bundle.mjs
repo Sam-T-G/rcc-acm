@@ -33,6 +33,12 @@ html = html.replace(/<script src="([^"]+)"( defer)?><\/script>/g, (tag, href, de
   // The CDN scripts above it stay deferred and still run first.
   n++; return "<script>\ndocument.addEventListener('DOMContentLoaded', function () {\n" + readFileSync(resolve(base, href), 'utf8').replace(/<\/script/gi, '<\\/script') + '\n});\n</script>';
 });
+// A module script (deck-kit/disk.js) inlines as a module; it still waits for the parser,
+// and its imports (Three.js through the import map) stay on the CDN.
+html = html.replace(/<script type="module" src="([^"]+)"><\/script>/g, (tag, href) => {
+  if (!local(href)) return tag;
+  n++; return '<script type="module">\n' + readFileSync(resolve(base, href), 'utf8').replace(/<\/script/gi, '<\\/script') + '\n</script>';
+});
 html = html.replace(/<img([^>]*?) src="([^"]+)"/g, (tag, attrs, href) => {
   const file = resolve(base, href);
   if (!local(href) || !existsSync(file)) return tag;

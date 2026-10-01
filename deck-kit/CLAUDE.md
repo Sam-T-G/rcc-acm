@@ -23,6 +23,10 @@ Never fetch: people or faces, stock people at laptops, AI images of people, the 
 - Keep `orange` for the loud moments, about one slide in four, and at most one `giant` statement per section.
 - Branding is the name `ACM @ RCC` as text, the Rail (cover only), and orange. There is no logo to add.
 
+## The career disk
+
+Stations are real roles only: every card names a current posting and a sourced reason, or leaves the reason off. Majors weights are judgment; say so in the deck header. Look at the disk in screenshots (overview, a few stations, the finale) before publishing.
+
 ## Always
 
 - Invent no facts: no dates, numbers, names, or claims Sam did not give. Unknowns stay `[TBD]` or come off the slide.
