@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACM @ RCC, 2026-10-01</title>
+<!--
+  ACM @ RCC meeting deck, Thursday 2026-10-01, 1:30 to 2:30 PM, BLCIS A-210.
+  Built on deck-kit/ (README.md, CLAUDE.md). The last slide is the career disk (deck-kit/disk.js, Three.js).
+  Careers: researched 2026-09-29 from job postings and BLS, LinkedIn, WEF, IFR, IEEE Spectrum, Lightcast,
+  SpaceNews, CNBC, SIA; sources on each station. Majors weights are judgment, not sourced; Skills: O*NET OnLine or the cited posting, checked 2026-09-29.
+  Pay: BLS OEWS May 2025 (api.bls.gov), annual 10th percentile / median / 90th percentile shown as entry / mid / senior (a proxy: BLS has no job levels), United States and the San Jose-Sunnyvale-Santa Clara metro (41940); each role mapped to its closest occupation, named on the card.
+  Order: inside out, classic ring, then growing, then new, each ring swept by angle.
+  Publish: scripts/publish-deck.sh semesters/2026-fall/meetings/2026-10-01-deck.html 2026-10-01 --push
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../../../deck-kit/deck.css">
+<style>
+/* Twist pictures (data-layout="split", deck.css). Motion runs only on the current
+   slide while presenting; each element's attributes hold its still pose. */
+.is-presenting .slide.is-current .viz--m1 .m1-req { animation: m1-req 1.4s linear infinite; }
+@keyframes m1-req { from { transform: translateX(0); opacity: 0; } 12%, 85% { opacity: 1; } to { transform: translateX(390px); opacity: 0; } }
+.is-presenting .slide.is-current .viz--m1 .m1-q { animation: m1-q 4s step-end infinite; }
+@keyframes m1-q { 0% { opacity: 0; } 30% { opacity: 1; } 96% { opacity: 0; } }
+.is-presenting .slide.is-current .viz--m1 .m1-disk { animation: m1-disk 0.8s step-end infinite; }
+@keyframes m1-disk { 0% { fill: var(--acm-surface-container-highest); } 50% { fill: var(--acm-fill-orange); } }
+.is-presenting .slide.is-current .viz--m1 .m1-timeout { animation: m1-blink 1.2s step-end infinite; }
+@keyframes m1-blink { 0% { opacity: 1; } 60% { opacity: 0; } }
+
+.is-presenting .slide.is-current .viz--r1 .r1-direct { animation: r1-direct 2.1s linear infinite; }
+@keyframes r1-direct { from { transform: translateX(0); opacity: 0; } 10%, 88% { opacity: 1; } to { transform: translateX(420px); opacity: 0; } }
+.is-presenting .slide.is-current .viz--r1 .r1-photo { animation: r1-photo 1.8s linear infinite; }
+@keyframes r1-photo { from { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 60% { transform: translate(0, var(--dy)); } 88% { opacity: 1; } to { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+.is-presenting .slide.is-current .viz--r1 .r1-hit { animation: r1-hit 1.2s ease-in-out infinite; }
+@keyframes r1-hit { 0% { transform: translateX(0); fill: var(--acm-on-surface); } 45% { transform: translateX(var(--d)); fill: var(--acm-on-surface); } 55% { transform: translateX(var(--d)); fill: var(--acm-primary); } 100% { transform: translateX(0); fill: var(--acm-primary); } }
+.is-presenting .slide.is-current .viz--r1 .r1-miss { animation: r1-hit 3.6s ease-in-out infinite; animation-delay: -1.1s; }
+
+
+
+
+
+/* Twist two: reels and an interest profile. Twist three: a follow graph and its tree. */
+.viz .reel-t { font-family: var(--acm-font-brand); font-size: 52px; font-weight: 700; fill: var(--acm-on-surface); }
+.viz .reel-track { fill: var(--acm-outline-variant); }
+.viz .reel-fill { fill: var(--acm-primary); transform-box: fill-box; transform-origin: left center; transform: scaleX(var(--p)); }
+.is-presenting .slide.is-current .viz--m2r .m2-reels { animation: m2r-swipe 12s var(--acm-ease-standard) infinite; }
+@keyframes m2r-swipe { 0%, 29% { transform: translateY(0); } 33%, 38% { transform: translateY(-460px); } 42%, 67% { transform: translateY(-920px); } 71%, 100% { transform: translateY(-1380px); } }
+.is-presenting .slide.is-current .viz--m2r .m2-fill { animation: 12s linear infinite; }
+.is-presenting .slide.is-current .viz--m2r .m2-fill[style*="--n:0"] { animation-name: m2r-f0; }
+.is-presenting .slide.is-current .viz--m2r .m2-fill[style*="--n:1"] { animation-name: m2r-f1; }
+.is-presenting .slide.is-current .viz--m2r .m2-fill[style*="--n:2"] { animation-name: m2r-f2; }
+.is-presenting .slide.is-current .viz--m2r .m2-fill[style*="--n:3"] { animation-name: m2r-f3; }
+@keyframes m2r-f0 { 0% { transform: scaleX(0); } 29%, 100% { transform: scaleX(1); } }
+@keyframes m2r-f1 { 0%, 33% { transform: scaleX(0); } 38%, 100% { transform: scaleX(0.06); } }
+@keyframes m2r-f2 { 0%, 42% { transform: scaleX(0); } 67%, 100% { transform: scaleX(0.6); } }
+@keyframes m2r-f3 { 0%, 71% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+.is-presenting .slide.is-current .viz--m2r .m2-log { animation: 12s step-end infinite; }
+.is-presenting .slide.is-current .viz--m2r .m2-log[style*="--n:0"] { animation-name: m2r-l0; }
+.is-presenting .slide.is-current .viz--m2r .m2-log[style*="--n:1"] { animation-name: m2r-l1; }
+.is-presenting .slide.is-current .viz--m2r .m2-log[style*="--n:2"] { animation-name: m2r-l2; }
+.is-presenting .slide.is-current .viz--m2r .m2-log[style*="--n:3"] { animation-name: m2r-l3; }
+@keyframes m2r-l0 { 0% { opacity: 0; } 29% { opacity: 1; } }
+@keyframes m2r-l1 { 0% { opacity: 0; } 38% { opacity: 1; } }
+@keyframes m2r-l2 { 0% { opacity: 0; } 67% { opacity: 1; } }
+@keyframes m2r-l3 { 0% { opacity: 0; } 97% { opacity: 1; } }
+
+.viz--r2r .r2-bar { fill: var(--acm-on-surface); width: calc(var(--w) * 1px); transition: width var(--acm-dur-move) var(--acm-ease-arrive) 150ms; }
+.viz--r2r .r2-bar.is-top { fill: var(--acm-primary); }
+.deck-live.is-presenting .slide:has(.beats > li:nth-child(1).is-pending) .viz--r2r .r2-bar { width: 107.5px; fill: var(--acm-on-surface); }
+.viz .pick { fill: none; stroke: var(--acm-primary); stroke-width: 4; }
+.viz .pick.is-explore { stroke-dasharray: 12 10; }
+
+.viz .edge { stroke: var(--acm-on-surface); stroke-opacity: 0.45; stroke-width: 3; }
+.viz .nd rect { fill: var(--acm-surface); stroke: var(--acm-on-surface); stroke-width: 4; }
+.viz .nd.is-you rect { fill: var(--acm-primary); stroke: var(--acm-primary); }
+.viz .nd.is-you text { fill: var(--acm-on-primary); }
+.viz .nd.is-top rect { stroke: var(--acm-primary); stroke-width: 7; }
+.viz .chip.is-top { fill: var(--acm-primary); }
+.is-presenting .slide.is-current .viz--m3f .edge { stroke-dasharray: 1 1; animation: m3f-draw 9s var(--acm-ease-standard) infinite; animation-delay: calc(var(--n) * 180ms); }
+@keyframes m3f-draw { 0% { stroke-dashoffset: 1; } 18%, 92% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 1; } }
+.is-presenting .slide.is-current .viz--m3f .m3-q { animation: m1-blink 1.4s step-end infinite; }
+.is-presenting .slide.is-current .viz--m2 .m2-feed { animation: m2-feed 8s var(--acm-ease-standard) infinite; }
+@keyframes m2-feed { 0% { transform: translateY(0); } 62%, 100% { transform: translateY(-420px); } }
+.viz .hand { transform-origin: 180px 230px; }
+.viz--m2 .m2-hand { transform: rotate(330deg); }
+.viz--r2 .r2-hand { transform: rotate(120deg); }
+.is-presenting .slide.is-current .viz--m2 .m2-hand { animation: m2-hand 8s linear infinite; }
+@keyframes m2-hand { 0% { transform: rotate(0deg); } 62%, 100% { transform: rotate(330deg); } }
+.viz--m2 .m2-posts { opacity: 0.3; }
+.is-presenting .slide.is-current .viz--m2 .m2-posts { animation: m2-feed 8s var(--acm-ease-standard) infinite, m2-fade 8s step-end infinite; }
+@keyframes m2-fade { 0% { opacity: 1; } 70% { opacity: 0.3; } }
+.is-presenting .slide.is-current .viz--m2 .m2-leave { animation: m2-end 8s step-end infinite; }
+@keyframes m2-end { 0% { opacity: 0; } 70% { opacity: 1; } }
+.is-presenting .slide.is-current .viz--r2 .r2-feed { animation: r2-feed 15s linear infinite; }
+@keyframes r2-feed { from { transform: translateY(0); } to { transform: translateY(-900px); } }
+.is-presenting .slide.is-current .viz--r2 .r2-hand { animation: r2-hand 6s linear infinite; }
+@keyframes r2-hand { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/" } }</script>
+<script type="module" src="../../../deck-kit/disk.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="../../../deck-kit/deck.js" defer></script>
+<script src="../../../deck-kit/presenter.js" defer></script>
+</head>
+<body>
+<main class="deck" data-deck="acm-2026-10-01" data-ledger="ACM @ RCC · Thu Oct 1 · BLCIS A-210" data-live-url="https://sam-t-g.github.io/rcc-acm/decks/2026-10-01/">
+
+<section class="slide" data-kind="cover" data-starts="13:30" aria-label="Cover">
+  <div class="cover__rail" aria-hidden="true"></div>
+  <p class="cover__name">ACM @ RCC</p>
+  <p class="eyebrow">Fall 2026 · <time datetime="2026-10-01T13:30">Thursday, October 1</time></p>
+  <h1>From one app to a hundred careers</h1>
+  <p class="sub">We build Instagram from scratch, <strong>then fly through where your major can go.</strong></p>
+  <aside class="notes"><p>Name the club at the start. Two parts today: a 25-minute build exercise, then the careers disk.</p><p class="bridge">Before we talk careers, we're going to build an app together, and you're the engineering team.</p></aside>
+</section>
+
+<!-- PART ONE: build Instagram from scratch. About 25 minutes: 3 to list features, then four twists (2 minutes talk + reveal each), small to big: stay longer, the Reels algorithm, who to follow, then scale. Facts verified 2026-09-29; sources in each slide's notes. -->
+<section class="slide" data-kind="clock" data-section="Build Instagram" data-timer="180" data-room aria-label="Build Instagram">
+  <p class="eyebrow">Warm-up · twenty-five minutes</p>
+  <h2>Build Instagram from scratch. What does it need?</h2>
+  <div class="clock"><p class="clock__digits">3:00</p><span class="clock__track"><span class="clock__fill"></span></span><p class="clock__hint">Shout out features. T to start the clock.</p></div>
+  <aside class="notes"><p>Three minutes. Write every answer on the board. Push for the boring stuff too: accounts, passwords, uploading.</p><p class="bridge">Let's check your board against what Instagram actually shipped in 2010.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-ground="warm" aria-label="Version one">
+  <p class="eyebrow">Version one</p>
+  <h2>The basics you probably said</h2>
+  <ol class="beats">
+    <li data-beat>Post a photo</li>
+    <li data-beat>Follow people</li>
+    <li data-beat>A feed of the people you follow</li>
+    <li data-beat>Likes and comments</li>
+  </ol>
+  <aside class="notes"><p>Check these off against the board. That is roughly the app that launched on October 6, 2010.</p><p class="bridge">That app works, but it's free, so somebody has to pay for it, and that changes what you build.</p></aside>
+</section>
+
+<section class="slide" data-kind="clock" data-layout="split" data-ground="tint" data-timer="120" data-room aria-label="Twist one">
+  <div class="split__head"><p class="eyebrow">Twist one · talk it over</p><h2>We get paid when you stay longer</h2></div>
+  <div class="split__main"><p class="sub">Right now the feed runs out and people close the app. What do you add?</p><div class="clock"><p class="clock__digits">2:00</p><span class="clock__track"><span class="clock__fill"></span></span><p class="clock__hint">Talk with your neighbors. T to start.</p></div></div>
+  <figure class="viz viz--m2"><svg viewBox="0 0 760 560" role="img" aria-label="A phone feed scrolls to its last post while a stopwatch counts time in the app. Then the feed ends and the person leaves."><rect class="ink" x="166" y="76" width="28" height="22" rx="4"/><circle class="ring" cx="180" cy="230" r="120"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(0 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(30 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(60 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(90 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(120 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(150 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(180 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(210 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(240 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(270 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(300 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(330 180 230)"/><line class="m2-hand hand" x1="180" y1="230" x2="180" y2="140"/><circle class="ink" cx="180" cy="230" r="10"/><text x="180" y="410" text-anchor="middle">time in app</text><clipPath id="m2-screen"><rect x="440" y="50" width="260" height="460" rx="14"/></clipPath><rect class="box" x="420" y="10" width="300" height="540" rx="44"/><g clip-path="url(#m2-screen)"><g class="m2-feed m2-posts" transform="translate(0 -420)"><g class="post"><rect class="card" x="452" y="62" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="92" r="14"/><rect class="ph" x="504" y="85" width="90" height="14" rx="7"/><rect class="ph" x="464" y="116" width="212" height="64" rx="6"/></g><g class="post"><rect class="card" x="452" y="212" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="242" r="14"/><rect class="ph" x="504" y="235" width="113" height="14" rx="7"/><rect class="ph" x="464" y="266" width="212" height="64" rx="6"/></g><g class="post"><rect class="card" x="452" y="362" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="392" r="14"/><rect class="ph" x="504" y="385" width="136" height="14" rx="7"/><rect class="ph" x="464" y="416" width="212" height="64" rx="6"/></g><g class="post"><rect class="card" x="452" y="512" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="542" r="14"/><rect class="ph" x="504" y="535" width="109" height="14" rx="7"/><rect class="ph" x="464" y="566" width="212" height="64" rx="6"/></g><g class="post"><rect class="card" x="452" y="662" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="692" r="14"/><rect class="ph" x="504" y="685" width="132" height="14" rx="7"/><rect class="ph" x="464" y="716" width="212" height="64" rx="6"/></g></g><g class="m2-feed" transform="translate(0 -420)"><line class="line" x1="470" y1="822" x2="670" y2="822"/><text x="570" y="872" text-anchor="middle">No more</text><text x="570" y="912" text-anchor="middle">posts</text></g></g><text class="m2-leave t-acc" x="180" y="470" text-anchor="middle">they leave</text></svg></figure>
+  <aside class="notes"><p>Two minutes. Press T, then walk the room. Each group picks one answer to share. When time is up, take two or three answers before you move on.</p><p>Push them past "more content": how do you pick which post goes first? Do they show posts from people you don't follow?</p><p class="bridge">Here's what Instagram actually added. Count how many your group called.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="split" data-ground="warm" aria-label="Twist one revealed">
+  <div class="split__head"><p class="eyebrow">Twist one · what they did</p><h2>Make the feed never run out</h2></div>
+  <ol class="beats split__main">
+    <li data-beat>A feed that never ends<span class="detail">Infinite scroll, there is no last post</span></li>
+    <li data-beat>Ranked, not newest first<span class="detail">2016, by interest, relationship, and timeliness</span></li>
+    <li data-beat>More to watch<span class="detail">Stories in 2016, Reels in 2020</span></li>
+    <li data-beat>Posts from strangers<span class="detail">Explore makes 90 million predictions a second</span></li>
+  </ol>
+  <figure class="viz viz--r2"><svg viewBox="0 0 760 560" role="img" aria-label="The same phone feed now scrolls forever. Posts carry ranking scores, a video post appears, then a suggested post from a stranger, while the stopwatch keeps going."><rect class="ink" x="166" y="76" width="28" height="22" rx="4"/><circle class="ring" cx="180" cy="230" r="120"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(0 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(30 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(60 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(90 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(120 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(150 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(180 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(210 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(240 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(270 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(300 180 230)"/><line class="tick" x1="180" y1="122" x2="180" y2="136" transform="rotate(330 180 230)"/><line class="r2-hand hand" x1="180" y1="230" x2="180" y2="140"/><circle class="ink" cx="180" cy="230" r="10"/><text x="180" y="410" text-anchor="middle">time in app</text><clipPath id="r2-screen"><rect x="440" y="50" width="260" height="460" rx="14"/></clipPath><rect class="box" x="420" y="10" width="300" height="540" rx="44"/><g clip-path="url(#r2-screen)"><g class="r2-feed"><g class="post"><rect class="card" x="452" y="62" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="92" r="14"/><rect class="ph" x="504" y="85" width="90" height="14" rx="7"/><rect class="ph" x="464" y="116" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="74" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="105" text-anchor="middle">97</text></g></g><g class="post"><rect class="card" x="452" y="212" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="242" r="14"/><rect class="ph" x="504" y="235" width="113" height="14" rx="7"/><rect class="ph" x="464" y="266" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="224" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="255" text-anchor="middle">94</text></g></g><g class="post"><rect class="card" x="452" y="362" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="392" r="14"/><rect class="ph" x="504" y="385" width="136" height="14" rx="7"/><rect class="ph" x="464" y="416" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="374" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="405" text-anchor="middle">90</text></g><path data-stage="3" class="acc" d="M558 430 l34 18 l-34 18 z"/></g><g class="post"><rect class="card" x="452" y="512" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="542" r="14"/><rect class="ph" x="504" y="535" width="109" height="14" rx="7"/><rect class="ph" x="464" y="566" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="524" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="555" text-anchor="middle">86</text></g></g><g class="post"><rect class="card" x="452" y="662" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="692" r="14"/><rect class="ph" x="504" y="685" width="132" height="14" rx="7"/><rect class="ph" x="464" y="716" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="674" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="705" text-anchor="middle">83</text></g><text data-stage="4" x="570" y="760" text-anchor="middle">Suggested</text></g><g class="post"><rect class="card" x="452" y="812" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="842" r="14"/><rect class="ph" x="504" y="835" width="105" height="14" rx="7"/><rect class="ph" x="464" y="866" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="824" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="855" text-anchor="middle">79</text></g></g><g class="post"><rect class="card" x="452" y="962" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="992" r="14"/><rect class="ph" x="504" y="985" width="90" height="14" rx="7"/><rect class="ph" x="464" y="1016" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="974" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="1005" text-anchor="middle">97</text></g></g><g class="post"><rect class="card" x="452" y="1112" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="1142" r="14"/><rect class="ph" x="504" y="1135" width="113" height="14" rx="7"/><rect class="ph" x="464" y="1166" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="1124" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="1155" text-anchor="middle">94</text></g></g><g class="post"><rect class="card" x="452" y="1262" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="1292" r="14"/><rect class="ph" x="504" y="1285" width="136" height="14" rx="7"/><rect class="ph" x="464" y="1316" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="1274" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="1305" text-anchor="middle">90</text></g><path data-stage="3" class="acc" d="M558 1330 l34 18 l-34 18 z"/></g><g class="post"><rect class="card" x="452" y="1412" width="236" height="130" rx="12"/><circle class="ph" cx="480" cy="1442" r="14"/><rect class="ph" x="504" y="1435" width="109" height="14" rx="7"/><rect class="ph" x="464" y="1466" width="212" height="64" rx="6"/><g data-stage="2"><rect class="chip" x="610" y="1424" width="66" height="40" rx="20"/><text class="chip-t" x="643" y="1455" text-anchor="middle">86</text></g></g></g></g></svg></figure>
+  <aside class="notes"><p>Each of these is a whole team: ranking, recommendations, video, infrastructure. Ranked feed and its three signals: Instagram, 2016-03-15, instagram.tumblr.com/post/141107034797/160315-news. Stories: 2016-08-02. Reels: 2020-08-05. Explore narrows 500 candidates to 25 in three passes, 90 million predictions a second (Meta AI, 2019-11-25, ai.meta.com/blog/powered-by-ai-instagrams-explore-recommender-system/). The scores on the posts are made up for the picture.</p><p class="bridge">All of that runs on one guess, what you want to watch next, and now you're the one guessing.</p></aside>
+</section>
+
+<section class="slide" data-kind="clock" data-layout="split" data-ground="tint" data-timer="120" data-room aria-label="Twist two">
+  <div class="split__head"><p class="eyebrow">Twist two · talk it over</p><h2>Build the Reels algorithm</h2></div>
+  <div class="split__main"><p class="sub">All you see is how long people watch. Pick their next reel.</p><div class="clock"><p class="clock__digits">2:00</p><span class="clock__track"><span class="clock__fill"></span></span><p class="clock__hint">Talk with your neighbors. T to start.</p></div></div>
+  <figure class="viz viz--m2r"><svg viewBox="0 0 760 560" role="img" aria-label="A phone plays reels about cats, soccer, cooking, and cats. A watch log beside it records how long each one was watched: all of the first cat reel, 1 second of soccer, 9 of 15 seconds of cooking."><text x="0" y="40">WATCH LOG</text><g class="m2-log" style="--n:0"><text x="0" y="110">cats</text><text x="390" y="110" text-anchor="end">15 of 15s</text></g><g class="m2-log" style="--n:1"><text x="0" y="174">soccer</text><text x="390" y="174" text-anchor="end">1 of 20s</text></g><g class="m2-log" style="--n:2"><text x="0" y="238">cooking</text><text x="390" y="238" text-anchor="end">9 of 15s</text></g><g class="m2-log" style="--n:3"><text x="0" y="302">cats</text><text x="390" y="302" text-anchor="end">15 of 15s</text></g><text class="t-acc" x="0" y="440">all you get</text><text class="t-acc" x="0" y="480">is this</text><clipPath id="m2r-screen"><rect x="440" y="50" width="260" height="460" rx="14"/></clipPath><rect class="box" x="420" y="10" width="300" height="540" rx="44"/><g clip-path="url(#m2r-screen)"><g class="m2-reels" transform="translate(0 -1380)"><g><rect class="ph" x="440" y="50" width="260" height="460"/><text class="reel-t" x="570" y="280" text-anchor="middle">cats</text><rect class="reel-track" x="456" y="482" width="228" height="10" rx="5"/><rect class="reel-fill m2-fill" style="--n:0;--p:1.0" x="456" y="482" width="228" height="10" rx="5"/></g><g><rect class="ph" x="440" y="510" width="260" height="460"/><text class="reel-t" x="570" y="740" text-anchor="middle">soccer</text><rect class="reel-track" x="456" y="942" width="228" height="10" rx="5"/><rect class="reel-fill m2-fill" style="--n:1;--p:0.06" x="456" y="942" width="228" height="10" rx="5"/></g><g><rect class="ph" x="440" y="970" width="260" height="460"/><text class="reel-t" x="570" y="1200" text-anchor="middle">cooking</text><rect class="reel-track" x="456" y="1402" width="228" height="10" rx="5"/><rect class="reel-fill m2-fill" style="--n:2;--p:0.6" x="456" y="1402" width="228" height="10" rx="5"/></g><g><rect class="ph" x="440" y="1430" width="260" height="460"/><text class="reel-t" x="570" y="1660" text-anchor="middle">cats</text><rect class="reel-track" x="456" y="1862" width="228" height="10" rx="5"/><rect class="reel-fill m2-fill" style="--n:3;--p:1.0" x="456" y="1862" width="228" height="10" rx="5"/></g></g></g></svg></figure>
+  <aside class="notes"><p>Two minutes. Press T, then walk the room. Each group picks one answer to share. When time is up, take two or three answers before you move on.</p><p>The point: nobody tells the app what they like; the app guesses from behavior. Push them to make it concrete: what number would you keep for each person? What happens to someone who watches one soccer reel by accident?</p><p class="bridge">Let's turn your ideas into numbers the app can actually use.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="split" aria-label="Twist two revealed">
+  <div class="split__head"><p class="eyebrow">Twist two · build it</p><h2>Turn watch time into a score</h2></div>
+  <ol class="beats split__main">
+    <li data-beat>Watched it all? Score goes up<span class="detail">Swiped in a second? It goes down</span></li>
+    <li data-beat>Next reel: the top score<span class="detail">The feed learns, one reel at a time</span></li>
+    <li data-beat>Sometimes show something new<span class="detail">Or the feed gets stuck on cats</span></li>
+    <li data-beat>Instagram tracks watch time too<span class="detail">3-second views, swipes, time spent</span></li>
+  </ol>
+  <figure class="viz viz--r2r"><svg viewBox="0 0 760 560" role="img" aria-label="An interest profile with four topics. Everyone starts equal at 25. After watching, cats rises to 70, cooking to 45, soccer drops to 8, cars stays at 25. The next reel is cats, and one time in ten it tries cars."><text x="0" y="40">INTEREST PROFILE</text><text x="0" y="120">cats</text><rect class="ph" x="170" y="94" width="430" height="34"/><rect class="r2-bar is-top" style="--w:301.0" x="170" y="94" height="34"/><text class="r2-val" x="620" y="120"><tspan data-until="1">25</tspan></text><text x="620" y="120" data-stage="1">70</text><text x="0" y="196">soccer</text><rect class="ph" x="170" y="170" width="430" height="34"/><rect class="r2-bar" style="--w:34.4" x="170" y="170" height="34"/><text class="r2-val" x="620" y="196"><tspan data-until="1">25</tspan></text><text x="620" y="196" data-stage="1">8</text><text x="0" y="272">cooking</text><rect class="ph" x="170" y="246" width="430" height="34"/><rect class="r2-bar" style="--w:193.5" x="170" y="246" height="34"/><text class="r2-val" x="620" y="272"><tspan data-until="1">25</tspan></text><text x="620" y="272" data-stage="1">45</text><text x="0" y="348">cars</text><rect class="ph" x="170" y="322" width="430" height="34"/><rect class="r2-bar" style="--w:107.5" x="170" y="322" height="34"/><text class="r2-val" x="620" y="348"><tspan data-until="1">25</tspan></text><text x="620" y="348" data-stage="1">25</text><g data-stage="2"><rect class="pick" x="-12" y="84" width="700" height="58" rx="6"/></g><g data-stage="3"><rect class="pick is-explore" x="-12" y="312" width="700" height="58" rx="6"/></g><text x="0" y="430" data-until="1">everyone starts equal</text><text class="t-acc" x="0" y="430" data-stage="2">next reel: cats</text><text class="t-acc" x="0" y="480" data-stage="3">1 in 10: try cars</text><text x="0" y="540" data-stage="4">real one: ~100 reels, scored, sorted</text></svg></figure>
+  <aside class="notes"><p>Beats 1 to 3 are the class's own algorithm, not Instagram's: the numbers are made up for the picture. Beat 4 is real. Meta's system card for the Reels tab (updated 2025-11-11, transparency.meta.com/features/explaining-ranking/ig-reels-chaining/): the system gathers reels, a lightweight model narrows them to about 100, models predict what you will find relevant, and it ranks those by a relevance score. Its signals include how many times people watched at least 3 seconds of a reel, how many times it was dismissed, how likely you are to watch more of it than 95% of people who watched reels of the same length, and how much time people spent on it. Mosseri, "Instagram Ranking Explained" (2023-05-31): there is no single algorithm; for Reels, the top signal is your activity with similar content, and it predicts whether you will watch all the way through, like, and reshare. Exploration: ask why a feed that only shows the top score gets boring, and what "1 in 10" trades away.</p><p class="bridge">Watching is half of it. The other half is who you follow.</p></aside>
+</section>
+
+<section class="slide" data-kind="clock" data-layout="split" data-ground="tint" data-timer="120" data-room aria-label="Twist three">
+  <div class="split__head"><p class="eyebrow">Twist three · talk it over</p><h2>Who should they follow next?</h2></div>
+  <div class="split__main"><p class="sub">You know who follows who. Suggest three accounts, and say why.</p><div class="clock"><p class="clock__digits">2:00</p><span class="clock__track"><span class="clock__fill"></span></span><p class="clock__hint">Talk with your neighbors. T to start.</p></div></div>
+  <figure class="viz viz--m3f"><svg viewBox="0 0 760 560" role="img" aria-label="A small follow graph. You follow ana, ben, and cam. They follow dee, eli, fay, gus, and hal, some of them followed by more than one of your people."><g class="m3-edges"><line class="edge" pathLength="1" style="--n:0" x1="380" y1="320" x2="160" y2="230"/><line class="edge" pathLength="1" style="--n:1" x1="380" y1="320" x2="380" y2="140"/><line class="edge" pathLength="1" style="--n:2" x1="380" y1="320" x2="600" y2="230"/><line class="edge" pathLength="1" style="--n:3" x1="160" y1="230" x2="70" y2="430"/><line class="edge" pathLength="1" style="--n:4" x1="160" y1="230" x2="200" y2="50"/><line class="edge" pathLength="1" style="--n:5" x1="160" y1="230" x2="480" y2="480"/><line class="edge" pathLength="1" style="--n:6" x1="380" y1="140" x2="200" y2="50"/><line class="edge" pathLength="1" style="--n:7" x1="380" y1="140" x2="480" y2="480"/><line class="edge" pathLength="1" style="--n:8" x1="380" y1="140" x2="560" y2="50"/><line class="edge" pathLength="1" style="--n:9" x1="600" y1="230" x2="480" y2="480"/><line class="edge" pathLength="1" style="--n:10" x1="600" y1="230" x2="560" y2="50"/><line class="edge" pathLength="1" style="--n:11" x1="600" y1="230" x2="690" y2="430"/></g><g class="nd is-you"><rect x="320" y="296" width="120" height="48" rx="24"/><text x="380" y="331" text-anchor="middle">you</text></g><g class="nd"><rect x="100" y="206" width="120" height="48" rx="24"/><text x="160" y="241" text-anchor="middle">@ana</text></g><g class="nd"><rect x="320" y="116" width="120" height="48" rx="24"/><text x="380" y="151" text-anchor="middle">@ben</text></g><g class="nd"><rect x="540" y="206" width="120" height="48" rx="24"/><text x="600" y="241" text-anchor="middle">@cam</text></g><g class="nd"><rect x="140" y="26" width="120" height="48" rx="24"/><text x="200" y="61" text-anchor="middle">@eli</text></g><text class="m3-q t-acc" x="266" y="36">?</text><g class="nd"><rect x="500" y="26" width="120" height="48" rx="24"/><text x="560" y="61" text-anchor="middle">@gus</text></g><text class="m3-q t-acc" x="626" y="36">?</text><g class="nd"><rect x="10" y="406" width="120" height="48" rx="24"/><text x="70" y="441" text-anchor="middle">@dee</text></g><text class="m3-q t-acc" x="136" y="416">?</text><g class="nd"><rect x="630" y="406" width="120" height="48" rx="24"/><text x="690" y="441" text-anchor="middle">@fay</text></g><text class="m3-q t-acc" x="756" y="416">?</text><g class="nd"><rect x="420" y="456" width="120" height="48" rx="24"/><text x="480" y="491" text-anchor="middle">@hal</text></g><text class="m3-q t-acc" x="546" y="466">?</text></svg></figure>
+  <aside class="notes"><p>Two minutes. Press T, then walk the room. Each group picks one answer to share. When time is up, take two or three answers before you move on.</p><p>Draw the graph on the board if the room is big. Listen for "friends of friends" and "the one more of my friends follow." Traps: suggesting someone they already follow, or themselves. Bonus: how do you break a tie?</p><p class="bridge">Let's redraw that messy web as a tree, starting from you.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="split" data-ground="warm" aria-label="Twist three revealed">
+  <div class="split__head"><p class="eyebrow">Twist three · build it</p><h2>Walk the graph two steps</h2></div>
+  <ol class="beats split__main">
+    <li data-beat>Start at you, one step out<span class="detail">The accounts you follow</span></li>
+    <li data-beat>Two steps out: who they follow<span class="detail">Stop here: 300 × 300 is 90,000 already</span></li>
+    <li data-beat>Rank by mutuals<span class="detail">Followed by more of your people wins</span></li>
+    <li data-beat>Instagram: gather, rank, filter<span class="detail">Mutual friends is one of its signals</span></li>
+  </ol>
+  <figure class="viz viz--r3f"><svg viewBox="0 0 760 560" role="img" aria-label="A tree. You at the top, then ana, ben, and cam, then the accounts they follow. Counts show how many of your people follow each: hal 3, eli 2, gus 2, dee 1, fay 1. Suggest hal, eli, and gus."><g class="nd is-you"><rect x="320" y="16" width="120" height="48" rx="24"/><text x="380" y="51" text-anchor="middle">you</text></g><g data-stage="1"><line class="edge" x1="380" y1="64" x2="130" y2="146"/><line class="edge" x1="380" y1="64" x2="380" y2="146"/><line class="edge" x1="380" y1="64" x2="630" y2="146"/><g class="nd"><rect x="70" y="146" width="120" height="48" rx="24"/><text x="130" y="181" text-anchor="middle">@ana</text></g><g class="nd"><rect x="320" y="146" width="120" height="48" rx="24"/><text x="380" y="181" text-anchor="middle">@ben</text></g><g class="nd"><rect x="570" y="146" width="120" height="48" rx="24"/><text x="630" y="181" text-anchor="middle">@cam</text></g></g><g data-stage="2"><line class="edge" x1="130" y1="194" x2="66" y2="286"/><line class="edge" x1="130" y1="194" x2="223" y2="286"/><line class="edge" x1="130" y1="194" x2="380" y2="286"/><line class="edge" x1="380" y1="194" x2="223" y2="286"/><line class="edge" x1="380" y1="194" x2="380" y2="286"/><line class="edge" x1="380" y1="194" x2="537" y2="286"/><line class="edge" x1="630" y1="194" x2="380" y2="286"/><line class="edge" x1="630" y1="194" x2="537" y2="286"/><line class="edge" x1="630" y1="194" x2="694" y2="286"/><g class="nd"><rect x="6" y="286" width="120" height="48" rx="24"/><text x="66" y="321" text-anchor="middle">@dee</text></g><g class="nd"><rect x="163" y="286" width="120" height="48" rx="24"/><text x="223" y="321" text-anchor="middle">@eli</text></g><g class="nd"><rect x="320" y="286" width="120" height="48" rx="24"/><text x="380" y="321" text-anchor="middle">@hal</text></g><g class="nd"><rect x="477" y="286" width="120" height="48" rx="24"/><text x="537" y="321" text-anchor="middle">@gus</text></g><g class="nd"><rect x="634" y="286" width="120" height="48" rx="24"/><text x="694" y="321" text-anchor="middle">@fay</text></g></g><g data-stage="3"><rect class="pick" x="312" y="278" width="136" height="64" rx="32"/><rect class="pick" x="155" y="278" width="136" height="64" rx="32"/><rect class="pick" x="469" y="278" width="136" height="64" rx="32"/><rect class="chip" x="30" y="346" width="72" height="44" rx="22"/><text class="chip-t" x="66" y="378" text-anchor="middle">×1</text><rect class="chip is-top" x="187" y="346" width="72" height="44" rx="22"/><text class="chip-t" x="223" y="378" text-anchor="middle">×2</text><rect class="chip is-top" x="344" y="346" width="72" height="44" rx="22"/><text class="chip-t" x="380" y="378" text-anchor="middle">×3</text><rect class="chip is-top" x="501" y="346" width="72" height="44" rx="22"/><text class="chip-t" x="537" y="378" text-anchor="middle">×2</text><rect class="chip" x="658" y="346" width="72" height="44" rx="22"/><text class="chip-t" x="694" y="378" text-anchor="middle">×1</text><text class="t-acc" x="0" y="450">suggest: @hal, @eli, @gus</text></g><text x="0" y="520" data-stage="4">real one: gather → rank → filter</text></svg></figure>
+  <aside class="notes"><p>This is a tree walk (breadth-first search, two levels deep). The 300 × 300 line is arithmetic on an example, not a statistic. Real: Meta's Suggested Accounts system card (updated 2025-03-07, transparency.meta.com/features/explaining-ranking/ig-suggested-accounts/): it gathers candidates such as followers of accounts you already follow, popular accounts nearby, and accounts tied to topics you engaged with; ranks them with signals including how many mutual friends you share, whether they follow you, and how many people follow them; then filters out blocked and deactivated accounts. Fun follow-up: Instagram's card says followers of your follows, the class built who your follows follow. What is the difference?</p><p class="bridge">Every one of these ideas assumes the app stays online. Back to launch night.</p></aside>
+</section>
+
+<section class="slide" data-kind="figure" data-ground="orange" aria-label="Launch day">
+  <p class="eyebrow">October 6, 2010</p>
+  <p class="figure"><span class="figure__num" data-from="0" data-to="25000">25000</span><span class="figure__unit">signups on day one</span></p>
+  <h2>And the servers crashed that night</h2>
+  <aside class="notes"><p>25,000 signed up the first day (TechCrunch, 2012-04-09, techcrunch.com/2012/04/09/instagram-story-facebook-acquisition/). 100,000 in a week, 1 million by December, and the servers crashed on launch night (Systrom interview, TechCrunch, 2011-02-02). Ask: why would a photo app crash?</p><p class="bridge">If 25,000 people broke it, picture Instagram at today's size.</p></aside>
+</section>
+
+<section class="slide" data-kind="clock" data-layout="split" data-ground="tint" data-timer="120" data-room aria-label="Twist four">
+  <div class="split__head"><p class="eyebrow">Twist four · talk it over</p><h2>Three billion people. What breaks?</h2></div>
+  <div class="split__main"><p class="sub">Everyone opens the app at once. What falls over first, and how do you fix it?</p><div class="clock"><p class="clock__digits">2:00</p><span class="clock__track"><span class="clock__fill"></span></span><p class="clock__hint">Talk with your neighbors. T to start.</p></div></div>
+  <figure class="viz viz--m1"><svg viewBox="0 0 760 560" role="img" aria-label="Many phones send requests to one database. A line of requests piles up at the door and the database times out."><rect class="box" x="20" y="80" width="44" height="76" rx="9"/><rect class="ink" x="36" y="144" width="12" height="4" rx="2"/><rect class="box" x="84" y="80" width="44" height="76" rx="9"/><rect class="ink" x="100" y="144" width="12" height="4" rx="2"/><line class="dash" x1="140" y1="118" x2="548" y2="118"/><rect class="box" x="20" y="200" width="44" height="76" rx="9"/><rect class="ink" x="36" y="264" width="12" height="4" rx="2"/><rect class="box" x="84" y="200" width="44" height="76" rx="9"/><rect class="ink" x="100" y="264" width="12" height="4" rx="2"/><line class="dash" x1="140" y1="238" x2="548" y2="238"/><rect class="box" x="20" y="320" width="44" height="76" rx="9"/><rect class="ink" x="36" y="384" width="12" height="4" rx="2"/><rect class="box" x="84" y="320" width="44" height="76" rx="9"/><rect class="ink" x="100" y="384" width="12" height="4" rx="2"/><line class="dash" x1="140" y1="358" x2="548" y2="358"/><path class="box" d="M560 168 v224 a85.0 18 0 0 0 170 0 v-224"/><ellipse class="box" cx="645.0" cy="168" rx="85.0" ry="18"/><rect class="m1-disk ph" x="586" y="230" width="118" height="22" rx="4" style="animation-delay:0.00s"/><rect class="m1-disk ph" x="586" y="290" width="118" height="22" rx="4" style="animation-delay:-0.27s"/><rect class="m1-disk ph" x="586" y="350" width="118" height="22" rx="4" style="animation-delay:-0.54s"/><circle class="m1-req ink" cx="150" cy="118" r="9" transform="translate(60 0)" style="animation-delay:-0.00s"/><circle class="m1-req ink" cx="150" cy="118" r="9" transform="translate(190 0)" style="animation-delay:-0.47s"/><circle class="m1-req ink" cx="150" cy="118" r="9" transform="translate(320 0)" style="animation-delay:-0.94s"/><circle class="m1-req ink" cx="150" cy="238" r="9" transform="translate(60 0)" style="animation-delay:-0.20s"/><circle class="m1-req ink" cx="150" cy="238" r="9" transform="translate(190 0)" style="animation-delay:-0.67s"/><circle class="m1-req ink" cx="150" cy="238" r="9" transform="translate(320 0)" style="animation-delay:-1.14s"/><circle class="m1-req ink" cx="150" cy="358" r="9" transform="translate(60 0)" style="animation-delay:-0.40s"/><circle class="m1-req ink" cx="150" cy="358" r="9" transform="translate(190 0)" style="animation-delay:-0.87s"/><circle class="m1-req ink" cx="150" cy="358" r="9" transform="translate(320 0)" style="animation-delay:-1.34s"/><circle class="m1-q acc" cx="532" cy="200" r="10" style="animation-delay:0.00s"/><circle class="m1-q acc" cx="510" cy="234" r="10" style="animation-delay:0.45s"/><circle class="m1-q acc" cx="532" cy="268" r="10" style="animation-delay:0.90s"/><circle class="m1-q acc" cx="510" cy="302" r="10" style="animation-delay:1.35s"/><circle class="m1-q acc" cx="532" cy="336" r="10" style="animation-delay:1.80s"/><circle class="m1-q acc" cx="510" cy="370" r="10" style="animation-delay:2.25s"/><text class="m1-timeout t-acc" x="645" y="120" text-anchor="middle">TIMEOUT</text><text x="20" y="500">phones</text><text x="645" y="500" text-anchor="middle">database</text></svg></figure>
+  <aside class="notes"><p>Two minutes. Press T, then walk the room. Each group picks one answer to share. When time is up, take two or three answers before you move on.</p><p>Listen for: slow photo loading, the database falling over, storage running out, video. Write their fixes on the board so the reveal can check them off.</p><p class="bridge">Here's how Instagram kept it standing.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="split" aria-label="Twist four revealed">
+  <div class="split__head"><p class="eyebrow">Twist four · what they did</p><h2>Keep the popular stuff close</h2></div>
+  <ol class="beats split__main">
+    <li data-beat>Photos load from a server near you<span class="detail">A CDN in front of Amazon S3</span></li>
+    <li data-beat>A cache answers repeat requests<span class="detail">Memcached and Redis, from the start</span></li>
+    <li data-beat>20 billion photos move to Facebook<span class="detail">Into its own data centers, in 2014</span></li>
+    <li data-beat>Video gets cheaper to process<span class="detail">A 2022 rewrite cut basic encoding compute by 94%</span></li>
+  </ol>
+  <figure class="viz viz--r1"><svg viewBox="0 0 760 560" role="img" aria-label="Phones ask for photos. A CDN sends photos from close by. A cache answers most requests itself, and only a miss goes on to the database."><rect class="box" x="96" y="162" width="44" height="76" rx="9"/><rect class="ink" x="112" y="226" width="12" height="4" rx="2"/><rect class="box" x="96" y="282" width="44" height="76" rx="9"/><rect class="ink" x="112" y="346" width="12" height="4" rx="2"/><rect class="box" x="96" y="402" width="44" height="76" rx="9"/><rect class="ink" x="112" y="466" width="12" height="4" rx="2"/><path class="box" d="M600 218 v204 a70.0 18 0 0 0 140 0 v-204"/><ellipse class="box" cx="670.0" cy="218" rx="70.0" ry="18"/><text x="670" y="530" text-anchor="middle">database</text><g data-until="2"><line class="dash" x1="150" y1="200" x2="590" y2="200"/><circle class="r1-direct ink" cx="160" cy="200" r="9" transform="translate(100 0)" style="animation-delay:-0.00s"/><circle class="r1-direct ink" cx="160" cy="200" r="9" transform="translate(300 0)" style="animation-delay:-1.05s"/><line class="dash" x1="150" y1="320" x2="590" y2="320"/><circle class="r1-direct ink" cx="160" cy="320" r="9" transform="translate(100 0)" style="animation-delay:-0.35s"/><circle class="r1-direct ink" cx="160" cy="320" r="9" transform="translate(300 0)" style="animation-delay:-1.40s"/><line class="dash" x1="150" y1="440" x2="590" y2="440"/><circle class="r1-direct ink" cx="160" cy="440" r="9" transform="translate(100 0)" style="animation-delay:-0.70s"/><circle class="r1-direct ink" cx="160" cy="440" r="9" transform="translate(300 0)" style="animation-delay:-1.75s"/></g><g data-stage="1"><rect class="box" x="0" y="20" width="200" height="84" rx="12"/><text x="100" y="74" text-anchor="middle">CDN</text><line class="dash" x1="40" y1="104" x2="40" y2="440"/><line class="dash" x1="40" y1="200" x2="90" y2="200"/><rect class="r1-photo acc" x="30" y="94" width="20" height="20" rx="3" style="--dx:50px;--dy:96px;animation-delay:0.00s" transform="translate(0 96)"/><line class="dash" x1="40" y1="320" x2="90" y2="320"/><rect class="r1-photo acc" x="30" y="94" width="20" height="20" rx="3" style="--dx:50px;--dy:216px;animation-delay:-0.60s" transform="translate(0 216)"/><line class="dash" x1="40" y1="440" x2="90" y2="440"/><rect class="r1-photo acc" x="30" y="94" width="20" height="20" rx="3" style="--dx:50px;--dy:336px;animation-delay:-1.20s" transform="translate(0 336)"/></g><g data-stage="2"><rect class="box" x="300" y="170" width="130" height="300" rx="12"/><text x="365" y="530" text-anchor="middle">cache</text><line class="dash" x1="150" y1="200" x2="296" y2="200"/><circle class="r1-hit ink" cx="160" cy="200" r="9" transform="translate(60 0)" style="--d:126px;animation-delay:0.00s"/><line class="dash" x1="150" y1="320" x2="296" y2="320"/><circle class="r1-hit ink" cx="160" cy="320" r="9" transform="translate(60 0)" style="--d:126px;animation-delay:-0.40s"/><line class="dash" x1="150" y1="440" x2="296" y2="440"/><circle class="r1-hit ink" cx="160" cy="440" r="9" transform="translate(60 0)" style="--d:126px;animation-delay:-0.80s"/><line class="dash" x1="434" y1="320" x2="590" y2="320"/><circle class="r1-miss ink" cx="160" cy="320" r="9" transform="translate(350 0)" style="--d:420px"/><text class="t-acc" x="190" y="160">hit</text><text class="t-acc" x="470" y="300">miss</text></g></svg></figure>
+  <aside class="notes"><p>Check their board answers off as each line lands. Beat 2 is the cache: point at the animation, most requests turn around at the cache and only a miss reaches the database. 3 billion monthly users: announced 2025-09-24 (TechCrunch, CNBC). 2011 stack: Django, PostgreSQL, Redis, Memcached on Amazon EC2, photos on S3 and CloudFront, with three engineers and 14 million users (High Scalability, 2011-12-06, summarizing Instagram Engineering). Move off AWS with 20 billion photos: Data Center Knowledge, 2014-06-27. Video: Engineering at Meta, 2022-11-04, engineering.fb.com/2022/11/04/video-engineering/instagram-video-processing-encoding-reduction/.</p><p class="bridge">Look back at the board one more time.</p></aside>
+</section>
+
+<section class="slide" data-kind="statement" data-layout="giant" aria-label="The bridge">
+  <h2>Every feature you listed is somebody's job.</h2>
+  <aside class="notes"><p>Point at the board. Ranking, video, data centers, trust and safety, the app itself: each one is a team, and a career. That is part two.</p><p class="bridge">So who actually does those jobs, and which majors get them there?</p></aside>
+</section>
+
+
+<section class="slide" data-kind="statement" data-section="Careers" data-ground="orange" aria-label="Careers">
+  <p class="eyebrow">Part two</p>
+  <h2>Computer science doesn't just mean software engineer</h2>
+  <p class="sub">Let's see where CS, data science, and computer, electrical, and mechanical engineering really lead.</p>
+  <aside class="notes"><p>Ask the room: what jobs do you picture after your major? Take three answers, then press on. The next press breaks into the disk.</p><p class="bridge">We'll fly through 32 real jobs, starting with the ones you already know.</p></aside>
+</section>
+
+<section class="slide" data-kind="disk" data-card="mix" data-ground="space" aria-label="The career disk">
+  <div class="disk__hud">
+    <p class="eyebrow">Careers</p>
+    <h2>Where can your major take you?</h2>
+    <p class="sub">32 real jobs. We start in the middle with the ones you know, then work out to the ones booming with AI.</p>
+    <p class="sub disk__finale">The soft skills that show up most across these 32 jobs: critical thinking, adaptability, and attention to detail. Those travel with any major.</p>
+  </div>
+  <div class="disk__legend" aria-hidden="true"><canvas width="520" height="10"></canvas><p><span>Theory</span><span>Physical</span></p></div>
+  <ol class="stations">
+    <li data-majors="CS:0.9,CompE:0.1" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Software engineer</h3>
+        <p class="st__majors">CS · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://stripe.com/careers/listing/software-engineer-new-grad/8130930">Stripe</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">+10% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You write the code that makes apps and websites work, and fix it when something breaks.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as software developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,460, $135,980, $214,670. Silicon Valley (San Jose metro): $138,420, $213,110, $289,150."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, software developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.5;--hi:51.4"></span><span class="pay__tick is-entry" style="--x:12.5"></span><span class="pay__tick is-mid" style="--x:28.2"></span><span class="pay__tick is-senior" style="--x:51.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$82k</span><span class="st__label pay__v is-mid" style="--x:28.9">$136k</span><span class="st__label pay__v is-senior" style="--x:51.4">$215k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:28.9;--hi:73.3"></span><span class="pay__tick is-entry" style="--x:28.9"></span><span class="pay__tick is-mid" style="--x:50.9"></span><span class="pay__tick is-senior" style="--x:73.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:28.9">$138k</span><span class="st__label pay__v is-mid" style="--x:50.9">$213k</span><span class="st__label pay__v is-senior" style="--x:73.3">$289k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Git</li><li>React</li><li>TypeScript</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Critical thinking</li><li>Adaptability</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.35,CompE:0.2,ME:0.2,EE:0.15,DS:0.1" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Engineering manager</h3>
+        <p class="st__majors">Any major · mostly CS</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/verkada/jobs/5209693007">Verkada</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/management/architectural-and-engineering-managers.htm">Eng managers: +6% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You lead a team of engineers, sitting between them and company leadership to hire, coach, and deliver.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as engineering managers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $120,810, $171,270, $262,760. Silicon Valley (San Jose metro): $174,850, $234,590, $318,400."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, engineering managers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:23.8;--hi:65.5"></span><span class="pay__tick is-entry" style="--x:23.8"></span><span class="pay__tick is-mid" style="--x:38.6"></span><span class="pay__tick is-senior" style="--x:65.5"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:22.7">$121k</span><span class="st__label pay__v is-mid" style="--x:39.7">$171k</span><span class="st__label pay__v is-senior" style="--x:65.5">$263k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:39.7;--hi:81.9"></span><span class="pay__tick is-entry" style="--x:39.7"></span><span class="pay__tick is-mid" style="--x:57.2"></span><span class="pay__tick is-senior" style="--x:81.9"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:39.7">$175k</span><span class="st__label pay__v is-mid" style="--x:57.2">$235k</span><span class="st__label pay__v is-senior" style="--x:81.9">$318k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Confluence</li><li>Microsoft Project</li><li>AWS</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Leadership</li><li>Coordination</li></ul>
+      </div>
+    </li>
+    <li data-majors="CompE:0.7,EE:0.2,CS:0.1" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Embedded firmware engineer</h3>
+        <p class="st__majors">Comp E · EE · CS</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://ev.careers/jobs/456637882-internship-embedded-software-engineer-firmware-platforms-fall-2026">Tesla</a></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You write the code that lives inside devices, like a car, a watch, or a microwave.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as software developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,460, $135,980, $214,670. Silicon Valley (San Jose metro): $138,420, $213,110, $289,150."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, software developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.5;--hi:51.4"></span><span class="pay__tick is-entry" style="--x:12.5"></span><span class="pay__tick is-mid" style="--x:28.2"></span><span class="pay__tick is-senior" style="--x:51.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$82k</span><span class="st__label pay__v is-mid" style="--x:28.9">$136k</span><span class="st__label pay__v is-senior" style="--x:51.4">$215k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:28.9;--hi:73.3"></span><span class="pay__tick is-entry" style="--x:28.9"></span><span class="pay__tick is-mid" style="--x:50.9"></span><span class="pay__tick is-senior" style="--x:73.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:28.9">$138k</span><span class="st__label pay__v is-mid" style="--x:50.9">$213k</span><span class="st__label pay__v is-senior" style="--x:73.3">$289k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>C</li><li>C++</li><li>Linux</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Critical thinking</li><li>Adaptability</li></ul>
+      </div>
+    </li>
+    <li data-majors="EE:0.65,CompE:0.3,ME:0.05" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>PCB design engineer</h3>
+        <p class="st__majors">EE · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/planetlabs/jobs/8140278">Planet</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">+8% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You design the circuit boards inside electronics, deciding where every part and wire goes.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as electronics engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $81,840, $130,220, $206,960. Silicon Valley (San Jose metro): $104,620, $194,370, $269,780."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, electronics engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.3;--hi:49.1"></span><span class="pay__tick is-entry" style="--x:12.3"></span><span class="pay__tick is-mid" style="--x:26.5"></span><span class="pay__tick is-senior" style="--x:49.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:10.9">$82k</span><span class="st__label pay__v is-mid" style="--x:27.9">$130k</span><span class="st__label pay__v is-senior" style="--x:49.1">$207k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:19.0;--hi:67.6"></span><span class="pay__tick is-entry" style="--x:19.0"></span><span class="pay__tick is-mid" style="--x:45.4"></span><span class="pay__tick is-senior" style="--x:67.6"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:19.0">$105k</span><span class="st__label pay__v is-mid" style="--x:45.4">$194k</span><span class="st__label pay__v is-senior" style="--x:67.6">$270k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Altium Designer</li><li>PSpice</li><li>LabVIEW</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Attention to detail</li><li>Active listening</li></ul>
+      </div>
+    </li>
+    <li data-majors="EE:0.5,ME:0.3,CompE:0.15,CS:0.05" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Controls engineer</h3>
+        <p class="st__majors">EE · ME · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/laporteusa/jobs/5122145008">LAPORTE</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">+8% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You program the brains of factory machines, so conveyors, pumps, and robots run on their own.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as electrical engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $76,550, $120,630, $184,300. Silicon Valley (San Jose metro): $116,900, $187,060, $258,100."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, electrical engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.8;--hi:42.4"></span><span class="pay__tick is-entry" style="--x:10.8"></span><span class="pay__tick is-mid" style="--x:23.7"></span><span class="pay__tick is-senior" style="--x:42.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:8.6">$77k</span><span class="st__label pay__v is-mid" style="--x:25.6">$121k</span><span class="st__label pay__v is-senior" style="--x:42.6">$184k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:22.6;--hi:64.1"></span><span class="pay__tick is-entry" style="--x:22.6"></span><span class="pay__tick is-mid" style="--x:43.3"></span><span class="pay__tick is-senior" style="--x:64.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:22.6">$117k</span><span class="st__label pay__v is-mid" style="--x:43.3">$187k</span><span class="st__label pay__v is-senior" style="--x:64.1">$258k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Allen-Bradley PLCs</li><li>Studio 5000</li><li>FactoryTalk</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Critical thinking</li><li>Cautiousness</li></ul>
+      </div>
+    </li>
+    <li data-majors="ME:0.5,EE:0.3,CompE:0.1,CS:0.05,DS:0.05" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Project engineer</h3>
+        <p class="st__majors">ME · EE · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://boards.greenhouse.io/spacex/jobs/8811665002?gh_jid=8811665002">SpaceX</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/mechanical-engineers.htm">Mechanical engineers: +11% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You keep a build on schedule and budget, sitting between the designers, the vendors, and the job site.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as mechanical engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $73,990, $104,110, $164,340. Silicon Valley (San Jose metro): $105,400, $168,030, $217,530."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, mechanical engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.0;--hi:36.6"></span><span class="pay__tick is-entry" style="--x:10.0"></span><span class="pay__tick is-mid" style="--x:18.9"></span><span class="pay__tick is-senior" style="--x:36.6"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.0">$74k</span><span class="st__label pay__v is-mid" style="--x:24.0">$104k</span><span class="st__label pay__v is-senior" style="--x:41.0">$164k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:19.2;--hi:52.2"></span><span class="pay__tick is-entry" style="--x:19.2"></span><span class="pay__tick is-mid" style="--x:37.7"></span><span class="pay__tick is-senior" style="--x:52.2"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:19.2">$105k</span><span class="st__label pay__v is-mid" style="--x:36.5">$168k</span><span class="st__label pay__v is-senior" style="--x:53.5">$218k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>AutoCAD</li><li>Scheduling</li><li>Cost control</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Coordination</li><li>Negotiation</li></ul>
+      </div>
+    </li>
+    <li data-majors="ME:0.85,EE:0.1,DS:0.05" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Manufacturing engineer</h3>
+        <p class="st__majors">ME · EE</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/rebuildmanufacturing/jobs/4659401005">Re:Build Manufacturing</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/industrial-engineers.htm">Industrial engineers: +12% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You figure out how a factory can build something faster, cheaper, and with fewer mistakes.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as industrial engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $74,370, $102,440, $159,860. Silicon Valley (San Jose metro): $97,480, $136,950, $206,190."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, industrial engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.1;--hi:35.3"></span><span class="pay__tick is-entry" style="--x:10.1"></span><span class="pay__tick is-mid" style="--x:18.4"></span><span class="pay__tick is-senior" style="--x:35.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.0">$74k</span><span class="st__label pay__v is-mid" style="--x:24.0">$102k</span><span class="st__label pay__v is-senior" style="--x:41.0">$160k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:16.9;--hi:48.9"></span><span class="pay__tick is-entry" style="--x:16.9"></span><span class="pay__tick is-mid" style="--x:28.5"></span><span class="pay__tick is-senior" style="--x:48.9"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:14.2">$97k</span><span class="st__label pay__v is-mid" style="--x:31.2">$137k</span><span class="st__label pay__v is-senior" style="--x:48.9">$206k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>SolidWorks</li><li>Minitab</li><li>SAP</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Monitoring</li><li>Adaptability</li></ul>
+      </div>
+    </li>
+    <li data-majors="ME:1" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Aerospace structures engineer</h3>
+        <p class="st__majors">ME</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/andurilindustries/jobs/5055631007">Anduril</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/aerospace-engineers.htm">+8% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You make sure planes and rockets are strong enough to fly, and redesign whatever breaks.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as aerospace engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $86,700, $134,960, $205,890. Silicon Valley (San Jose metro): $127,490, $181,630, $254,880."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, aerospace engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:13.7;--hi:48.8"></span><span class="pay__tick is-entry" style="--x:13.7"></span><span class="pay__tick is-mid" style="--x:27.9"></span><span class="pay__tick is-senior" style="--x:48.8"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:12.3">$87k</span><span class="st__label pay__v is-mid" style="--x:29.3">$135k</span><span class="st__label pay__v is-senior" style="--x:48.8">$206k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:25.7;--hi:63.2"></span><span class="pay__tick is-entry" style="--x:25.7"></span><span class="pay__tick is-mid" style="--x:41.7"></span><span class="pay__tick is-senior" style="--x:63.2"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:25.2">$127k</span><span class="st__label pay__v is-mid" style="--x:42.2">$182k</span><span class="st__label pay__v is-senior" style="--x:63.2">$255k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>NASTRAN</li><li>ANSYS</li><li>CATIA</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Critical thinking</li><li>Cautiousness</li></ul>
+      </div>
+    </li>
+    <li data-majors="ME:0.95,EE:0.05" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Mechanical design engineer</h3>
+        <p class="st__majors">ME</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/andurilindustries/jobs/5136984007">Anduril</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/mechanical-engineers.htm">+11% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You design physical parts in 3D software, check the math, and build prototypes that fit.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as mechanical engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $73,990, $104,110, $164,340. Silicon Valley (San Jose metro): $105,400, $168,030, $217,530."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, mechanical engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.0;--hi:36.6"></span><span class="pay__tick is-entry" style="--x:10.0"></span><span class="pay__tick is-mid" style="--x:18.9"></span><span class="pay__tick is-senior" style="--x:36.6"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.0">$74k</span><span class="st__label pay__v is-mid" style="--x:24.0">$104k</span><span class="st__label pay__v is-senior" style="--x:41.0">$164k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:19.2;--hi:52.2"></span><span class="pay__tick is-entry" style="--x:19.2"></span><span class="pay__tick is-mid" style="--x:37.7"></span><span class="pay__tick is-senior" style="--x:52.2"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:19.2">$105k</span><span class="st__label pay__v is-mid" style="--x:36.5">$168k</span><span class="st__label pay__v is-senior" style="--x:53.5">$218k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>SolidWorks</li><li>MATLAB</li><li>Python</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Critical thinking</li><li>Attention to detail</li></ul>
+      </div>
+    </li>
+    <li data-majors="DS:0.9,CS:0.1" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Data scientist</h3>
+        <p class="st__majors">Data science · CS</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://www.metacareers.com/profile/job_details/1321789282873925/">Meta</a></p><p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">+35% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You dig through data to answer questions like: is this new feature actually helping?</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as data scientists; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $67,240, $120,230, $199,130. Silicon Valley (San Jose metro): $109,740, $185,080, $282,840."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, data scientists</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:8.0;--hi:46.8"></span><span class="pay__tick is-entry" style="--x:8.0"></span><span class="pay__tick is-mid" style="--x:23.6"></span><span class="pay__tick is-senior" style="--x:46.8"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.3">$67k</span><span class="st__label pay__v is-mid" style="--x:24.3">$120k</span><span class="st__label pay__v is-senior" style="--x:46.8">$199k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:20.5;--hi:71.4"></span><span class="pay__tick is-entry" style="--x:20.5"></span><span class="pay__tick is-mid" style="--x:42.7"></span><span class="pay__tick is-senior" style="--x:71.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:20.5">$110k</span><span class="st__label pay__v is-mid" style="--x:42.7">$185k</span><span class="st__label pay__v is-senior" style="--x:71.4">$283k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>PyTorch</li><li>PostgreSQL</li><li>Mathematics</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Curiosity</li><li>Critical thinking</li></ul>
+      </div>
+    </li>
+    <li data-majors="DS:0.8,CS:0.2" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Data analyst</h3>
+        <p class="st__majors">Data science · CS</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/nmi/jobs/5323410008">NMI</a></p><p><a class="st__outlook" href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">Big data jobs: fastest-growing, per WEF</a><span class="visually-hidden">, source: WEF, 2025</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You pull numbers from a database and turn them into charts that help a team decide.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as data scientists; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $67,240, $120,230, $199,130. Silicon Valley (San Jose metro): $109,740, $185,080, $282,840."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, data scientists</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:8.0;--hi:46.8"></span><span class="pay__tick is-entry" style="--x:8.0"></span><span class="pay__tick is-mid" style="--x:23.6"></span><span class="pay__tick is-senior" style="--x:46.8"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.3">$67k</span><span class="st__label pay__v is-mid" style="--x:24.3">$120k</span><span class="st__label pay__v is-senior" style="--x:46.8">$199k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:20.5;--hi:71.4"></span><span class="pay__tick is-entry" style="--x:20.5"></span><span class="pay__tick is-mid" style="--x:42.7"></span><span class="pay__tick is-senior" style="--x:71.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:20.5">$110k</span><span class="st__label pay__v is-mid" style="--x:42.7">$185k</span><span class="st__label pay__v is-senior" style="--x:71.4">$283k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>SQL</li><li>Tableau</li><li>Power BI</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Active listening</li><li>Attention to detail</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.4,DS:0.25,CompE:0.15,EE:0.1,ME:0.1" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Product manager</h3>
+        <p class="st__majors">Any major · mostly CS</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://databricks.com/company/careers/open-positions/job?gh_jid=7586263002">Databricks</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/management/computer-and-information-systems-managers.htm">IT managers: +16% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You decide what a product should do next, sitting between the customers and the engineers who build it.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as IT managers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $107,550, $175,140, $297,510. Silicon Valley (San Jose metro): $164,400, $291,660, $377,060."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, IT managers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:19.9;--hi:75.7"></span><span class="pay__tick is-entry" style="--x:19.9"></span><span class="pay__tick is-mid" style="--x:39.7"></span><span class="pay__tick is-senior" style="--x:75.7"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:19.9">$108k</span><span class="st__label pay__v is-mid" style="--x:39.7">$175k</span><span class="st__label pay__v is-senior" style="--x:75.7">$298k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:36.6;--hi:99.1"></span><span class="pay__tick is-entry" style="--x:36.6"></span><span class="pay__tick is-mid" style="--x:74.0"></span><span class="pay__tick is-senior" style="--x:99.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:36.6">$164k</span><span class="st__label pay__v is-mid" style="--x:74.0">$292k</span><span class="st__label pay__v is-senior" style="--x:93.0">$377k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>SQL</li><li>Python</li><li>Prototyping</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Social perceptiveness</li><li>Speaking</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.9,CompE:0.1" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>Frontend developer</h3>
+        <p class="st__majors">CS · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/avochato/jobs/4500844003">Avochato</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm">+5% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You build the part of a website people actually see and click: pages, buttons, menus.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as web developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $48,100, $92,650, $162,290. Silicon Valley (San Jose metro): $89,030, $166,670, $233,990."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, web developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:2.4;--hi:36.0"></span><span class="pay__tick is-entry" style="--x:2.4"></span><span class="pay__tick is-mid" style="--x:15.5"></span><span class="pay__tick is-senior" style="--x:36.0"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.0">$48k</span><span class="st__label pay__v is-mid" style="--x:24.0">$93k</span><span class="st__label pay__v is-senior" style="--x:41.0">$162k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:14.4;--hi:57.1"></span><span class="pay__tick is-entry" style="--x:14.4"></span><span class="pay__tick is-mid" style="--x:37.3"></span><span class="pay__tick is-senior" style="--x:57.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:14.4">$89k</span><span class="st__label pay__v is-mid" style="--x:37.3">$167k</span><span class="st__label pay__v is-senior" style="--x:57.1">$234k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>React</li><li>TypeScript</li><li>Git</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Active learning</li><li>Adaptability</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.85,CompE:0.15" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>iOS engineer</h3>
+        <p class="st__majors">CS · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/thenewyorktimes/jobs/4714695005">The New York Times</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">+10% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You build features inside iPhone apps, like a new screen or a faster way to post.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as software developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,460, $135,980, $214,670. Silicon Valley (San Jose metro): $138,420, $213,110, $289,150."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, software developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.5;--hi:51.4"></span><span class="pay__tick is-entry" style="--x:12.5"></span><span class="pay__tick is-mid" style="--x:28.2"></span><span class="pay__tick is-senior" style="--x:51.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$82k</span><span class="st__label pay__v is-mid" style="--x:28.9">$136k</span><span class="st__label pay__v is-senior" style="--x:51.4">$215k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:28.9;--hi:73.3"></span><span class="pay__tick is-entry" style="--x:28.9"></span><span class="pay__tick is-mid" style="--x:50.9"></span><span class="pay__tick is-senior" style="--x:73.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:28.9">$138k</span><span class="st__label pay__v is-mid" style="--x:50.9">$213k</span><span class="st__label pay__v is-senior" style="--x:73.3">$289k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Swift</li><li>iOS</li><li>Android</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Innovation</li><li>Adaptability</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.75,CompE:0.25" data-tier="classic">
+      <div class="st__id">
+        <p class="st__tier">classic</p>
+        <h3>QA automation engineer</h3>
+        <p class="st__majors">CS · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/coderoad/jobs/4164242009">CodeRoad</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">+10% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You write small programs that test the app for you, so bugs get caught before users see them.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as QA analysts and testers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $61,440, $104,300, $167,010. Silicon Valley (San Jose metro): $84,240, $166,530, $215,130."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, QA analysts and testers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:6.3;--hi:37.4"></span><span class="pay__tick is-entry" style="--x:6.3"></span><span class="pay__tick is-mid" style="--x:18.9"></span><span class="pay__tick is-senior" style="--x:37.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.0">$61k</span><span class="st__label pay__v is-mid" style="--x:24.0">$104k</span><span class="st__label pay__v is-senior" style="--x:41.0">$167k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:13.0;--hi:51.5"></span><span class="pay__tick is-entry" style="--x:13.0"></span><span class="pay__tick is-mid" style="--x:37.2"></span><span class="pay__tick is-senior" style="--x:51.5"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:13.0">$84k</span><span class="st__label pay__v is-mid" style="--x:35.9">$167k</span><span class="st__label pay__v is-senior" style="--x:52.9">$215k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Selenium</li><li>JUnit</li><li>Jira</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Attention to detail</li><li>Curiosity</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.65,CompE:0.35" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Cloud engineer</h3>
+        <p class="st__majors">CS · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/accenturefederalservices/jobs/4703608006">Accenture Federal</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/computer-network-architects.htm">Network architects: +8% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You set up the rented computers that apps run on, so they stay online and grow when needed.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as network architects; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $79,900, $134,050, $202,680. Silicon Valley (San Jose metro): $129,340, $186,110, $274,500."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, network architects</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:11.7;--hi:47.8"></span><span class="pay__tick is-entry" style="--x:11.7"></span><span class="pay__tick is-mid" style="--x:27.7"></span><span class="pay__tick is-senior" style="--x:47.8"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.2">$80k</span><span class="st__label pay__v is-mid" style="--x:28.2">$134k</span><span class="st__label pay__v is-senior" style="--x:47.8">$203k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:26.3;--hi:69.0"></span><span class="pay__tick is-entry" style="--x:26.3"></span><span class="pay__tick is-mid" style="--x:43.0"></span><span class="pay__tick is-senior" style="--x:69.0"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:26.1">$129k</span><span class="st__label pay__v is-mid" style="--x:43.1">$186k</span><span class="st__label pay__v is-senior" style="--x:69.0">$274k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>CloudFormation</li><li>Terraform</li><li>Docker</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Problem solving</li><li>Dependability</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.7,CompE:0.3" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Site reliability engineer</h3>
+        <p class="st__majors">CS · Comp E</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://lifeattiktok.com/search/7531164305472358663">TikTok</a></p><p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">Its industry: +25% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You keep a huge app online for millions of people, and you&#x27;re first to fix it when it goes down.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as software developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,460, $135,980, $214,670. Silicon Valley (San Jose metro): $138,420, $213,110, $289,150."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, software developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.5;--hi:51.4"></span><span class="pay__tick is-entry" style="--x:12.5"></span><span class="pay__tick is-mid" style="--x:28.2"></span><span class="pay__tick is-senior" style="--x:51.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$82k</span><span class="st__label pay__v is-mid" style="--x:28.9">$136k</span><span class="st__label pay__v is-senior" style="--x:51.4">$215k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:28.9;--hi:73.3"></span><span class="pay__tick is-entry" style="--x:28.9"></span><span class="pay__tick is-mid" style="--x:50.9"></span><span class="pay__tick is-senior" style="--x:73.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:28.9">$138k</span><span class="st__label pay__v is-mid" style="--x:50.9">$213k</span><span class="st__label pay__v is-senior" style="--x:73.3">$289k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Linux</li><li>Terraform</li><li>Prometheus</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Active listening</li><li>Dependability</li></ul>
+      </div>
+    </li>
+    <li data-majors="CompE:0.6,EE:0.4" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Chip design verification</h3>
+        <p class="st__majors">Comp E · EE</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://jobs.nvidia.com/careers/job/893392585259">NVIDIA</a></p><p><a class="st__outlook" href="https://www.semiconductors.org/wp-content/uploads/2023/07/SIA_July2023_ChippingAway_website.pdf">67,000 more US chip workers needed by 2030</a><span class="visually-hidden">, source: SIA, 2023</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">Before a chip gets made, you try everything to break its design, so the real chip works.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as hardware engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $92,940, $161,740, $225,330. Silicon Valley (San Jose metro): $141,590, $209,860, $284,400."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, hardware engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:15.6;--hi:54.5"></span><span class="pay__tick is-entry" style="--x:15.6"></span><span class="pay__tick is-mid" style="--x:35.8"></span><span class="pay__tick is-senior" style="--x:54.5"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:15.6">$93k</span><span class="st__label pay__v is-mid" style="--x:35.8">$162k</span><span class="st__label pay__v is-senior" style="--x:54.5">$225k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:29.9;--hi:71.9"></span><span class="pay__tick is-entry" style="--x:29.9"></span><span class="pay__tick is-mid" style="--x:50.0"></span><span class="pay__tick is-senior" style="--x:71.9"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:29.9">$142k</span><span class="st__label pay__v is-mid" style="--x:50.0">$210k</span><span class="st__label pay__v is-senior" style="--x:71.9">$284k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>RTL</li><li>Python</li><li>Shell script</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Attention to detail</li><li>Critical thinking</li></ul>
+      </div>
+    </li>
+    <li data-majors="EE:0.35,ME:0.3,CompE:0.25,CS:0.1" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Hardware program manager</h3>
+        <p class="st__majors">Any major · mostly EE</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/redwoodmaterials/jobs/5737915004">Redwood Materials</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/management/architectural-and-engineering-managers.htm">Eng managers: +6% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You keep a hardware project on schedule, coordinating parts, tests, and teams from prototype to launch.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as engineering managers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $120,810, $171,270, $262,760. Silicon Valley (San Jose metro): $174,850, $234,590, $318,400."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, engineering managers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:23.8;--hi:65.5"></span><span class="pay__tick is-entry" style="--x:23.8"></span><span class="pay__tick is-mid" style="--x:38.6"></span><span class="pay__tick is-senior" style="--x:65.5"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:22.7">$121k</span><span class="st__label pay__v is-mid" style="--x:39.7">$171k</span><span class="st__label pay__v is-senior" style="--x:65.5">$263k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:39.7;--hi:81.9"></span><span class="pay__tick is-entry" style="--x:39.7"></span><span class="pay__tick is-mid" style="--x:57.2"></span><span class="pay__tick is-senior" style="--x:81.9"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:39.7">$175k</span><span class="st__label pay__v is-mid" style="--x:57.2">$235k</span><span class="st__label pay__v is-senior" style="--x:81.9">$318k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Jira</li><li>Confluence</li><li>Excel</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Coordination</li><li>Time management</li></ul>
+      </div>
+    </li>
+    <li data-majors="EE:0.95,DS:0.05" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Power systems engineer</h3>
+        <p class="st__majors">EE</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/olsson/jobs/5170143008">Olsson</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/architecture-and-engineering/electrical-and-electronics-engineers.htm">+8% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You make sure the power grid can safely deliver enough electricity to places like data centers.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as electrical engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $76,550, $120,630, $184,300. Silicon Valley (San Jose metro): $116,900, $187,060, $258,100."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, electrical engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.8;--hi:42.4"></span><span class="pay__tick is-entry" style="--x:10.8"></span><span class="pay__tick is-mid" style="--x:23.7"></span><span class="pay__tick is-senior" style="--x:42.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:8.6">$77k</span><span class="st__label pay__v is-mid" style="--x:25.6">$121k</span><span class="st__label pay__v is-senior" style="--x:42.6">$184k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:22.6;--hi:64.1"></span><span class="pay__tick is-entry" style="--x:22.6"></span><span class="pay__tick is-mid" style="--x:43.3"></span><span class="pay__tick is-senior" style="--x:64.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:22.6">$117k</span><span class="st__label pay__v is-mid" style="--x:43.3">$187k</span><span class="st__label pay__v is-senior" style="--x:64.1">$258k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>PSCAD</li><li>MATLAB</li><li>Simulink</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Writing</li><li>Monitoring</li></ul>
+      </div>
+    </li>
+    <li data-majors="EE:0.6,ME:0.4" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Battery systems engineer</h3>
+        <p class="st__majors">EE · ME</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://careers.rivian.com/careers-home/jobs/30892">Rivian</a></p><p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">Its industry: +26% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You design big battery packs, like the ones in electric cars, so they stay safe and last.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as electrical engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $76,550, $120,630, $184,300. Silicon Valley (San Jose metro): $116,900, $187,060, $258,100."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, electrical engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.8;--hi:42.4"></span><span class="pay__tick is-entry" style="--x:10.8"></span><span class="pay__tick is-mid" style="--x:23.7"></span><span class="pay__tick is-senior" style="--x:42.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:8.6">$77k</span><span class="st__label pay__v is-mid" style="--x:25.6">$121k</span><span class="st__label pay__v is-senior" style="--x:42.6">$184k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:22.6;--hi:64.1"></span><span class="pay__tick is-entry" style="--x:22.6"></span><span class="pay__tick is-mid" style="--x:43.3"></span><span class="pay__tick is-senior" style="--x:64.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:22.6">$117k</span><span class="st__label pay__v is-mid" style="--x:43.3">$187k</span><span class="st__label pay__v is-senior" style="--x:64.1">$258k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>HV battery packs</li><li>CANalyzer</li><li>MATLAB</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Problem solving</li><li>Communication</li></ul>
+      </div>
+    </li>
+    <li data-majors="DS:0.5,ME:0.5" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Perception engineer</h3>
+        <p class="st__majors">Data science · ME</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://careers.withwaymo.com/jobs/software-engineer-perception-scaling-evaluation-mountain-view-california-united-states-san-francisco">Waymo</a></p><p><a class="st__outlook" href="https://www.cnbc.com/2026/02/24/waymo-opens-robotaxi-service-to-select-riders-in-4-more-us-cities.html">Robotaxis in 4 more US cities</a><span class="visually-hidden">, source: CNBC, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You teach self-driving cars to see people, cars, and signs using cameras and sensors.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as computer scientists; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,200, $140,300, $230,630. Silicon Valley (San Jose metro): $133,270, $218,420, $310,190."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, computer scientists</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.4;--hi:56.1"></span><span class="pay__tick is-entry" style="--x:12.4"></span><span class="pay__tick is-mid" style="--x:29.5"></span><span class="pay__tick is-senior" style="--x:56.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:12.4">$82k</span><span class="st__label pay__v is-mid" style="--x:29.5">$140k</span><span class="st__label pay__v is-senior" style="--x:56.1">$231k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:27.4;--hi:79.5"></span><span class="pay__tick is-entry" style="--x:27.4"></span><span class="pay__tick is-mid" style="--x:52.5"></span><span class="pay__tick is-senior" style="--x:79.5"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:27.4">$133k</span><span class="st__label pay__v is-mid" style="--x:52.5">$218k</span><span class="st__label pay__v is-senior" style="--x:79.5">$310k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Python</li><li>PyTorch</li><li>Sensor fusion</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Communication</li><li>Mentoring</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.55,DS:0.45" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Machine learning engineer</h3>
+        <p class="st__majors">CS · Data science</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://lifeattiktok.com/search/7537244549992417543">TikTok</a></p><p><a class="st__outlook" href="https://www.weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs/">AI and ML: top-3 fastest-growing, per WEF</a><span class="visually-hidden">, source: WEF, 2025</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You train models that learn from data, like the one picking which video you see next.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as computer scientists; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,200, $140,300, $230,630. Silicon Valley (San Jose metro): $133,270, $218,420, $310,190."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, computer scientists</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.4;--hi:56.1"></span><span class="pay__tick is-entry" style="--x:12.4"></span><span class="pay__tick is-mid" style="--x:29.5"></span><span class="pay__tick is-senior" style="--x:56.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:12.4">$82k</span><span class="st__label pay__v is-mid" style="--x:29.5">$140k</span><span class="st__label pay__v is-senior" style="--x:56.1">$231k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:27.4;--hi:79.5"></span><span class="pay__tick is-entry" style="--x:27.4"></span><span class="pay__tick is-mid" style="--x:52.5"></span><span class="pay__tick is-senior" style="--x:79.5"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:27.4">$133k</span><span class="st__label pay__v is-mid" style="--x:52.5">$218k</span><span class="st__label pay__v is-senior" style="--x:79.5">$310k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>PyTorch</li><li>TensorFlow</li><li>Kubernetes</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Innovation</li><li>Perseverance</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.7,DS:0.3" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Solutions engineer</h3>
+        <p class="st__majors">CS · Data science</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://stripe.com/careers/listing/technical-solutions-engineer/7377101">Stripe</a></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You sit between the engineers and the customers, helping customers get the product working in their own setup.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as sales engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $73,870, $124,900, $195,270. Silicon Valley (San Jose metro): $100,830, $177,490, $242,520."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, sales engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.0;--hi:45.7"></span><span class="pay__tick is-entry" style="--x:10.0"></span><span class="pay__tick is-mid" style="--x:25.0"></span><span class="pay__tick is-senior" style="--x:45.7"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:9.0">$74k</span><span class="st__label pay__v is-mid" style="--x:26.0">$125k</span><span class="st__label pay__v is-senior" style="--x:45.7">$195k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:17.9;--hi:59.6"></span><span class="pay__tick is-entry" style="--x:17.9"></span><span class="pay__tick is-mid" style="--x:40.4"></span><span class="pay__tick is-senior" style="--x:59.6"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:17.9">$101k</span><span class="st__label pay__v is-mid" style="--x:40.4">$177k</span><span class="st__label pay__v is-senior" style="--x:59.6">$243k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Salesforce</li><li>Docker</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Speaking</li><li>Active listening</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.6,CompE:0.3,DS:0.1" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>SOC analyst</h3>
+        <p class="st__majors">CS · Comp E · Data science</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://job-boards.greenhouse.io/idme/jobs/7808011003">ID.me</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/information-security-analysts.htm">+21% jobs by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You watch for hackers. When an alert goes off, you figure out if it&#x27;s real and stop it.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as info security analysts; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $75,090, $129,180, $199,850. Silicon Valley (San Jose metro): $90,290, $176,120, $278,340."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, info security analysts</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.3;--hi:47.0"></span><span class="pay__tick is-entry" style="--x:10.3"></span><span class="pay__tick is-mid" style="--x:26.2"></span><span class="pay__tick is-senior" style="--x:47.0"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:9.8">$75k</span><span class="st__label pay__v is-mid" style="--x:26.8">$129k</span><span class="st__label pay__v is-senior" style="--x:47.0">$200k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:14.8;--hi:70.1"></span><span class="pay__tick is-entry" style="--x:14.8"></span><span class="pay__tick is-mid" style="--x:40.0"></span><span class="pay__tick is-senior" style="--x:70.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:14.8">$90k</span><span class="st__label pay__v is-mid" style="--x:40.0">$176k</span><span class="st__label pay__v is-senior" style="--x:70.1">$278k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Splunk</li><li>Python</li><li>Bash</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Critical thinking</li><li>Cautiousness</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.45,CompE:0.2,DS:0.15,EE:0.15,ME:0.05" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>Technical program manager</h3>
+        <p class="st__majors">Any major · mostly CS</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://stripe.com/jobs/search?gh_jid=8171297">Stripe</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/business-and-financial/project-management-specialists.htm">Project managers: +7% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You keep many software teams moving toward one launch date, sitting between the engineering teams and leadership.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as project managers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $61,580, $102,320, $167,970. Silicon Valley (San Jose metro): $82,920, $135,120, $212,340."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, project managers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:6.3;--hi:37.6"></span><span class="pay__tick is-entry" style="--x:6.3"></span><span class="pay__tick is-mid" style="--x:18.3"></span><span class="pay__tick is-senior" style="--x:37.6"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.0">$62k</span><span class="st__label pay__v is-mid" style="--x:24.0">$102k</span><span class="st__label pay__v is-senior" style="--x:41.0">$168k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.6;--hi:50.7"></span><span class="pay__tick is-entry" style="--x:12.6"></span><span class="pay__tick is-mid" style="--x:28.0"></span><span class="pay__tick is-senior" style="--x:50.7"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$83k</span><span class="st__label pay__v is-mid" style="--x:28.8">$135k</span><span class="st__label pay__v is-senior" style="--x:50.7">$212k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Jira</li><li>Microsoft Project</li><li>Git</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Coordination</li><li>Monitoring</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.5,CompE:0.25,DS:0.1,EE:0.1,ME:0.05" data-tier="growing">
+      <div class="st__id">
+        <p class="st__tier">growing</p>
+        <h3>DevOps engineer</h3>
+        <p class="st__majors">Any major · mostly CS</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://builtin.com/job/devops-engineer-i-new-grad/10807466">True Anomaly</a></p><p><a class="st__outlook" href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">Software devs: +10% by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You build the systems that ship code to live servers, sitting between the developers and the operations team.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as software developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,460, $135,980, $214,670. Silicon Valley (San Jose metro): $138,420, $213,110, $289,150."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, software developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.5;--hi:51.4"></span><span class="pay__tick is-entry" style="--x:12.5"></span><span class="pay__tick is-mid" style="--x:28.2"></span><span class="pay__tick is-senior" style="--x:51.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$82k</span><span class="st__label pay__v is-mid" style="--x:28.9">$136k</span><span class="st__label pay__v is-senior" style="--x:51.4">$215k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:28.9;--hi:73.3"></span><span class="pay__tick is-entry" style="--x:28.9"></span><span class="pay__tick is-mid" style="--x:50.9"></span><span class="pay__tick is-senior" style="--x:73.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:28.9">$138k</span><span class="st__label pay__v is-mid" style="--x:50.9">$213k</span><span class="st__label pay__v is-senior" style="--x:73.3">$289k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Terraform</li><li>Git</li><li>Bash</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Speaking</li><li>Adaptability</li></ul>
+      </div>
+    </li>
+    <li data-majors="CompE:0.5,CS:0.4,EE:0.1" data-tier="new">
+      <div class="st__id">
+        <p class="st__tier">new</p>
+        <h3>GPU infrastructure engineer</h3>
+        <p class="st__majors">Comp E · CS · EE</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://openai.com/careers/software-engineer-gpu-infrastructure-san-francisco/">OpenAI</a></p><p><a class="st__outlook" href="https://www.bls.gov/news.release/pdf/ecopro.pdf">120,400 new jobs in its industry by 2035</a><span class="visually-hidden">, source: bls.gov, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You keep giant rooms of AI chips running so AI models can train without crashing.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as network architects; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $79,900, $134,050, $202,680. Silicon Valley (San Jose metro): $129,340, $186,110, $274,500."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, network architects</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:11.7;--hi:47.8"></span><span class="pay__tick is-entry" style="--x:11.7"></span><span class="pay__tick is-mid" style="--x:27.7"></span><span class="pay__tick is-senior" style="--x:47.8"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.2">$80k</span><span class="st__label pay__v is-mid" style="--x:28.2">$134k</span><span class="st__label pay__v is-senior" style="--x:47.8">$203k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:26.3;--hi:69.0"></span><span class="pay__tick is-entry" style="--x:26.3"></span><span class="pay__tick is-mid" style="--x:43.0"></span><span class="pay__tick is-senior" style="--x:69.0"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:26.1">$129k</span><span class="st__label pay__v is-mid" style="--x:43.1">$186k</span><span class="st__label pay__v is-senior" style="--x:69.0">$274k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Linux</li><li>PCIe</li><li>NVIDIA GPUs</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Ownership</li><li>Curiosity</li></ul>
+      </div>
+    </li>
+    <li data-majors="ME:0.4,CompE:0.3,EE:0.3" data-tier="new">
+      <div class="st__id">
+        <p class="st__tier">new</p>
+        <h3>Robotics integration engineer</h3>
+        <p class="st__majors">ME · Comp E · EE</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://www.builtinsf.com/job/robotics-integration-engineer/9222146">Figure AI</a></p><p><a class="st__outlook" href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years">542,000 robots installed worldwide in 2024</a><span class="visually-hidden">, source: IFR, 2025</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You get a robot&#x27;s motors, sensors, wires, and code working together as one machine.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as other engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $66,810, $122,930, $189,950. Silicon Valley (San Jose metro): $94,240, $169,650, $266,030."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, other engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:7.9;--hi:44.1"></span><span class="pay__tick is-entry" style="--x:7.9"></span><span class="pay__tick is-mid" style="--x:24.4"></span><span class="pay__tick is-senior" style="--x:44.1"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.7">$67k</span><span class="st__label pay__v is-mid" style="--x:24.6">$123k</span><span class="st__label pay__v is-senior" style="--x:44.1">$190k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:16.0;--hi:66.5"></span><span class="pay__tick is-entry" style="--x:16.0"></span><span class="pay__tick is-mid" style="--x:38.1"></span><span class="pay__tick is-senior" style="--x:66.5"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:16.0">$94k</span><span class="st__label pay__v is-mid" style="--x:38.1">$170k</span><span class="st__label pay__v is-senior" style="--x:66.5">$266k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>C++</li><li>Python</li><li>Gazebo</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Critical thinking</li><li>Adaptability</li></ul>
+      </div>
+    </li>
+    <li data-majors="ME:0.9,EE:0.1" data-tier="new">
+      <div class="st__id">
+        <p class="st__tier">new</p>
+        <h3>Data center cooling engineer</h3>
+        <p class="st__majors">ME · EE</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://www.google.com/about/careers/applications/jobs/results/126994228717724358-data-center-mechanical-cooling-engineer/">Google</a></p><p><a class="st__outlook" href="https://spectrum.ieee.org/ai-data-centers-engineers-jobs">AI data centers want more MEs</a><span class="visually-hidden">, source: IEEE Spectrum, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">AI chips run hot. You design the air and liquid systems that keep them from overheating.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as mechanical engineers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $73,990, $104,110, $164,340. Silicon Valley (San Jose metro): $105,400, $168,030, $217,530."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, mechanical engineers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:10.0;--hi:36.6"></span><span class="pay__tick is-entry" style="--x:10.0"></span><span class="pay__tick is-mid" style="--x:18.9"></span><span class="pay__tick is-senior" style="--x:36.6"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:7.0">$74k</span><span class="st__label pay__v is-mid" style="--x:24.0">$104k</span><span class="st__label pay__v is-senior" style="--x:41.0">$164k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:19.2;--hi:52.2"></span><span class="pay__tick is-entry" style="--x:19.2"></span><span class="pay__tick is-mid" style="--x:37.7"></span><span class="pay__tick is-senior" style="--x:52.2"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:19.2">$105k</span><span class="st__label pay__v is-mid" style="--x:36.5">$168k</span><span class="st__label pay__v is-senior" style="--x:53.5">$218k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>AutoCAD</li><li>MATLAB</li><li>Physics</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Active listening</li><li>Attention to detail</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.7,DS:0.3" data-tier="new">
+      <div class="st__id">
+        <p class="st__tier">new</p>
+        <h3>AI enablement engineer</h3>
+        <p class="st__majors">CS · Data science</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://dynamitejobs.com/company/phorest/remote-job/ai-enablement-engineer">Phorest</a></p><p><a class="st__outlook" href="https://www.linkedin.com/pulse/linkedin-jobs-rise-2026-25-fastest-growing-roles-us-linkedin-news-dlb1c">AI engineer: LinkedIn&#x27;s #1 rising job</a><span class="visually-hidden">, source: LinkedIn, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You build AI helpers for your own coworkers, so teams like HR and sales work faster.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as software developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,460, $135,980, $214,670. Silicon Valley (San Jose metro): $138,420, $213,110, $289,150."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, software developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.5;--hi:51.4"></span><span class="pay__tick is-entry" style="--x:12.5"></span><span class="pay__tick is-mid" style="--x:28.2"></span><span class="pay__tick is-senior" style="--x:51.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$82k</span><span class="st__label pay__v is-mid" style="--x:28.9">$136k</span><span class="st__label pay__v is-senior" style="--x:51.4">$215k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:28.9;--hi:73.3"></span><span class="pay__tick is-entry" style="--x:28.9"></span><span class="pay__tick is-mid" style="--x:50.9"></span><span class="pay__tick is-senior" style="--x:73.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:28.9">$138k</span><span class="st__label pay__v is-mid" style="--x:50.9">$213k</span><span class="st__label pay__v is-senior" style="--x:73.3">$289k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Python</li><li>Kubernetes</li><li>AWS</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Mentorship</li><li>Collaboration</li></ul>
+      </div>
+    </li>
+    <li data-majors="CS:0.7,DS:0.3" data-tier="new">
+      <div class="st__id">
+        <p class="st__tier">new</p>
+        <h3>Forward deployed engineer</h3>
+        <p class="st__majors">CS · Data science</p>
+        <div class="st__foot"><p><span class="st__label">Hiring</span> <a href="https://jobs.lever.co/palantir/dab396d4-2f14-4796-aac0-0d82883dccf0">Palantir</a></p><p><a class="st__outlook" href="https://lightcast.io/resources/blog/forward-deployed-engineer-ai-job">5,200+ US postings by July 2026</a><span class="visually-hidden">, source: Lightcast, 2026</span></p></div>
+      </div>
+      <div class="st__what"><p class="st__label">What you'd do</p><p class="st__do">You work right alongside a customer, building what they need so your product works for them.</p></div>
+      <div class="st__pay" role="group" aria-label="Pay ladder, BLS May 2025, as software developers; entry, mid, and senior are the 10th percentile, the median, and the 90th percentile. United States: $82,460, $135,980, $214,670. Silicon Valley (San Jose metro): $138,420, $213,110, $289,150."><p class="pay__head"><span class="st__label">Pay: entry · mid · senior</span><span class="st__src">BLS 2025, software developers</span></p><div class="pay__row"><span class="pay__where">United States</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:12.5;--hi:51.4"></span><span class="pay__tick is-entry" style="--x:12.5"></span><span class="pay__tick is-mid" style="--x:28.2"></span><span class="pay__tick is-senior" style="--x:51.4"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:11.8">$82k</span><span class="st__label pay__v is-mid" style="--x:28.9">$136k</span><span class="st__label pay__v is-senior" style="--x:51.4">$215k</span></span></div><div class="pay__row is-sv"><span class="pay__where">Silicon Valley</span><span class="pay__track" aria-hidden="true"><span class="pay__range" style="--lo:28.9;--hi:73.3"></span><span class="pay__tick is-entry" style="--x:28.9"></span><span class="pay__tick is-mid" style="--x:50.9"></span><span class="pay__tick is-senior" style="--x:73.3"></span></span><span class="pay__vals"><span class="st__label pay__v is-entry" style="--x:28.9">$138k</span><span class="st__label pay__v is-mid" style="--x:50.9">$213k</span><span class="st__label pay__v is-senior" style="--x:73.3">$289k</span></span></div></div>
+      <div class="st__skills">
+        <p class="st__label">Hard skills</p><ul class="st__chips"><li>Python</li><li>vLLM</li><li>Fine-tuning</li></ul>
+        <p class="st__label">Soft skills</p><ul class="st__chips st__soft"><li>Judgment</li><li>Collaboration</li></ul>
+      </div>
+    </li>
+  </ol>
+  <p class="disk__name">ACM @ RCC</p>
+  <aside class="notes"><p>One press per station. Drag to look around; click any beacon to fly to it. Inner ring is classic roles, middle is growing, outer is new. The majors under each title are our judgment of who usually lands there, not a rule.</p><p>Pay ladder, how to read it: the bar runs from entry to senior, and the thick mark is the middle. Entry, mid, and senior are the 10th percentile, the median, and the 90th percentile of what people in that BLS occupation earn (May 2025). BLS has no job levels, so say "about" when you read them. A long bar means a high ceiling. Silicon Valley is the San Jose metro. Roles without their own BLS category use the closest one, named on the card.</p></aside>
+</section>
+
+</main>
+</body>
+</html>
