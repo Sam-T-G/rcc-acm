@@ -137,14 +137,18 @@
     var listeners = [], qrBox = null, phoneUrl = '', last = null;
     // Report a change to the presenter windows (postMessage) and the phone (relay).
     function report(st, force) {
-      var m = msg('state', { i: st.i, b: st.b, room: st.room, clock: clockOf(st.i), phone: !!(relay && relay.phone) });
+      var n = remotes();
+      var m = msg('state', { i: st.i, b: st.b, room: st.room, clock: clockOf(st.i), remotes: n });
       listeners = listeners.filter(function (w) { if (!w || w.closed) return false; try { w.postMessage(m, '*'); return true; } catch (e) { return false; } });
-      // The phone already moved its own screen for its own presses; tell it only
-      // what it could not predict (a clicker, the laptop's keys, the end).
-      if (relay && relay.phone && (force || !(relay.known && relay.known.i === st.i && relay.known.b === st.b && relay.known.room === st.room))) {
+      // One remote already moved its own screen for its own presses, so it hears
+      // only what it could not predict (a clicker, the laptop's keys, the end).
+      // With two or more, every change goes to all of them.
+      if (n && (force || n > 1 || !(relay.known && relay.known.i === st.i && relay.known.b === st.b && relay.known.room === st.room))) {
         relay.known = st;
         clearTimeout(relay.t);
-        relay.t = setTimeout(function () { relayPost(msg('state', { from: 'deck', i: relay.known.i, b: relay.known.b, room: relay.known.room, seq: relay.seq }), relayFail); }, 250);
+        relay.t = setTimeout(function () {
+          relayPost(msg('state', { from: 'deck', i: relay.known.i, b: relay.known.b, room: relay.known.room, seqs: relay.seqs, remotes: remotes() }), relayFail);
+        }, 250);
       }
     }
     function relayFail(code) { say(code === 429 ? 'The phone relay is busy. Wait a few seconds.' : 'The phone relay is unreachable. Is this laptop online?'); }
@@ -184,24 +188,36 @@
       if (/^https?:$/.test(location.protocol) && !/^(127\.|localhost)/.test(location.hostname)) return base();
       return deck.getAttribute('data-live-url') || '';
     }
+    // Remotes seen in the last five minutes. Each says hello on connect and every
+    // two minutes after, so a closed tab drops out of the count.
+    function remotes() {
+      if (!relay) return 0;
+      var cut = Date.now() - 300000, n = 0;
+      for (var id in relay.seen) { if (relay.seen[id] < cut) delete relay.seen[id]; else n++; }
+      return n;
+    }
     function tell(src, text) { if (src) src.postMessage(msg('note', { text: text }), '*'); else say(text); }
     function startPhone(src) {
       var b = remoteBase();
       if (!b) { tell(src, 'The remote needs the published deck. Add data-live-url, or open the live link.'); return; }
       if (!window.EventSource || !window.fetch) { tell(src, 'This browser cannot run the remote.'); return; }
       if (!relay) {
-        relay = { topic: 'rccdeck-' + rid(24), phone: false, known: null, t: 0, seq: 0 };
+        relay = { topic: 'rccdeck-' + rid(24), seen: {}, seqs: {}, known: null, t: 0 };
         relayListen(function (d) {
           if (!d || d.gdgDeck !== DECK_ID || d.from !== 'phone') return;
+          var id = typeof d.id === 'string' ? d.id.slice(0, 24) : 'one';
+          var fresh = !relay.seen[id];
+          relay.seen[id] = Date.now();
           if (d.t === 'hello') {
-            if (!relay.phone) { hideQr(); say('Remote connected'); }
-            relay.phone = true; var st = state(); if (st) report(st, true);
+            if (fresh) { hideQr(); var n = remotes(); say(n > 1 ? n + ' remotes connected' : 'Remote connected'); }
+            // A heartbeat only keeps the count; a real hello asks where the deck is.
+            if (fresh || !d.beat) { var st = state(); if (st) report(st, true); }
           } else if (d.t === 'key' && typeof d.k === 'string') {
-            if (typeof d.seq === 'number') relay.seq = d.seq;
+            if (typeof d.seq === 'number') relay.seqs[id] = d.seq;
             if (d.expect && typeof d.expect.i === 'number') relay.known = { i: d.expect.i, b: d.expect.b, room: (state() || {}).room };
             press(d.k);
           }
-        }, function (ok) { if (!ok && !relay.phone) tell(src, 'Reaching the relay…'); });
+        }, function (ok) { if (!ok && !remotes()) tell(src, 'Reaching the relay…'); });
         phoneUrl = b + '?view=remote&relay=' + relay.topic;
       }
       if (src) { src.postMessage(msg('qr', { url: phoneUrl }), '*'); return; }
@@ -291,7 +307,7 @@
     var q = function (sel) { return one(sel, pv); };
     q('.pv__deck').textContent = deck.getAttribute('data-ledger') || document.title;
     q('a.pv-btn').href = base() + '?view=runsheet';
-    var show = frames(all('.pv__slot', pv), 2), st = null, t0 = Date.now();
+    var show = frames(all('.pv__slot', pv), 2), st = null, t0 = Date.now(), lastRemotes = 0;
     function hello() { toHost(msg('hello')); }
     hello(); setInterval(hello, 3000);                  // re-register if the deck window reloads
     setInterval(function () {
@@ -305,14 +321,15 @@
       if (d.t === 'state') {
         st = { i: d.i, b: d.b, room: !!d.room };
         var c = cue(st);
-        q('.pv__status').textContent = d.phone ? 'Remote connected' : '';
+        q('.pv__status').textContent = d.remotes > 1 ? d.remotes + ' remotes connected' : d.remotes ? 'Remote connected' : '';
         q('.pv__where').textContent = c.where + ' · ' + c.label;
         var clk = q('.pv__clock'); clk.hidden = !d.clock; clk.textContent = d.clock ? 'Clock ' + d.clock : '';
         q('.pv__upnext').textContent = c.upNext;
         q('.pv__notes').innerHTML = c.notes.html || '<p class="pv-muted">No notes on this slide.</p>';
         q('.pv-bridge__body').innerHTML = bridgeHtml(c);
         q('.pv-bridge').classList.toggle('is-due', c.due && !!c.notes.bridge);
-        if (d.phone) q('.pv__qr').hidden = true;
+        if (d.remotes && d.remotes !== lastRemotes) q('.pv__qr').hidden = true;
+        lastRemotes = d.remotes || 0;
         show(0, st); show(1, c.next || st);
       } else if (d.t === 'qr') {
         var box = q('.pv__qr'); box.hidden = false; box.innerHTML = '<p class="pv-label">Scan with your phone or tablet</p>';
@@ -338,7 +355,7 @@
     rv.classList.toggle('is-wide', wide);
     rv.innerHTML =
       '<p class="rv__status" role="status">Connecting to the deck…</p>' +
-      '<div class="rv__main"><header class="rv__bar"><p class="rv__where"></p><p class="rv__clock"></p></header>' +
+      '<div class="rv__main"><header class="rv__bar"><p class="rv__where"></p><p class="rv__count"></p><p class="rv__clock"></p></header>' +
       '<h1 class="rv__title"></h1>' +
       '<div class="pv-bridge"><p class="pv-label">Bridge</p><div class="pv-bridge__body"></div></div>' +
       '<p class="rv__next"></p><div class="rv__notes"></div></div>' +
@@ -346,7 +363,7 @@
       '<nav class="rv__pad"><button type="button" data-k="ArrowLeft">Back</button><button type="button" data-k="ArrowRight">Next</button></nav>';
     var q = function (sel) { return one(sel, rv); };
     var show = wide ? frames(all('.pv__slot', rv), 2) : function () {};
-    var topic = (/[?&]relay=([\w-]+)/.exec(location.search) || [])[1], cur = null, lock = null, seq = 0;
+    var topic = (/[?&]relay=([\w-]+)/.exec(location.search) || [])[1], cur = null, lock = null, seq = 0, me = rid(12), tapAt = 0;
     function status(t) { q('.rv__status').textContent = t; rv.classList.toggle('is-live', !t); }
     function draw(st) {
       var c = cue(st);
@@ -365,19 +382,24 @@
     relay = { topic: topic };
     relayListen(function (d) {
       if (!d || d.gdgDeck !== DECK_ID || d.from !== 'deck' || d.t !== 'state') return;
-      // A reply sent before the deck saw this device's latest tap is already out of date.
-      if (typeof d.seq === 'number' && d.seq < seq) return;
+      // A reply sent before the deck saw this device's latest tap is already out of
+      // date for this device (other remotes' taps don't count against it).
+      var mine = d.seqs && typeof d.seqs[me] === 'number' ? d.seqs[me] : 0;
+      // A tap whose message was lost never gets acknowledged, so the wait ends after 2.5 s.
+      if (mine < seq && Date.now() - tapAt < 2500) return;
+      q('.rv__count').textContent = d.remotes > 1 ? d.remotes + ' remotes' : '';
       cur = { i: d.i, b: d.b, room: !!d.room }; status(''); draw(cur);
     }, function (ok) {
       // Say hello on every (re)connect; the deck answers with where it is.
-      if (ok) { relayPost(msg('hello', { from: 'phone' }), fail); if (!cur) status('Waiting for the deck…'); }
+      if (ok) { relayPost(msg('hello', { from: 'phone', id: me }), fail); if (!cur) status('Waiting for the deck…'); }
       else status('Reconnecting…');
     });
+    setInterval(function () { relayPost(msg('hello', { from: 'phone', id: me, beat: true })); }, 120000);
     function sendKey(k) {
       if (!cur) return;
       var exp = k === 'ArrowRight' ? nextOf(cur.i, cur.b, cur.room) : prevOf(cur.i, cur.b, cur.room);
-      seq += 1;
-      relayPost(msg('key', { from: 'phone', k: k, seq: seq, expect: exp ? { i: exp.i, b: exp.b } : null }), fail);
+      seq += 1; tapAt = Date.now();
+      relayPost(msg('key', { from: 'phone', id: me, k: k, seq: seq, expect: exp ? { i: exp.i, b: exp.b } : null }), fail);
       if (exp) { cur = { i: exp.i, b: exp.b, room: cur.room }; draw(cur); }
     }
     all('[data-k]', rv).forEach(function (btn) {
@@ -444,7 +466,7 @@
     '.rv.is-wide{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px;padding:20px 24px calc(124px + env(safe-area-inset-bottom))}',
     '.rv.is-wide .rv__status{grid-column:1/-1}.rv__previews .pv__slot{margin-bottom:16px}',
     '.rv__status{margin:0 0 12px;padding:10px 12px;border-radius:8px;background:var(--pv-box-high);font-size:16px}.rv__status:empty{display:none}',
-    '.rv__bar{display:flex;justify-content:space-between;gap:12px;font:14px var(--pv-code);color:var(--pv-muted)}.rv__bar p{margin:0}.rv__clock{color:var(--pv-primary);font-size:18px}',
+    '.rv__count{color:var(--pv-primary)}.rv__count:empty{display:none}.rv__bar{display:flex;justify-content:space-between;gap:12px;font:14px var(--pv-code);color:var(--pv-muted)}.rv__bar p{margin:0}.rv__clock{color:var(--pv-primary);font-size:18px}',
     '.rv__title{font-size:24px;line-height:1.25;font-weight:500;margin:8px 0 0}.rv .pv-bridge__text{font-size:20px}.rv .pv-bridge.is-due .pv-bridge__text{font-size:22px}',
     '.rv__next{margin:14px 0 0;font-size:17px;font-weight:500}.rv__notes{margin-top:12px;font-size:18px;line-height:1.5}.rv__notes p{margin:0 0 12px}',
     '.rv__pad{position:fixed;inset-inline:0;bottom:0;display:grid;grid-template-columns:1fr 2fr;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--pv-surface);box-shadow:0 -1px 0 var(--pv-line)}',
