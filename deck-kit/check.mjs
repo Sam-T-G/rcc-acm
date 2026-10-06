@@ -433,6 +433,12 @@ async function walk(label, opts, expect) {
   }
   // Enter on the focused QR link belongs to the link, not the deck.
   if (await evaluate('!!document.querySelector("a.qr")')) {
+    // A fast scripted walk can trip Chrome's history throttle (too many URL writes in
+    // ten seconds), which drops writes silently and leaves the URL behind the deck.
+    // No person presses that fast; wait the window out and resync before testing jumps.
+    if (await evaluate(`location.hash !== '#' + (__deck.state().i + 1)`)) {
+      await sleep(10500); await evaluate(`history.replaceState(null, '', '#' + (__deck.state().i + 1))`);
+    }
     // Go to the slide that holds the link, from somewhere else, so the hash really changes.
     await evaluate(`location.hash = '#1'`); await sleep(200); await settle();
     const qrAt = await evaluate(`[...document.querySelectorAll('.deck > .slide')].findIndex((s) => s.querySelector('a.qr'))`);
