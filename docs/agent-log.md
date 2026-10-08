@@ -10,6 +10,18 @@ Remove a line once it is answered and note the answer in that day's entry.
 
 <!-- newest entry below: add "## YYYY-MM-DD · Name (via Claude Code)" here and end it with a blank line -->
 
+## 2026-10-08 · Sam (via Claude Code)
+
+**Changed:**
+
+- Hook pinning: every hook runs a copy each person approved in `~/.config/rcc-coworking/`. A pull that changes `scripts/hooks/`, `sync.sh`, `context.sh`, `review.mjs`, `coworking.conf`, `install-bridge.sh`, or `.claude/` stops with `SYNC HELD` until a person approves the diff in a terminal (`~/.config/rcc-coworking/approve <repo>`). Raw `git pull`, `merge`, and `rebase` are blocked. Same kit in all three repos. (`b743ce2`)
+- `deck-kit/check.mjs`: mock keychain, and typed keys without native key codes (`f48866c`).
+- Review v2 (`7271e70`, `56eaedb`): `deck-kit/review.js` loads the relay's annotation client (`A` to annotate, `I` for the inbox, `?view=review`, Google sign-in limited to club members). `presenter.js` lists each slide's open notes in the presenter view and remote, never on the room's screen. `scripts/review.mjs` uses the v2 API with an agent token. The relay's v1 passcode review is retired. No published ACM deck loaded v1, so none needed republishing.
+
+**Issues:** Until each person runs `scripts/install-bridge.sh` once in a terminal, hooks here print a one-line notice and do not run. The main clone is still on `2026-10-01-deck` with another session's edits; these commits went to `main` from a worktree.
+
+**Next:** add the officers' emails to the relay's ACM member list (`node admin.mjs add acm <email> <name>` in deck-relay).
+
 ## 2026-10-07 · Sam (via Claude Code)
 
 **Changed:**
