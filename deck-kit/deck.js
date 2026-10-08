@@ -332,7 +332,10 @@
   coverRail = one('.slide[data-kind="cover"] .cover__rail', deck);
 
   /* ---------- State -------------------------------------------------------- */
-  var S = { i: 0, b: 0, room: recall('room') === '1', tl: null, last: 'none', presenting: false };
+  var S = { i: 0, b: 0, room: recall('room') === '1', tl: null, last: 'none', presenting: false, auto: null };
+  // data-auto: a slide that reveals its own beats when the presenter arrives
+  // pressing forward. Off in the tool views and with ?auto=0 (the check's walks).
+  var NO_AUTO = /[?&](auto=0|view=)/.test(location.search);
   function visible() {
     if (!S.room) return slides.map(function (s, i) { return i; });
     var v = slides.map(function (s, i) { return s.hasAttribute('data-room') ? i : -1; }).filter(function (i) { return i >= 0; });
@@ -465,8 +468,8 @@
     if (kind === 'hold') {
       if (dir > 0) {
         setBeats(from, nb);
-        var inU = unitsFor(from, nb, nb).map(function (u) { return u.el; });
-        var ks = unitsFor(from, nb, nb).map(function (u) { return u.k; });
+        var inU = unitsFor(from, b + 1, nb).map(function (u) { return u.el; });
+        var ks = unitsFor(from, b + 1, nb).map(function (u) { return u.k + (u.beat - b - 1) * 2; });
         tl.fromTo(inU, { yPercent: 110 }, { yPercent: 0, duration: beat, ease: EASE.arrive, delay: 0, stagger: function (q) { return ks[q] * STAGGER; } });
       } else {
         var outU = unitsFor(from, b, b).map(function (u) { return u.el; });
@@ -517,23 +520,47 @@
     slide._enterT = setTimeout(function () { slide.classList.remove('is-entering'); }, 2000);
   }
 
+  /* ---------- Auto beats (data-auto) ---------------------------------------- */
+  // Arriving forward on a data-auto slide, its beats reveal themselves every
+  // data-auto seconds (empty: 1.6). A forward press while that runs lands every
+  // remaining beat at once; the next press leaves. Back, a jump, or leaving
+  // stops it. Arriving backward lands on the last beat as usual.
+  function autoGap(slide) { var v = parseFloat(slide.getAttribute('data-auto')); return (v > 0 ? v : 1.6) * 1000; }
+  function stopAuto() { if (S.auto) { clearTimeout(S.auto.t); S.auto = null; } }
+  function startAuto(i) {
+    stopAuto();
+    var slide = slides[i];
+    if (NO_AUTO || !S.presenting || slide._custom || !slide.hasAttribute('data-auto') || !slide._beatEls.length) return;
+    var gap = autoGap(slide), last = slide._beatEls.length;
+    function tick() {
+      if (!S.auto || S.i !== i || S.b >= last) { stopAuto(); return; }
+      if (S.tl || customBusy()) { S.auto.t = setTimeout(tick, 120); return; }
+      go(i, S.b + 1, 1);
+      if (S.b >= last) { S.auto = null; return; }
+      S.auto.t = setTimeout(tick, gap);
+    }
+    S.auto = { i: i, t: setTimeout(tick, gap) };
+  }
+
   // Every press first lands the transition in flight, then reads the state.
   function next() {
     finish();
     var slide = slides[S.i];
+    if (S.auto && S.auto.i === S.i) { stopAuto(); if (S.b < slide._beatEls.length) { go(S.i, slide._beatEls.length, 1); return; } }
     if (S.b < slide._beats) { go(S.i, S.b + 1, 1); return; }
     var V = visible(), pos = V.indexOf(S.i);
     if (pos < 0) pos = V.filter(function (k) { return k < S.i; }).length - 1;
-    if (pos + 1 < V.length) go(V[pos + 1], 0, 1);
+    if (pos + 1 < V.length) { go(V[pos + 1], 0, 1); startAuto(V[pos + 1]); }
   }
   function prev() {
+    stopAuto();
     finish();
     if (S.b > 0) { go(S.i, S.b - 1, -1); return; }
     var V = visible(), pos = V.indexOf(S.i);
     if (pos < 0) pos = V.filter(function (k) { return k < S.i; }).length;
     if (pos - 1 >= 0) { var p = V[pos - 1]; go(p, slides[p]._beats, -1); }
   }
-  function jump(i) { finish(); S.last = 'cut'; applyState(i, 0); announce(slides[i], 0); }
+  function jump(i) { stopAuto(); finish(); S.last = 'cut'; applyState(i, 0); announce(slides[i], 0); }
 
   /* ---------- Cover: the opening, and the optional countdown ------------- */
   function coverEntrance() {
@@ -693,7 +720,7 @@
     state: function () {
       var V = visible();
       return { i: S.i, b: S.b, pos: V.indexOf(S.i), count: V.length, room: S.room, last: S.last,
-               busy: !!S.tl || customBusy(), presenting: S.presenting, gsap: !!gsap,
+               busy: !!S.tl || customBusy(), presenting: S.presenting, gsap: !!gsap, auto: !!S.auto,
                playing: slides.map(function (s) { return s._videos.filter(function (v) { return !v.paused; }).length; }),
                rail: { t: R.t, frac: V.length ? R.fill / V.length : 0, draw: R.draw } };
     },

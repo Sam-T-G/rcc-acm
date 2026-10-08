@@ -109,13 +109,14 @@ await send('Page.enable'); await send('Runtime.enable'); await send('Network.ena
 await send('Page.bringToFront');
 await send('Emulation.setFocusEmulationEnabled', { enabled: true });
 
-async function load({ w = 1920, h = 1080, reduce = false, js = true, block = [] } = {}) {
+async function load({ w = 1920, h = 1080, reduce = false, js = true, block = [], auto = false } = {}) {
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: w < 600 });
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: reduce ? 'reduce' : 'no-preference' }] });
   await send('Emulation.setScriptExecutionDisabled', { value: !js });
   await send('Network.setBlockedURLs', { urls: block });
   events.length = 0;
-  await send('Page.navigate', { url: URL0 + '?fresh=' + Date.now() });
+  // The walks count presses, so data-auto slides stay manual unless a test asks.
+  await send('Page.navigate', { url: URL0 + '?fresh=' + Date.now() + (auto ? '' : '&auto=0') });
   for (let i = 0; i < 80; i++) { await sleep(100); try { if ((await evaluate('document.readyState')) === 'complete') break; } catch {} }
   await evaluate('document.fonts.ready.then(() => true)');
   await sleep(js ? 2600 : 400);          // the cover entrance runs about two seconds
@@ -160,6 +161,7 @@ const info = await evaluate(`(() => {
   return slides.map((s, i) => ({
     i, kind: s.getAttribute('data-kind'), room: s.hasAttribute('data-room'),
     beats: s.querySelectorAll('.beats > li').length,
+    auto: s.hasAttribute('data-auto') ? (parseFloat(s.getAttribute('data-auto')) || 1.6) : 0,
     words: s.getAttribute('data-kind') === 'statement' ? (s.querySelector('h2')?.textContent.trim().split(/\\s+/).length || 0) : 0,
     timer: +s.getAttribute('data-timer') || 0,
     h1: s.querySelectorAll('h1').length, h2: s.querySelectorAll('h2').length,
@@ -463,6 +465,52 @@ await walk('GSAP blocked (offline fallback)', { w: 1280, h: 800, block: ['*cdnjs
 await walk('Three.js blocked', { w: 1280, h: 800, block: ['*cdn.jsdelivr.net*'] }, { presenting: true, gsap: true });
 await walk('no script', { w: 1280, h: 800, js: false }, {});
 await walk('phone 390', { w: 390, h: 844 }, { presenting: false });
+
+// ---------- data-auto: beats that reveal themselves on a forward arrival.
+const autoAt = info.findIndex((s, k) => s.auto && s.beats > 1 && k > 0);
+if (autoAt >= 0) {
+  console.log('auto beats');
+  const A = info[autoAt], gapMs = A.auto * 1000;
+  for (const reduce of [false, true]) {
+    await load({ w: 1920, h: 1080, auto: true, reduce });
+    const tag = reduce ? 'reduced motion: ' : '';
+    await evaluate(`location.hash = '#${autoAt}'`); await sleep(500);
+    for (let k = 0; k < info[autoAt - 1].beats; k++) { await press('right'); await settle(); }
+    await press('right'); await settle();
+    let st = await evaluate('__deck.state()');
+    check(st.i === autoAt && st.b === 0 && st.auto, `${tag}arriving forward on slide ${autoAt + 1} starts its auto beats (beat ${st.b}, auto ${st.auto})`);
+    await sleep(gapMs * A.beats + 1500);
+    st = await evaluate('__deck.state()');
+    check(st.i === autoAt && st.b === A.beats && !st.auto, `${tag}all ${A.beats} beats reveal on their own, then it stops (beat ${st.b}, slide ${st.i + 1})`);
+    await press('right'); await settle();
+    st = await evaluate('__deck.state()');
+    check(st.i === autoAt + 1, `${tag}the next press leaves the slide (on ${st.i + 1})`);
+    await press('left'); await settle();
+    st = await evaluate('__deck.state()');
+    check(st.i === autoAt && st.b === A.beats && !st.auto, `${tag}arriving backward lands on the last beat with nothing running (beat ${st.b})`);
+    await sleep(gapMs + 400);
+    st = await evaluate('__deck.state()');
+    check(st.b === A.beats, `${tag}and stays there`);
+    // Mid-run: one press lands every remaining beat; the next one leaves.
+    for (let k = 0; k <= A.beats; k++) { await press('left'); await settle(); }
+    await press('right'); await settle();
+    await sleep(gapMs + 300);
+    await press('right'); await settle();
+    st = await evaluate('__deck.state()');
+    check(st.i === autoAt && st.b === A.beats && !st.auto, `${tag}a press mid-run lands every remaining beat (beat ${st.b} of ${A.beats})`);
+    if (!reduce) await shot('auto-landed');
+    const shown = await evaluate(`[...document.querySelectorAll('.deck > .slide')[${autoAt}].querySelectorAll('.beats > li')].filter((li) => li.getBoundingClientRect().height && getComputedStyle(li).visibility !== 'hidden' && !li.classList.contains('is-pending')).length`);
+    check(shown === A.beats, `${tag}every beat is on screen after the landing press (${shown})`);
+    await press('right'); await settle();
+    st = await evaluate('__deck.state()');
+    check(st.i === autoAt + 1, `${tag}and the press after that leaves (on ${st.i + 1})`);
+    // A hash jump onto the slide does not start it (that is how the tool views move).
+    await evaluate(`location.hash = '#${autoAt + 1}'`); await sleep(gapMs + 600);
+    st = await evaluate('__deck.state()');
+    check(st.i === autoAt && st.b === 0 && !st.auto, `${tag}a jump onto the slide does not start it (beat ${st.b})`);
+    check(!errors().length, `${tag}no console errors${errors().length ? ': ' + errors()[0] : ''}`);
+  }
+}
 
 // ---------- Timer: T starts it, a transition during a run is a cut.
 const clockAt = info.findIndex((s) => s.timer > 0);
