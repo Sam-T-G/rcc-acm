@@ -157,7 +157,7 @@ console.log('structure and slide rules');
 await load();
 const info = await evaluate(`(() => {
   const slides = [...document.querySelectorAll('.deck > .slide')];
-  const text = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.notes, .code, script, style').forEach((n) => n.remove()); return c.textContent.replace(/\\s+/g, ' ').trim(); };
+  const text = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.notes, .code, [data-code], script, style').forEach((n) => n.remove()); return c.textContent.replace(/\\s+/g, ' ').trim(); };
   return slides.map((s, i) => ({
     i, kind: s.getAttribute('data-kind'), room: s.hasAttribute('data-room'),
     beats: s.querySelectorAll('.beats > li').length,
@@ -485,7 +485,8 @@ if (autoAt >= 0) {
     await press('right'); await settle();
     st = await evaluate('__deck.state()');
     check(st.i === autoAt + 1, `${tag}the next press leaves the slide (on ${st.i + 1})`);
-    await press('left'); await settle();
+    // The next slide may have its own beats (a step slide); back out of them first.
+    for (let n = 0; n < 8 && (await evaluate('__deck.state()')).i > autoAt; n++) { await press('left'); await settle(); }
     st = await evaluate('__deck.state()');
     check(st.i === autoAt && st.b === A.beats && !st.auto, `${tag}arriving backward lands on the last beat with nothing running (beat ${st.b})`);
     await sleep(gapMs + 400);

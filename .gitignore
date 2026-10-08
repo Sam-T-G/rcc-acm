@@ -11,6 +11,7 @@ desktop.ini
 
 # Tool output
 node_modules/
+__pycache__/
 lychee/
 .lycheecache
 *.log

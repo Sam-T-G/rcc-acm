@@ -535,8 +535,9 @@
     function tick() {
       if (!S.auto || S.i !== i || S.b >= last) { stopAuto(); return; }
       if (S.tl || customBusy()) { S.auto.t = setTimeout(tick, 120); return; }
-      go(i, S.b + 1, 1);
-      if (S.b >= last) { S.auto = null; return; }
+      var nb = S.b + 1;
+      go(i, nb, 1);                       // S.b catches up when the move lands
+      if (nb >= last) { S.auto = null; return; }
       S.auto.t = setTimeout(tick, gap);
     }
     S.auto = { i: i, t: setTimeout(tick, gap) };
