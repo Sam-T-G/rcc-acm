@@ -33,6 +33,8 @@ These go on the slides where they apply, and in every officer guide.
 | Button legs on the same internal pair | The button acts like a plain wire, so it's always on | Always use opposite corners |
 | INPUT_PULLUP missing | The input reads random values | The step says to add `pinMode(pin, INPUT_PULLUP);` |
 | Servo on USB power resets the board | USB can't supply the servo's surge | Move the servo's red wire to the module's + rail and add a shared ground |
+| IDE never opened online | No Arduino Uno in the board menu, no Servo examples | Members open IDE 2 once on Wi-Fi before the lab (its first start installs `arduino:avr` and the built-in libraries) |
+| Built-in examples look read-only | They aren't: IDE 2 copies an opened example to a temporary folder, so it can be edited and uploaded | Nothing to fix. Saving asks for a new name. |
 | Servo buzzes at 0 or 180 | Some servos can't reach the very ends | Use 10 and 170 |
 | No port on some Windows laptops | The board's USB driver isn't installed | Elegoo tutorial lesson 0: install the driver from Device Manager. Read the small chip by the USB port to know which driver (ATmega16U2 or CH340) |
 | USB-C-only laptops | The kit cable won't fit | Club USB-B to USB-C cables. The UNO R4 WiFi needs a USB-C cable. |

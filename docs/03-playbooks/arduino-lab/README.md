@@ -37,7 +37,7 @@ The workshop lead for that week. The Chair signs off on the date. Anyone who cha
 - [ ] One outcome: "By the end, every table will have ___." One sentence.
 - [ ] Draft each round on [templates/arduino-lab-round.md](../../../templates/arduino-lab-round.md), with every step written to [instruction-spec.md](instruction-spec.md).
 - [ ] Run the [inventory audit](inventory-and-audit.md). Work out the station count and list the gaps.
-- [ ] Post the prerequisites: laptop, Arduino IDE 2, any library to install.
+- [ ] Post the prerequisites: laptop, Arduino IDE 2 **opened once on Wi-Fi** (its first start downloads the board package and built-in libraries), and any other library to install.
 
 ### 3 days out
 
