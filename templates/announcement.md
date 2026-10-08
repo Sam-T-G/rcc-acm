@@ -52,6 +52,7 @@ This event is funded by ASRCC (Associated Students of Riverside City College).
 ## Image
 
 - File: <!-- fill: path in assets/ or the shared drive -->
+- Sizes exported, per [design-system/assets.md](../docs/04-brand/design-system/assets.md): <!-- fill: feed 1080 x 1440, story 1080 x 1920, share card 1200 x 630, flyer, or n/a -->
 - Alt text: <!-- fill: describe the image in one sentence; include the date and room if they are in the image -->
 - Uses the club name and logo per [brand.md](../docs/04-brand/brand.md): <!-- fill: yes -->
 - No photos of people without written consent: <!-- fill: confirmed -->

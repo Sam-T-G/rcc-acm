@@ -30,3 +30,7 @@ scratch/
 *.csv
 *.xlsx
 *.xls
+
+# Deck kit build output (scripts/publish-deck.sh, deck-kit/bundle.mjs)
+site/
+*.bundle.html

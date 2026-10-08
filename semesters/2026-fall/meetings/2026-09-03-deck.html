@@ -1,0 +1,602 @@
+<title>ACM @ RCC Kickoff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap">
+<style>
+  /* ACM @ RCC kickoff deck. Light theme only by rule (assets.md §10.5). Values from the token sheet. */
+  #stage {
+    --acm-surface: #fdf8f7; --acm-on-surface: #221f1e; --acm-on-surface-variant: #5c5958;
+    --acm-outline: #7e7572; --acm-outline-variant: #dacfcc;
+    --acm-primary: #ae3200; --acm-primary-container: #ffdbd0; --acm-on-primary-container: #661900;
+    --acm-live-container: #c9f2d0; --acm-on-live-container: #003e17;
+    --acm-surface-container-high: #f0e6e3; --acm-surface-container-lowest: #ffffff;
+    --acm-focus-ring: #ae3200;
+    --acm-space-2: 8px; --acm-space-3: 12px; --acm-space-4: 16px; --acm-space-6: 24px; --acm-space-12: 48px;
+    --acm-rail-w: 40px;
+    --acm-radius-callout: 16px;
+    --acm-font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --acm-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --acm-dur-slow-effects: 220ms; --acm-dur-default-effects: 140ms; --acm-dur-fast-effects: 90ms;
+    --acm-dur-slow-spatial: 480ms; --acm-dur-default-spatial: 320ms; --acm-dur-fast-spatial: 200ms;
+    --acm-ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+    --acm-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #stage { --acm-dur-slow-spatial: 0ms; --acm-dur-default-spatial: 0ms; --acm-dur-fast-spatial: 0ms; }
+  }
+
+  body { margin: 0; background: #fdf8f7; overflow: hidden; }
+  #stage {
+    position: fixed; left: 50%; top: 50%; width: 1920px; height: 1080px;
+    transform: translate(-50%, -50%) scale(var(--s, 1)); transform-origin: center;
+    background: var(--acm-surface); color: var(--acm-on-surface); overflow: hidden;
+    font-family: var(--acm-font-sans); font-optical-sizing: auto; font-synthesis: weight;
+    text-wrap: pretty;
+  }
+  @supports (width: tan(atan2(1px, 1px))) { #stage { --s: min(tan(atan2(100vw, 1920px)), tan(atan2(100vh, 1080px))); } }
+  #stage * { box-sizing: border-box; }
+
+  /* ---- slides ---- */
+  section.slide {
+    position: absolute; inset: 0; width: 1920px; height: 1080px; margin: 0;
+    opacity: 0; visibility: hidden;
+    transition: opacity var(--acm-dur-default-effects) var(--acm-ease-exit), visibility 0s linear var(--acm-dur-default-effects);
+  }
+  section.slide[aria-current="true"] {
+    opacity: 1; visibility: visible;
+    transition: opacity var(--acm-dur-slow-effects) var(--acm-ease-standard), visibility 0s;
+  }
+  section.slide::before, section.slide::after {
+    content: ""; position: absolute; left: 96px; right: 96px; height: 1px; background: var(--acm-outline-variant);
+  }
+  section.slide::before { top: 160px; }
+  section.slide::after { top: 880px; }
+  #s01-title::before { display: none; }
+
+  .eyebrow, .counter {
+    position: absolute; top: 96px; margin: 0;
+    font: 500 32px/48px var(--acm-font-mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--acm-on-surface-variant); font-variant-numeric: tabular-nums lining-nums;
+  }
+  .eyebrow { left: 96px; }
+  .counter { right: 93.5px; text-align: right; }
+  #stage[data-slide="s01-title"] .counter { visibility: hidden; }
+
+  .slide h1, .slide h2 { margin: 0; color: var(--acm-on-surface); text-wrap: balance; }
+  /* headings receive programmatic focus for assistive tech only; they are not controls, so no ring on the projector */
+  .slide :is(h1, h2)[tabindex="-1"]:focus { outline: none; }
+  [data-layer="notes"] ul:focus-visible { outline: 2px solid var(--acm-focus-ring); outline-offset: 4px; }
+  .slide h2 { position: absolute; left: 96px; top: 184px; font: 500 96px/108px var(--acm-font-sans); letter-spacing: -.015em; max-width: 20ch; }
+
+  .body { position: absolute; left: 96px; right: 96px; top: 324px; margin: 0; }
+  .cap { position: absolute; left: 96px; right: 96px; top: 896px; margin: 0; font: 400 36px/44px var(--acm-font-sans); letter-spacing: .008em; color: var(--acm-on-surface-variant); }
+  .url { font: 500 40px/44px var(--acm-font-mono); letter-spacing: 0; text-transform: none; font-variant-ligatures: none; color: var(--acm-on-surface); }
+  .w500 { font-weight: 500; }
+  .quiet { color: var(--acm-on-surface-variant); }
+
+  /* roles */
+  .lead { font: 400 48px/64px var(--acm-font-sans); letter-spacing: -.005em; }
+  .label { font: 500 44px/60px var(--acm-font-sans); letter-spacing: 0; }
+  .bodytext { font: 400 40px/56px var(--acm-font-sans); letter-spacing: .005em; }
+  .dense { font: 500 76px/96px var(--acm-font-sans); letter-spacing: -.01em; }
+  .display { font: 500 136px/143px var(--acm-font-sans); letter-spacing: -.02em; }
+  #stage .num, #stage time, #stage .counter, #stage .display, #stage .label { font-variant-numeric: tabular-nums lining-nums; }
+
+  /* lists */
+  ul.plain, ol.plain { list-style: none; padding: 0; margin: 0; }
+  dl { margin: 0; }
+  dl dt, dl dd { margin: 0; }
+
+  /* callouts: one per slide at most; the short Rail only on Warning and Check */
+  .callout {
+    position: absolute; left: 96px; right: 96px; margin: 0;
+    border-radius: var(--acm-radius-callout); box-shadow: inset 0 0 0 1px var(--acm-outline);
+    padding: 24px 48px; font: 400 40px/56px var(--acm-font-sans); letter-spacing: .005em; overflow: hidden;
+  }
+  .callout b { font-weight: 700; }
+  .callout.note { background: var(--acm-surface-container-high); color: var(--acm-on-surface); }
+  .callout.warning { background: var(--acm-primary-container); color: var(--acm-on-primary-container); padding-left: 68px; }
+  .callout.check { background: var(--acm-live-container); color: var(--acm-on-live-container); padding-left: 68px; }
+  .callout.warning::before, .callout.check::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 20px; background: currentColor; }
+
+  /* tables: horizontal rules only */
+  table.tbl { position: absolute; left: 96px; right: 96px; top: 324px; width: 1728px; border-collapse: collapse; table-layout: fixed; }
+  table.tbl caption { text-align: left; caption-side: top; font: 400 40px/56px var(--acm-font-sans); letter-spacing: .005em; color: var(--acm-on-surface); padding: 0 0 24px; }
+  table.tbl th { background: var(--acm-surface-container-high); font: 500 40px/48px var(--acm-font-sans); letter-spacing: .005em; color: var(--acm-on-surface-variant); text-align: left; padding: 6px 16px; height: 60px; }
+  table.tbl td { font: 400 40px/56px var(--acm-font-sans); letter-spacing: .005em; padding: 4px 16px; height: 64px; border-bottom: 1px solid var(--acm-outline-variant); vertical-align: middle; }
+
+  /* the Rail, once, on the title slide. Exact construction from accessibility.md §2.4; break unset renders solid */
+  .acm-rail { position: absolute; left: 96px; top: 96px; width: 1728px; height: 888px; padding-inline-start: calc(var(--acm-rail-w) + var(--acm-space-12)); }
+  .acm-rail::before {
+    content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: var(--acm-rail-w); color: var(--acm-primary);
+    background: linear-gradient(to bottom,
+      currentColor 0 calc(var(--acm-rail-break, 200%) - 6px),
+      transparent calc(var(--acm-rail-break, 200%) - 6px) calc(var(--acm-rail-break, 200%) + 6px),
+      currentColor calc(var(--acm-rail-break, 200%) + 6px) 100%);
+  }
+
+  /* QR */
+  .qr { position: absolute; background: var(--acm-surface-container-lowest); box-shadow: inset 0 0 0 1px var(--acm-outline); }
+  .qr svg { display: block; width: 100%; height: 100%; }
+
+  /* ---- s01 ---- */
+  #s01-title .eyebrow { left: 184px; }
+  #s01-title .name { position: absolute; left: 184px; top: 200px; margin: 0; font: 500 184px/200px var(--acm-font-sans); letter-spacing: -.02em; font-variant-numeric: lining-nums; }
+  #s01-title h1 { position: absolute; left: 184px; top: 448px; font: 500 96px/108px var(--acm-font-sans); letter-spacing: -.015em; }
+  #s01-title .when { position: absolute; left: 184px; top: 620px; margin: 0; }
+  #s01-title .where { position: absolute; left: 184px; top: 688px; margin: 0; font-weight: 400; }
+  #s01-title .qr { left: 1343px; top: 292px; width: 481px; height: 481px; }
+  #s01-title .invite { position: absolute; left: 1343px; width: 481px; top: 792px; margin: 0; text-align: center; }
+  #s01-title .cap { left: 184px; }
+
+  /* ---- s02 ---- */
+  #s02-board dl { display: grid; grid-template-columns: 300px 1fr; column-gap: 0; row-gap: 0; }
+  #s02-board dt, #s02-board dd { height: 80px; display: flex; align-items: center; border-bottom: 1px solid var(--acm-outline-variant); }
+  #s02-board dt:nth-last-of-type(1), #s02-board dd:nth-last-of-type(1) { border-bottom: 0; }
+
+  /* ---- s03 ---- */
+  #s03-sentence h2 { top: 305px; font: 500 136px/143px var(--acm-font-sans); letter-spacing: -.02em; max-width: 20ch; }
+
+  /* ---- s04 ---- */
+  #s04-pillars dl { display: grid; grid-template-columns: 852px 852px; column-gap: 24px; row-gap: 0; }
+  #s04-pillars .cell { height: 264px; }
+  #s04-pillars dt { margin-bottom: 8px; }
+
+  /* ---- s05 ---- */
+  #s05-proof dl { display: grid; grid-template-columns: 560px 560px 560px; column-gap: 24px; }
+  #s05-proof dt { font: 500 176px/176px var(--acm-font-sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums lining-nums; }
+  #s05-proof dd { margin-top: 24px; font: 400 40px/48px var(--acm-font-sans); letter-spacing: .005em; color: var(--acm-on-surface-variant); }
+  #s05-proof .cell { display: flex; flex-direction: column; }
+
+  /* ---- s06 ---- */
+  #s06-what-you-get ul { display: grid; row-gap: 24px; }
+  #s06-what-you-get .callout { top: 700px; }
+
+  /* ---- s07 ---- */
+  #s07-shape dl { display: grid; grid-template-columns: 132px 1fr; }
+  #s07-shape dt, #s07-shape dd { height: 64px; display: flex; align-items: center; }
+  #s07-shape .callout { top: 692px; }
+
+  /* ---- s08 ---- */
+  #s08-dates .cols { display: grid; grid-template-columns: 852px 852px; column-gap: 24px; align-items: start; }
+  #s08-dates dl { display: grid; grid-template-columns: 200px 1fr; }
+  #s08-dates dt, #s08-dates dd { height: 64px; display: flex; align-items: center; border-bottom: 1px solid var(--acm-outline-variant); }
+
+  /* ---- s09 ---- */
+  #s09-lab .tiers { position: absolute; left: 96px; right: 96px; top: 436px; display: grid; grid-template-columns: repeat(4, 414px); column-gap: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--acm-outline-variant); }
+  #s09-lab .tiers dt { margin-bottom: 4px; }
+
+  /* ---- s10 ---- */
+  #s10-money dl { display: grid; grid-template-columns: 852px 852px; column-gap: 24px; row-gap: 40px; }
+  #s10-money dt { font-variant-numeric: tabular-nums lining-nums; }
+  #s10-money dd { margin-top: 8px; font: 400 40px/48px var(--acm-font-sans); letter-spacing: .005em; color: var(--acm-on-surface-variant); }
+  #s10-money .cap .url { display: block; }
+
+  /* ---- s11 ---- */
+  #s11-decision .body { top: 432px; }
+  #s11-decision ul { display: grid; row-gap: 12px; }
+  #s11-decision .callout { top: 704px; }
+
+  /* ---- s12b ---- */
+  #s12b-icc .callout { top: 420px; }
+
+  /* ---- s13 ---- */
+  #s13-jobs .jobs { position: absolute; left: 96px; right: 96px; top: 404px; display: grid; grid-template-columns: 560px 1fr; }
+  #s13-jobs .jobs dt, #s13-jobs .jobs dd { height: 64px; display: flex; align-items: center; border-bottom: 1px solid var(--acm-outline-variant); }
+  #s13-jobs .callout { top: 716px; }
+
+  /* ---- s14 ---- */
+  #s14-on-ramp ol { display: grid; grid-template-columns: 120px 1fr; row-gap: 24px; align-items: baseline; }
+  #s14-on-ramp li { display: contents; }
+
+  /* ---- s15 ---- */
+  #s15-questions ul { display: grid; row-gap: 24px; }
+  #s15-questions .callout { top: 580px; }
+
+  /* ---- s16 ---- */
+  #s16-ask .qr { left: 96px; top: 324px; width: 518px; height: 518px; }
+  #s16-ask .invite { position: absolute; left: 96px; width: 518px; top: 896px; margin: 0; text-align: center; }
+  #s16-ask .stamp { position: absolute; left: 972px; top: 812px; margin: 0; font: 500 32px/48px var(--acm-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--acm-on-surface-variant); }
+  #s16-ask .right { position: absolute; left: 972px; width: 852px; top: 324px; margin: 0; }
+  #s16-ask .callout { left: 972px; width: 852px; right: auto; top: 572px; }
+  #s16-ask .cap { left: 972px; text-align: right; }
+  #s16-ask .cap .club { font: 500 40px/44px var(--acm-font-sans); letter-spacing: .005em; color: var(--acm-on-surface); }
+  #s16-ask .cap { font-size: 40px; }
+
+  /* ---- layers ---- */
+  [data-layer="notes"] {
+    position: absolute; left: 0; top: 680px; width: 1920px; height: 400px; margin: 0;
+    background: var(--acm-surface-container-high); border-top: 1px solid var(--acm-outline); padding: 40px 96px;
+    color: var(--acm-on-surface); overflow: hidden;
+  }
+  [data-layer="notes"] h3 { margin: 0 0 12px; font: 500 32px/48px var(--acm-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--acm-on-surface-variant); }
+  [data-layer="notes"] ul { margin: 0; padding-left: 40px; font: 400 36px/48px var(--acm-font-sans); letter-spacing: .005em; max-height: 252px; overflow-y: auto; }
+  [data-layer="notes"] li { margin-bottom: 8px; }
+  [data-layer="overview"] {
+    position: absolute; inset: 0; background: var(--acm-surface); padding: 96px;
+    display: grid; grid-template-columns: repeat(4, 414px); grid-auto-rows: 152px; gap: 24px; align-content: start;
+  }
+  [data-layer="overview"][hidden] { display: none; }
+  [data-layer="overview"] button {
+    appearance: none; border: 0; background: var(--acm-surface-container-high); color: var(--acm-on-surface);
+    text-align: left; padding: 20px 24px; border-radius: 16px; cursor: pointer; font-family: var(--acm-font-sans);
+    box-shadow: inset 0 0 0 1px var(--acm-outline-variant); display: flex; flex-direction: column; gap: 6px; overflow: hidden;
+  }
+  [data-layer="overview"] button .n { font: 500 32px/40px var(--acm-font-mono); letter-spacing: .08em; color: var(--acm-on-surface-variant); }
+  [data-layer="overview"] button .t { font: 500 40px/48px var(--acm-font-sans); letter-spacing: 0; }
+  [data-layer="overview"] button[aria-current="true"] { box-shadow: inset 0 0 0 2px var(--acm-primary); }
+  [data-layer="overview"] button:focus-visible, .lb-btn:focus-visible { outline: 2px solid var(--acm-focus-ring); outline-offset: 4px; }
+
+  /* letterbox controls, outside the stage, only when a letterbox exists */
+  .lb-btn {
+    position: fixed; top: 50%; transform: translateY(-50%); z-index: 2; display: none;
+    appearance: none; border: 1px solid #dacfcc; background: #fdf8f7; color: #5c5958; border-radius: 999px;
+    font: 500 16px/20px "Inter", system-ui, sans-serif; letter-spacing: .01em; padding: 10px 16px; cursor: pointer;
+  }
+  .lb-btn.prev { left: 16px; } .lb-btn.next { right: 16px; }
+  body.has-letterbox .lb-btn { display: block; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+
+<div id="stage" data-theme="light" data-slide="s01-title">
+
+  <!-- 1 -->
+  <section class="slide" id="s01-title" aria-current="true" aria-labelledby="s01-h">
+    <div class="acm-rail" aria-hidden="true"></div>
+    <p class="eyebrow">Fall 2026</p>
+    <p class="name">ACM @ RCC</p>
+    <h1 id="s01-h" tabindex="-1">First meeting</h1>
+    <p class="when label num">Thursdays, 12:50 to 1:50 PM</p>
+    <p class="where label">BLCIS A-210</p>
+    <div class="qr" role="img" aria-label="QR code for https://discord.gg/fM2HbsJyBG">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 37 37" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path d="M0 0h7v1h-7zM8 0h2v1h-2zM11 0h1v1h-1zM13 0h1v1h-1zM15 0h2v1h-2zM18 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM9 1h3v1h-3zM13 1h4v1h-4zM20 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM12 2h2v1h-2zM15 2h3v1h-3zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h2v1h-2zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h2v1h-2zM11 7h3v1h-3zM17 7h1v1h-1zM1 8h1v1h-1zM3 8h1v1h-1zM5 8h4v1h-4zM10 8h1v1h-1zM13 8h2v1h-2zM17 8h1v1h-1zM19 8h5v1h-5zM25 8h2v1h-2zM28 8h1v1h-1zM0 9h3v1h-3zM5 9h1v1h-1zM9 9h2v1h-2zM14 9h4v1h-4zM20 9h2v1h-2zM28 9h1v1h-1zM1 10h2v1h-2zM6 10h1v1h-1zM8 10h2v1h-2zM13 10h1v1h-1zM17 10h4v1h-4zM22 10h1v1h-1zM27 10h1v1h-1zM0 11h4v1h-4zM5 11h1v1h-1zM7 11h2v1h-2zM10 11h1v1h-1zM12 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM20 11h3v1h-3zM25 11h3v1h-3zM1 12h1v1h-1zM4 12h5v1h-5zM10 12h1v1h-1zM15 12h3v1h-3zM19 12h2v1h-2zM22 12h2v1h-2zM0 13h2v1h-2zM4 13h2v1h-2zM7 13h3v1h-3zM12 13h2v1h-2zM17 13h1v1h-1zM19 13h3v1h-3zM23 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM2 14h1v1h-1zM6 14h6v1h-6zM16 14h1v1h-1zM27 14h2v1h-2zM0 15h1v1h-1zM4 15h1v1h-1zM7 15h2v1h-2zM12 15h3v1h-3zM17 15h5v1h-5zM23 15h1v1h-1zM28 15h1v1h-1zM2 16h2v1h-2zM6 16h1v1h-1zM8 16h1v1h-1zM12 16h3v1h-3zM16 16h1v1h-1zM18 16h4v1h-4zM23 16h1v1h-1zM27 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM7 17h1v1h-1zM9 17h4v1h-4zM14 17h2v1h-2zM17 17h1v1h-1zM19 17h1v1h-1zM21 17h2v1h-2zM27 17h2v1h-2zM0 18h1v1h-1zM3 18h1v1h-1zM5 18h3v1h-3zM9 18h2v1h-2zM17 18h1v1h-1zM21 18h1v1h-1zM23 18h3v1h-3zM27 18h2v1h-2zM2 19h1v1h-1zM8 19h2v1h-2zM11 19h9v1h-9zM24 19h2v1h-2zM28 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h5v1h-5zM16 20h1v1h-1zM20 20h5v1h-5zM26 20h2v1h-2zM8 21h1v1h-1zM11 21h3v1h-3zM17 21h4v1h-4zM24 21h1v1h-1zM27 21h2v1h-2zM0 22h7v1h-7zM8 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM24 22h4v1h-4zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h4v1h-4zM13 23h1v1h-1zM15 23h2v1h-2zM20 23h1v1h-1zM24 23h1v1h-1zM26 23h3v1h-3zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM11 24h1v1h-1zM14 24h1v1h-1zM16 24h1v1h-1zM18 24h1v1h-1zM20 24h6v1h-6zM27 24h1v1h-1zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h5v1h-5zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h2v1h-2zM28 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM9 26h4v1h-4zM15 26h2v1h-2zM18 26h3v1h-3zM24 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h4v1h-4zM16 27h2v1h-2zM20 27h2v1h-2zM23 27h1v1h-1zM27 27h1v1h-1zM0 28h7v1h-7zM9 28h3v1h-3zM14 28h2v1h-2zM17 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM24 28h4v1h-4z" fill="#221f1e"/></svg>
+    </div>
+    <p class="invite url">discord.gg/fM2HbsJyBG</p>
+    <p class="cap"><span class="url">instagram.com/rcc.acm</span></p>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" id="s02-board" aria-hidden="true" aria-labelledby="s02-h">
+    <p class="eyebrow"><time datetime="2026-09-03">Thursday, Sep 3</time></p>
+    <h2 id="s02-h" tabindex="-1">The next four weeks</h2>
+    <dl class="body">
+      <dt class="label num">Today</dt><dd class="lead">Kit order-by date for the lab</dd>
+      <dt class="label num"><time datetime="2026-09-10">Sep 10</time></dt><dd class="lead">ICPC. Format, teams, registration</dd>
+      <dt class="label num"><time datetime="2026-09-17">Sep 17</time></dt><dd class="lead">Dev environment and git</dd>
+      <dt class="label num"><time datetime="2026-09-24">Sep 24</time></dt><dd class="lead">Lab day 1, if the order goes out today</dd>
+      <dt class="label">Club Rush</dt><dd class="lead">Mid September, dates [TBD]</dd>
+    </dl>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" id="s03-sentence" aria-hidden="true" aria-labelledby="s03-h" data-title="One sentence">
+    <h2 id="s03-h" tabindex="-1">Where RCC students who want to get good at computing practice together.</h2>
+    <p class="cap">Chartered under ACM, the professional association for computing.</p>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" id="s04-pillars" aria-hidden="true" aria-labelledby="s04-h">
+    <p class="eyebrow">Fall 2026</p>
+    <h2 id="s04-h" tabindex="-1">Four pillars</h2>
+    <dl class="body">
+      <div class="cell"><dt class="dense">Build</dt><dd class="bodytext">Projects, hackathons, the website, the AI Hackathon we run</dd></div>
+      <div class="cell"><dt class="dense">Compete</dt><dd class="bodytext">Weekly problems, the ICPC regional, collegiate hackathons</dd></div>
+      <div class="cell"><dt class="dense">Learn</dt><dd class="bodytext">Workshops, study sessions, speakers, help with CS courses</dd></div>
+      <div class="cell"><dt class="dense">Connect</dt><dd class="bodytext">Discord, meetings, trips, alumni in tech</dd></div>
+    </dl>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" id="s05-proof" aria-hidden="true" aria-labelledby="s05-h">
+    <p class="eyebrow">Compete</p>
+    <h2 id="s05-h" tabindex="-1">Proof</h2>
+    <dl class="body">
+      <div class="cell"><dt><time datetime="2000">2000</time></dt><dd>ICPC regional host site since</dd></div>
+      <div class="cell"><dt><time datetime="1998">1998</time></dt><dd>RCC teams competing since</dd></div>
+      <div class="cell"><dt>11</dt><dd>members accepted to Cal Hacks 12.0, fall 2025</dd></div>
+    </dl>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" id="s06-what-you-get" aria-hidden="true" aria-labelledby="s06-h">
+    <p class="eyebrow">Fall 2026</p>
+    <h2 id="s06-h" tabindex="-1">What you get</h2>
+    <ul class="body plain lead">
+      <li>A team for the contest</li>
+      <li>People to build with</li>
+      <li>A resume line you made</li>
+      <li>Transfer evidence</li>
+    </ul>
+    <p class="callout note"><b>Note:</b> Any major, any level. Nobody gets screened at the door.</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" id="s07-shape" aria-hidden="true" aria-labelledby="s07-h">
+    <p class="eyebrow">Fall 2026</p>
+    <h2 id="s07-h" tabindex="-1">Fifteen Thursdays</h2>
+    <dl class="body">
+      <dt class="label num">6</dt><dd class="lead">lab days</dd>
+      <dt class="label num">2</dt><dd class="lead">career meetings, set against deadlines that do not move</dd>
+      <dt class="label num">2</dt><dd class="lead">ICPC meetings, set against the season</dd>
+      <dt class="label num">1</dt><dd class="lead">hackathon meeting</dd>
+      <dt class="label num">1</dt><dd class="lead">showcase, Dec 10</dd>
+    </dl>
+    <p class="callout note"><b>Note:</b> Every regular meeting opens with a 15-minute contest problem. The warm-up lead rotates.</p>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" id="s08-dates" aria-hidden="true" aria-labelledby="s08-h">
+    <p class="eyebrow">Fall 2026</p>
+    <h2 id="s08-h" tabindex="-1">The dates</h2>
+    <div class="body cols">
+      <dl>
+        <dt class="label num"><time datetime="2026-09-03">Sep 3</time></dt><dd class="bodytext">Today: kickoff</dd>
+        <dt class="label num"><time datetime="2026-09-10">Sep 10</time></dt><dd class="bodytext">ICPC: teams</dd>
+        <dt class="label num"><time datetime="2026-09-17">Sep 17</time></dt><dd class="bodytext">Dev environment, git</dd>
+        <dt class="label num"><time datetime="2026-09-24">Sep 24</time></dt><dd class="bodytext w500">Lab day 1</dd>
+        <dt class="label num"><time datetime="2026-10-01">Oct 1</time></dt><dd class="bodytext">Career: internships</dd>
+        <dt class="label num"><time datetime="2026-10-08">Oct 8</time></dt><dd class="bodytext w500">Lab day 2</dd>
+        <dt class="label num"><time datetime="2026-10-15">Oct 15</time></dt><dd class="bodytext">Career: resume, transfer</dd>
+        <dt class="label num"><time datetime="2026-10-22">Oct 22</time></dt><dd class="bodytext w500">Lab day 3</dd>
+      </dl>
+      <dl>
+        <dt class="label num"><time datetime="2026-10-29">Oct 29</time></dt><dd class="bodytext">ICPC mock contest</dd>
+        <dt class="label num"><time datetime="2026-11-05">Nov 5</time></dt><dd class="bodytext w500">Lab day 4</dd>
+        <dt class="label num"><time datetime="2026-11-12">Nov 12</time></dt><dd class="bodytext">Hackathon planning</dd>
+        <dt class="label num"><time datetime="2026-11-19">Nov 19</time></dt><dd class="bodytext w500">Lab day 5</dd>
+        <dt class="label num quiet"><time datetime="2026-11-26">Nov 26</time></dt><dd class="bodytext quiet">No class</dd>
+        <dt class="label num"><time datetime="2026-12-03">Dec 3</time></dt><dd class="bodytext w500">Lab day 6</dd>
+        <dt class="label num"><time datetime="2026-12-10">Dec 10</time></dt><dd class="bodytext w500">Showcase</dd>
+      </dl>
+    </div>
+    <p class="cap">Lab days depend on today's order. ICPC dates follow the season calendar once it is published.</p>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" id="s09-lab" aria-hidden="true" aria-labelledby="s09-h">
+    <p class="eyebrow">Build</p>
+    <h2 id="s09-h" tabindex="-1">Six lab days</h2>
+    <p class="body lead">Four stations on a Pico 2 W, one per tier, 30 minutes each.</p>
+    <dl class="tiers">
+      <div><dt class="label num">T0</dt><dd class="bodytext">Never written code. MicroPython</dd></div>
+      <div><dt class="label num">T1</dt><dd class="bodytext">CIS-5. Arduino C++</dd></div>
+      <div><dt class="label num">T2</dt><dd class="bodytext">CIS-17A. Arduino C++</dd></div>
+      <div><dt class="label num">T3</dt><dd class="bodytext">CIS-17B/C. Arduino C++</dd></div>
+    </dl>
+    <p class="cap">Same board and same pin map at every station. The same build comes back at a higher tier.</p>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" id="s10-money" aria-hidden="true" aria-labelledby="s10-h">
+    <p class="eyebrow">Build</p>
+    <h2 id="s10-h" tabindex="-1">The money</h2>
+    <dl class="body">
+      <div><dt class="display">$1,000</dt><dd>cap</dd></div>
+      <div><dt class="display">$624.65</dt><dd>base order</dd></div>
+      <div><dt class="display">$929.64</dt><dd>max order</dd></div>
+      <div><dt class="display">$150</dt><dd>restock reserve, held until after lab day 2</dd></div>
+    </dl>
+    <p class="cap">Both totals include 8.75% tax and a shipping estimate. Six station kits plus spares.<span class="url">Code and wiring: github.com/Sam-T-G/rcc-acm-microcontroller-lab</span></p>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" id="s11-decision" aria-hidden="true" aria-labelledby="s11-h">
+    <p class="eyebrow">Build</p>
+    <h2 id="s11-h" tabindex="-1">Order today, or lab day one moves</h2>
+    <ul class="body plain bodytext">
+      <li>Overseas vendor line: 7 to 14 working days</li>
+      <li>Lab day 1: Sep 24</li>
+      <li>After today: lab day 1 moves about two weeks, or the kit costs about $130 to $200 more from US vendors</li>
+    </ul>
+    <p class="callout warning"><b>Warning:</b> Hands today are a count, not a binding vote. The spend needs advisor sign-off before anyone orders.</p>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" id="s12-seats" aria-hidden="true" aria-labelledby="s12-h">
+    <p class="eyebrow">Connect</p>
+    <h2 id="s12-h" tabindex="-1">Six seats, all open</h2>
+    <table class="tbl">
+      <caption>Two names for each job, one person holds both.</caption>
+      <colgroup><col style="width:400px"><col style="width:400px"><col style="width:928px"></colgroup>
+      <thead><tr><th scope="col">RCC title</th><th scope="col">ACM title</th><th scope="col">What it costs per week</th></tr></thead>
+      <tbody>
+        <tr><td>President</td><td>Chair</td><td>Runs the meeting, owns the semester plan</td></tr>
+        <tr><td>Vice President</td><td>Vice Chair</td><td>Events, Club Rush, backs up the Chair</td></tr>
+        <tr><td>Treasurer</td><td>Treasurer</td><td>The money, the ledger, the ACM annual report</td></tr>
+        <tr><td>Secretary</td><td>Secretary</td><td>Notes within 48 hours. Optional under ACM</td></tr>
+        <tr><td>ICC Representative</td><td>none</td><td>Mondays 9:30 AM, Bradshaw Center</td></tr>
+        <tr><td>Faculty Advisor</td><td>Faculty Sponsor</td><td>Room booking, spend supervision</td></tr>
+      </tbody>
+    </table>
+    <p class="cap">Chair, Vice Chair, and Treasurer hold ACM Student Membership: $19 a year.</p>
+  </section>
+
+  <!-- 12b -->
+  <section class="slide" id="s12b-icc" aria-hidden="true" aria-labelledby="s12b-h" data-title="The Monday seat">
+    <p class="eyebrow">Connect</p>
+    <h2 id="s12b-h" tabindex="-1">Six seats, all open</h2>
+    <p class="body lead num">ICC Representative: Mondays 9:30 AM, Bradshaw Center.</p>
+    <p class="callout warning"><b>Warning:</b> ICC Representative is every Monday at 9:30 AM. Three absences and the club loses its standing.</p>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" id="s13-jobs" aria-hidden="true" aria-labelledby="s13-h">
+    <p class="eyebrow">Connect</p>
+    <h2 id="s13-h" tabindex="-1">Four more jobs</h2>
+    <p class="body bodytext">These are not officer seats.</p>
+    <dl class="jobs">
+      <dt class="label">ICPC coach</dt><dd class="bodytext">Faculty or staff. Cannot be a contestant</dd>
+      <dt class="label">Lab lead</dt><dd class="bodytext">Owns a lab day: setup, four stations, teardown</dd>
+      <dt class="label">Warm-up lead</dt><dd class="bodytext">One 15-minute problem. Rotates</dd>
+      <dt class="label num">Repo admin 2</dt><dd class="bodytext">Reviews pull requests on the docs repo</dd>
+    </dl>
+    <p class="callout note"><b>Note:</b> Warm-up lead is the best first task.</p>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" id="s14-on-ramp" aria-hidden="true" aria-labelledby="s14-h">
+    <p class="eyebrow">Connect</p>
+    <h2 id="s14-h" tabindex="-1">The on-ramp</h2>
+    <ol class="body plain">
+      <li><span class="label num" aria-hidden="true">1</span><span class="dense">Run one 15-minute warm-up problem</span></li>
+      <li><span class="label num" aria-hidden="true">2</span><span class="dense">Back up a lab day. Hand out kits</span></li>
+      <li><span class="label num" aria-hidden="true">3</span><span class="dense">Take notes at one meeting</span></li>
+      <li><span class="label num" aria-hidden="true">4</span><span class="dense">Then an officer seat</span></li>
+    </ol>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" id="s15-questions" aria-hidden="true" aria-labelledby="s15-h">
+    <p class="eyebrow">Fall 2026</p>
+    <h2 id="s15-h" tabindex="-1">Questions</h2>
+    <ul class="body plain lead">
+      <li>The sheet going around: name, email, what you are interested in.</li>
+      <li>Officer seat, lab, ICPC, hackathon, just meetings.</li>
+    </ul>
+    <p class="callout note"><b>Note:</b> The sheet does not go online. Names are published only with written consent.</p>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" id="s16-ask" aria-hidden="true" aria-labelledby="s16-h">
+    <p class="eyebrow"><time datetime="2026-09-10">Next Thursday, Sep 10</time></p>
+    <h2 id="s16-h" tabindex="-1">Join the Discord</h2>
+    <div class="qr" role="img" aria-label="QR code for https://discord.gg/fM2HbsJyBG">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 37 37" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path d="M0 0h7v1h-7zM8 0h2v1h-2zM11 0h1v1h-1zM13 0h1v1h-1zM15 0h2v1h-2zM18 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM9 1h3v1h-3zM13 1h4v1h-4zM20 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM12 2h2v1h-2zM15 2h3v1h-3zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h2v1h-2zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h2v1h-2zM11 7h3v1h-3zM17 7h1v1h-1zM1 8h1v1h-1zM3 8h1v1h-1zM5 8h4v1h-4zM10 8h1v1h-1zM13 8h2v1h-2zM17 8h1v1h-1zM19 8h5v1h-5zM25 8h2v1h-2zM28 8h1v1h-1zM0 9h3v1h-3zM5 9h1v1h-1zM9 9h2v1h-2zM14 9h4v1h-4zM20 9h2v1h-2zM28 9h1v1h-1zM1 10h2v1h-2zM6 10h1v1h-1zM8 10h2v1h-2zM13 10h1v1h-1zM17 10h4v1h-4zM22 10h1v1h-1zM27 10h1v1h-1zM0 11h4v1h-4zM5 11h1v1h-1zM7 11h2v1h-2zM10 11h1v1h-1zM12 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM20 11h3v1h-3zM25 11h3v1h-3zM1 12h1v1h-1zM4 12h5v1h-5zM10 12h1v1h-1zM15 12h3v1h-3zM19 12h2v1h-2zM22 12h2v1h-2zM0 13h2v1h-2zM4 13h2v1h-2zM7 13h3v1h-3zM12 13h2v1h-2zM17 13h1v1h-1zM19 13h3v1h-3zM23 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM2 14h1v1h-1zM6 14h6v1h-6zM16 14h1v1h-1zM27 14h2v1h-2zM0 15h1v1h-1zM4 15h1v1h-1zM7 15h2v1h-2zM12 15h3v1h-3zM17 15h5v1h-5zM23 15h1v1h-1zM28 15h1v1h-1zM2 16h2v1h-2zM6 16h1v1h-1zM8 16h1v1h-1zM12 16h3v1h-3zM16 16h1v1h-1zM18 16h4v1h-4zM23 16h1v1h-1zM27 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM7 17h1v1h-1zM9 17h4v1h-4zM14 17h2v1h-2zM17 17h1v1h-1zM19 17h1v1h-1zM21 17h2v1h-2zM27 17h2v1h-2zM0 18h1v1h-1zM3 18h1v1h-1zM5 18h3v1h-3zM9 18h2v1h-2zM17 18h1v1h-1zM21 18h1v1h-1zM23 18h3v1h-3zM27 18h2v1h-2zM2 19h1v1h-1zM8 19h2v1h-2zM11 19h9v1h-9zM24 19h2v1h-2zM28 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h5v1h-5zM16 20h1v1h-1zM20 20h5v1h-5zM26 20h2v1h-2zM8 21h1v1h-1zM11 21h3v1h-3zM17 21h4v1h-4zM24 21h1v1h-1zM27 21h2v1h-2zM0 22h7v1h-7zM8 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM24 22h4v1h-4zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h4v1h-4zM13 23h1v1h-1zM15 23h2v1h-2zM20 23h1v1h-1zM24 23h1v1h-1zM26 23h3v1h-3zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM11 24h1v1h-1zM14 24h1v1h-1zM16 24h1v1h-1zM18 24h1v1h-1zM20 24h6v1h-6zM27 24h1v1h-1zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM8 25h5v1h-5zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h2v1h-2zM28 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM9 26h4v1h-4zM15 26h2v1h-2zM18 26h3v1h-3zM24 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h4v1h-4zM16 27h2v1h-2zM20 27h2v1h-2zM23 27h1v1h-1zM27 27h1v1h-1zM0 28h7v1h-7zM9 28h3v1h-3zM14 28h2v1h-2zM17 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM24 28h4v1h-4z" fill="#221f1e"/></svg>
+    </div>
+    <p class="invite url">discord.gg/fM2HbsJyBG</p>
+    <p class="right lead">Sep 10, same room, same time: ICPC. What the contest is, how teams form, how registration works.</p>
+    <p class="callout check"><b>Check:</b> join before you leave the room. Everything else gets followed up there.</p>
+    <p class="stamp">Updated <time datetime="2026-09-03">2026-09-03</time></p>
+    <p class="cap"><span class="club">ACM @ RCC</span><span aria-hidden="true">&nbsp;·&nbsp;</span><span class="url">instagram.com/rcc.acm</span></p>
+  </section>
+
+  <output class="counter num" aria-live="polite">01 / 17</output>
+
+  <aside data-layer="notes" hidden aria-label="Speaker notes">
+    <h3>Speaker notes</h3>
+    <ul data-for="s01-title"><li>This slide holds for the whole doors block. Do not talk over it.</li><li>Sign-in sheet at the door. The person taking the headcount is [TBD]. Grab someone before 12:50, not after.</li><li>Point every new face at the QR. That is the only job of these five minutes.</li><li>Start at 12:55 on the clock, whatever the room looks like.</li></ul>
+    <ul data-for="s02-board" hidden><li>Read the five lines. Sixty seconds, then move on. This is the Board; it runs every week.</li><li>Today is the order-by date for the lab kit. We come back to that at 1:11.</li><li>Club Rush is set by Student Activities. It is not confirmed. It goes in Discord the day it is.</li><li>Two clubs share this room: GDG on Campus meets here at 2:30. Different club. Plenty of people do both.</li></ul>
+    <ul data-for="s03-sentence" hidden><li>Say the full sentence: the ACM Student Chapter at RCC is where students who want to get good at computing practice together, and it is chartered under ACM, the professional association for computing.</li><li>Do not open with the constitution. Do not open with the officer list.</li><li>One sentence, then the four words.</li></ul>
+    <ul data-for="s04-pillars" hidden><li>These are the four words on the website. Every event we run fits at least one.</li><li>Build: projects, hackathons, the chapter website, and the AI Hackathon we run ourselves.</li><li>Compete: a problem every week, the Southern California ICPC Regional, collegiate hackathons.</li><li>Learn: workshops, study sessions, guest speakers, help with the transfer-level CS courses.</li><li>Connect: Discord, these meetings, trips, and an alumni network that reaches large tech companies.</li></ul>
+    <ul data-for="s05-proof" hidden><li>Three facts so this does not sound like a poster.</li><li>RCC has hosted a Southern California ICPC Regional site since 2000. RCC teams have competed since 1998.</li><li>Last fall, 11 of our members were accepted to Cal Hacks 12.0.</li><li>As of the spring funding request, 22 active members. That is the room you are joining.</li></ul>
+    <ul data-for="s06-what-you-get" hidden><li>Say this to the room and mean it. A team for the contest. People to build with when a class project is bigger than one person. A resume line that is a thing you made rather than a club you joined. A transfer application with evidence in it.</li><li>Any major, any level. The lab program is tiered from "never written code" upward on purpose.</li><li>Housekeeping, thirty seconds: every Thursday, 12:50 to 1:50, this room. Discord is where everything actually happens. Instagram is rcc.acm.</li><li>Cut this slide first if the block is running past 1:03.</li></ul>
+    <ul data-for="s07-shape" hidden><li>Say the shape, not the table. Six lab days. Two career meetings placed against deadlines that do not move. Two ICPC meetings placed against the season. One hackathon meeting. One showcase on Dec 10.</li><li>The other three Thursdays: today, the dev environment session on Sep 17, and Thanksgiving week off.</li><li>Every regular meeting opens with a 15-minute contest problem. That is the ICPC preparation, spread out instead of crammed.</li><li>Running one warm-up is the lowest-stakes way to run part of a meeting. Say that line; it recruits.</li></ul>
+    <ul data-for="s08-dates" hidden><li>Do not read the grid. Point at two things: lab days are every other week from Sep 24, and Dec 10 is the showcase.</li><li>Oct 1 is the internship timeline, because fall is when summer applications open. Oct 15 is resume and transfer, inside the UC window.</li><li>Sep 10 and Oct 29 are placed against last season's ICPC dates. They move once the real calendar is out.</li><li>Anything not on this grid is not confirmed. Club Rush, Cal Hacks 13.0, the ICPC calendar: "not confirmed yet, it goes in Discord the day it is."</li><li>Do not say: Club Rush dates; the 2026-27 ICPC calendar; Cal Hacks 13.0 dates; the ASRCC allocation; who holds any seat; whether a fall election is required; that the Aug 27 vote happened; quorum; the A-210 booking; UC dates for 2027; a sketch count.</li></ul>
+    <ul data-for="s09-lab" hidden><li>Six lab days this semester. Four stations run at once, one per skill tier, 30 minutes each, on a Raspberry Pi Pico 2 W. Everyone builds something that physically responds in the room.</li><li>T0 has never written code and runs MicroPython. T1 through T3 run Arduino C++ and line up with CIS-5, CIS-17A, and CIS-17B/C.</li><li>Name the stations, they sell it better than the structure: Play Your Riff. Cyclone: Stop the Light. A drum machine where the beat is packed into bits. Snake where the body is a queue. Tic-tac-toe you cannot beat. An elevator scheduler, one car, eight floors.</li><li>The ladder is the feature. Same board every time, so a T0 member can see exactly what the T2 version of their own project looks like.</li><li>Three minutes here. The money is next.</li></ul>
+    <ul data-for="s10-money" hidden><li>No hedging. The cap is $1,000. The base order is $624.65. The max order, which adds backlog parts and a reserve, is $929.64. Both include tax and a shipping estimate.</li><li>$150 is held back as a restock reserve until after lab day 2, to replace whatever the first two sessions actually break.</li><li>Six station kits plus spares: eight boards for six tables.</li><li>The code and wiring are public. CI compiles every sketch, so the starters and solutions are known to build. Do not quote a sketch count.</li></ul>
+    <ul data-for="s11-decision" hidden><li>State it as a fact. The vendor line is 7 to 14 working days. Lab day 1 is Sep 24. An order that does not go out today either moves lab day 1 or costs $130 to $200 more domestically.</li><li>Ask for a show of hands. Record it as a count. It is a straw poll, and say so.</li><li>Then say what actually happens next: advisor sign-off, a decision-log entry, and the order placed by [TBD: name the person with the card]. Say the name out loud or the decision evaporates on the way out.</li><li>If the room is thin or the advisor is unreachable today, take the schedule hit on purpose: lab day 1 moves to Oct 8, the rest slides, and say when the decision gets made instead.</li><li>Six minutes. Close it with one of the two lines above, not a maybe.</li></ul>
+    <ul data-for="s12-seats" hidden><li>Sixty seconds on why this matters: RCC requires at least seven fee-paid students including a President, a Treasurer, and an ICC Representative, plus a full-time faculty advisor. Below that the club is not recognized, and an unrecognized club cannot book this room or request funding.</li><li>Two names for each job, one person holds both. Lead with the cost per week, not the title.</li><li>Chair, Vice Chair, and Treasurer need ACM Student Membership. It is $19 a year. Say the number now; finding out later feels like a bait and switch.</li><li>Nobody has to run for anything today.</li></ul>
+    <ul data-for="s12b-icc" hidden><li>The ICC seat is a real Monday morning commitment and it is the one that quietly kills clubs.</li><li>Someone whose Monday is already free is worth more than someone enthusiastic with a 9:35 class.</li></ul>
+    <ul data-for="s13-jobs" hidden><li>These are not officer seats. They are the jobs that make the semester run.</li><li>The ICPC coach has to be faculty or staff and cannot compete. If you know a professor who would, tell me.</li><li>A lab lead owns one lab day end to end. A warm-up lead owns fifteen minutes, once.</li><li>The docs repo needs a second admin who will review pull requests.</li></ul>
+    <ul data-for="s14-on-ramp" hidden><li>Nobody runs for office today. Each of these is a rung, in this order.</li><li>One problem, one board, fifteen minutes. Then stand next to the person running a lab day and do nothing but hand out kits. Then take notes once. Then, and only then, a seat.</li><li>The elections question, do not improvise it: "Seats are open. How they get filled, appointment now or an election in a few weeks, is a question for the advisor and I will have the answer in Discord by [TBD: date]." Then have it.</li><li>If you get names today, they go on the interest sheet with a role, and nowhere else.</li></ul>
+    <ul data-for="s15-questions" hidden><li>Start the interest sheet at the top of this block, not the end. Half the room leaves at 1:48.</li><li>Do I need to know how to code? No. T0 stations assume you have never written a line.</li><li>How much time is this? One hour a week. Everything else is optional.</li><li>Is there money for the hackathon trip? Not recorded yet. Say that rather than guessing.</li><li>Is this the same as the GDG club? Different clubs, same room, GDG meets at 2:30 right after us. Plenty of people do both. Do not sell against it.</li><li>What is ICPC? Three people, one computer, five hours, a set of problems. RCC hosts a site.</li></ul>
+    <ul data-for="s16-ask" hidden><li>One ask, not three. QR on the screen. Join before you leave the room.</li><li>Next Thursday, same room, same time: ICPC. What the contest is, how teams form, how registration works. If you might want to compete, that is the one to be at.</li><li>The lab decision in one sentence, with a name attached: either "the order goes out today after advisor sign-off, [TBD: name] places it" or "lab day 1 moves to Oct 8 and the decision gets made by [TBD: date]."</li><li>Out by 1:50. The room turns over.</li></ul>
+  </aside>
+
+  <div data-layer="overview" hidden role="dialog" aria-modal="true" aria-label="Slide overview"></div>
+</div>
+
+<button class="lb-btn prev" type="button" aria-label="Previous slide">Previous</button>
+<button class="lb-btn next" type="button" aria-label="Next slide">Next</button>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll('section.slide'));
+  var ids = slides.map(function (s) { return s.id; });
+  var counter = stage.querySelector('.counter');
+  var notes = stage.querySelector('[data-layer="notes"]');
+  var overview = stage.querySelector('[data-layer="overview"]');
+  var titles = slides.map(function (s) { if (s.getAttribute('data-title')) return s.getAttribute('data-title'); var h = s.querySelector('h1, h2'); return h ? h.textContent.trim() : s.id; });
+  var current = 0;
+
+  // overview grid: one button per slide
+  ids.forEach(function (id, j) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-current', j === 0 ? 'true' : 'false');
+    b.innerHTML = '<span class="n">' + pad(j + 1) + '</span><span class="t"></span>';
+    b.querySelector('.t').textContent = titles[j];
+    b.addEventListener('click', function () { overview.hidden = true; go(j); });
+    overview.appendChild(b);
+  });
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function fromHash() { var k = ids.indexOf(location.hash.slice(1)); return k < 0 ? 0 : k; }
+
+  function show(k, moveFocus) {
+    current = k;
+    slides.forEach(function (s, j) {
+      if (j === k) { s.setAttribute('aria-current', 'true'); s.removeAttribute('aria-hidden'); s.inert = false; }
+      else { s.removeAttribute('aria-current'); s.setAttribute('aria-hidden', 'true'); s.inert = true; }
+    });
+    stage.setAttribute('data-slide', ids[k]);
+    counter.textContent = pad(k + 1) + ' / ' + ids.length;
+    Array.prototype.forEach.call(notes.querySelectorAll('[data-for]'), function (n) { var on = n.getAttribute('data-for') === ids[k]; n.hidden = !on; if (on) { n.setAttribute('tabindex', '0'); n.setAttribute('aria-label', 'Speaker notes, scrollable'); } });
+    Array.prototype.forEach.call(overview.children, function (b, j) { b.setAttribute('aria-current', j === k ? 'true' : 'false'); });
+    if (moveFocus !== false && overview.hidden) {
+      var target = notes.hidden ? slides[k].querySelector('h1, h2') : notes.querySelector('[data-for="' + ids[k] + '"]');
+      if (target) { try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); } }
+    }
+  }
+
+  function go(k) {
+    k = Math.max(0, Math.min(ids.length - 1, k));
+    show(k);
+    try { if (location.hash !== '#' + ids[k]) location.hash = ids[k]; } catch (e) { /* a frame that cannot rewrite its URL still navigates */ }
+  }
+
+  function fit() {
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.setProperty('--s', s);
+    var ratio = window.innerWidth / window.innerHeight;
+    var sideBand = (window.innerWidth - 1920 * s) / 2;
+    document.body.classList.toggle('has-letterbox', sideBand >= 140);
+  }
+
+  window.addEventListener('hashchange', function () { show(fromHash()); });
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (k === 'Escape') { if (!overview.hidden) { overview.hidden = true; show(current); } else if (!notes.hidden) { notes.hidden = true; } return; }
+    if (!overview.hidden) { if (k === 'o' || k === 'O') { overview.hidden = true; show(current); } return; }
+    if (!notes.hidden && e.target && e.target.closest && e.target.closest('[data-layer="notes"]') && (k === 'ArrowUp' || k === 'ArrowDown' || k === 'PageUp' || k === 'PageDown' || k === 'Home' || k === 'End' || k === ' ')) { return; }
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === ' ' || k === 'Spacebar' || k === 'PageDown') { e.preventDefault(); go(current + 1); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); go(current - 1); }
+    else if (k === 'Home') { e.preventDefault(); go(0); }
+    else if (k === 'End') { e.preventDefault(); go(ids.length - 1); }
+    else if (k === 'n' || k === 'N') { notes.hidden = !notes.hidden; show(current); }
+    else if (k === 'o' || k === 'O') { overview.hidden = false; slides[current].inert = true; var b = overview.children[current]; if (b) b.focus(); }
+    else if (k === 'f' || k === 'F') {
+      var p = document.fullscreenElement ? (document.exitFullscreen && document.exitFullscreen()) : (document.documentElement.requestFullscreen && document.documentElement.requestFullscreen());
+      if (p && p.catch) { p.catch(function () {}); }
+    }
+  });
+
+  stage.addEventListener('click', function (e) {
+    var sel = window.getSelection && window.getSelection();
+    if (sel && String(sel).length) return;
+    if (e.target.closest && e.target.closest('a, button, [data-layer]')) return;
+    var r = stage.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width;
+    if (x > 0.4) go(current + 1); else go(current - 1);
+  });
+
+  var tx = null, ty = null;
+  stage.addEventListener('touchstart', function (e) { var t = e.changedTouches[0]; tx = t.clientX; ty = t.clientY; }, { passive: true });
+  stage.addEventListener('touchend', function (e) {
+    if (tx === null) return;
+    var t = e.changedTouches[0]; var dx = t.clientX - tx, dy = t.clientY - ty; tx = ty = null;
+    if (Math.abs(dx) > 60 && Math.abs(dy) < 40) { if (dx < 0) go(current + 1); else go(current - 1); }
+  }, { passive: true });
+
+  document.querySelector('.lb-btn.prev').addEventListener('click', function () { go(current - 1); });
+  document.querySelector('.lb-btn.next').addEventListener('click', function () { go(current + 1); });
+
+  fit();
+  show(fromHash(), false);
+})();
+</script>
