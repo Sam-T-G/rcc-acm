@@ -76,7 +76,7 @@ const URL0 = `http://127.0.0.1:${server.address().port}/${relative(ROOT, DECK).s
 
 // ---------- Chrome.
 const port = 9400 + Math.floor(Math.random() * 400);
-const chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'deck-cdp-'))}`,
+const chrome = spawn(CHROME, ['--headless=new', '--use-mock-keychain', '--password-store=basic', `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'deck-cdp-'))}`,
   '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb',
   // Software WebGL, so a disk slide (Three.js) renders headless.
   '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', 'about:blank'], { stdio: 'ignore' });
@@ -125,10 +125,11 @@ function errors() {
   return events.filter((e) => (e.method === 'Runtime.exceptionThrown') || (e.method === 'Runtime.consoleAPICalled' && e.params.type === 'error'))
     .map((e) => e.params.exceptionDetails?.exception?.description || e.params.args?.map((a) => a.value).join(' ') || 'error');
 }
+// A typed key is one keyDown carrying its text, then keyUp. No nativeVirtualKeyCode: those are platform
+// codes (macOS Space is 49, not 32), and a wrong one can leave a native key held down, repeating.
 async function key(k, code, vk) {
-  const base = { key: k, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk };
-  await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', ...base });
-  if (k.length === 1) await send('Input.dispatchKeyEvent', { type: 'char', text: k, ...base });
+  const base = { key: k, code, windowsVirtualKeyCode: vk };
+  await send('Input.dispatchKeyEvent', k.length === 1 ? { type: 'keyDown', text: k, unmodifiedText: k, ...base } : { type: 'rawKeyDown', ...base });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', ...base });
 }
 const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84], c: ['c', 'KeyC', 67] };
