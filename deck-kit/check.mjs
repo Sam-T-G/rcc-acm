@@ -132,7 +132,7 @@ async function key(k, code, vk) {
   await send('Input.dispatchKeyEvent', k.length === 1 ? { type: 'keyDown', text: k, unmodifiedText: k, ...base } : { type: 'rawKeyDown', ...base });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', ...base });
 }
-const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84], c: ['c', 'KeyC', 67] };
+const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84], c: ['c', 'KeyC', 67], a: ['a', 'KeyA', 65], escape: ['Escape', 'Escape', 27] };
 const press = (name) => key(...KEYS[name]);
 async function settle() { for (let i = 0; i < 140; i++) { if (!(await evaluate('window.__deck && window.__deck.state().busy'))) return; await sleep(50); } }
 async function shot(name) {
@@ -574,6 +574,23 @@ if (dAt2 >= 0) {
 }
 check(!errors().length, 'no console errors with the presenter open' + (errors().length ? ': ' + errors()[0] : ''));
 if (SHOTS) await shot('presenter');
+// Open review notes on the current slide show in the presenter view (stand-in notes; the relay is not needed).
+const rvn = await evaluate(`(async () => { const w = document.getElementById('pv-test').contentWindow, i = __deck.state().i, real = w.__review;
+  w.__review = Object.assign({}, real || {}, { ownerOf: () => '', chip: (n) => '<span class="rvw-who">' + n + '</span>',
+    threadsOf: (k) => k === i ? [{ author: { name: 'Check', via: 'agent' }, target: { text: 'these words' }, body: 'Tighten this line', suggestion: 'x' }] : [] });
+  w.dispatchEvent(new w.CustomEvent('deck-review')); await new Promise((r) => setTimeout(r, 600));
+  const box = w.document.querySelector('.pv-review'), text = box ? box.textContent : '', r = box ? box.getBoundingClientRect() : null;
+  const hit = r && r.height ? w.document.elementFromPoint(r.left + 10, r.top + 10) : null;
+  w.__realReview = real;
+  return { text, seen: !!(hit && box.contains(hit)) }; })()`);
+if (SHOTS) await shot('presenter-review-notes');
+rvn.after = await evaluate(`(async () => { const w = document.getElementById('pv-test').contentWindow, real = w.__realReview;
+  if (real) w.__review = real; else delete w.__review; delete w.__realReview;
+  w.dispatchEvent(new w.CustomEvent('deck-review')); await new Promise((r) => setTimeout(r, 400));
+  return w.document.querySelector('.pv-review').textContent; })()`);
+check(/Open review notes · 1/.test(rvn.text) && /Check’s agent/.test(rvn.text) && /these words/.test(rvn.text) && /Tighten this line/.test(rvn.text) && rvn.seen,
+  `the presenter view lists the slide's open review notes, on screen (${rvn.text.slice(0, 80) || 'nothing'})`);
+check(rvn.after === '', 'and drops them when there are none');
 // The run sheet: one row per slide, the stage hidden.
 events.length = 0;
 await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
@@ -595,47 +612,47 @@ const rv = await evaluate(`({ status: (document.querySelector('.rv__status') || 
 check(/missing its code/.test(rv.status) && rv.pad === 2, `the phone page without a code says so (${rv.status})`);
 check(!errors().length, 'no console errors on the phone page' + (errors().length ? ': ' + errors()[0] : ''));
 
-// ---------- Review (review.js): the C panel and the ?view=review board, without the relay.
+// ---------- Review (review.js): it loads the relay's annotation client. A, sign-in, and the ?view=review
+// board, as far as they go without signing in. Needs the network; offline, this part is skipped.
 if (await evaluate(`!!document.querySelector('script[src$="review.js"]')`)) {
   console.log('review');
   await load();
-  await evaluate(`location.hash = '#2'`); await sleep(500); await settle();
-  const w0 = await evaluate('document.querySelector(".deck").clientWidth');
-  await press('c'); await sleep(400);
-  const open = await evaluate(`(() => { const p = document.querySelector('.rvw-panel'); if (!p || p.hidden) return null; const r = p.getBoundingClientRect();
-    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + 120); return { w: r.width, inside: !!(hit && p.contains(hit)), form: !!p.querySelector('.rvw-signin'), deckW: document.querySelector('.deck').clientWidth }; })()`);
-  check(open && open.inside, `C opens the review panel, on top and reachable (${open ? Math.round(open.w) + ' px wide' : 'not open'})`);
-  check(open && open.form, 'a first visit asks for a name and the club passcode');
-  check(open && open.deckW < w0 && open.deckW + open.w <= 1920 + 1, `the slide shrinks to sit beside the panel (${w0} to ${open && open.deckW} px)`);
-  // Real typing in the panel: the deck must not move.
-  const box = await evaluate(`(() => { const r = document.querySelector('.rvw-panel input[name="who"]').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
-  await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: box.x, y: box.y, button: 'left', clickCount: 1 });
-  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: box.x, y: box.y, button: 'left', clickCount: 1 });
-  await sleep(150);
-  const at = (await evaluate('__deck.state()')).i;
-  await send('Input.insertText', { text: 'Sam' });
-  await press('right'); await press('c'); await sleep(400);
-  const typed = await evaluate(`({ v: document.activeElement && document.activeElement.value, i: __deck.state().i, open: !document.querySelector('.rvw-panel').hidden })`);
-  check(typed.v === 'Samc' && typed.i === at && typed.open, `keys typed in the panel stay in the panel, C included (field "${typed.v}", slide ${typed.i + 1}, panel ${typed.open ? 'open' : 'closed'})`);
-  // Pressing on the panel's background must not advance the deck either (some decks advance on any click).
-  const bg = await evaluate(`(() => { const r = document.querySelector('.rvw-panel').getBoundingClientRect(); return { x: r.left + 20, y: r.bottom - 20 }; })()`);
-  await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: bg.x, y: bg.y, button: 'left', clickCount: 1 });
-  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: bg.x, y: bg.y, button: 'left', clickCount: 1 });
-  await sleep(500);
-  check((await evaluate('__deck.state()')).i === at, 'a click in the panel does not move the deck');
-  await evaluate('document.activeElement.blur()');
-  await press('c'); await sleep(400);
-  const shut = await evaluate(`({ hidden: document.querySelector('.rvw-panel').hidden, w: document.querySelector('.deck').clientWidth })`);
-  check(shut.hidden && shut.w === w0, `C again closes it and the slide takes the full width back (${shut.w} px)`);
-  check(!errors().length, 'no console errors with the review panel' + (errors().length ? ': ' + errors()[0] : ''));
-  if (SHOTS) { await press('c'); await sleep(400); await shot('review-panel'); await press('c'); }
-  events.length = 0;
-  await send('Page.navigate', { url: URL0 + '?view=review' });
-  for (let i = 0; i < 60; i++) { await sleep(100); try { if ((await evaluate('document.readyState')) === 'complete') break; } catch {} }
-  await sleep(800);
-  const bd = await evaluate(`({ form: !!document.querySelector('.rvw-board .rvw-signin'), deck: getComputedStyle(document.querySelector('.deck')).display })`);
-  check(bd.form && bd.deck === 'none', 'the ?view=review board asks for the passcode, with the stage hidden');
-  check(!errors().length, 'no console errors on the review board' + (errors().length ? ': ' + errors()[0] : ''));
+  const src = await evaluate(`(document.querySelector('script[src*="/client/v1/annotate.js"]') || {}).src || ''`);
+  check(/^https:\/\/deck-relay-[\w.-]+\/client\/v1\/annotate\.js$/.test(src), `review.js loads the relay's annotation client (${src || 'no script'})`);
+  let v = 0;
+  for (let i = 0; i < 50 && !v; i++) { v = await evaluate('(window.__review && window.__review.v) || 0'); if (!v) await sleep(200); }
+  if (!v) pass('review client did not load (offline?); review checks skipped (informational)');
+  else {
+    await evaluate(`location.hash = '#2'`); await sleep(500); await settle();
+    const at = (await evaluate('__deck.state()')).i;
+    await press('a'); await sleep(500);
+    // The bar lives in an open shadow root; hit-test inside it, as a real click would land.
+    const bar = await evaluate(`(() => { const h = document.querySelector('.rvw2-host'), sr = h && h.shadowRoot, b = sr && sr.querySelector('.bar');
+      if (!b || b.hidden) return null; const btn = b.querySelector('[data-a="signin"]'); if (!btn) return { signin: false };
+      const r = btn.getBoundingClientRect(), hit = sr.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return { signin: true, reach: !!(hit && btn.contains(hit)), y: Math.round(r.top) }; })()`);
+    check(bar && bar.signin && bar.reach, `A opens the review bar and asks a first visitor to sign in, button reachable (${bar ? JSON.stringify(bar) : 'no bar'})`);
+    check((await evaluate('__deck.state()')).i === at, 'A does not move the deck');
+    await press('escape'); await sleep(400);
+    const gone = await evaluate(`(() => { const b = document.querySelector('.rvw2-host').shadowRoot.querySelector('.bar'); return !b || b.hidden; })()`);
+    check(gone, 'Esc closes the review bar');
+    const s0 = await evaluate('JSON.stringify(__deck.state())');
+    await press('right'); await sleep(900); await settle();
+    const s1 = await evaluate('JSON.stringify(__deck.state())');
+    check(s1 !== s0, `the deck keys work again after it closes (${s0} to ${s1})`);
+    check(!errors().length, 'no console errors with the review client' + (errors().length ? ': ' + errors()[0] : ''));
+    if (SHOTS) { await press('a'); await sleep(500); await shot('review-bar'); await press('escape'); }
+    events.length = 0;
+    await send('Page.navigate', { url: URL0 + '?view=review' });
+    let bd = null;
+    for (let i = 0; i < 50 && !(bd && bd.signin); i++) {
+      await sleep(200);
+      try { bd = await evaluate(`(() => { const h = document.querySelector('.rvw2-host'), sr = h && h.shadowRoot; return { signin: !!(sr && sr.querySelector('[data-signin]')), deck: getComputedStyle(document.querySelector('.deck')).display }; })()`); } catch {}
+    }
+    check(bd && bd.signin && bd.deck === 'none', 'the ?view=review board asks for sign-in, with the stage hidden');
+    check(!errors().length, 'no console errors on the review board' + (errors().length ? ': ' + errors()[0] : ''));
+    if (SHOTS) await shot('review-board');
+  }
 }
 
 ws.close(); chrome.kill(); server.close();

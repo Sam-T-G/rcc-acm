@@ -18,5 +18,5 @@ Last updated: 2026-10-07 by Sam.
 - Meetings: Thursdays in BLCIS A-210 (the time is on each deck's ledger line).
 - Live decks: `https://sam-t-g.github.io/rcc-acm/decks/<slug>/`, published from `main` with `scripts/publish-deck.sh` (the `gh-pages` branch).
 - Collaborators push to `main` through `scripts/sync.sh push` (since 2026-10-07; see the decision log). Branch protection blocks force-pushes and deletion only. PR #1 (the microcontroller lab proposal) is still open.
-- Review: `C` in a deck, `?view=review` for the whole deck, `node scripts/review.mjs` for agents. The passcode is shared by the club officers out of band and lives in `~/.config/rcc-review/key`.
+- Review: `A` in a deck to annotate, `I` for the notes inbox, `?view=review` for the board, `node scripts/review.mjs` for agents. Google sign-in, limited to each club's member list on the relay. Decks published before 2026-10-08 still run the older passcode panel (`C`) until they are republished.
 - Presenter tools: `S` presenter view, `M` phone or tablet remote, `?view=runsheet` (`deck-kit/README.md`).

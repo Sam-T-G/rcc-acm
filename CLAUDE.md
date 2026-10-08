@@ -8,7 +8,7 @@ The **Context rule**, **Sync**, and **Review** rules below are mandatory, and ho
 
 Before building anything, meaning any edit to a repo file or any commit, cross-reference new and existing context:
 
-1. **New:** what others did since you last worked here. The session-start brief lists their commits and the files each touched; `git show <sha>` for detail. It also lists open review comments on the decks.
+1. **New:** what others did since you last worked here. The session-start brief lists their commits and the files each touched; `git show <sha>` for detail. It also lists open review notes on the decks.
 2. **Existing:** `docs/status.md`, the open questions and recent entries in `docs/agent-log.md`, this file, the files you are about to change, and the previous week's deck (structure, style, bugs already fixed).
 3. **Say it:** before the first edit, tell the user under **Context check:** in 1 to 3 lines what is relevant and how your plan accounts for it, or that nothing affects it. If the context conflicts with the request (someone else already built it, a decision went the other way, an open question is unresolved), ask before building.
 
@@ -30,13 +30,14 @@ Where context lives: `docs/status.md` (current snapshot, rewritten at every `/ha
 - **Hand off before you stop.** After committing work, run `/handoff`. A Stop hook reminds you if work is unlogged, unpushed, or uncommitted.
 - `docs/agent-log.md` merges with git's `union` driver, so two entries added at once both survive.
 
-## Review (comments and speakers on the decks)
+## Review (notes and speakers on the decks)
 
-- Every deck loads `deck-kit/review.js`. `C` opens a side panel: who covers the slide and its comment threads. `?view=review` on the deck's URL is the whole-deck board. Changes reach everyone's screen in about a second, through the club relay (`/review/` on `deck-relay`, saved in Firestore).
-- Agents use `node scripts/review.mjs`: `brief`, `show <deck>`, `add <deck> <slide> <text>`, `reply`, `resolve <deck> <id> <what changed>`, `assign <deck> <3-7> <name|->`. Anything an agent writes is marked agent.
-- A comment is a request from a person. Treat open comments on a deck you are editing as part of the task: fix them or reply why not, and resolve each one you fixed in the same turn (`/handoff` checks).
-- Slides are keyed by `aria-label` (or `data-id`). Renaming a slide's `aria-label` orphans its comments and speaker; set `data-id` to the old key first if a slide has either.
-- The passcode is in `~/.config/rcc-review/key` (`node scripts/review.mjs login`). It never goes in the repo, and neither does comment text: the repo is public.
+- Every deck loads `deck-kit/review.js`, which loads the club relay's annotation client. In a deck, `A` toggles annotate mode: pin a note to a spot, a selected phrase, or the whole slide, or suggest replacement text. `I` opens the notes inbox. `?view=review` on the deck's URL is the whole-deck board with speakers. Sign-in is Google, limited to each club's member list on the relay. Changes reach everyone in about a second.
+- Open notes show in the presenter view (`S`) and the remote, never on the screen the room sees.
+- Agents use `node scripts/review.mjs` (commands at the top of the file): `brief`, `inbox <deck>` (each note with the source line it points at), `claim`, `resolve <deck> <id> --commit <sha> <what changed>`, `reply`, `annotate`, `assign`, `status`, `watch`. Anything an agent writes is marked agent. The relay also serves the same tools over MCP (`/mcp`).
+- A note is a request from a person. When you edit a deck, run `inbox` first, `claim` each note you take, set `status` while you work, then fix it or reply why not. Apply an accepted suggestion exactly as written. Resolve each fixed note with the commit that fixed it, in the same turn (`/handoff` checks).
+- Slides are keyed by `data-id`, else `id`, else the `aria-label` slug. Renaming a slide's `aria-label` orphans its notes and speaker; set `data-id` to the old key first if a slide has either.
+- The agent token comes from "Connect an agent" in a deck (your avatar in the review bar) and lives in `~/.config/rcc-review/agent-token` (`node scripts/review.mjs login`). It never goes in the repo, and neither does note text or anyone's email: the repo is public.
 - `publish-deck.sh` bakes the current speakers into the published deck as `data-owner`, so the presenter view shows them offline.
 
 ## Rules
