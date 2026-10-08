@@ -55,6 +55,8 @@ out="site/decks/$slug"
 rm -rf "$out"
 mkdir -p "$out"
 node deck-kit/bundle.mjs "$deck_rel" "$out/index.html"
+# The speakers from the live review (scripts/review.mjs), so the presenter view names them offline.
+[ -f scripts/review.mjs ] && node scripts/review.mjs bake "$out/index.html" "$deck_rel" || true
 
 # A bundled deck must not reach for a local file the bundler could not inline.
 if grep -Eo '(src|href)="[^"]+"' "$out/index.html" | grep -Ev '"(https?:|data:|#|mailto:)' | grep -q .; then
