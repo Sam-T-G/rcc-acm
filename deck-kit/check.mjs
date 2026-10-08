@@ -131,7 +131,7 @@ async function key(k, code, vk) {
   if (k.length === 1) await send('Input.dispatchKeyEvent', { type: 'char', text: k, ...base });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', ...base });
 }
-const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84] };
+const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84], c: ['c', 'KeyC', 67] };
 const press = (name) => key(...KEYS[name]);
 async function settle() { for (let i = 0; i < 140; i++) { if (!(await evaluate('window.__deck && window.__deck.state().busy'))) return; await sleep(50); } }
 async function shot(name) {
@@ -593,6 +593,49 @@ await sleep(600);
 const rv = await evaluate(`({ status: (document.querySelector('.rv__status') || {}).textContent || '', pad: document.querySelectorAll('.rv__pad button').length })`);
 check(/missing its code/.test(rv.status) && rv.pad === 2, `the phone page without a code says so (${rv.status})`);
 check(!errors().length, 'no console errors on the phone page' + (errors().length ? ': ' + errors()[0] : ''));
+
+// ---------- Review (review.js): the C panel and the ?view=review board, without the relay.
+if (await evaluate(`!!document.querySelector('script[src$="review.js"]')`)) {
+  console.log('review');
+  await load();
+  await evaluate(`location.hash = '#2'`); await sleep(500); await settle();
+  const w0 = await evaluate('document.querySelector(".deck").clientWidth');
+  await press('c'); await sleep(400);
+  const open = await evaluate(`(() => { const p = document.querySelector('.rvw-panel'); if (!p || p.hidden) return null; const r = p.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + 120); return { w: r.width, inside: !!(hit && p.contains(hit)), form: !!p.querySelector('.rvw-signin'), deckW: document.querySelector('.deck').clientWidth }; })()`);
+  check(open && open.inside, `C opens the review panel, on top and reachable (${open ? Math.round(open.w) + ' px wide' : 'not open'})`);
+  check(open && open.form, 'a first visit asks for a name and the club passcode');
+  check(open && open.deckW < w0 && open.deckW + open.w <= 1920 + 1, `the slide shrinks to sit beside the panel (${w0} to ${open && open.deckW} px)`);
+  // Real typing in the panel: the deck must not move.
+  const box = await evaluate(`(() => { const r = document.querySelector('.rvw-panel input[name="who"]').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+  await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: box.x, y: box.y, button: 'left', clickCount: 1 });
+  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: box.x, y: box.y, button: 'left', clickCount: 1 });
+  await sleep(150);
+  const at = (await evaluate('__deck.state()')).i;
+  await send('Input.insertText', { text: 'Sam' });
+  await press('right'); await press('c'); await sleep(400);
+  const typed = await evaluate(`({ v: document.activeElement && document.activeElement.value, i: __deck.state().i, open: !document.querySelector('.rvw-panel').hidden })`);
+  check(typed.v === 'Samc' && typed.i === at && typed.open, `keys typed in the panel stay in the panel, C included (field "${typed.v}", slide ${typed.i + 1}, panel ${typed.open ? 'open' : 'closed'})`);
+  // Pressing on the panel's background must not advance the deck either (some decks advance on any click).
+  const bg = await evaluate(`(() => { const r = document.querySelector('.rvw-panel').getBoundingClientRect(); return { x: r.left + 20, y: r.bottom - 20 }; })()`);
+  await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: bg.x, y: bg.y, button: 'left', clickCount: 1 });
+  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: bg.x, y: bg.y, button: 'left', clickCount: 1 });
+  await sleep(500);
+  check((await evaluate('__deck.state()')).i === at, 'a click in the panel does not move the deck');
+  await evaluate('document.activeElement.blur()');
+  await press('c'); await sleep(400);
+  const shut = await evaluate(`({ hidden: document.querySelector('.rvw-panel').hidden, w: document.querySelector('.deck').clientWidth })`);
+  check(shut.hidden && shut.w === w0, `C again closes it and the slide takes the full width back (${shut.w} px)`);
+  check(!errors().length, 'no console errors with the review panel' + (errors().length ? ': ' + errors()[0] : ''));
+  if (SHOTS) { await press('c'); await sleep(400); await shot('review-panel'); await press('c'); }
+  events.length = 0;
+  await send('Page.navigate', { url: URL0 + '?view=review' });
+  for (let i = 0; i < 60; i++) { await sleep(100); try { if ((await evaluate('document.readyState')) === 'complete') break; } catch {} }
+  await sleep(800);
+  const bd = await evaluate(`({ form: !!document.querySelector('.rvw-board .rvw-signin'), deck: getComputedStyle(document.querySelector('.deck')).display })`);
+  check(bd.form && bd.deck === 'none', 'the ?view=review board asks for the passcode, with the stage hidden');
+  check(!errors().length, 'no console errors on the review board' + (errors().length ? ': ' + errors()[0] : ''));
+}
 
 ws.close(); chrome.kill(); server.close();
 console.log(`\n${passes.length} passed, ${fails.length} failed${SHOTS ? '. Screenshots in ' + SHOTS : ''}`);
