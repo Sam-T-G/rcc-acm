@@ -18,8 +18,9 @@ Where context lives: `docs/status.md` (current snapshot, rewritten at every `/ha
 
 ## Sync
 
-- **Starting Claude outside this folder?** Project hooks only load when Claude starts inside the repo. Run `scripts/install-bridge.sh` once per machine so they also run in sessions started elsewhere, once a prompt names ACM or an edit lands here.
-- **Pull before you work.** Hooks run `scripts/sync.sh pull` at session start and before every prompt. New commits from others are their progress. On `SYNC CONFLICT`, `SYNC BLOCKED`, or edits sent to the stash, stop and tell the user before editing anything.
+- **Set up once per machine (a person, in a terminal):** `scripts/install-bridge.sh`. The hooks then run an approved copy of their scripts from `~/.config/rcc-coworking/`, never the repo's own files, and also run in sessions started outside the repo once a prompt names ACM. Until it is run, sessions print a one-line notice and no hooks run.
+- **Pull before you work.** Hooks run `scripts/sync.sh pull` at session start and before every prompt. New commits from others are their progress. On `SYNC CONFLICT`, `SYNC BLOCKED`, or edits sent to the stash, stop and tell the user before editing anything. Never `git pull`, `merge`, or `rebase` directly; a hook blocks it.
+- **`SYNC HELD` means someone changed a file the hooks run** (`scripts/hooks/`, `sync.sh`, `context.sh`, `review.mjs`, `coworking.conf`, `install-bridge.sh`, `.claude/`). Nothing was pulled. Stop and tell the user who changed what; they review and approve it in a terminal with `~/.config/rcc-coworking/approve <repo>`. Never run `approve` or `install-bridge.sh` yourself, never pull around a hold, and treat a change to those files as code that will run on everyone's machine.
 - **Work on `main`.** No branches or PRs for collaborators. Commit small, one change per commit, with a message that says what changed and why.
 - **Push after every verified change, without asking.** Stage files by name (`git add <paths>`, never `-A` or `.`), commit, then `scripts/sync.sh push` (pull, `scripts/push-check.sh` on exactly what is committed, push, retry on a race). Never `git push` directly; a hook blocks it.
 - **Verified means opened in a browser.** For a deck: `node deck-kit/check.mjs <deck>` passes and you looked at its screenshots.
