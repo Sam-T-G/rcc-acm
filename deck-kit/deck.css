@@ -369,6 +369,10 @@ body {
    margins. The credit is a link, on the slide, in the ledger face. */
 .slide[data-kind="photo"] { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(96 * var(--u)); align-items: center; }
 .photo__text { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+/* A sign-up QR beside a photo: smaller tile, label to its right, so the column clears the rail. */
+.photo__text .qr { flex-direction: row; align-self: flex-start; gap: calc(28 * var(--u)); }
+.photo__text .qr .label { text-align: left; overflow-wrap: anywhere; }
+.photo__text .qr__tile { width: calc(216 * var(--u)); height: calc(216 * var(--u)); flex: none; }
 .photo { margin: 0; }
 .photo img { display: block; object-fit: cover; }
 .credit { font-family: var(--acm-font-code); font-size: var(--s-ledger); line-height: 1.25; color: var(--acm-on-surface-variant); font-variant-ligatures: none; }
