@@ -89,15 +89,15 @@ Quick reference:
 
 **When violated.** Treat it as urgent. The remaining admin adds a second admin the same week, and MAINTAINERS.md is updated in the same PR. If no eligible officer exists, the advisor becomes the second admin until one is elected.
 
-## Rule 8: PRs, not direct pushes, to main
+## Rule 8: Collaborators push to main through the sync script
 
-**The rule.** Every change to `main` goes through a pull request. One topic per PR. Any officer can review. Link checks and lint must pass.
+**The rule.** Collaborators with push access work on `main` directly: small commits, each pushed with `scripts/sync.sh push`, which pulls first, runs `scripts/check.sh` on exactly what is being pushed, and retries if someone else pushed first. Anyone without push access opens a pull request, one topic per PR. Since 2026-10-07 (decision log).
 
-**Why.** Review is how rules 1 through 5 actually get checked. One topic per PR keeps reviews short enough that people do them, and makes a bad change easy to revert without losing a good one. Automated checks catch broken links and formatting so reviewers can spend their attention on content.
+**Why.** Several people's Claude Code agents edit this repo the same week. Long-lived branches left `main` weeks behind and hid each person's work from the others. Working on one branch, with a context gate that makes each agent read what the others pushed before it edits, keeps everyone on the same copy. The checks still run on every push, locally before it leaves and in CI after.
 
-**Enforced by.** Branch protection on `main` (require a PR, require one review, require the `markdownlint` and `links` status checks). CI runs [docs-check.yml](../../.github/workflows/docs-check.yml) on every PR and push. Run `scripts/check.sh` locally first to avoid a red build.
+**Enforced by.** The repo's Claude Code hooks (`.claude/settings.json`): a raw `git push` is blocked in favor of `scripts/sync.sh push`, as are force-pushes, `reset --hard`, and `clean -f`. Branch protection on `main` blocks force-pushes and deletion. CI runs [docs-check.yml](../../.github/workflows/docs-check.yml) on every push.
 
-**When violated.** If something was pushed directly: do not revert it blindly. Open a PR that either reverts it or reviews it after the fact, so the change gets the review it skipped. Then check that branch protection is still on; a direct push usually means it was turned off or the pusher bypassed it as an admin.
+**When violated.** If a push skipped the checks and broke something, fix forward with a new commit; never force-push. If someone's work was overwritten, recover it from the reflog or the other person's clone and say so in the agent log.
 
 ## Rule 9: Unknowns are marked [TBD]
 
