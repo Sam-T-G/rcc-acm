@@ -14,6 +14,7 @@ Playbooks are evergreen. Dates, names, and budgets for a specific run live in `s
 | [Hackathon trip](hackathon-trip.md) | Taking a group to an off-campus hackathon (Cal Hacks pattern) | Trip lead plus Treasurer | Plan 8 or more weeks out; funding request first |
 | [ICPC regional site](icpc-regional-site.md) | RCC as a host site and as a competing school for the Southern California ICPC regional | Chair plus faculty coach | Registration in early fall, contest in November |
 | [ACM AI Hackathon](acm-ai-hackathon.md) | The club's own hackathon | Event lead plus Treasurer | Date [TBD] |
+| [Arduino lab](arduino-lab/README.md) | A hands-on Arduino build in a meeting slot, with the instruction spec every lab follows | Workshop lead for the week, Chair signs off | Any hardware week; start 1 week out |
 | [Guest speaker](guest-speaker.md) | Hosting an alumni, faculty, or industry speaker | Chair or assigned officer | 1 to 2 per semester; invite 6 weeks out |
 
 ## How to use a playbook

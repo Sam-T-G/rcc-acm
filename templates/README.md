@@ -26,6 +26,8 @@ If a template is wrong or missing a field, change it here, add a [decision recor
 | [officer-handoff.md](officer-handoff.md) | Semester close, and any time an officer leaves | `semesters/<YYYY-term>/handoff.md` (the semester template already holds a copy) |
 | [funding-line-item.md](funding-line-item.md) | Each line of an ASRCC funding request, before the late-April deadline | One section per line item in `semesters/<YYYY-term>/budget.md` |
 | [workshop-outline.md](workshop-outline.md) | Planning any hands-on session | `semesters/<YYYY-term>/events/YYYY-MM-DD-slug/workshop.md`; promote to `docs/03-playbooks/` once it has run twice |
+| [arduino-lab-round.md](arduino-lab-round.md) | Writing one round of an Arduino lab, before any slide is built | `scratch/` while drafting, then summarized in that week's lab guide |
+| [arduino-lab-guide.md](arduino-lab-guide.md) | The officer guide for an Arduino lab week | `semesters/<YYYY-term>/meetings/YYYY-MM-DD-lab-guide.md` |
 | [announcement.md](announcement.md) | Anything posted to members or the campus | Draft in `semesters/<YYYY-term>/events/YYYY-MM-DD-slug/announcement.md`, then post |
 
 ## Conventions shared by every template

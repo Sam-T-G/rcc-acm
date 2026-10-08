@@ -27,6 +27,10 @@ Never fetch: people or faces, stock people at laptops, AI images of people, the 
 
 Stations are real roles only: every card names a current posting and a sourced reason, or leaves the reason off. Majors weights are judgment; say so in the deck header. Look at the disk in screenshots (overview, a few stations, the finale) before publishing.
 
+## Arduino lab decks
+
+Follow [docs/03-playbooks/arduino-lab/](../docs/03-playbooks/arduino-lab/README.md), [instruction-spec.md](../docs/03-playbooks/arduino-lab/instruction-spec.md) first, and build with [lab/labkit.py](lab/README.md). Every step slide names the part and says where each end goes by exact hole or pin label; nothing vague ships. Compile every sketch for `arduino:avr:uno` and `arduino:renesas_uno:unor4wifi`. After the lab, write what it taught back into the spec (the README's Rules learned table).
+
 ## Always
 
 - Invent no facts: no dates, numbers, names, or claims Sam did not give. Unknowns stay `[TBD]` or come off the slide.
