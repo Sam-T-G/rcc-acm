@@ -49,6 +49,9 @@ pre code { background: none; padding: 0; font-size: 15px; }
 .code__bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 15px; color: var(--ink-2); }
 button { font: 600 16px var(--sans); background: var(--primary); color: #fff; border: 0; border-radius: 8px; padding: 8px 18px; cursor: pointer; min-height: 40px; flex: none; }
 button:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+details.ex { margin: 8px 0; }
+.io { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.io__label { margin: 8px 0 4px; font-weight: 600; font-size: 15px; color: var(--ink-2); }
 footer { margin-top: 64px; color: var(--ink-2); font-size: 15px; }
 @media print {
   body { font-size: 12px; background: #fff; }
@@ -86,7 +89,7 @@ footer { margin-top: 64px; color: var(--ink-2); font-size: 15px; }
 
 <h2 id="problems">Problems</h2>
 <ol class="probs">
-<li class="prob">
+<li class="prob" id="p-isyavowel">
   <div class="prob__head"><span class="prob__num">1</span><h3><a href="https://open.kattis.com/problems/isyavowel">Is Y a Vowel?</a></h3></div>
   <p class="prob__meta">2023 ICPC North America Qualifier · Kattis difficulty 1.2</p>
   <p class="prob__task">Count the vowels in one lowercase word, first without y and then with y.</p>
@@ -109,7 +112,7 @@ int main() {
   <details><summary>Hint</summary><p>Count a, e, i, o, u in one counter and y in another. The second answer is both counters added.</p></details>
   <details><summary>Common trap</summary><p>Printing the two numbers in the wrong order. The count without y comes first.</p></details>
 </li>
-<li class="prob">
+<li class="prob" id="p-nodup">
   <div class="prob__head"><span class="prob__num">2</span><h3><a href="https://open.kattis.com/problems/nodup">No Duplicates</a></h3></div>
   <p class="prob__meta">2017 ICPC Mid-Central Regional · Kattis difficulty 1.4</p>
   <p class="prob__task">Print <code>yes</code> if no word in the line repeats, <code>no</code> if one does.</p>
@@ -130,7 +133,7 @@ int main() {
   <details><summary>Hint</summary><p>There's no word count, so read with <code>while (cin &gt;&gt; w)</code>. It stops when the input runs out. Keep the words you've seen in a <code>set&lt;string&gt;</code>.</p></details>
   <details><summary>Common trap</summary><p>Waiting for a count that isn't there. The output is lowercase.</p></details>
 </li>
-<li class="prob">
+<li class="prob" id="p-quickbrownfox">
   <div class="prob__head"><span class="prob__num">3</span><h3><a href="https://open.kattis.com/problems/quickbrownfox">Quick Brown Fox</a></h3></div>
   <p class="prob__meta">2015 ICPC North American Qualifier · Kattis difficulty 1.4</p>
   <p class="prob__task">For each phrase, print <code>pangram</code> if it uses all 26 letters. Otherwise print <code>missing</code> and the missing letters in lowercase, a to z.</p>
@@ -160,7 +163,7 @@ int main() {
   <details><summary>Hint</summary><p>Read each phrase with <code>getline</code>. Mark letters in an array of 26 and use <code>tolower</code> so <code>A</code> and <code>a</code> count as the same letter.</p></details>
   <details><summary>Common trap</summary><p>After <code>cin &gt;&gt; n</code> the newline is still in the input, so the first <code>getline</code> comes back empty. Call <code>getline</code> once before the loop to throw it away.</p></details>
 </li>
-<li class="prob">
+<li class="prob" id="p-speedlimit">
   <div class="prob__head"><span class="prob__num">4</span><h3><a href="https://open.kattis.com/problems/speedlimit">Speed Limit</a></h3></div>
   <p class="prob__meta">2004 ACM ICPC Mid-Central Regional · Kattis difficulty 1.5</p>
   <p class="prob__task">Each log line has a speed and the total hours since the trip started. Print the miles for each data set, like <code>170 miles</code>.</p>
@@ -183,7 +186,7 @@ int main() {
   <details><summary>Hint</summary><p>Keep the previous time and add <code>speed * (time - previousTime)</code>. Reset both to 0 for each data set.</p></details>
   <details><summary>Common trap</summary><p>Using the time on the line as the hours at that speed. It counts from the start of the trip. Don't drop the word <code>miles</code>.</p></details>
 </li>
-<li class="prob">
+<li class="prob" id="p-acm">
   <div class="prob__head"><span class="prob__num">5</span><h3><a href="https://open.kattis.com/problems/acm">ACM Contest Scoring</a></h3></div>
   <p class="prob__meta">2015 ICPC Mid-Central Regional · Kattis difficulty 1.5</p>
   <p class="prob__task">Given one team's submission log, print problems solved and the time score: the minute of each correct submission plus 20 for each wrong try on a problem they solved. This is the real ICPC scoring rule.</p>
@@ -209,7 +212,7 @@ int main() {
   <details><summary>Hint</summary><p>Two arrays indexed by <code>letter - 'A'</code>: wrong tries so far and solved or not.</p></details>
   <details><summary>Common trap</summary><p>Charging 20 minutes for wrong tries on problems the team never solved. Those are free.</p></details>
 </li>
-<li class="prob">
+<li class="prob" id="p-linesperhour">
   <div class="prob__head"><span class="prob__num">6</span><h3><a href="https://open.kattis.com/problems/linesperhour">Lines Per Hour</a></h3></div>
   <p class="prob__meta">2023 ICPC North America Qualifier · Kattis difficulty 1.6</p>
   <p class="prob__task">A team writes <code>lph</code> lines per hour for 5 hours. Print the most problems you can pick so they could still solve every one.</p>
@@ -233,7 +236,7 @@ int main() {
   <details><summary>Hint</summary><p>Sort the line counts small to large and take from the front while the total stays at or under <code>5 * lph</code>.</p></details>
   <details><summary>Common trap</summary><p>Using <code>lph</code> as the limit and forgetting the 5 hours. Not sorting is the other one.</p></details>
 </li>
-<li class="prob">
+<li class="prob" id="p-nineknights">
   <div class="prob__head"><span class="prob__num">7</span><h3><a href="https://open.kattis.com/problems/nineknights">Nine Knights</a></h3></div>
   <p class="prob__meta">2017 ICPC Mid-Central Regional · Kattis difficulty 1.8</p>
   <p class="prob__task">Print <code>valid</code> if a 5 by 5 board has exactly 9 knights and none can attack another, <code>invalid</code> otherwise.</p>
@@ -256,7 +259,7 @@ int main() {
   <details><summary>Hint</summary><p>Put the 8 knight moves in two arrays of row and column changes and check each one from every knight.</p></details>
   <details><summary>Common trap</summary><p>Not counting the knights. Sample 3 has 8 knights that don't attack each other and the answer is <code>invalid</code>. Check the board edges before you read a square.</p></details>
 </li>
-<li class="prob">
+<li class="prob" id="p-mousepursuit">
   <div class="prob__head"><span class="prob__num">8</span><h3><a href="https://open.kattis.com/problems/mousepursuit">Mouse Pursuit</a></h3></div>
   <p class="prob__meta">2024 ICPC Pacific Northwest Regional · Kattis difficulty 2.0</p>
   <p class="prob__task"><code>CAUGHT</code> adds cheese and glory, <code>MISS</code> takes them away. Print the totals from the events in the last <code>k</code> seconds. Totals can be negative.</p>
@@ -327,7 +330,36 @@ for (int i = 0; i &lt; n; i++) cin &gt;&gt; a[i];
 <li><code>cin &gt;&gt;</code> skips spaces and newlines, so it doesn't matter if the n values are on one line or many.</li>
 <li>Mistake: <code>vector&lt;int&gt; a;</code> then <code>a[i] = ...</code>. The vector is empty, so that writes past the end. Use <code>vector&lt;int&gt; a(n)</code> or <code>push_back</code>.</li>
 </ul>
-<h3>2. T test cases, "Case #x:" output</h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>01_count_first.cpp</span><button type="button" data-copy="io-01_count_first">Copy</button></div><pre id="io-01_count_first"><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;                  // first line: how many
+    vector&lt;int&gt; a(n);
+    for (int i = 0; i &lt; n; i++) cin &gt;&gt; a[i];
+
+    long long sum = 0;
+    for (int x : a) sum += x;
+    cout &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>5
+3 1 4 1 5</code></pre></div><div><p class="io__label">Output</p><pre><code>14</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: Lines Per Hour (problem 6)</summary><p><a href="#p-linesperhour">Go to problem 6</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>linesperhour.cpp starter</span><button type="button" data-copy="cs-linesperhour-1">Copy</button></div><pre id="cs-linesperhour-1"><code>#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n, lph;
+    cin &gt;&gt; n &gt;&gt; lph;
+    vector&lt;int&gt; lines(n);
+    for (int i = 0; i &lt; n; i++) cin &gt;&gt; lines[i];
+
+    int count = 0;
+    // your code here (sort(lines.begin(), lines.end()) sorts small to large)
+
+    cout &lt;&lt; count &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details><h3>2. T test cases, "Case #x:" output</h3>
 <p><strong>You see:</strong> "The first line contains T, the number of test cases." Output: "For each test case, output <code>Case #x: y</code>."</p>
 <pre><code class="language-cpp">int T;
 cin &gt;&gt; T;
@@ -342,7 +374,23 @@ for (int t = 1; t &lt;= T; t++) {
 <li>Mistake: starting <code>t</code> at 0 (prints <code>Case #0</code>), or missing the space after the colon. Copy the format from the sample output character by character.</li>
 <li>Mistake: keeping a global counter or array between cases and not resetting it. Declare per-case variables inside the loop.</li>
 </ul>
-<h3>3. Big numbers: use <code>long long</code></h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>02_test_cases.cpp</span><button type="button" data-copy="io-02_test_cases">Copy</button></div><pre id="io-02_test_cases"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int T;
+    cin &gt;&gt; T;
+    for (int t = 1; t &lt;= T; t++) {      // start at 1 for &quot;Case #1&quot;
+        int a, b;
+        cin &gt;&gt; a &gt;&gt; b;
+        cout &lt;&lt; &quot;Case #&quot; &lt;&lt; t &lt;&lt; &quot;: &quot; &lt;&lt; a + b &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>3
+1 2
+10 20
+-5 5</code></pre></div><div><p class="io__label">Output</p><pre><code>Case #1: 3
+Case #2: 30
+Case #3: 0</code></pre></div></div></details><h3>3. Big numbers: use <code>long long</code></h3>
 <p><strong>You see:</strong> values up to 10^9 or bigger, or anything that gets added or multiplied together.</p>
 <p><code>int</code> stops at 2,147,483,647 (about 2.1 × 10^9). <code>long long</code> goes up to about 9.2 × 10^18.</p>
 <pre><code class="language-cpp">long long a, b;
@@ -358,7 +406,42 @@ cout &lt;&lt; good &lt;&lt; &quot;\n&quot;;
 <li>Mistake: reading 3000000000 into an <code>int</code>. <code>cin</code> fails, and every read after that fails too.</li>
 <li>Put sums of many values and any product in <code>long long</code>.</li>
 </ul>
-<h3>4. Fast I/O and <code>"\n"</code> vs <code>endl</code></h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>09_long_long.cpp</span><button type="button" data-copy="io-09_long_long">Copy</button></div><pre id="io-09_long_long"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // int max is 2,147,483,647 (about 2.1e9). long long goes to about 9.2e18.
+    long long a, b;            // read into long long, not int
+    cin &gt;&gt; a &gt;&gt; b;
+    cout &lt;&lt; a + b &lt;&lt; &quot;\n&quot;;
+    cout &lt;&lt; a * b &lt;&lt; &quot;\n&quot;;
+
+    int x = 100000, y = 100000;
+    // long long bad = x * y;     // int * int overflows BEFORE it&#x27;s stored
+    long long good = 1LL * x * y; // 1LL makes the math happen in long long
+    cout &lt;&lt; good &lt;&lt; &quot;\n&quot;;
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>2000000000 3000000000</code></pre></div><div><p class="io__label">Output</p><pre><code>5000000000
+6000000000000000000
+10000000000</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: Mouse Pursuit (problem 8)</summary><p><a href="#p-mousepursuit">Go to problem 8</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>mousepursuit.cpp starter</span><button type="button" data-copy="cs-mousepursuit-3">Copy</button></div><pre id="cs-mousepursuit-3"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    vector&lt;string&gt; type(n);                 // &quot;CAUGHT&quot; or &quot;MISS&quot;
+    vector&lt;long long&gt; secondsAgo(n), cheese(n), glory(n);
+    for (int i = 0; i &lt; n; i++)
+        cin &gt;&gt; type[i] &gt;&gt; secondsAgo[i] &gt;&gt; cheese[i] &gt;&gt; glory[i];
+    long long k;
+    cin &gt;&gt; k;                               // k comes after all the events
+
+    long long totalCheese = 0, totalGlory = 0;   // long long: these can pass 2.1 billion
+    // your code here
+
+    cout &lt;&lt; totalCheese &lt;&lt; &quot; &quot; &lt;&lt; totalGlory &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details><h3>4. Fast I/O and <code>"\n"</code> vs <code>endl</code></h3>
 <p><strong>You see:</strong> n up to 10^5 or 10^6, or a time limit you're barely missing.</p>
 <pre><code class="language-cpp">ios::sync_with_stdio(false);
 cin.tie(nullptr);
@@ -369,7 +452,23 @@ cout &lt;&lt; x &lt;&lt; &quot;\n&quot;;      // not endl
 <li><code>endl</code> prints a newline and also flushes the output every time. On a million lines that's slow. <code>"\n"</code> just prints the newline.</li>
 <li>Mistake: after <code>sync_with_stdio(false)</code>, mixing <code>cin</code>/<code>cout</code> with <code>scanf</code>/<code>printf</code>. The output can come out in the wrong order. Pick one.</li>
 </ul>
-<h3>5. Read until end of file (no count given)</h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>10_fast_io.cpp</span><button type="button" data-copy="io-10_fast_io">Copy</button></div><pre id="io-10_fast_io"><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);   // after this, don&#x27;t mix cin/cout with scanf/printf
+    cin.tie(nullptr);
+
+    int n;
+    cin &gt;&gt; n;
+    vector&lt;int&gt; a(n);
+    for (auto&amp; x : a) cin &gt;&gt; x;
+    for (int x : a) cout &lt;&lt; 2 * x &lt;&lt; &quot;\n&quot;;   // &quot;\n&quot;, not endl: endl flushes every line
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>3
+1 2 3</code></pre></div><div><p class="io__label">Output</p><pre><code>2
+4
+6</code></pre></div></div></details><h3>5. Read until end of file (no count given)</h3>
 <p><strong>You see:</strong> "Input consists of several lines" or "process until end of input," with no n.</p>
 <pre><code class="language-cpp">long long x, sum = 0;
 int count = 0;
@@ -382,7 +481,32 @@ cout &lt;&lt; count &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
 <li>Mistake: <code>while (!cin.eof())</code>. When the file ends with a newline (almost always), the loop runs one extra time and the failed read leaves the last value in <code>x</code>, so it gets counted twice (on the sample: <code>7 150</code>). Put the read inside the <code>while</code>.</li>
 <li>To type end of file by hand in the terminal: Ctrl+D (Mac/Linux). Easier to use <code>./a &lt; a.in</code>.</li>
 </ul>
-<h3>6. Sentinel end ("ends with 0 0")</h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>03_until_eof.cpp</span><button type="button" data-copy="io-03_until_eof">Copy</button></div><pre id="io-03_until_eof"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    long long x, sum = 0;
+    int count = 0;
+    while (cin &gt;&gt; x) {         // stops when there&#x27;s nothing left to read
+        sum += x;
+        count++;
+    }
+    cout &lt;&lt; count &lt;&lt; &quot; &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>4 8
+15
+16 23 42</code></pre></div><div><p class="io__label">Output</p><pre><code>6 108</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: No Duplicates (problem 2)</summary><p><a href="#p-nodup">Go to problem 2</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>nodup.cpp starter</span><button type="button" data-copy="cs-nodup-5">Copy</button></div><pre id="cs-nodup-5"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    bool repeat = false;
+    string w;
+    while (cin &gt;&gt; w) {         // no count given: read words until the input runs out
+        // your code here: has w shown up before?
+    }
+
+    cout &lt;&lt; (repeat ? &quot;no&quot; : &quot;yes&quot;) &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details><h3>6. Sentinel end ("ends with 0 0")</h3>
 <p><strong>You see:</strong> "The input ends with a line containing 0 0, which should not be processed."</p>
 <pre><code class="language-cpp">int a, b;
 while (cin &gt;&gt; a &gt;&gt; b) {
@@ -395,7 +519,52 @@ while (cin &gt;&gt; a &gt;&gt; b) {
 <li>Mistake: printing an answer for the <code>0 0</code> line. Check for the sentinel right after reading, before doing anything else.</li>
 <li>Mistake: stopping when only one value is 0 (<code>7 0</code> above is a real case). Check exactly what the statement says ends the input.</li>
 </ul>
-<h3>7. Output formatting: decimals and spaces</h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>04_sentinel.cpp</span><button type="button" data-copy="io-04_sentinel">Copy</button></div><pre id="io-04_sentinel"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a, b;
+    while (cin &gt;&gt; a &gt;&gt; b) {
+        if (a == 0 &amp;&amp; b == 0) break;   // check BEFORE you use the values
+        cout &lt;&lt; a * b &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>2 3
+4 5
+7 0
+0 0</code></pre></div><div><p class="io__label">Output</p><pre><code>6
+20
+0</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: Speed Limit (problem 4)</summary><p><a href="#p-speedlimit">Go to problem 4</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>speedlimit.cpp starter</span><button type="button" data-copy="cs-speedlimit-6">Copy</button></div><pre id="cs-speedlimit-6"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    while (cin &gt;&gt; n &amp;&amp; n != -1) {   // data sets until a line with -1
+        int miles = 0;
+        for (int i = 0; i &lt; n; i++) {
+            int speed, hours;       // hours since the trip started
+            cin &gt;&gt; speed &gt;&gt; hours;
+            // your code here
+        }
+        cout &lt;&lt; miles &lt;&lt; &quot; miles\n&quot;;
+    }
+}</code></pre></div></details><details class="ex"><summary>Real ICPC example: ACM Contest Scoring (problem 5)</summary><p><a href="#p-acm">Go to problem 5</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>acm.cpp starter</span><button type="button" data-copy="cs-acm-6">Copy</button></div><pre id="cs-acm-6"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    int solvedCount = 0, timeScore = 0;
+
+    int minute;
+    while (cin &gt;&gt; minute &amp;&amp; minute != -1) {   // log lines until -1
+        char problem;          // a letter, A to Z
+        string result;         // &quot;right&quot; or &quot;wrong&quot;
+        cin &gt;&gt; problem &gt;&gt; result;
+        int k = problem - &#x27;A&#x27;; // A is 0, B is 1, ... handy for arrays of 26
+        // your code here
+    }
+
+    cout &lt;&lt; solvedCount &lt;&lt; &quot; &quot; &lt;&lt; timeScore &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details><h3>7. Output formatting: decimals and spaces</h3>
 <p><strong>You see:</strong> "Print the answer rounded to 2 decimal places" or "print the values on one line separated by spaces."</p>
 <pre><code class="language-cpp">cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; (double)sum / n &lt;&lt; &quot;\n&quot;;   // needs &lt;iomanip&gt;
 for (int i = 0; i &lt; n; i++) {
@@ -411,7 +580,65 @@ cout &lt;&lt; &quot;\n&quot;;
 <li>Whitespace: by default the judge's checker treats any run of spaces and newlines as the same, and decimals must match exactly unless the problem gives an allowed error (<a href="https://icpc.io/problem-package-format/spec/legacy.html">problem package format spec</a>; the <a href="https://www.domjudge.org/docs/manual/main/team.html">DOMjudge manual</a> says "some extra whitespace may be ignored," depending on the problem). Don't count on it. Match the sample output's format exactly.</li>
 <li>If the problem says "absolute or relative error of at most 10^-6," print more digits than that (<code>setprecision(9)</code>).</li>
 </ul>
-<h3>8. Grids: R C, then R lines of characters</h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>11_formatting.cpp</span><button type="button" data-copy="io-11_formatting">Copy</button></div><pre id="io-11_formatting"><code>#include &lt;iomanip&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    vector&lt;int&gt; a(n);
+    long long sum = 0;
+    for (auto&amp; x : a) { cin &gt;&gt; x; sum += x; }
+
+    // decimals: fixed + setprecision(k) = exactly k digits after the point
+    cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; (double)sum / n &lt;&lt; &quot;\n&quot;;
+
+    // a vector on one line, one space between values, none at the end
+    for (int i = 0; i &lt; n; i++) {
+        if (i &gt; 0) cout &lt;&lt; &quot; &quot;;
+        cout &lt;&lt; a[i];
+    }
+    cout &lt;&lt; &quot;\n&quot;;
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>3
+1 2 2</code></pre></div><div><p class="io__label">Output</p><pre><code>1.67
+1 2 2</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: Speed Limit (problem 4)</summary><p><a href="#p-speedlimit">Go to problem 4</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>speedlimit.cpp starter</span><button type="button" data-copy="cs-speedlimit-7">Copy</button></div><pre id="cs-speedlimit-7"><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    while (cin &gt;&gt; n &amp;&amp; n != -1) {   // data sets until a line with -1
+        int miles = 0;
+        for (int i = 0; i &lt; n; i++) {
+            int speed, hours;       // hours since the trip started
+            cin &gt;&gt; speed &gt;&gt; hours;
+            // your code here
+        }
+        cout &lt;&lt; miles &lt;&lt; &quot; miles\n&quot;;
+    }
+}</code></pre></div></details><details class="ex"><summary>Real ICPC example: Quick Brown Fox (problem 3)</summary><p><a href="#p-quickbrownfox">Go to problem 3</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>quickbrownfox.cpp starter</span><button type="button" data-copy="cs-quickbrownfox-7">Copy</button></div><pre id="cs-quickbrownfox-7"><code>#include &lt;cctype&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    cin.ignore();              // drop the newline left after n
+
+    for (int i = 0; i &lt; n; i++) {
+        string phrase;
+        getline(cin, phrase);  // the whole line, spaces and all
+
+        string missing = &quot;&quot;;
+        // your code here: which letters a to z never show up?
+        // tolower(c) turns &#x27;A&#x27; into &#x27;a&#x27;
+
+        if (missing == &quot;&quot;) cout &lt;&lt; &quot;pangram\n&quot;;
+        else cout &lt;&lt; &quot;missing &quot; &lt;&lt; missing &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre></div></details><h3>8. Grids: R C, then R lines of characters</h3>
 <p><strong>You see:</strong> "The first line has R and C. The next R lines each have C characters" (<code>.</code> open, <code>#</code> wall, <code>S</code> start).</p>
 <pre><code class="language-cpp">int R, C;
 cin &gt;&gt; R &gt;&gt; C;
@@ -424,7 +651,42 @@ for (int r = 0; r &lt; R; r++) cin &gt;&gt; g[r];
 <li><code>cin &gt;&gt; g[r]</code> reads one row because rows have no spaces. If a row can contain spaces, use <code>getline</code> (section 10).</li>
 <li>Mistake: mixing up <code>g[r][c]</code> and <code>g[c][r]</code>. Row first, then column. Also check bounds (<code>0 &lt;= r &lt; R</code>, <code>0 &lt;= c &lt; C</code>) before looking at a neighbor.</li>
 </ul>
-<h3>9. A record per line, then sort</h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>07_grid.cpp</span><button type="button" data-copy="io-07_grid">Copy</button></div><pre id="io-07_grid"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int R, C;
+    cin &gt;&gt; R &gt;&gt; C;
+    vector&lt;string&gt; g(R);
+    for (int r = 0; r &lt; R; r++) cin &gt;&gt; g[r];   // works when rows have no spaces
+
+    int walls = 0, sr = -1, sc = -1;
+    for (int r = 0; r &lt; R; r++)
+        for (int c = 0; c &lt; C; c++) {          // g[r][c] = row r, column c
+            if (g[r][c] == &#x27;#&#x27;) walls++;
+            if (g[r][c] == &#x27;S&#x27;) { sr = r; sc = c; }
+        }
+    cout &lt;&lt; walls &lt;&lt; &quot; walls, start at &quot; &lt;&lt; sr &lt;&lt; &quot; &quot; &lt;&lt; sc &lt;&lt; &quot;\n&quot;;
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>3 4
+#..#
+.S..
+##.#</code></pre></div><div><p class="io__label">Output</p><pre><code>5 walls, start at 1 1</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: Nine Knights (problem 7)</summary><p><a href="#p-nineknights">Go to problem 7</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>nineknights.cpp starter</span><button type="button" data-copy="cs-nineknights-8">Copy</button></div><pre id="cs-nineknights-8"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;string&gt; board(5);
+    for (int r = 0; r &lt; 5; r++) cin &gt;&gt; board[r];   // 5 rows of 5 characters
+    // board[r][c] is row r, column c. &#x27;k&#x27; is a knight, &#x27;.&#x27; is empty.
+
+    bool valid = true;
+    // your code here
+
+    cout &lt;&lt; (valid ? &quot;valid&quot; : &quot;invalid&quot;) &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details><h3>9. A record per line, then sort</h3>
 <p><strong>You see:</strong> "Each of the next n lines contains a name and a score." Output: "sorted by score, highest first; break ties by name."</p>
 <pre><code class="language-cpp">struct Player { string name; int score; };
 vector&lt;Player&gt; p(n);
@@ -440,7 +702,71 @@ sort(p.begin(), p.end(), [](const Player&amp; a, const Player&amp; b) {
 <li>Mistake: using <code>&gt;=</code> or <code>&lt;=</code> in the compare. It has to be strict (<code>&gt;</code> or <code>&lt;</code>) or <code>sort</code> can crash.</li>
 <li>Quick version: <code>vector&lt;pair&lt;int,string&gt;&gt;</code> sorts by the first field, then the second, with no compare function.</li>
 </ul>
-<h3>10. Whole lines with spaces: <code>getline</code></h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>08_structs.cpp</span><button type="button" data-copy="io-08_structs">Copy</button></div><pre id="io-08_structs"><code>#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+struct Player {
+    string name;
+    int score;
+};
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    vector&lt;Player&gt; p(n);
+    for (auto&amp; x : p) cin &gt;&gt; x.name &gt;&gt; x.score;
+
+    // highest score first; ties go alphabetical by name
+    sort(p.begin(), p.end(), [](const Player&amp; a, const Player&amp; b) {
+        if (a.score != b.score) return a.score &gt; b.score;
+        return a.name &lt; b.name;
+    });
+    for (auto&amp; x : p) cout &lt;&lt; x.name &lt;&lt; &quot; &quot; &lt;&lt; x.score &lt;&lt; &quot;\n&quot;;
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>4
+bob 70
+amy 90
+cal 70
+dee 85</code></pre></div><div><p class="io__label">Output</p><pre><code>amy 90
+dee 85
+bob 70
+cal 70</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: Lines Per Hour (problem 6)</summary><p><a href="#p-linesperhour">Go to problem 6</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>linesperhour.cpp starter</span><button type="button" data-copy="cs-linesperhour-9">Copy</button></div><pre id="cs-linesperhour-9"><code>#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n, lph;
+    cin &gt;&gt; n &gt;&gt; lph;
+    vector&lt;int&gt; lines(n);
+    for (int i = 0; i &lt; n; i++) cin &gt;&gt; lines[i];
+
+    int count = 0;
+    // your code here (sort(lines.begin(), lines.end()) sorts small to large)
+
+    cout &lt;&lt; count &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details><details class="ex"><summary>Real ICPC example: Mouse Pursuit (problem 8)</summary><p><a href="#p-mousepursuit">Go to problem 8</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>mousepursuit.cpp starter</span><button type="button" data-copy="cs-mousepursuit-9">Copy</button></div><pre id="cs-mousepursuit-9"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    vector&lt;string&gt; type(n);                 // &quot;CAUGHT&quot; or &quot;MISS&quot;
+    vector&lt;long long&gt; secondsAgo(n), cheese(n), glory(n);
+    for (int i = 0; i &lt; n; i++)
+        cin &gt;&gt; type[i] &gt;&gt; secondsAgo[i] &gt;&gt; cheese[i] &gt;&gt; glory[i];
+    long long k;
+    cin &gt;&gt; k;                               // k comes after all the events
+
+    long long totalCheese = 0, totalGlory = 0;   // long long: these can pass 2.1 billion
+    // your code here
+
+    cout &lt;&lt; totalCheese &lt;&lt; &quot; &quot; &lt;&lt; totalGlory &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details><h3>10. Whole lines with spaces: <code>getline</code></h3>
 <p><strong>You see:</strong> "Each line contains a full name" or a sentence, so the text has spaces in it.</p>
 <pre><code class="language-cpp">int n;
 cin &gt;&gt; n;
@@ -457,7 +783,46 @@ for (int i = 0; i &lt; n; i++) {
 <li><strong>The bug:</strong> <code>cin &gt;&gt; n</code> leaves the newline after <code>n</code> sitting in the input. The first <code>getline</code> reads that, so you get an empty first line and lose the last real one. Without <code>cin.ignore()</code> the output above is <code>Hello, !</code> / <code>Hello, Ada Lovelace!</code>.</li>
 <li>Fix 1: <code>cin.ignore();</code> once after the last <code>cin &gt;&gt;</code>. Fix 2: <code>getline(cin &gt;&gt; ws, line);</code> skips all spaces and newlines before the line starts. Fix 2 also skips blank lines, so don't use it when a blank line means something.</li>
 </ul>
-<h3>11. Unknown count per line: <code>stringstream</code></h3>
+<details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>05_getline.cpp</span><button type="button" data-copy="io-05_getline">Copy</button></div><pre id="io-05_getline"><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    cin.ignore();              // throw away the &#x27;\n&#x27; left after n
+    for (int i = 0; i &lt; n; i++) {
+        string line;
+        getline(cin, line);    // whole line, spaces included
+        cout &lt;&lt; &quot;Hello, &quot; &lt;&lt; line &lt;&lt; &quot;!\n&quot;;
+    }
+    // Same fix in one call: getline(cin &gt;&gt; ws, line);
+    // ws skips all whitespace (spaces, newlines) before the line starts.
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>2
+Ada Lovelace
+Grace Brewster Hopper</code></pre></div><div><p class="io__label">Output</p><pre><code>Hello, Ada Lovelace!
+Hello, Grace Brewster Hopper!</code></pre></div></div></details><details class="ex"><summary>Real ICPC example: Quick Brown Fox (problem 3)</summary><p><a href="#p-quickbrownfox">Go to problem 3</a>. Its starter reads the input this way:</p><div class="code"><div class="code__bar"><span>quickbrownfox.cpp starter</span><button type="button" data-copy="cs-quickbrownfox-10">Copy</button></div><pre id="cs-quickbrownfox-10"><code>#include &lt;cctype&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    cin.ignore();              // drop the newline left after n
+
+    for (int i = 0; i &lt; n; i++) {
+        string phrase;
+        getline(cin, phrase);  // the whole line, spaces and all
+
+        string missing = &quot;&quot;;
+        // your code here: which letters a to z never show up?
+        // tolower(c) turns &#x27;A&#x27; into &#x27;a&#x27;
+
+        if (missing == &quot;&quot;) cout &lt;&lt; &quot;pangram\n&quot;;
+        else cout &lt;&lt; &quot;missing &quot; &lt;&lt; missing &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre></div></details><h3>11. Unknown count per line: <code>stringstream</code></h3>
 <p><strong>You see:</strong> "Each line contains some integers" with no count, and you need an answer per line.</p>
 <pre><code class="language-cpp">string line;
 while (getline(cin, line)) {
@@ -473,7 +838,27 @@ while (getline(cin, line)) {
 <li>Mistake: reading with <code>cin &gt;&gt;</code> here. <code>cin</code> doesn't stop at the end of a line, so you can't tell where one line ends and the next begins.</li>
 </ul>
 
-<p><strong>Before you submit:</strong> run every sample. Check the output format against the sample character by character. Remove debug prints. Check <code>long long</code> anywhere numbers get big.</p>
+<p><strong>Before you submit:</strong> run every sample. Check the output format against the sample character by character. Remove debug prints. Check <code>long long</code> anywhere numbers get big.</p><details class="ex"><summary>Full program you can run</summary><div class="code"><div class="code__bar"><span>06_stringstream.cpp</span><button type="button" data-copy="io-06_stringstream">Copy</button></div><pre id="io-06_stringstream"><code>#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string line;
+    while (getline(cin, line)) {       // one line at a time
+        stringstream ss(line);
+        int x, sum = 0, count = 0;
+        while (ss &gt;&gt; x) {              // pull numbers until the line runs out
+            sum += x;
+            count++;
+        }
+        cout &lt;&lt; &quot;count &quot; &lt;&lt; count &lt;&lt; &quot;, sum &quot; &lt;&lt; sum &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre></div><div class="io"><div><p class="io__label">Input</p><pre><code>1 2 3
+10
+5 5 5 5 5</code></pre></div><div><p class="io__label">Output</p><pre><code>count 3, sum 6
+count 1, sum 10
+count 5, sum 25</code></pre></div></div></details>
 </div>
 
 <footer>
