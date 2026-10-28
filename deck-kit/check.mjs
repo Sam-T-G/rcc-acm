@@ -513,6 +513,39 @@ if (autoAt >= 0) {
   }
 }
 
+// ---------- Arrivals: nothing shows before it animates (a flash Sam saw, 2026-10-14).
+// Every frame of an arrival, a picture stage that belongs to a beat not yet
+// reached stays at opacity 0: on the first visit, and on a revisit after its
+// beats were shown. Before the engine runs, the deck must not paint the stack.
+{
+  console.log('arrivals');
+  const kitCss = readFileSync(join(HERE, 'deck.css'), 'utf8');
+  check(/@media \(scripting: enabled\)\s*\{\s*html:not\(\.deck-live\) \.deck \{ visibility: hidden;/.test(kitCss), 'the deck stays hidden until deck.js marks it live');
+  await load({ w: 1920, h: 1080 });
+  const staged = (await evaluate(`[...document.querySelectorAll('.deck > .slide')].map((s, k) => k > 0 && s.querySelector('.viz [data-stage]') ? k : -1).filter((k) => k >= 0)`)).slice(0, 8);
+  const SAMPLE = `window.__flash = { peak: 0, frames: 0 }; (function () { var t0 = performance.now(); function f() {
+    var cur = document.querySelector('.slide.is-current');
+    if (cur) cur.querySelectorAll('.viz [data-stage]').forEach(function (g) {
+      var li = cur.querySelectorAll('.beats > li')[+g.getAttribute('data-stage') - 1];
+      if (li && li.classList.contains('is-pending')) window.__flash.peak = Math.max(window.__flash.peak, +getComputedStyle(g).opacity);
+    });
+    window.__flash.frames++; if (performance.now() - t0 < 1300) requestAnimationFrame(f); } requestAnimationFrame(f); })(); true`;
+  const arrive = async (k) => {
+    await evaluate(`location.hash = '#${k}'`); await sleep(400); await settle();
+    await evaluate(SAMPLE); await press('right'); await sleep(1450);
+    return evaluate('window.__flash');
+  };
+  for (const k of staged) {
+    const first = await arrive(k);
+    for (let n = 0; n < info[k].beats; n++) { await press('right'); await settle(); }
+    await sleep(1200);
+    const again = await arrive(k);
+    check(first.frames > 10 && first.peak <= 0.02 && again.peak <= 0.02,
+      `slide ${k + 1}: no picture part of a later beat shows on arrival (peak opacity ${first.peak.toFixed(2)} first visit, ${again.peak.toFixed(2)} revisit, ${first.frames} frames)`);
+  }
+  if (!staged.length) console.log('  note no slide with picture stages');
+}
+
 // ---------- Timer: T starts it, a transition during a run is a cut.
 const clockAt = info.findIndex((s) => s.timer > 0);
 if (clockAt >= 0) {

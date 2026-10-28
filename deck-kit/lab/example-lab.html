@@ -54,6 +54,36 @@
 .slide[data-do] .clock__hint { grid-column: 2; grid-row: 1; margin: 0; }
 .slide[data-do] .clock__track { grid-column: 1 / -1; grid-row: 2; }
 .slide[data-do] .split__main { gap: calc(28 * var(--u)); }
+.viz .dbody { stroke: currentColor; stroke-width: 20; stroke-linecap: round; }
+.viz .dstripe { stroke: var(--acm-surface); stroke-width: 20; }
+.viz .dstripe-r { fill: var(--acm-surface); }
+.viz .rl-p { stroke: #dc3f46; stroke-width: 3; }
+.viz .rl-n { stroke: #247ad6; stroke-width: 3; }
+.viz .chan { fill: var(--acm-outline-variant); opacity: 0.55; }
+.viz .pt { fill: var(--acm-primary); opacity: 0.22; }
+.viz .halo { paint-order: stroke; stroke: var(--acm-surface); stroke-width: 10px; stroke-linejoin: round; }
+.is-presenting .slide.is-current .viz--bd .bd-spin { transform-box: view-box; transform-origin: 500px 196px; animation: spin 0.6s linear infinite; }
+.is-presenting .slide.is-current .viz--bz .bz-spin { transform-box: view-box; transform-origin: 680px 196px; animation: spin 0.6s linear infinite; }
+.is-presenting .slide.is-current .viz--ts .ts-spin { transform-box: view-box; transform-origin: 380px 140px; animation: spin 0.6s linear infinite; }
+.is-presenting .slide.is-current .viz--ts .ts-e { animation: ts-e 2.4s linear infinite; animation-delay: calc(var(--n) * -0.48s); }
+@keyframes ts-e { 0.00% { transform: translate(380px, 40px); } 100.00% { transform: translate(380px, 530px); } }
+.is-presenting .slide.is-current .viz--up .up-e { animation: up-e 2s linear infinite; animation-delay: calc(var(--n) * -0.4s); }
+@keyframes up-e { 0.00% { transform: translate(256px, 300px); } 26.78% { transform: translate(330px, 300px); } 54.34% { transform: translate(400px, 330px); } 81.90% { transform: translate(470px, 300px); } 100.00% { transform: translate(520px, 300px); } }
+.is-presenting .slide.is-current .viz--up .up-l { animation: blink 0.4s step-end infinite; }
+.is-presenting .slide.is-current .viz--tb :is(.tb-tx, .tb-rx) { animation: tb-flick 3s step-end infinite; }
+.is-presenting .slide.is-current .viz--tb .tb-rx { animation-delay: -0.1s; }
+.is-presenting .slide.is-current .viz--tb .tb-l { animation: tb-l 3s step-end infinite; }
+@keyframes tb-flick { 0%, 8%, 16%, 24%, 32% { opacity: 1; } 4%, 12%, 20%, 28%, 36%, 100% { opacity: 0.15; } }
+@keyframes tb-l { 0%, 44%, 52%, 60%, 68%, 76%, 84%, 92% { opacity: 0.15; } 40%, 48%, 56%, 64%, 72%, 80%, 88%, 96% { opacity: 1; } }
+.is-presenting .slide.is-current .viz--ps .ps-arm { transform-box: view-box; transform-origin: 340px 250px; animation: ps-arm 4s var(--acm-ease-standard) infinite; }
+@keyframes ps-arm { 0%, 12% { transform: rotate(-90deg); } 50%, 100% { transform: rotate(0deg); } }
+.is-presenting .slide.is-current .viz--ps .ps-fan { transform-box: view-box; transform-origin: 650px 270px; animation: ps-fan 4s linear infinite; }
+@keyframes ps-fan { 0%, 55% { transform: rotate(0deg); } 100% { transform: rotate(1080deg); } }
+.is-presenting .slide.is-current .viz--s9 .s9-arm { transform-box: view-box; transform-origin: 380px 330px; animation: s9-arm 2.8s linear infinite; }
+@keyframes s9-arm { 0%, 100% { transform: rotate(-90deg); } 50% { transform: rotate(0deg); } }
+.viz--ps .ps-btn { opacity: 0; }
+.is-presenting .slide.is-current .viz--ps .ps-btn { animation: ps-btn 4s step-end infinite; }
+@keyframes ps-btn { 0% { opacity: 1; } 10% { opacity: 0; } }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 <script src="../deck.js" defer></script>

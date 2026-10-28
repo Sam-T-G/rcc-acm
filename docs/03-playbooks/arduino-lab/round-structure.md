@@ -42,7 +42,9 @@ Concept slides are optional. If a round's idea is obvious from building it, skip
 **Kit rules that apply:**
 
 - No three slides in a row with the same kind, ground, and layout. `steps()` rotates the grounds for you.
-- At most 4 beats per slide.
+- At most 4 beats per slide. Three is better when the picture is busy.
+- A picture carries only the labels a student needs to find a part, about 6 at most. Never repeat the headline or a beat in it, and leave part numbers (ATmega328P, A0-A5) to the notes.
+- Every hole named in a step appears in that step's picture.
 - No `{ }` or `< >` in slide text outside code. Code drawn inside a picture goes in `<g data-code>`.
 
 ## Check-in questions

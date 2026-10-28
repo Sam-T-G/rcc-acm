@@ -195,6 +195,19 @@ body {
 
 /* Beats not yet reached. Hidden, not removed. */
 .deck-live.is-presenting [data-beat].is-pending { visibility: hidden; }
+/* deck.js sets a slide's beat state under this class when the slide arrives,
+   so nothing fades on arrival; only a beat revealed in view animates. */
+.slide.is-settling, .slide.is-settling * { transition: none !important; }
+
+/* Before the engine runs, the page would paint its no-script layout (every
+   slide stacked, at rest) and then snap to the stage. On a slow network that
+   showed the finished cover for over a second before its opening ran
+   (2026-10-14). With scripting on, the deck waits hidden until deck.js marks
+   it live; if the engine never arrives, the failsafe shows the stack. */
+@media (scripting: enabled) {
+  html:not(.deck-live) .deck { visibility: hidden; animation: deck-boot-failsafe 0s linear 6s forwards; }
+}
+@keyframes deck-boot-failsafe { to { visibility: visible; } }
 .beats li.is-past, .board li.is-past { color: var(--acm-on-surface-variant); transition: color var(--acm-dur-slow-effects) var(--acm-ease-standard); }
 
 /* --- Chrome: ledger, counter, progress. Still across every transition. ---- */

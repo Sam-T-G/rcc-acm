@@ -24,6 +24,7 @@ The workshop lead for that week. The Chair signs off on the date. Anyone who cha
 | [round-structure.md](round-structure.md) | How a lab is paced: concept, then steps, then check-in; timing and slide types |
 | [parts-glossary.md](parts-glossary.md) | One plain name per part, how to recognize it, and what's in each kit |
 | [power-and-safety.md](power-and-safety.md) | Where power comes from, the never list, and known hardware traps |
+| [breadboard-drawing.md](breadboard-drawing.md) | What the real breadboard looks like and the rules every board picture keeps |
 | [inventory-and-audit.md](inventory-and-audit.md) | How to check a lab against the parts the club actually owns |
 | [verification.md](verification.md) | What has to pass before a lab deck is published |
 | [deck-kit/lab/](../../../deck-kit/lab/README.md) | The code that builds lab slides and breadboard diagrams |
@@ -74,3 +75,5 @@ Each rule links to the lab that taught it.
 | Say which way the power module goes on, every time | Backwards reverses the power (Elegoo warning) | 2026-10-08, Elegoo lesson 29 |
 | Every round ends with a check-in that asks why | Reflection after each build, not one lecture at the end | 2026-10-08 |
 | Show what Arduino hides (`main()` calls `setup()` then `loop()`) | Keeps the lab honest to plain C++ | 2026-10-08 |
+| Draw the breadboard true to scale with `board()`: one pitch across and down, rails and channel along the long axis, joined strips shown, the same view every step | A zoom that stretched one axis made the rails read as rows and the channel cut across them, and showed nothing about which holes join | Sam's review of the [2026-10-15 deck](../../../semesters/2026-fall/meetings/2026-10-15-lab-guide.md), [breadboard-drawing.md](breadboard-drawing.md) |
+| Put the round the lab exists for first; keep no-code breadboard rounds short or cut them | The 2026-10-08 lab never reached the Arduino: the breadboard rounds filled the whole lab | 2026-10-08, so the [2026-10-15 guide](../../../semesters/2026-fall/meetings/2026-10-15-lab-guide.md) starts at the board |

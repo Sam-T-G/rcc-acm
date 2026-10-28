@@ -48,6 +48,7 @@ Every slide is a `<section class="slide">` with a `data-kind`. The first slide o
 - **Light theme only.** A-210 is a daylight wall. There is no dark toggle.
 - **Floors.** Titles 72, body 40, ledger 32, at 1920 x 1080 inside 96 px margins. The check measures every text node.
 - **Slide-scale motion.** Words rise through masks at 700 ms per beat and 1100 ms per section change, on `--acm-dur-beat`, `--acm-dur-move`, and `--acm-ease-arrive`, which the kit adds to the system's tokens (decision log, 2026-09-24). Reduced motion makes every transition a cut.
+- **Nothing shows before it animates.** The deck stays hidden until deck.js marks it live (a 6 s failsafe shows the plain stack if the engine never loads), so a slow GSAP download can't paint the finished cover first. A slide's beat state lands with transitions off when the slide arrives (`settleBeats`), so a picture stage never fades out over a new slide; only a beat revealed in view animates. Both came from a flash Sam saw on 2026-10-14. Any new CSS transition keyed to beat state is covered by the same rule, because `.is-settling` turns every transition off.
 
 ## Pictures and variety
 

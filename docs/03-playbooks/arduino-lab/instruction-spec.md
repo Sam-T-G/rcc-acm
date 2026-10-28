@@ -13,9 +13,9 @@ One step is one slide and one physical action. Built with `steps()` in [deck-kit
 | Eyebrow | `<Round name> · step k of n` | Generated |
 | Headline | The action, naming the part and where it goes: "Brown to GND", "Add the resistor" | 6 words, one line, no colon |
 | Instruction | 1. **Take** the part, by a name that matches what people see (bag label, color, shape). 2. **Where each end or leg goes**, by exact hole, rail, or pin label. 3. Optional: how to seat it or which way round. | About 35 words, 3 lines |
-| You should see | A result they can check with their eyes. Fills in on its own after 1.2 s. | 8 words |
-| Detail under it | What the result means, or the fix for the most common miss | 10 words |
-| Diagram | Everything built so far, with the newest part in orange. Every hole in the text appears in the picture. | |
+| You should see | A result they can check with their eyes. Fills in on its own after 1.2 s. | 8 words, about 30 characters (longer wraps) |
+| Detail under it | What the result means, or the fix for the most common miss. Leave it out when it would only repeat the instruction. | 10 words |
+| Diagram | Everything built so far, with the newest part in orange. Every hole in the text appears in the picture. A breadboard is drawn with `board()` to the rules in [breadboard-drawing.md](breadboard-drawing.md). | |
 | Speaker notes | Why it works, the usual mistakes, sourced facts, and a bridge line into the next step | |
 
 ## Sentence patterns to copy
@@ -35,12 +35,12 @@ Use these as written and swap in the part and the holes. They come from the 2026
 | Power off | "Press the module's power switch so its light goes off." / "Pull the USB cable out of the UNO." |
 | A menu in the IDE | "Click File. Point to Examples, then 01.Basics, and click Blink." |
 | Editing code | "Find the two lines that say delay(1000); and change both to delay(200);." |
-| Adding code | "Click at the end of the line myservo.attach(9); press Enter, and type pinMode(2, INPUT_PULLUP);" |
+| Adding code | "In setup(), click at the end of myservo.attach(9); Press Enter. Type the orange lines on the right." The picture shows the new lines in orange, and the slide sets the code in the code font. |
 | Uploading | "Click the round arrow button at the top left to upload." |
 
 ## Naming rules
 
-- **Holes:** a letter and a number, like a10. Explain this once per lab on the breadboard slide: the letters a to j run down the side, the numbers along the top. Say "row 10" only when any of a10 to e10 will do.
+- **Holes:** a letter and a number, like a10. Start the first breadboard round with a step that turns the board the way the pictures show it (for the club's boards: module on your right, letters upright, line a at the far edge) and says how to read a hole: e21 means line e and row 21. Say "row 10" only when any of a10 to e10 will do.
 - **Rails:** "the top + rail (red line)" and "any hole in the - rail (blue line)". Say "any hole" whenever the position doesn't matter. Boards differ in which line is on the outside, so the notes tell people to follow the lines, not the picture's order.
 - **Board pins:** use the label printed on the board, exactly: `~9`, `5V`, `GND`, `2`. Say which row: "the long row of digital pins" or "the short row of power pins". With more than one GND, say which one ("the GND next to pin 13").
 - **Parts:** one plain name per part for the whole lab, the name in the [parts glossary](parts-glossary.md). The first time a part appears, add how to find it: "from the bag labelled 220", "the white plastic arm", "the round plug".
@@ -72,6 +72,10 @@ Use these as written and swap in the part and the holes. They come from the 2026
 | pull-up | "INPUT_PULLUP keeps the pin HIGH until you press" |
 | PWM | "pulses fast enough to look in-between" |
 | sketch | say once that Arduino calls a program a sketch |
+| mA, current (on a slide) | "a little power" and "needs more"; keep the numbers in the notes |
+| loop (for a circuit) | "path". loop() is the code word, so a circuit is never a loop |
+| kick, spike (a motor turning off) | "jolt", and say the diode gives it a safe path |
+| shared ground | name the jumper: "- rail to the UNO's GND" |
 
 ## Order rules inside a round
 
@@ -85,6 +89,8 @@ Use these as written and swap in the part and the holes. They come from the 2026
 These come from the deck-kit rules, plus the lessons in the [README](README.md):
 
 - Casual and plain, the way a student explains it to a friend. No idioms, no lecture voice.
+- Short sentences, one idea each. Split a sentence at "and", "which", or a semicolon.
+- Headlines say the physical action ("Move the jumper to pin 5"), never a figure of speech ("Hand the switch to pin 5").
 - No em dashes inside sentences. No colons in headlines.
 - None of: seamless, comprehensive, robust, leverage, delve, showcase, elevate, unlock.
 

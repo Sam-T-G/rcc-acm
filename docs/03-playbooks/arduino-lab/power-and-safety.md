@@ -9,7 +9,7 @@ Say where the power comes from in every lab, in the officer guide and on the sli
 | Breadboard rails | 9V battery (or 9V adapter) → power module jack → module → + and - rails | LEDs, buttons in a loop, small motors | 6.5 to 9 V in; 5 V out per side; 700 mA max (Elegoo specs) |
 | Arduino | Laptop USB → UNO → its 5V and GND pins | The board, a servo (red wire to 5V), button inputs | What the laptop's USB port gives. One micro servo is fine; more needs the rails |
 
-The two systems never need to touch. **The one exception** is a part that's powered from the rails but takes a signal from the board (a servo on the rails, a motor driver). Then add one jumper from a UNO GND pin to the - rail. That shared ground is what lets the part read the signal.
+The two systems never need to touch. **The one exception** is a part that's powered from the rails but takes a signal from the board (a servo on the rails, a motor driver, a transistor switch for a fan). Then add one jumper from a UNO GND pin to the - rail. That shared ground is what lets the part read the signal.
 
 ## The never list
 
@@ -39,9 +39,15 @@ These go on the slides where they apply, and in every officer guide.
 | No port on some Windows laptops | The board's USB driver isn't installed | Elegoo tutorial lesson 0: install the driver from Device Manager. Read the small chip by the USB port to know which driver (ATmega16U2 or CH340) |
 | USB-C-only laptops | The kit cable won't fit | Club USB-B to USB-C cables. The UNO R4 WiFi needs a USB-C cable. |
 | LED backwards | It stays dark but isn't broken | Long leg to +. "Dark LED? Flip it around." |
+| Diode across a motor put in backwards | Nothing happens until the transistor switches on; then the rails short through the diode and the transistor, which can get hot enough to burn | Stripe toward +, in the step text and the picture. Officers check every stripe before the switch-on step, and that step says to switch off and look if the fan doesn't spin. Never touch the transistor to check it. |
+| Transistor base resistor on an UNO R4 WiFi | Its pins are rated for 8 mA (R4 WiFi datasheet); 220 Ω draws about 17 mA | 220 Ω on the Elegoo UNO R3 (under its 20 mA), 1 kΩ on an R4 |
+| Servo sits at 90 until the code writes an angle | `attach()` starts it at 90 (Servo 1.3.0, DEFAULT_PULSE_WIDTH 1500) | Add `myservo.write(0);` right after `attach` when a lab needs the arm to start at 0 |
+| A board wire into the wrong hole before the module is switched on | A jumper from the + rail to a pin back-powers the UNO through that pin, and an upload that drives the pin LOW then damages it. A ground jumper in the + rail lifts the UNO's GND to 5 V. | After wiring a rail-powered part to the board, a check step: trace the board wires, switch the module on with USB still out, and expect nothing to happen (no fan, no UNO lights) |
+| Opening the Serial Monitor | It restarts the UNO, like an upload, so the sketch starts over | Say so on any slide that opens it |
 
 ## Sources
 
 - Elegoo, *The Most Complete Starter Kit Tutorial for UNO*, V1.0.19.01.23: lessons 2, 3, 5, 9, and 29.
 - Arduino documentation: pin current limits.
-- The 2026-10-08 lab guide in `semesters/2026-fall/meetings/`.
+- The 2026-10-08 and 2026-10-15 lab guides in `semesters/2026-fall/meetings/`.
+- PN2222A datasheet (Fairchild); Arduino UNO R4 WiFi datasheet (ABX00087), GPIO current.

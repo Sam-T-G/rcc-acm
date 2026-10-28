@@ -30,6 +30,7 @@ Open the screenshot for each step at its last beat and check:
 
 - the diagram shows every hole, pin, and menu item the text names;
 - the newest part is the orange one;
+- a breadboard picture passes the checklist in [breadboard-drawing.md](breadboard-drawing.md): side by side with a photo of the real board, the rails and the channel run the same way and the holes are evenly spaced;
 - no label sits on a wire or runs off the picture;
 - the text fits without crowding the progress line.
 
