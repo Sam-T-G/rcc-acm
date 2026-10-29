@@ -211,18 +211,22 @@
     }
     function tick() {
       var now = performance.now();
-      c.left = Math.max(0, c.left - (now - c.last)); c.last = now; paint();
+      // A wall-clock clock reads the time of day each frame, so leaving the slide or a slow frame never makes it drift.
+      c.left = ends ? Math.min(c.total, untilTime(ends)) : Math.max(0, c.left - (now - c.last)); c.last = now; paint();
       if (c.left > 0 && c.running) c.raf = requestAnimationFrame(tick); else c.running = false;
     }
     c.toggle = function () {
-      if (ends && !c.running && c.left === c.total) { c.left = c.total = untilTime(ends) || 1; }
+      if (ends && !c.running) { var u = untilTime(ends) || 1; if (c.left === c.total) c.total = u; c.left = Math.min(u, c.total); }
       if (c.left <= 0) return;
       c.running = !c.running;
       if (c.running) { c.last = performance.now(); c.raf = requestAnimationFrame(tick); } else cancelAnimationFrame(c.raf);
       paint();
     };
     c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); if (ends) c.total = untilTime(ends) || 1; c.left = c.total; paint(); };
-    c.pause = function () { if (c.running) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
+    // Leaving the slide pauses a plain timer. A data-ends clock keeps counting to its end time.
+    c.pause = function () { if (c.running && !ends) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
+    // Before T, a data-ends clock shows the real time left, not the time left when the deck loaded.
+    if (ends) setInterval(function () { if (!c.running && c.left === c.total) { c.left = c.total = untilTime(ends) || 1; paint(); } }, 1000);
     paint();
     return c;
   }

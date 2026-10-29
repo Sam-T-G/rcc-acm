@@ -141,8 +141,20 @@ if (args.includes('--click')) {
   const label = await evaluate(`document.querySelector('button[data-copy="${box.key}"] .pk-copy__label').textContent`);
   const want = await evaluate(`document.getElementById('${box.key}').dataset.cleanCode.length`);
   let got = null; try { got = (await evaluate('navigator.clipboard.readText()')).length; } catch (e) { got = 'unreadable: ' + e.message.slice(0, 60); }
-  check(state === 'done' || label.startsWith('Selected'), `after a real click the button says "${label}"`);
+  check(state === 'done' || label.startsWith('Press'), `after a real click the button says "${label}"`);
   console.log(`  info clipboard ${got} chars, block ${want} chars`);
+  // The fallback, with the clipboard made to fail: it must select the whole text, not the preview.
+  const key2 = await evaluate(`(() => { navigator.clipboard.writeText = () => Promise.reject(new Error('blocked'));
+    const b = document.querySelector('.pk-code--preview button[data-copy]') || document.querySelector('button[data-copy]');
+    b.scrollIntoView({block:'center'}); return b.dataset.copy; })()`);
+  await sleep(200);
+  const b2 = await evaluate(`(() => { const r = document.querySelector('button[data-copy="${key2}"]').getBoundingClientRect(); return { x: r.x + r.width/2, y: r.y + r.height/2 }; })()`);
+  for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) await send('Input.dispatchMouseEvent', { type, x: b2.x, y: b2.y, button: 'left', clickCount: 1 });
+  await sleep(300);
+  const fb = await evaluate(`(() => { const blk = document.getElementById('${key2}'); const t = blk.querySelector('textarea.pk-clean');
+    return { label: blk.querySelector('.pk-copy__label').textContent, full: blk.dataset.cleanCode.length, ta: t ? t.value.length : -1,
+             sel: t ? t.selectionEnd - t.selectionStart : -1, focused: document.activeElement === t }; })()`);
+  check(fb.ta === fb.full && fb.sel === fb.full && fb.focused && fb.label.startsWith('Press'), `clipboard blocked: the whole text is selected (${fb.sel} of ${fb.full} chars, "${fb.label}")`);
 }
 
 chrome.kill();

@@ -72,10 +72,11 @@ def pick(left, right, h2='Pick one for today', section=None, ground=None, note='
             f'  <h2>{h2}</h2>\n  <div class="contrast contrast--even">{tiles}</div>\n  {_notes(note, bridge)}\n</section>\n')
 
 
-def sendoff(eyebrow, h2, sub, url, label=None, section=None, ground=None, note='', bridge=None):
+def sendoff(eyebrow, h2, sub, url, label=None, section=None, ground=None, note='', bridge=None, room=True):
     """Hand a group off to a page: headline and one line on the left, a large QR with its URL on the right.
     The URL wraps under the tile at the ledger size, so the headline keeps its width."""
-    return (f'<section class="slide" data-kind="signup" data-layout="sendoff"{_attrs(section, ground)} aria-label="{escape(h2)}">\n'
+    # Kept in room mode by default, so late arrivals can still scan the page.
+    return (f'<section class="slide" data-kind="signup" data-layout="sendoff"{_attrs(section, ground, room=room)} aria-label="{escape(h2)}">\n'
             f'  <div class="signup__main">\n    <p class="eyebrow">{eyebrow}</p>\n    <h2>{h2}</h2>\n    <p class="sub">{sub}</p>\n  </div>\n'
             f'  {qr(url, label)}\n  {_notes(note, bridge)}\n</section>\n')
 

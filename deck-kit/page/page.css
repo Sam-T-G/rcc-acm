@@ -29,7 +29,8 @@
 .pk-page .acm-callout, .pk-page .acm-table-scroll, .pk-page table, .pk-page .pk-cards, .pk-page .pk-steps,
 .pk-page .pk-group, .pk-page .pk-fig, .pk-page .pk-reveals, .pk-page .pk-code, .pk-page ul.pk-cards, .pk-page ol.pk-cards { max-width: var(--pk-width); }
 .pk-page .pk-steps > li, .pk-page .pk-cards > li { max-width: none; }
-.pk-page section { scroll-margin-top: var(--acm-space-16); }
+/* Jump targets clear the sticky progress strip (about 56px tall at 600px and up). */
+.pk-page [id] { scroll-margin-top: calc(var(--acm-space-16) + var(--acm-space-4)); }
 
 /* --- Masthead: the Rail at its token width, the club name in the ledger --- */
 .pk-mast { margin-block-end: var(--acm-space-8); }
@@ -230,3 +231,15 @@
 
 /* A wiring picture whose wire tags would collide at page size: the caption names the parts instead. */
 .pk-group--quiet .viz text.halo { display: none; }
+
+/* Focus. These controls draw their own box-shadow, which would hide tokens.css's :focus-visible ring. */
+.pk-reveal > summary:focus-visible, .pk-code details > summary:focus-visible, .pk-progress a:focus-visible, .pk-copy:focus-visible {
+  outline: 3px solid transparent; outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--acm-focus-gap), 0 0 0 5px var(--acm-focus-ring);
+}
+.pk-clean {
+  display: block; inline-size: 100%; block-size: calc(var(--acm-space-30) + var(--acm-space-10)); margin: 0;
+  border: 0; border-block-start: var(--acm-hairline) solid var(--acm-outline-variant); padding: var(--acm-space-4);
+  background: var(--acm-code-surface); color: var(--acm-code-on-surface);
+  font: var(--acm-weight-body) var(--acm-size-code-md)/var(--acm-lh-code-md) var(--acm-font-code); resize: vertical;
+}

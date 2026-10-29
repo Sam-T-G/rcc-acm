@@ -52,9 +52,14 @@ document.addEventListener('click', async (e) => {
   const text = block.dataset.cleanCode;
   const label = b.querySelector('.pk-copy__label');
   try { await navigator.clipboard.writeText(text); b.dataset.state = 'done'; label.textContent = 'Copied'; }
-  catch { const pre = block.querySelector('details pre, pre'); const r = document.createRange(); r.selectNodeContents(pre);
-          const s = getSelection(); s.removeAllRanges(); s.addRange(r); label.textContent = 'Selected, press Ctrl+C'; }
-  setTimeout(() => { b.dataset.state = ''; label.textContent = 'Copy'; }, 1800);
+  catch {
+    // No clipboard access: select the whole text (not the preview) in a textarea, so the student copies it by hand.
+    let t = block.querySelector('textarea.pk-clean');
+    if (!t) { t = document.createElement('textarea'); t.className = 'pk-clean'; t.readOnly = true; t.value = text;
+              t.setAttribute('aria-label', 'The full code, selected'); block.appendChild(t); }
+    t.focus(); t.select(); label.textContent = 'Press Cmd+C or Ctrl+C';
+  }
+  setTimeout(() => { b.dataset.state = ''; label.textContent = 'Copy'; }, 4000);
 });
 '''
 
