@@ -145,6 +145,18 @@ node deck-kit/check.mjs semesters/2026-fall/meetings/2026-09-24-deck.html --shot
 
 It needs Node 22 and Google Chrome. It fails on a fill marker or template token, token drift, a structure or slide-rule violation, type under a floor, anything outside the margins or in the progress band, and console errors. Then it walks the deck with real key presses with motion on, with reduced motion, with GSAP blocked, with no script, and at phone width, and checks that the Rail is full height on the cover after the opening and again after a walk back, that leaving the cover is a move and not a jump, that six fast presses land six steps on, and that `T` starts the clock.
 
+**Every deck and page in Chrome and Safari (Playwright).** One-time setup: `npm install`, then `npx playwright install chromium webkit`. Then:
+
+```sh
+npm run test:browser                              # every deck and built page
+npx playwright test -g 2026-10-29                 # just the ones whose path has 2026-10-29
+npx playwright show-report                        # what failed, with a step-by-step trace
+```
+
+It opens every meeting deck in Chrome and desktop Safari, presses Right until the deck moves, and fails on a script error or a file from this repo that doesn't load. Every built companion page in `site/decks/` also opens on an iPhone-sized Safari and fails if it scrolls sideways. The list of what it opens is `tests/browser/targets.mjs`. It adds to `check.mjs` and doesn't replace it.
+
+**Python scripts run with uv.** Generators list what they need (segno, markdown) in a `# /// script` block at the top, so `uv run <script.py>` sets up the environment itself. No venv to find or make. A new generator copies that block.
+
 ## Publishing it
 
 ```sh
