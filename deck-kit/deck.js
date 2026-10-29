@@ -179,9 +179,17 @@
 
   /* ---------- Clock -------------------------------------------------------- */
   function fmt(ms) { var s = Math.ceil(ms / 1000), m = Math.floor(s / 60); s %= 60; return m + ':' + (s < 10 ? '0' : '') + s; }
+  // data-ends="14:25" makes a work clock: on T it counts down to that wall-clock
+  // time today, so starting late never runs past the end of the meeting.
+  function untilTime(hm) {
+    var p = hm.split(':'), now = new Date(), at = new Date(now); at.setHours(+p[0], +p[1], 0, 0);
+    return Math.max(0, at - now);
+  }
   function makeClock(slide) {
     var secs = parseInt(slide.getAttribute('data-timer'), 10);
-    if (!secs) return null;
+    var ends = slide.getAttribute('data-ends');
+    if (!secs && !ends) return null;
+    if (!secs) secs = Math.ceil(untilTime(ends) / 1000) || 1;
     var el = one('.clock', slide);
     if (!el) {
       el = make('div', 'clock');
@@ -197,21 +205,28 @@
       digits.textContent = state === 'done' ? 'Time' : fmt(c.left);
       fill.style.transform = 'scaleX(' + (c.left / c.total) + ')';
       el.setAttribute('data-state', state);
-      hint.textContent = state === 'done' ? 'R to reset' : state === 'paused' ? 'Paused. T to resume' : state === 'idle' ? hint0 : 'T to pause';
+      // The room reads the screen, so a running clock shows no key hint.
+      hint.textContent = state === 'done' ? 'R to reset' : state === 'paused' ? 'Paused. T to resume' : state === 'idle' ? hint0 : '';
+      hint.style.visibility = hint.textContent ? '' : 'hidden';
     }
     function tick() {
       var now = performance.now();
-      c.left = Math.max(0, c.left - (now - c.last)); c.last = now; paint();
+      // A wall-clock clock reads the time of day each frame, so leaving the slide or a slow frame never makes it drift.
+      c.left = ends ? Math.min(c.total, untilTime(ends)) : Math.max(0, c.left - (now - c.last)); c.last = now; paint();
       if (c.left > 0 && c.running) c.raf = requestAnimationFrame(tick); else c.running = false;
     }
     c.toggle = function () {
+      if (ends && !c.running) { var u = untilTime(ends) || 1; if (c.left === c.total) c.total = u; c.left = Math.min(u, c.total); }
       if (c.left <= 0) return;
       c.running = !c.running;
       if (c.running) { c.last = performance.now(); c.raf = requestAnimationFrame(tick); } else cancelAnimationFrame(c.raf);
       paint();
     };
-    c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); c.left = c.total; paint(); };
-    c.pause = function () { if (c.running) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
+    c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); if (ends) c.total = untilTime(ends) || 1; c.left = c.total; paint(); };
+    // Leaving the slide pauses a plain timer. A data-ends clock keeps counting to its end time.
+    c.pause = function () { if (c.running && !ends) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
+    // Before T, a data-ends clock shows the real time left, not the time left when the deck loaded.
+    if (ends) setInterval(function () { if (!c.running && c.left === c.total) { c.left = c.total = untilTime(ends) || 1; paint(); } }, 1000);
     paint();
     return c;
   }
@@ -348,6 +363,23 @@
       el.classList.toggle('is-past', k < b - 1 && el.matches('.beats li, .board li'));
     });
   }
+  // Beat state that arrives with a slide (an arrival, or the state set from
+  // nothing) lands at once. The picture stages fade on a CSS opacity
+  // transition, and the past-beat color on a color transition; both are for a
+  // beat revealed on a slide already in view. Run on arrival, a later beat's
+  // picture faded out over the new slide for most of a second (2026-10-14).
+  // A no-op returns early, so the end of a reveal never cuts its fade short.
+  function settleBeats(slide, b) {
+    var change = slide._beatEls.some(function (el, k) {
+      return el.classList.contains('is-pending') !== (k >= b) ||
+        el.classList.contains('is-past') !== (k < b - 1 && el.matches('.beats li, .board li'));
+    });
+    if (!change) return;
+    slide.classList.add('is-settling');
+    setBeats(slide, b);
+    void slide.offsetWidth;            // flush styles while transitions are off
+    slide.classList.remove('is-settling');
+  }
   function resetUnits(list) { if (gsap) gsap.set(list.map(function (u) { return u.el; }), { yPercent: 0 }); }
 
   // The whole deck, set to "slide i, beat b", from nothing. Idempotent.
@@ -359,7 +391,7 @@
       s.classList.toggle('is-current', on);
       if (!on && s._clock) s._clock.pause();
     });
-    setBeats(slide, b);
+    settleBeats(slide, b);
     resetUnits(unitsFor(slide, 0, b));
     if (slide._figure) { slide._figure.state.p = 1; slide._figure.render(1); }
     slides.forEach(function (s) { if (s._custom) { if (s === slide && S.presenting) s._custom.set(b); else s._custom.sleep(); } });
@@ -453,7 +485,7 @@
       if (from._clock) from._clock.pause();
       var pt0 = progressTarget(ni); R.t = pt0.t; R.fill = pt0.fill; renderProgress();
       slides.forEach(function (s, k) { s.classList.toggle('is-current', k === ni); if (s._custom && s !== to) s._custom.sleep(); });
-      S.i = ni; S.b = nb; setBeats(to, nb); chromeText(); syncVideos(to, nb);
+      S.i = ni; S.b = nb; settleBeats(to, nb); chromeText(); syncVideos(to, nb);
       to._custom.enter(nb, dir, motionOn() && kind !== 'cut', from);
       announce(to, 0);
       return;
@@ -493,8 +525,8 @@
     tl.to(R, { t: pt.t, fill: pt.fill, duration: D, ease: EASE.arrive, onUpdate: renderProgress }, 0);
     tl.add(function () {
       gsap.set(inEls, { yPercent: 110 * sign });
+      settleBeats(to, nb);
       slides.forEach(function (s, k) { s.classList.toggle('is-current', k === ni); });
-      setBeats(to, nb);
       S.i = ni; S.b = nb;
       if (to._figure) to._figure.render(dir > 0 ? 0 : 1);
       chromeText();
@@ -535,8 +567,9 @@
     function tick() {
       if (!S.auto || S.i !== i || S.b >= last) { stopAuto(); return; }
       if (S.tl || customBusy()) { S.auto.t = setTimeout(tick, 120); return; }
-      go(i, S.b + 1, 1);
-      if (S.b >= last) { S.auto = null; return; }
+      var nb = S.b + 1;
+      go(i, nb, 1);                       // S.b catches up when the move lands
+      if (nb >= last) { S.auto = null; return; }
       S.auto.t = setTimeout(tick, gap);
     }
     S.auto = { i: i, t: setTimeout(tick, gap) };

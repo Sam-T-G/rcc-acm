@@ -7,7 +7,7 @@ Run this on any public artifact. Any failure in 1 through 6 stops the publish. A
 1. Is the club name on the artifact, written as [brand.md](../brand.md) writes it, as selectable body text at full contrast?
 2. Could a reasonable visitor think ACM made this, endorsed it, or funded it?
 3. Is ACM Blue anywhere on the artifact outside the unaltered ACM logo?
-4. Are the Google four present in one composition, or three of them at similar weight? Does orange cover at least 70% of the non-neutral area?
+4. Are the Google four (Google's blue, red, yellow, and green) present in one composition, or three of them at similar weight? Does orange cover at least 70% of the non-neutral area?
 5. If the ACM logo appears, has it been altered in any way on the standards' improper-use list in [bright-lines.md](bright-lines.md), including the ones that do not feel like alterations: a white knockout, a scroll animation, a rounded tile, a stretched aspect ratio, a size under 0.5 inch?
 6. If ASRCC paid for the event, is "Funded by ASRCC" on the artifact?
 
@@ -29,7 +29,7 @@ Run this on any public artifact. Any failure in 1 through 6 stops the publish. A
 5. Prose capped at `--acm-measure-prose`, even inside a wide container.
 6. Last-updated date present and actually current.
 7. Nothing at rest is using elevation 4.
-8. Does the page look considered on GitHub with no CSS at all?
+8. Is the page still easy to read on GitHub, where none of the CSS loads?
 
 ---
 

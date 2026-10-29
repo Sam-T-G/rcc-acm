@@ -6,13 +6,13 @@ Every public link the chapter uses, in one place. Last verified: 2026-08-24, exc
 
 | What | Link | Notes |
 |---|---|---|
-| Discord | <https://discord.gg/fM2HbsJyBG> | The real hub. Invite may expire; check it each semester |
+| Discord | <https://discord.gg/fM2HbsJyBG> | The club's main channel. Invite may expire; check it each semester |
 | Instagram | <https://www.instagram.com/rcc.acm/> | |
 | Website | [TBD: live URL] | Next.js single page |
 | Website source | <https://github.com/ACM-RCC/ACMWebsite> | GitHub org ACM-RCC |
 | This repo | <https://github.com/Sam-T-G/rcc-acm> | Docs and semester records. Goes live on first push; not yet verified |
 | Bevy chapter page | Not applicable | ACM does not use Bevy. GDG on Campus does; see the related repo below |
-| Meeting | Thursdays, 12:50 to 1:50 PM, BLCIS A-210 | Not a link, but people ask |
+| Meeting | Thursdays, 1:30 to 2:30 PM, BLCIS A-210 | Not a link, but people ask |
 
 ## Related repos
 

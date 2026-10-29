@@ -2,7 +2,7 @@
 
 # Templates
 
-Templates are contracts for ACM @ RCC. Every semester folder is built from them, so a future officer can open any past semester and find the same headings in the same order.
+Every ACM @ RCC semester folder is built from these templates, so a future officer can open any past semester and find the same headings in the same order. That is why changing a template needs a decision record.
 
 ## How to use one
 
@@ -26,7 +26,16 @@ If a template is wrong or missing a field, change it here, add a [decision recor
 | [officer-handoff.md](officer-handoff.md) | Semester close, and any time an officer leaves | `semesters/<YYYY-term>/handoff.md` (the semester template already holds a copy) |
 | [funding-line-item.md](funding-line-item.md) | Each line of an ASRCC funding request, before the late-April deadline | One section per line item in `semesters/<YYYY-term>/budget.md` |
 | [workshop-outline.md](workshop-outline.md) | Planning any hands-on session | `semesters/<YYYY-term>/events/YYYY-MM-DD-slug/workshop.md`; promote to `docs/03-playbooks/` once it has run twice |
+| [arduino-lab-round.md](arduino-lab-round.md) | Writing one round of an Arduino lab, before any slide is built | `scratch/` while drafting, then summarized in that week's lab guide |
+| [arduino-lab-guide.md](arduino-lab-guide.md) | The officer guide for an Arduino lab week | `semesters/<YYYY-term>/meetings/YYYY-MM-DD-lab-guide.md` |
 | [announcement.md](announcement.md) | Anything posted to members or the campus | Draft in `semesters/<YYYY-term>/events/YYYY-MM-DD-slug/announcement.md`, then post |
+
+Deck and page templates are Python generators, not markdown, and live with the kit:
+
+| Template | Use it when | Run |
+| --- | --- | --- |
+| [deck-kit/templates/two-track.py](../deck-kit/templates/two-track.py) | The room splits into two groups that each work from their own page | `python deck-kit/templates/two-track.py semesters/<YYYY-term>/meetings/YYYY-MM-DD-deck.html --blank` |
+| [deck-kit/templates/self-guided-lab.py](../deck-kit/templates/self-guided-lab.py) | A lab where tables build from a page and the projector only frames the rounds | `python deck-kit/templates/self-guided-lab.py semesters/<YYYY-term>/meetings/YYYY-MM-DD-deck.html` |
 
 ## Conventions shared by every template
 

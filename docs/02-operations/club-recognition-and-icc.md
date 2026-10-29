@@ -1,6 +1,6 @@
 # Club recognition and ICC
 
-RCC clubs exist because ASRCC recognizes them, and recognition has to be renewed every semester. Lose it and the club account is frozen, campus rooms are off limits, and the club cannot sponsor events. This page is the checklist to stay recognized.
+A club at RCC needs ASRCC recognition, and the club has to renew it every semester. Lose it and the club account is frozen, campus rooms are off limits, and the club cannot sponsor events. This page is the checklist to stay recognized.
 
 Sources: [Clubs and Organizations](https://www.rcc.edu/life-at-rcc/clubs-and-organizations.html), [ASRCC Student Government](https://www.rcc.edu/life-at-rcc/student-government.html), and the [Club Advisor's Guide (PDF)](https://www.rcc.edu/assets/documents/life-at-rcc/asrcc/forms/Club%20Advisor%20Guide.pdf). The guide carries 2010 and 2019 revision stamps; where it conflicts with the web page, the web page is newer.
 
@@ -55,7 +55,7 @@ ICC is where every chartered club sends one representative. It is also where fun
 | ICC advisor | A Student Activities Coordinator |
 | Contact | ASRCC.ICC@rcc.edu |
 
-The ICC representative's job in this repo: after each ICC meeting, post anything that affects us (deadlines, forms, Club Rush dates, funding training) in the officer channel and add dates to the semester `calendar.md`.
+After each ICC meeting, the ICC representative posts anything that affects us (deadlines, forms, Club Rush dates, funding training) in the officer channel and adds the dates to the semester `calendar.md`.
 
 ## Trainings to attend
 
@@ -64,7 +64,7 @@ The ICC representative's job in this repo: after each ICC meeting, post anything
 | Advisor training | early March | Advisor |
 | ICC budget training | early March | ICC rep and treasurer |
 
-Both feed directly into the [ASRCC funding request](./asrcc-funding.md).
+Both trainings walk through the [ASRCC funding request](./asrcc-funding.md) packet.
 
 ## Semester start checklist
 

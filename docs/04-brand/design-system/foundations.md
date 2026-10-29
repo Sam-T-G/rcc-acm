@@ -17,7 +17,7 @@ Sourced, from the club website's stylesheet (`src/app/globals.css` in `ACM-RCC/A
 | Electric blue (`--accent-2`, marked "provisional" in the source) | `#4d9fff` | 64.6 | 254.1 | 2.58:1 | 6.68:1 | 6.02:1 | 2.72:1 |
 | Green (`--success`, `--live`) | `#22c55e` | 70.2 | 149.6 | 2.16:1 | 7.97:1 | 7.18:1 | 2.28:1 |
 
-Read that as one sentence: **the website's palette is a dark-mode palette.** The site runs white text on `#050505`, and every accent was tuned for that ground. None of the four clears 4.5:1 as text on a light page, and only the orange clears the 3:1 graphic floor there. That is why the light theme runs on derived tones and the raw hexes are reserved for two named fills and for hue anchors.
+**The website's colors were picked for a dark page.** The site runs white text on `#050505`, and every accent was tuned for that ground. None of the four clears 4.5:1 as text on a light page, and only the orange clears the 3:1 graphic floor there. That is why the light theme runs on derived tones and the raw hexes are reserved for two named fills and for hue anchors.
 
 The site ships no red. The error ramp below holds a reference red hue (OKLCh 23.0, taken from `#e5484d` only to fix a hue) and is derived like everything else. Label: derived, not sourced.
 
@@ -32,42 +32,42 @@ Two of the website's four hold 4.5:1 with our ink (`#221f1e`) and ship as raw fi
 - `--acm-fill-orange: #ff4d00` (ink on it 4.92:1)
 - `--acm-fill-green: #22c55e` (ink on it 7.18:1)
 
-Blue clears the ratio (6.02:1) and is excluded on purpose. The website's own source calls it provisional, and a blue fill on a chapter page invites the one confusion this system exists to prevent: reading as ACM headquarters, whose color is blue. The gradient-end orange is excluded because it is a gradient stop and the system ships no gradient. Red ships no fill because there is no sourced red.
+Blue clears the ratio (6.02:1) and is excluded on purpose. The website's own source calls it provisional, and a blue fill could make a chapter page look like it came from ACM headquarters, whose color is blue. Keeping chapter pages from looking like ACM's is a main goal of this system. The gradient-end orange is excluded because it is a gradient stop and the system ships no gradient. Red ships no fill because there is no sourced red.
 
 White on either fill fails body text (3.33:1 on orange, 2.28:1 on green). Filled brand buttons on the raw fills take ink labels.
 
 ## 2.3 Which color leads
 
-**Orange leads.** `#ff4d00` is the primary hue. Three reasons, in order of weight: it is already the website's accent, so the docs and the site read as one club; it sits inside ACM's own sanctioned secondary palette (ACM Orange, PANTONE 138C), so it is a color ACM already lets its communications carry as an accent; and it is not ACM Blue, so a chapter page never reads as the parent organization. Blue as the lead would cost the club its clearest point of separation and would collide with the ACM logo the moment one lands on the page.
+**Orange leads.** `#ff4d00` is the primary hue. Three reasons, in order of weight: it is already the website's accent, so the docs and the site look like the same club; it sits inside ACM's own sanctioned secondary palette (ACM Orange, PANTONE 138C), so ACM already allows it as an accent color; and it is not ACM Blue, so a chapter page never looks like it came from ACM itself. With blue as the lead, the club would lose its clearest color difference from ACM, and the blue would clash with the ACM logo on any page that shows it.
 
-The positive case: this is a club about building, competing, and shipping on a Thursday afternoon, and the website already chose a color that reads as heat and speed. Nothing here overrides that.
+The club meets Thursday afternoons to build things and compete, and the website already picked orange, a color people link with heat and speed. This system keeps that choice.
 
-This is a judgment call, not something ACM or the website ranks. The mechanics work with any hue as lead: swap the hue feeding `--acm-primary` and re-run the audit.
+Neither ACM nor the website says which color should lead, so this is a judgment call. The ramp method works with any hue as lead: to change it, swap the hue feeding `--acm-primary` and re-run the audit.
 
 **One job each.**
 
 | Colour | Role | Job | Never |
 |---|---|---|---|
-| Orange | `primary` | Links, buttons, active state, focus ring, the Rail. The color the club is recognized by. | n/a |
-| Blue | `secondary` | Cross-references out to another doc or repo: the lab repo, the website, ACM's pages. That is the whole job. | Adjacent to primary in the same component. |
+| Orange | `primary` | Links, buttons, active state, focus ring, the Rail. The club's main color. | n/a |
+| Blue | `secondary` | Cross-references out to another doc or repo: the lab repo, the website, ACM's pages. Blue is used for nothing else. | Adjacent to primary in the same component. |
 | Green | `live` | The live-now, confirmed, and passing marker, and the Check callout. | Decoration, headings, accents. |
 | Red | `error` | Errors, destructive actions, and failure paths in a diagram. Semantic. | Near primary in one component. Orange and red are 14 degrees apart in OKLCh hue and are confusable, so an error is always labeled by a word or an icon, never by hue alone. |
 
-**Three checks that keep it the chapter's**, all verifiable by looking at a page:
+**Three checks that keep a page looking like the chapter's and not ACM's or Google's.** You can verify each one by looking at the page:
 
 1. ACM Blue appears nowhere except inside the unaltered ACM logo.
 2. No single component uses more than two hues.
-3. Orange covers at least 70% of the non-neutral area on any surface. A page that is a spread of four colors at similar weight has failed regardless of hex, and a page that assembles Google's blue, red, yellow, and green has failed twice (§1.3).
+3. Orange covers at least 70% of the non-neutral area on any surface. A page that is a spread of four colors at similar weight has failed whatever the hexes are, and a page that puts Google's blue, red, yellow, and green together fails both this check and §1.3.
 
 The meeting types (regular, lab day, showcase) and the four pillars (Build, Compete, Learn, Connect) get no hue. [accessibility.md](accessibility.md) §2.4 gives the pillars a form instead (the Rail's Break), and meeting types are told apart by their words.
 
 ## 2.4 How the ramps were derived
 
-Reproducible, so a future officer can regenerate rather than guess. Tone is CIE L\*. Hue and chroma come from OKLCh, which holds hue steady across lightness better than LCh(ab), particularly for blue. Each ramp holds its source hue, solves for the OKLab lightness landing on the target CIE L\*, and takes the largest in-gamut chroma under an envelope that peaks at mid tones and tapers to zero at both ends (0.42 of source chroma at T10, 0.62 at T20, 0.80 at T30, 1.00 from T40 to T60, 0.62 at T80, 0.38 at T90, 0.28 at T94, 0.20 at T96). Without the taper the deep tones clip to gamut-edge primaries and the light tones go neon. The method is the same one the sibling GDG chapter's system uses, so the two clubs' palettes are generated the same way from different anchors.
+The steps are written out so a future officer can regenerate the ramps instead of guessing. Tone is CIE L\*. Hue and chroma come from OKLCh, which holds hue steady across lightness better than LCh(ab), particularly for blue. Each ramp holds its source hue, solves for the OKLab lightness landing on the target CIE L\*, and takes the largest in-gamut chroma under an envelope that peaks at mid tones and tapers to zero at both ends (0.42 of source chroma at T10, 0.62 at T20, 0.80 at T30, 1.00 from T40 to T60, 0.62 at T80, 0.38 at T90, 0.28 at T94, 0.20 at T96). Without the taper, the dark tones come out as the most saturated color a screen can show, and the light tones look neon. The method is the same one the sibling GDG chapter's system uses, so the two clubs' palettes are generated the same way from different anchors.
 
-Tone deltas are a reasoning aid: 40 points is about 3:1, 50 points is about 4.5:1. Every pair in §2.5 was measured, not estimated.
+For a quick estimate, use the tone difference: 40 points is about 3:1, 50 points is about 4.5:1. Every pair in §2.5 was measured, not estimated.
 
-**The neutral ramp.** Neutrals are tinted toward the lead hue at 37.0. Ink and page surfaces run at OKLCh chroma `0.005`, which reads as grey. **Container fills and outlines run at `0.012`**, which is where the tint becomes a decision a reader can see: a card reads as faintly warm paper against a near-white ground. That is the club's cheapest and most durable signature, and it is the one place the docs and the website (whose neutrals are pure grey) deliberately differ.
+**The neutral ramp.** Neutrals are tinted toward the lead hue at 37.0. Ink and page surfaces run at OKLCh chroma `0.005`, which looks grey. **Container fills and outlines run at `0.012`**, which is enough tint for a reader to see: a card looks faintly warm against the near-white page. This warm tint is the cheapest way to make club pages recognizable, and it is the one place the docs and the website (whose neutrals are pure grey) deliberately differ.
 
 The container chroma of 0.012 is a judgment call tuned against generated output. Look at it on the A-210 projector before the showcase; a lecture-hall projector flattens low-chroma tints.
 
@@ -154,15 +154,15 @@ Recomputed this session from the shipped hexes with the WCAG 2.x formula. 4.5:1 
 ### Numbers to watch
 
 - **The tightest body-text pass in light is `live` on `surface-container-highest` at 4.97:1**, with `secondary` at 4.98 and `primary` at 4.99 right beside it. Nothing sanctions a darker surface than `surface-container-highest` in light mode. If someone adds one, every colored word on it stops passing.
-- **The tightest pass in dark is `inverse-primary` on `inverse-surface` at 4.98:1.** The inverse surface is the one light island on a dark page; keep colored text on it to that single role.
+- **The tightest pass in dark is `inverse-primary` on `inverse-surface` at 4.98:1.** The inverse surface is the only light area on a dark page; keep colored text on it to that single role.
 - **`outline-variant` is 1.45:1 on the light surface and 1.94:1 on the dark surface.** That is deliberate and below 3:1. It is a divider and a decorative edge. It must never be the only thing defining the boundary of a control or of a status container. Use `outline` for that.
 - **Container fills are nearly invisible on their own.** Against the light page ground, `primary-container` measures 1.22:1, `live-container` 1.17:1, `secondary-container` 1.16:1, and `error-container` 1.10:1. **Any container that carries status (a callout, an error field, a live marker) pairs with a 1px `--acm-outline` hairline.** The fill is a tint, and the hairline is the boundary that meets 1.4.11.
-- **`--acm-live` may be a bare mark in light.** It measures 6.10:1 against the light surface, so a green dot beside a confirmed room is legal as a graphic. It still carries a word, because a mark that means something cannot mean it by color alone (SC 1.4.1).
+- **`--acm-live` may be a bare mark in light.** It measures 6.10:1 against the light surface, so a green dot beside a confirmed room is legal as a graphic. It still gets a word beside it, because SC 1.4.1 says meaning cannot rely on color alone.
 - **A link is not distinguishable by color alone.** `primary` against body ink measures 2.54:1 in light and 1.38:1 in dark, both below the 3:1 that SC 1.4.1 needs for color-only distinction. Every in-prose link carries an underline (§3.7).
 
 ### The surface ladder
 
-Adjacent steps sit at 1.045:1 to 1.169:1 (light: 1.108, 1.048, 1.056, 1.055; dark: 1.124, 1.045, 1.137, 1.169). They are meant to be barely perceptible: enough to read an edge without drawing a line. `surface` to `surface-container-highest` is 1.23:1 in light and 1.47:1 in dark. Depth is tone difference first, and tone survives dark mode, a classroom projector, and a printer in a way `box-shadow` does not.
+Adjacent steps sit at 1.045:1 to 1.169:1 (light: 1.108, 1.048, 1.056, 1.055; dark: 1.124, 1.045, 1.137, 1.169). The steps are meant to be barely visible: enough to see an edge without drawing a line. `surface` to `surface-container-highest` is 1.23:1 in light and 1.47:1 in dark. Show depth with a tone difference first, because a tone difference still shows in dark mode, on a classroom projector, and on a printout, and a `box-shadow` often does not.
 
 ## 2.6 Rules
 
@@ -172,7 +172,7 @@ Adjacent steps sit at 1.045:1 to 1.169:1 (light: 1.108, 1.048, 1.056, 1.055; dar
 
 **Do** use `error` for failure and destruction, and always with a word or an icon. **Do not** put an error control next to a primary control in one component; the two hues are close enough that a reader in a hurry reads them as one.
 
-**Do** put white cards (`surface-container-lowest`) on the tinted page ground (`surface`). The tint is what lets the card read as lifted without a shadow.
+**Do** put white cards (`surface-container-lowest`) on the tinted page ground (`surface`). A white card on the tinted page looks raised without a shadow.
 
 **Do** derive a new color by picking a tone on one of the four hues and measuring it. **Do not** introduce a fifth hue, and never introduce ACM Blue as a UI color. This answers the `brand.md` line "Colors: [TBD]": the club's colors are the ramps here, pending the decision-log entry that makes them binding.
 
@@ -180,13 +180,13 @@ Adjacent steps sit at 1.045:1 to 1.169:1 (light: 1.108, 1.048, 1.056, 1.055; dar
 
 ## 2.7 Color in the markdown docs
 
-**On GitHub**, the club's CSS does not apply. Color reaches those pages only through committed images and diagrams, so the rule there constrains assets rather than tokens.
+**On GitHub**, the club's CSS does not apply. Color reaches those pages only through committed images and diagrams, so on GitHub the color rules apply to those images and diagrams, not to tokens.
 
 **As standalone HTML**, the tokens apply directly.
 
-There is a hard arithmetic limit worth publishing. GitHub's light canvas is `#ffffff` and its dark canvas is `#0d1117` (current as of 2026-09-01; if GitHub changes it, re-run this table). **No single color clears 4.5:1 against both.** An exhaustive sRGB search puts the true ceiling of `min(CR vs #ffffff, CR vs #0d1117)` at **4.350:1**. So:
+The math sets a hard limit here. GitHub's light canvas is `#ffffff` and its dark canvas is `#0d1117` (current as of 2026-09-01; if GitHub changes it, re-run this table). **No single color clears 4.5:1 against both.** An exhaustive sRGB search puts the true ceiling of `min(CR vs #ffffff, CR vs #0d1117)` at **4.350:1**. So:
 
-- **Text inside artwork** cannot be one fixed color. Either ship two files behind a `<picture>` with `prefers-color-scheme` (§8.7 in [components.md](components.md) has the markup), or put the text in the markdown beside the image, which is cheaper and makes it searchable.
+- **Text inside artwork** cannot be one fixed color. Either ship two files behind a `<picture>` with `prefers-color-scheme` (§8.7 in [components.md](components.md) has the markup), or put the text in the markdown beside the image, which takes less work and makes the text searchable.
 - **Strokes, fills, and marks** need 3:1, which one color can hold on both. Use these dual-mode tones, each computed this session as the best tone on its hue:
 
 | Role in a diagram | Hex | On `#ffffff` | On `#0d1117` |
@@ -197,17 +197,17 @@ There is a hard arithmetic limit worth publishing. GitHub's light canvas is `#ff
 | Failure path only | `#dc3f46` | 4.34:1 | 4.36:1 |
 | Neutral rule / connector | `#7b7877` | 4.38:1 | 4.32:1 |
 
-Never encode meaning in color alone in a diagram. Pair it with a label, a shape, or a dash pattern, and let a dashed stroke mean one thing across every diagram the club draws. Never use the lead mark and the failure mark on the same diagram without a shape difference; on a wiring diagram they read as two shades of the same wire.
+Never encode meaning in color alone in a diagram. Pair it with a label, a shape, or a dash pattern, and give a dashed stroke the same meaning in every diagram the club draws. Never use the lead mark and the failure mark on the same diagram without a shape difference; on a wiring diagram they read as two shades of the same wire.
 
 ## 2.8 Ligatures in code
 
-Inter carries no logo glyphs and no ligature trap. JetBrains Mono does ship coding ligatures (`->`, `!=`, `>=` and the rest), and they are the reason the system sets `font-variant-ligatures: none` on `code, kbd, samp, pre`. The club's code blocks are teaching material and station cards. A student copies what they see, and a ligature shows a glyph that does not exist on the keyboard. Judgment call, and a cheap one: no code sample here needs ligatures.
+Inter has no logo glyphs and no ligatures that would show a student the wrong characters. JetBrains Mono does ship coding ligatures (`->`, `!=`, `>=` and the rest), which join two typed characters into one symbol, and they are the reason the system sets `font-variant-ligatures: none` on `code, kbd, samp, pre`. The club's code blocks are teaching material and station cards. A student copies what they see, and a ligature shows a glyph that does not exist on the keyboard. This is a judgment call, and turning ligatures off costs nothing because no code sample here needs them.
 
 ## 2.9 Judgment calls in this section
 
 - Orange as the lead. Neither ACM nor the website ranks it; the website uses it and ACM permits it as an accent.
 - The container tint chroma of 0.012 and the surface chroma of 0.005, tuned by eye against generated output. Tone targets and every contrast number are computed.
-- The dark surface at CIE L\* 7 (`#181514`) rather than the website's `#050505` (L\* 1.4). L\* 7 leaves room for a five-step container ladder above it and survives the A-210 projector. The website is a separate codebase and may keep its deeper ground; converging it on these tokens is an open item in [checklist.md](checklist.md).
+- The dark surface at CIE L\* 7 (`#181514`) rather than the website's `#050505` (L\* 1.4). L\* 7 leaves room for a five-step container ladder above it and stays visible on the A-210 projector. The website is a separate codebase and may keep its deeper ground; converging it on these tokens is an open item in [checklist.md](checklist.md).
 - The error hue at OKLCh 23.0. The website ships no red, so the hue is fixed from a reference red and is derived rather than sourced.
 - `#0d1117` as GitHub's dark canvas, current as of 2026-09-01.
 - The website's electric blue is marked "provisional" in its own source. If the site drops or changes it, the `secondary` ramp is regenerated from the new anchor and this section re-audited.
@@ -218,7 +218,7 @@ Inter carries no logo glyphs and no ligature trap. JetBrains Mono does ship codi
 
 ## 3.1 The license answer
 
-The website loads **Inter** and **JetBrains Mono** through `next/font/google` (read from `src/app/layout.tsx`, 2026-09-01). Both are SIL Open Font License faces in the Google Fonts catalog, both are self-hostable, and neither is anyone's brand face. That is the whole license answer, and it is a better position than the sibling GDG chapter has.
+The website loads **Inter** and **JetBrains Mono** through `next/font/google` (read from `src/app/layout.tsx`, 2026-09-01). Both are SIL Open Font License faces in the Google Fonts catalog, both are self-hostable, and neither is anyone's brand face. That settles the license question, and it is simpler than the license question the sibling GDG chapter had to answer.
 
 | Family | In catalog | License | Web-embeddable | Slot |
 |---|---|---|---|---|
@@ -227,17 +227,17 @@ The website loads **Inter** and **JetBrains Mono** through `next/font/google` (r
 | Myriad Pro | No (Adobe) | Adobe Fonts subscription | Not without a license the club does not hold | out |
 | Arial, Helvetica | System faces | n/a | n/a | fallback only |
 
-**Why not Myriad Pro.** ACM's identity standards name Myriad Pro for ACM's own communications and allow Arial or Helvetica for digital applications and correspondence. The chapter's docs, posts, and flyers are the chapter's communications, not ACM's, and Myriad is a licensed Adobe face the club would have to pay for on every machine that opens a template. Inter is free, variable, and already on the website. Record this in `brand.md` as provisional until the decision is logged; the "Typography: [TBD]" row is answered by this section.
+**Why not Myriad Pro.** ACM's identity standards name Myriad Pro for ACM's own communications and allow Arial or Helvetica for digital applications and correspondence. The chapter's docs, posts, and flyers are the chapter's communications, not ACM's, and Myriad is a licensed Adobe face the club would have to pay for on every machine that opens a template. Inter is free, ships every weight in one variable file, and is already on the website. Record this in `brand.md` as provisional until the decision is logged; the "Typography: [TBD]" row is answered by this section.
 
-**Roboto is deliberately not recommended.** Roboto plus a blue plus a card grid reads as stock Android, and the club is one blue away from that at all times.
+**Roboto is deliberately not recommended.** Roboto with a blue accent and a card grid looks like a default Android app, and the club's palette already includes a blue.
 
 ## 3.2 The optical seam, and how it is set
 
-Inter exposes an `opsz` axis with a range of 14 to 32. The low end is the text design; the high end is the display design. Two drawings, one file, one continuous axis. That is the brand-face-versus-text-face split available for free, and it is one of the three things that make a club page recognizable, with the ledger line (§3.4) and the Rail ([accessibility.md](accessibility.md) §2.4).
+Inter exposes an `opsz` axis with a range of 14 to 32. The low end is the text design; the high end is the display design. Both designs are in one file, on one continuous axis, so the club gets a separate headline design and body design without loading a second font. This optical-size switch (the seam), the ledger line (§3.4), and the Rail ([accessibility.md](accessibility.md) §2.4) are the three things that make a club page recognizable.
 
-**Set it with `font-optical-sizing: auto` and nothing else.** The UA then maps `opsz` to the used font size, clamped to the axis range, so a 40px headline gets the display drawing and 17px body gets the text drawing with no hard-coded axis anywhere. Pinning an axis value in `font-variation-settings` would break the fallback stack and create an inheritance trap, because `font-variation-settings` is a single replaced value and any child setting one axis drops the rest.
+**Set it with `font-optical-sizing: auto` and nothing else.** The UA then maps `opsz` to the used font size, clamped to the axis range, so a 40px headline gets the display drawing and 17px body gets the text drawing with no hard-coded axis anywhere. Pinning an axis value in `font-variation-settings` would break the fallback stack and cause an inheritance bug, because `font-variation-settings` is a single replaced value and any child setting one axis drops the rest.
 
-**`font-variation-settings` is not set anywhere.** Inter has no `GRAD` axis, so there is nothing to retune per theme. Light text on a dark ground blooms and reads heavier; if that shows on a real page, the fix is a weight step (400 to 450 for body on dark), and it has to be looked at rather than assumed. Open item.
+**`font-variation-settings` is not set anywhere.** Inter has no `GRAD` axis, so there is nothing to retune per theme. Light text on a dark background looks heavier than the same weight on light. If that shows on a real page, the fix is a weight step (400 to 450 for body on dark), and someone has to look at a real page to decide. Open item.
 
 ## 3.3 Weights
 
@@ -249,15 +249,15 @@ Inter ships `wght` 100 to 900 with true italics in a second file. Three weights 
 | `--acm-weight-strong` | 500 | Every heading, label, and button. |
 | `--acm-weight-loud` | 700 | Reserved. One use per page at most, and the emphasized tier. |
 
-Every other weight exists in the font and is out of the system. The difference between 500 and 600 will not survive a handoff between officers. Hierarchy is carried by size, space, face, and color. Every heading is 500 and the reader tells them apart by size and by the seam.
+Every other weight exists in the font and is out of the system. The difference between 500 and 600 is too small for the next officer team to keep consistent. Size, space, face, and color show which text matters more. Every heading is 500, and readers tell heading levels apart by size and by the seam (§3.2).
 
-**`font-synthesis: weight`**, not `none`. Weight 500 carries every heading, label, and button; `system-ui`, `-apple-system`, and `Segoe UI` do not all ship a real 500, and with synthesis fully off those headings render at 400 during the swap window and look unstyled rather than broken. Allowing weight synthesis and forbidding style synthesis gives a fallback heading that still reads as a heading and still makes a missing italic fail visibly.
+**`font-synthesis: weight`**, not `none`. Weight 500 carries every heading, label, and button; `system-ui`, `-apple-system`, and `Segoe UI` do not all ship a real 500, and with synthesis fully off those headings render at 400 during the swap window and look unstyled rather than broken. Allowing weight synthesis and forbidding style synthesis gives a fallback heading that still looks like a heading and still makes a missing italic fail visibly.
 
-**Emphasized tier.** A parallel set at identical sizes, one weight step heavier: 400 goes to 500, 500 goes to 700. Sizes and leading never change, so switching a card to emphasized cannot reflow a layout. Use it for the current phase on the showcase agenda, the station a student is at, a selected filter, the next lab day in the meeting plan. Two or three per page and it stops signalling anything.
+**Emphasized tier.** A parallel set at identical sizes, one weight step heavier: 400 goes to 500, 500 goes to 700. Sizes and leading never change, so switching a card to emphasized cannot reflow a layout. Use it for the current phase on the showcase agenda, the station a student is at, a selected filter, the next lab day in the meeting plan. With two or three on one page, readers can no longer tell what it marks.
 
 ## 3.4 The scale
 
-Fifteen roles. Ordering is strictly monotonic at every viewport width. Fluid roles interpolate between a 360px and a 1440px viewport. Fixed roles never move; the reading size should not change when the window does, and the hierarchy should flatten on a phone rather than shrink proportionally.
+Fifteen roles. Ordering is strictly monotonic at every viewport width. Fluid roles interpolate between a 360px and a 1440px viewport. Fixed roles never move; the reading size should not change when the window does, and on a phone the headings should get closer to body size instead of everything shrinking by the same ratio.
 
 | Role | Size | Line height | Tracking | Weight | Face |
 |---|---|---|---|---|---|
@@ -281,13 +281,13 @@ At a 390px viewport the fluid roles compute to 36.6 / 28.3 / 24.2 / 20.1, above 
 
 Brand and text are the same family here; the seam is carried by `opsz`, not by a second file. Both slots exist as tokens so the system can reface one without touching a component.
 
-**The seam.** The scale is not generated from a modular ratio and does not pretend to be. Steps run about 1.42 at the display end and settle to roughly 1.11 to 1.20 through headline and title, then take one deliberate jump from `title-lg` (18px) down to `body-lg` (17px) where weight and tracking change instead of size. Around 20px the display drawing hands off to the text drawing and the tracking flips sign. Publishing that seam matters more than publishing a ratio; the ledger line below makes it a visible feature rather than an artifact.
+**The seam.** The scale is not generated from a modular ratio. Steps run about 1.42 at the display end and settle to roughly 1.11 to 1.20 through headline and title, then take one deliberate jump from `title-lg` (18px) down to `body-lg` (17px) where weight and tracking change instead of size. Around 20px the display drawing hands off to the text drawing and the tracking flips sign. This doc publishes where the seam is instead of a ratio. The ledger line (uppercase `label-sm`, §3.6) uses the seam on purpose, so the jump looks designed and not like a mistake.
 
-Body is anchored at 17px, not 16px. Judgment call: these documents get read on a phone and projected in A-210 on Thursday afternoons, and 17px holds up in both. The website runs a fluid body near 16 to 19px; 17 sits inside that range.
+Body is anchored at 17px, not 16px. Judgment call: these documents get read on a phone and projected in A-210 on Thursday afternoons, and 17px stays readable on both. The website runs a fluid body near 16 to 19px; 17 sits inside that range.
 
 **Line heights.** Display through headline run 1.05 to 1.30, tighter as size grows. Body and label run 1.5 to 1.65. Fixed roles are set in rem so leading lands on a 4px grid and text stacks against components without drift; fluid roles use a unitless ratio and land off-grid between the clamp ends, which is invisible because display type rarely meets a component edge.
 
-**Tracking** is a function of size and flips sign around 20px: negative above, zero at `title-lg`, positive below, up to +0.06em on the uppercase `label-sm`. The website sets every heading at -0.03em, which is right for its 9rem display and wrong for a 20px subheading. Setting tracking to one value everywhere is the single most common reason student work looks flat.
+**Tracking** is a function of size and flips sign around 20px: negative above, zero at `title-lg`, positive below, up to +0.06em on the uppercase `label-sm`. The website sets every heading at -0.03em, which is right for its 9rem display and wrong for a 20px subheading. Using one tracking value at every size is the most common reason student pages look flat.
 
 ## 3.5 Measure
 
@@ -297,15 +297,15 @@ Body is anchored at 17px, not 16px. Judgment call: these documents get read on a
 | `--acm-measure-narrow` | `46ch` | Captions, callout bodies, sidebars, table cells. |
 | `--acm-measure-display` | `20ch` | Headlines. Caps the line by character count so a hero headline wraps to two or three lines at every viewport. |
 
-Keep prose between 45ch and 75ch. Above 75ch the eye loses the line return; below 45ch the rag gets ugly. Measure is capped independently of the layout grid: a section can be 1200px wide and its prose still 68ch. Every heading role gets `--acm-measure-display` whether it arrives as a class or as an `h1` through `h4` element, so a heading looks the same coming from markdown as from hand-written markup.
+Keep prose between 45ch and 75ch. Above 75ch the eye loses the line return; below 45ch the uneven right edge gets too ragged. Measure is capped independently of the layout grid: a section can be 1200px wide and its prose still 68ch. Every heading role gets `--acm-measure-display` whether it arrives as a class or as an `h1` through `h4` element, so a heading looks the same coming from markdown as from hand-written markup.
 
 ## 3.6 Details set once
 
 **Tabular figures.** Inter documents `tnum`. Default figures are proportional. Turn on `font-variant-numeric: tabular-nums` for anything in a column or anything that changes: the budget, the kit order, attendance counts, the sixteen-row meeting plan, the phase clock on the showcase page, the serial readings on a station card. `[TBD: confirm the served latin subset carries tnum before relying on it in a build; read the GSUB list of the delivered WOFF2.]`
 
-**No time colon feature.** Inter has no stylistic set for a raised time colon, so "12:50 to 1:50 PM" renders with the default colon. Nothing to verify and nothing to design around.
+**No time colon feature.** Inter has no stylistic set for a raised time colon, so "1:30 to 2:30 PM" renders with the default colon. There is nothing to check here.
 
-**Small caps.** Inter ships no true small caps. Do not design anything that depends on them; `label-sm` in uppercase with +0.06em tracking is the ledger voice instead.
+**Small caps.** Inter ships no true small caps. Do not design anything that depends on them; use the ledger line instead: `label-sm` in uppercase with +0.06em tracking.
 
 **Italics.** True italics ship across the weight range. Use them.
 
@@ -313,7 +313,7 @@ Keep prose between 45ch and 75ch. Above 75ch the eye loses the line return; belo
 
 ## 3.7 Links
 
-`primary` against body ink is 2.54:1 in light and 1.38:1 in dark, both below the 3:1 that color-alone distinction requires. **Every link inside prose carries an underline**, at `text-underline-offset: 0.15em` and `text-decoration-thickness: from-font`. Standalone navigation links and button-styled links are exempt, because there the surrounding context is not prose and the affordance is the shape.
+`primary` against body ink is 2.54:1 in light and 1.38:1 in dark, both below the 3:1 that color-alone distinction requires. **Every link inside prose carries an underline**, at `text-underline-offset: 0.15em` and `text-decoration-thickness: from-font`. Standalone navigation links and button-styled links are exempt, because they are not inside prose and their shape already shows they are clickable.
 
 ## 3.8 Fallback stack
 
@@ -349,9 +349,9 @@ Self-hosting is also fine for both families, because their OFL files live in the
 
 **Base unit 4px, preferred step 8px, named by multiplier.** `--acm-space-6` is 6 x 4px = 24px.
 
-Two things make 4px right. The type scale's fixed line heights are all 4px multiples, so a text block and a box beside it stack without half-pixel drift. And 4px is fine enough to handle real sub-8 cases (icon-to-label gaps, chip padding) without anyone inventing a 5px, while 8px is coarse enough that most layout decisions have one obvious answer.
+4px is the base for two reasons. The type scale's fixed line heights are all 4px multiples, so a text block and a box beside it stack without half-pixel drift. And 4px is fine enough to handle real sub-8 cases (icon-to-label gaps, chip padding) without anyone inventing a 5px, while 8px is coarse enough that most layout decisions have one obvious answer.
 
-Multiplier naming extends without renaming anything. T-shirt sizes run out the moment you need a step between two of them.
+Multiplier names let you add a step without renaming anything. Size names like `sm` and `md` run out as soon as you need a step between two of them.
 
 The scale is deliberately incomplete: fourteen steps, not thirty-two. Add a step when a real component needs one.
 
@@ -374,13 +374,13 @@ The scale is deliberately incomplete: fourteen steps, not thirty-two. Add a step
 
 **Padding, then gap, then margin.** Spacing lives on the parent container. A card carrying its own outer margin cannot be reused in a grid, a stack, and a sidebar without three overrides. The one sanctioned exception is prose flow between siblings, where `li + li` and `p + p` margins are the correct tool and are applied from a `--acm-flow-*` token so the value stays in one place.
 
-**Positions are logical.** `inline-start` / `inline-end`, `block-start` / `block-end`. Free today, and the whole difference if the club ever publishes in a right-to-left script. It is also what puts the Rail on the correct edge without a second rule.
+**Positions are logical.** `inline-start` / `inline-end`, `block-start` / `block-end`. They cost nothing now, and they make pages work in a right-to-left language if the club ever publishes in one. They also put the Rail on the correct edge without a second rule.
 
-**Section rhythm has its own tokens.** The space between two sections is not made of component spacing. These three are the only fluid tokens in the system, because nothing aligns across a section gap so intermediate drift is invisible. Everything structural steps at breakpoints and stays on the grid.
+**Section rhythm has its own tokens.** The space between two sections does not use the component spacing tokens. These three are the only fluid tokens in the system: nothing lines up across a section gap, so nobody can see a gap that lands between grid steps. Everything structural steps at breakpoints and stays on the grid.
 
-**Prose rhythm is 2:1, above to below, at every heading level.** One ratio does all the sectioning work, which is why a well-set doc needs no rules, boxes, or background changes to mark a section boundary. It is the club's only sectioning device.
+**Prose rhythm is 2:1, above to below, at every heading level.** That spacing alone marks where a section starts, so a doc needs no rules, boxes, or background changes at section boundaries. Club pages use no other way to mark sections.
 
-**Density: two settings.** Default for cards, event pages, and prose. Compact for the meeting plan, the kit table, and the roster. Compact changes *what appears* and not only the row height: at compact, a station card in a grid drops its "why this matters" line and keeps title, tier, and the parts count.
+**Density: two settings.** Default for cards, event pages, and prose. Compact for the meeting plan, the kit table, and the roster. Compact changes *what appears* as well as the row height: at compact, a station card in a grid drops its "why this matters" line and keeps title, tier, and the parts count.
 
 **Density is a user setting and never a viewport consequence.** Binding it to a breakpoint would make content disappear on phones, which is a content-parity failure. `data-density="compact"` is set by a control, not a media query.
 
@@ -390,7 +390,7 @@ The scale is deliberately incomplete: fourteen steps, not thirty-two. Add a step
 
 The breakpoint numbers are a judgment call. Three is the smallest ladder covering phone, small laptop or tablet, and desktop. Pick three; do not add a fourth.
 
-The column counts are not a judgment call. 4 / 8 / 12 share divisors, so a span of 4 is full width at 4 columns, half at 8, and a third at 12. One number, correct at every tier, no breakpoint override. Halves and quarters come free everywhere. **Thirds exist only at 12 columns**, which is worth knowing before designing a three-up card row: it collapses to two-up at 8 and stacks at 4. The lab-day page's four station cards are a quarter each: four-up at 12, two-up at 8, stacked at 4.
+The column counts are not a judgment call. 4 / 8 / 12 share divisors, so a span of 4 is full width at 4 columns, half at 8, and a third at 12. So one span value works at every tier with no breakpoint override, and halves and quarters work at every tier too. **Thirds exist only at 12 columns**, so check this before designing a three-up card row: it collapses to two-up at 8 and stacks at 4. The lab-day page's four station cards are a quarter each: four-up at 12, two-up at 8, stacked at 4.
 
 | Tier | Columns | Gutter | Page margin |
 |---|---|---|---|
@@ -398,7 +398,7 @@ The column counts are not a judgment call. 4 / 8 / 12 share divisors, so a span 
 | 600px and up | 8 | 24px | 32px |
 | 1024px and up | 12 | 24px | 48px |
 
-The gutter holds at 24px across both larger tiers rather than growing. Card padding is also 24px, so the gap between two cards and the gap inside one card agree and a row reads as one rhythm. The column width absorbs the extra viewport, which is the right answer: wider screens should get wider content, not wider air.
+The gutter holds at 24px across both larger tiers rather than growing. Card padding is also 24px, so the gap between two cards matches the padding inside one card and the spacing in a row looks even. On a wider screen the columns get wider and the gaps stay the same, so the extra width goes to content.
 
 **Containers, chosen by what is inside them.**
 
@@ -411,7 +411,7 @@ The gutter holds at 24px across both larger tiers rather than growing. Card padd
 
 The container's `max-width` measures the **content**, with page margin added on top. This requires `box-sizing: border-box`, which the reset in §5.1 ships. Without it the padding lands outside the max-width and the column band is wrong.
 
-**Control sizing.** The visible control is 40px; the hit area is 48px minimum. Two tokens, and every button, checkbox, and icon link clears the touch minimum without anyone thinking about it.
+**Control sizing.** The visible control is 40px; the hit area is 48px minimum. Two tokens set these, so every button, checkbox, and icon link meets the touch minimum by default.
 
 ## 4.3 Shape
 
@@ -427,9 +427,9 @@ Seven steps, indexed by roundness rather than by component size.
 | `--acm-radius-xl` | 24px | Hero media, large panels, page-level containers |
 | `--acm-radius-full` | 9999px | Actions and avatars only |
 
-The website's own scale runs 8 / 16 / 24 / 32 / 48 plus pill. The docs system caps at 24px and the 32 and 48 steps are out of it. Judgment call: the larger steps belong to a marketing page with 9rem display type, and on a document they read as bubbles. The site is a separate codebase and keeps its scale until it converges (open item).
+The website's own scale runs 8 / 16 / 24 / 32 / 48 plus pill. The docs system caps at 24px and the 32 and 48 steps are out of it. Judgment call: the larger steps belong to a marketing page with 9rem display type, and on a document the corners look too round. The site is a separate codebase and keeps its scale until it converges (open item).
 
-**Full round means you can press it.** Buttons, pills, pressable chips, avatars. Everything else uses the rectangular ladder. That single distinction does more affordance work than any hover state. If a container is fully rounded it reads as a control and someone will click it.
+**Fully rounded shapes are only for things you can press, and for avatars:** buttons, pills, pressable chips, avatars. Everything else uses the rectangular ladder. This one rule shows readers what is clickable better than any hover state does. People try to click any fully rounded container.
 
 **Radius grows with footprint.** An 8px radius on a 640px panel looks like a rendering artifact; a 24px radius on a 32px chip looks like a bubble.
 
@@ -437,7 +437,7 @@ The website's own scale runs 8 / 16 / 24 / 32 / 48 plus pill. The docs system ca
 
 **Nesting math, two subtractions.** Inner radius equals outer radius minus the padding between them: a 24px card with 8px of padding around an inner panel gives that panel 16px. And inner radius equals outer radius minus the border width: an 8px container with a 1px border wants 7px inside. Worked example in tokens.css: a 12px card with 8px of inlay leaves 4px, `--acm-radius-xs`, on the media band.
 
-**Asymmetric corners are first-class.** A card docked to a section boundary rounds only its free corners. Do not round a corner that has nothing on the other side of it. The Rail is never rounded; it is a bar, and a rounded bar is a pill, which means press.
+**Asymmetric corners are first-class.** A card docked to a section boundary rounds only its free corners. Do not round a corner that has nothing on the other side of it. The Rail is never rounded: a rounded bar looks like a pill, and pills mean "press this".
 
 **Radius is a spatial property.** When it animates it runs on the spatial track, never on effects.
 
@@ -453,21 +453,21 @@ Five levels. Four are allowed at rest.
 | 3 | Tone + shadow | Yes | Dialog, modal sheet |
 | 4 | Shadow | **No** | Interaction only: drag, and a genuine lift |
 
-**Depth is tone first.** Separation comes from a step on the surface container ladder. If tone alone will not carry it, add a 1px `--acm-outline-variant` hairline. Shadow has exactly two jobs: protecting an element that sits over busy or patterned content, and signalling interaction. If two boxes need to look different and neither floats over anything, that is a tone or a hairline problem. The website's glass panels (a 3% white fill with a 12px blur) are a marketing treatment and are not in this system.
+**Depth is tone first.** Separation comes from a step on the surface container ladder. If tone alone will not carry it, add a 1px `--acm-outline-variant` hairline. Use a shadow for exactly two things: keeping an element readable when it sits over busy or patterned content, and showing an interaction. If two boxes need to look different and neither floats over anything, fix it with tone or a hairline. The website's glass panels (a 3% white fill with a 12px blur) are a marketing treatment and are not in this system.
 
-**The recipe is two layers and the ink is not black.** A tight key shadow for contact plus a wider ambient shadow for distance, tinted with the same ink as the text (`--acm-elevation-ink: 34 31 30`, which is `#221f1e`). Pure black shadows go grey and muddy when they stack.
+**The recipe is two layers, tinted with the text ink instead of black.** A tight key shadow for contact plus a wider ambient shadow for distance, tinted with the same ink as the text (`--acm-elevation-ink: 34 31 30`, which is `#221f1e`). Pure black shadows go grey and muddy when they stack.
 
 **`--acm-elevation-0` is a zero-alpha shadow, not `none`.** `none` does not interpolate with a shadow list, so a transition from level 0 snaps instead of animating.
 
-**Card hover goes to level 1, not level 4.** Spending the top of a five-level ladder on the most common hover in the system flattens the whole range, and a shadow with no `transform` reads as a pop rather than a lift.
+**Card hover goes to level 1, not level 4.** Using the top level of five for the most common hover leaves no stronger level for drag, and a shadow with no `transform` looks like a jump instead of a lift.
 
-**Dark is a separate answer, not an inversion.** Step the tone first: on a dark ground a shadow has almost nothing to darken, so move up one surface container role. Pair every floating dark surface with a hairline. When a shadow is genuinely needed (dialogs, dragged items), swap the ink to true black and raise the alpha. The dark alphas (0.44 key, 0.24 ambient) are chosen, not measured. **Verify them on the A-210 projector before the showcase**; a lecture-hall projector flattens anything under about 0.3 to nothing.
+**Dark mode gets its own rules; do not invert the light ones.** Step the tone first: on a dark ground a shadow has almost nothing to darken, so move up one surface container role. Pair every floating dark surface with a hairline. When a shadow is genuinely needed (dialogs, dragged items), swap the ink to true black and raise the alpha. The dark alphas (0.44 key, 0.24 ambient) are chosen, not measured. **Verify them on the A-210 projector before the showcase**; on a lecture-hall projector, a shadow under about 0.3 alpha does not show at all.
 
 ## 4.5 Sourced against chosen
 
 Taken as method from the sibling GDG system, which read them from public engineering practice: the 4px base with an 8px preference and line heights on 4px multiples; padding before gap before margin; logical position naming; section rhythm as its own token; 2:1 heading space; the 4 / 8 / 12 column ladder; prose measure capped independently of the grid; a 40px visible control inside a 48px hit area; full-round for actions with rectangular surfaces; reusing one numeric scale for spacing and radius; tone before shadow; the two-layer tinted shadow at 0.30 key and 0.15 ambient; shadow on light and a tone step on dark; inner radius compensated for a border; asymmetric radii for docked panels; two densities where density changes content rather than only padding.
 
-Chosen here and open to argument: the breakpoints 600 / 1024 / 1440; holding the gutter at 24px across both larger tiers; page margins 16 / 32 / 48; the four container widths and 640px for prose; seven radius steps capping at 24px against the website's 48; five elevation levels; every dark-mode alpha; the three `clamp()` rhythm ranges.
+Chosen here and open to change: the breakpoints 600 / 1024 / 1440; holding the gutter at 24px across both larger tiers; page margins 16 / 32 / 48; the four container widths and 640px for prose; seven radius steps capping at 24px against the website's 48; five elevation levels; every dark-mode alpha; the three `clamp()` rhythm ranges.
 
 ---
 
@@ -478,11 +478,11 @@ Chosen here and open to argument: the breakpoints 600 / 1024 / 1440; holding the
 **Spatial** covers position, size, rotation, and corner radius. It may overshoot.
 **Effects** covers opacity, color, and state layers. It never overshoots.
 
-That split is the whole system, and it is what makes the reduced-motion override two lines rather than an audit.
+Every animation belongs to one of these two tracks. Because of that split, the reduced-motion override is two lines of CSS instead of a check of every animation.
 
 ## 5.2 Durations
 
-Three tiers per track. Spatial runs roughly 2.2 times the effects duration at the same tier, which is the ratio at which a movement and the color change riding along with it feel like one event.
+Three tiers per track. Spatial runs roughly 2.2 times the effects duration at the same tier, because at that ratio a movement and the color change that goes with it look like one change.
 
 | Tier | Effects | Spatial | Use |
 |---|---|---|---|
@@ -496,7 +496,7 @@ All chosen, not sourced. The website runs 0.3s / 0.6s / 1.2s because it is a scr
 
 ## 5.3 Easing
 
-The two working curves are the website's own, so the docs and the site feel like one club under the cursor.
+The two main curves are copied from the website, so the docs and the site move the same way.
 
 | Token | Curve | Use |
 |---|---|---|
@@ -504,21 +504,21 @@ The two working curves are the website's own, so the docs and the site feel like
 | `--acm-ease-spatial` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Spatial only. Overshoots and settles. The website's `--ease-premium`. |
 | `--acm-ease-exit` | `cubic-bezier(0.4, 0, 1, 1)` | Anything leaving. Accelerates out. |
 
-`--acm-ease-spatial` is the only curve with a control point above 1, which is what produces the overshoot. Never apply it to opacity or color: a color that overshoots renders as a flash. The site's overshoot is larger than the GDG system's (1.56 against 1.28); on a 320ms card lift it reads as a small bounce, and that is the intended difference in character between the two clubs' pages.
+`--acm-ease-spatial` is the only curve with a control point above 1, which is what produces the overshoot. Never apply it to opacity or color: a color that overshoots renders as a flash. The site's overshoot is larger than the GDG system's (1.56 against 1.28); on a 320ms card lift it shows as a small bounce, and the bigger bounce is an intended difference from the GDG pages.
 
 ## 5.4 Reduced motion
 
-Zero the spatial durations, leave effects intact. Every state change survives, every movement stops. The website already ships a `usePrefersReducedMotion` hook; the docs ship the media query in tokens.css.
+Set the spatial durations to zero and leave the effects alone. Color and opacity changes still happen, and nothing moves. The website already ships a `usePrefersReducedMotion` hook; the docs ship the media query in tokens.css.
 
 ## 5.5 Icons
 
 **Lucide**, at 24 x 24 with a 1.5px stroke and one locked weight everywhere. Two sizes: 24px inside a `lg` control and in prose, 20px inside `md` and `sm` controls.
 
-Stroke icons on a 24 grid agree with the diagram stroke ladder the club will draw wiring and state-machine diagrams with (`[TBD: not yet written; base weight 1.5px, three weights, one job each]`), which means one drawing logic covers icons, wiring diagrams, and the state-machine sketches on a T2 card.
+Stroke icons on a 24 grid agree with the diagram stroke ladder the club will draw wiring and state-machine diagrams with (`[TBD: not yet written; base weight 1.5px, three weights, one job each]`), so icons, wiring diagrams, and the state-machine sketches on a T2 card all follow the same stroke rules.
 
 **Unverified in this document: Lucide's license.** It is understood to be ISC. Read the LICENSE file in the Lucide repository and record the result in `brand.md` before committing the dependency. If it does not check out, Phosphor and Heroicons are the alternates on the same terms.
 
-Conventions: one base glyph plus a consistent modifier for a variant. Never the ACM Diamond as an icon (the standards forbid it inside headlines or text), never a Google or Gemini glyph, never the `{}` and `<>` code-punctuation glyphs that read as a stock CS-club identity. Decorative icons are `aria-hidden="true"`; an icon that is the only content of a control carries an accessible name.
+Conventions: one base glyph plus a consistent modifier for a variant. Never the ACM Diamond as an icon (the standards forbid it inside headlines or text), never a Google or Gemini glyph, never the `{}` and `<>` code-punctuation glyphs that make a page look like every other CS club's. Decorative icons are `aria-hidden="true"`; an icon that is the only content of a control carries an accessible name.
 
 ---
 

@@ -1,6 +1,6 @@
 # Playbook: ICPC Southern California Regional site
 
-Runbook for the one weekend a year when RCC hosts a site for the ICPC Southern California Regional Contest and fields its own teams. Evergreen rules live here. Each season's dates, headcounts, and spend live under `semesters/<YYYY-term>/events/`.
+Steps for the one weekend a year when RCC hosts a site for the ICPC Southern California Regional Contest and fields its own teams. This file holds the rules that repeat every year. Each season's dates, headcounts, and spend live under `semesters/<YYYY-term>/events/`.
 
 ## Purpose
 
@@ -9,7 +9,7 @@ RCC plays two separate roles on contest day, and they need two separate owners:
 1. **Host site.** RCC provides the building, the lab machines, the network, volunteers, and food for every team assigned to the Riverside site. The regional contest directors run the contest itself (problems, judging, clock, scoreboard).
 2. **Competing institution.** RCC registers its own teams of three, with a faculty or staff coach, and those students compete like everyone else.
 
-Keeping the two roles apart matters: ICPC rules say the coach cannot be a contestant, the club keeps host volunteers and contestants separate so nobody is torn between the two jobs, and the host budget is separate from the team budget.
+Keeping the two roles apart matters: ICPC rules say the coach cannot be a contestant, the club keeps host volunteers and contestants separate so no one has to do both jobs at once, and the host budget is separate from the team budget.
 
 ## History, for context
 
@@ -26,7 +26,7 @@ Numbers below are from the 2025-26 season page at <https://scl.na.icpc.global/20
 | Contest date | November 15, 2025 | [TBD] |
 | Registration window | September 1 to November 1, 2025 | [TBD] |
 | Team fee | $175 per team, invoiced through ICPC QuickBooks | [TBD] |
-| Team slots | up to 3 per institution guaranteed; extra slots round-robin after registration closes | [TBD] |
+| Team slots | up to 3 per institution guaranteed; extra slots handed out one school at a time, in turns (round-robin), after registration closes | [TBD] |
 | Online rehearsal | around October 25, 2025 | [TBD] |
 | Contest length | 5 hours | same unless announced |
 | Contest environment | Intel Core i7, Fedora 42, XFCE; C/C++ 14.2, Java OpenJDK 21, Kotlin 2.0, Python 3.12; DOMjudge | [TBD] |
@@ -39,7 +39,7 @@ Use `scl.na.icpc.global`, not `socalcontest.org`. The legacy domain served an ex
 
 | Role | Who | Does |
 | --- | --- | --- |
-| Site lead | An officer (not competing) | Single point of contact with the contest directors; owns the host checklist |
+| Site lead | An officer (not competing) | The one person who talks with the contest directors; owns the host checklist |
 | Faculty or staff site contact | Advisor or CIS faculty ([TBD]) | 25Live booking, building access, keys, custodial, Campus Safety, Strong Workforce or dean-level funding |
 | Lab lead | A member with Linux experience (not competing) | Machine imaging to the contest spec, network, printer, DOMjudge client checks |
 | Volunteer lead | Any officer or member (not competing) | Recruits and schedules volunteers; check-in table, runners, food |
@@ -84,13 +84,13 @@ Use `scl.na.icpc.global`, not `socalcontest.org`. The legacy domain served an ex
 - [ ] Room laid out: one machine per team, team number on each station, no adjacent teams sharing a monitor line of sight if the directors ask for it.
 - [ ] All machines re-imaged or verified; USB ports and network per the directors' instructions.
 - [ ] Coach and volunteer room set up; check-in table stocked (team list, name tags, maps).
-- [ ] Walk the route from parking to the room with fresh eyes.
+- [ ] Walk the route from parking to the room as if you had never been there.
 
 ## Competing institution: T-minus checklist
 
 ### Eligibility self-check (do this before anyone practices seriously)
 
-From the ICPC regional rules at <https://icpc.global/regionals/rules>. The year numbers move every season; store the rule shape here and confirm the current numbers on that page.
+From the ICPC regional rules at <https://icpc.global/regionals/rules>. The year numbers change every season. This list keeps the rules; confirm the current numbers on that page.
 
 - [ ] Enrolled at RCC in a degree program with at least a half-time load.
 - [ ] Willing and able to compete in the World Finals if the team advances.
@@ -102,7 +102,7 @@ From the ICPC regional rules at <https://icpc.global/regionals/rules>. The year 
 ### Registration
 
 - [ ] September 1 (2025 pattern): registration opens. Coach registers teams through the ICPC registration system: <https://icpc.global/regionals/finder/Southern-California>.
-- [ ] Teams are exactly three contestants. Up to three RCC team slots are guaranteed; ask for more and take what round-robin gives.
+- [ ] Teams are exactly three contestants. Up to three RCC team slots are guaranteed; ask for more and accept however many extra slots the round-robin assigns.
 - [ ] Fee: $175 per team (2025), invoiced through ICPC QuickBooks. Who pays (club, department, ASRCC): [TBD]. Log it.
 - [ ] Practice: weekly problem sessions in the regular meeting slot (Thursdays 12:50 to 1:50 PM, BLCIS A-210) from September until contest week. Use the contest languages only: C, C++, Java, Python 3, Kotlin.
 - [ ] Online rehearsal (around October 25 in 2025): every RCC team logs in from a lab machine and submits at least one problem.

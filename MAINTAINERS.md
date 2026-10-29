@@ -1,6 +1,6 @@
 # Maintainers
 
-Who holds the keys to this repo and how the keys move. Keep this file current; it is the first thing an incoming team reads when the outgoing team is gone.
+This file lists who has admin access to this repo and how that access gets handed to the next team. Keep it current: when the outgoing team is gone, the incoming team reads this file first.
 
 Last reviewed: 2026-08-24
 
@@ -40,9 +40,9 @@ This repo lives at https://github.com/Sam-T-G/rcc-acm, under a personal GitHub a
 - Collaborators can pull and push. That is the only access level a personal repo can grant.
 - Only the owner can invite collaborators, change visibility, delete the repo, or transfer it.
 
-So under a personal account, "repo admin 2" is a write collaborator who is the designated transfer target, and only the owner is a true admin. That satisfies the two-admins rule in spirit, but one person can still lock everyone out by disappearing.
+So under a personal account, "repo admin 2" is a write collaborator who is the designated transfer target, and only the owner is a true admin. That covers the two-admins rule on paper, but if the owner stops responding, nobody else can change settings, add collaborators, or transfer the repo.
 
-The durable fix is to move the repo into a GitHub organization owned by the club, where two or more people can hold the Admin role at the same time. Whether and when to do that is a decision for the decision log: [TBD].
+The long-term fix is to move the repo into a GitHub organization owned by the club, where two or more people can hold the Admin role at the same time. Whether and when to do that is a decision for the decision log: [TBD].
 
 ## How to transfer admin rights on GitHub
 
@@ -96,4 +96,4 @@ Check these after any transfer or admin change. They live under "Settings" for t
 
 ## Other accounts this repo does not control
 
-GitHub is one key among several. Discord, Instagram, the club website, the shared drive, the ACM (Association for Computing Machinery) chapter portal, and any trust-account signer list each have their own owner. The semester `handoff.md` (from `semesters/_template/handoff.md`) lists them with their current holder role and the transfer status. Keep credentials out of this repo entirely.
+GitHub is one of several club accounts. Discord, Instagram, the club website, the shared drive, the ACM (Association for Computing Machinery) chapter portal, and any trust-account signer list each have their own owner. The semester `handoff.md` (from `semesters/_template/handoff.md`) lists them with their current holder role and the transfer status. Keep credentials out of this repo entirely.

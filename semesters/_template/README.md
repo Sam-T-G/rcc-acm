@@ -2,7 +2,7 @@
 
 Working checklist for the SEMESTER_LABEL officer team of ACM @ RCC. Folder: `semesters/SEMESTER_SLUG/`. The rules behind this checklist are in [semester-lifecycle.md](../../docs/01-governance/semester-lifecycle.md).
 
-Tick boxes in this file as you go and commit it as-is. A half-finished checklist in the repo beats a finished one in someone's head.
+Tick boxes in this file as you go and commit it as-is. Commit it even when it is half done, so the rest of the team and the next team can see what is finished.
 
 ## Files in this folder
 

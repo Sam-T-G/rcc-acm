@@ -42,6 +42,9 @@
   --acm-inverse-on-surface:        #f7f3f1;
   --acm-focus-ring:                #ae3200;
   --acm-fill-orange:               #ff4d00;
+  /* Mark colors, for pictures only (breadboard rail lines): the system's mark set. */
+  --acm-mark-xref:                 #247ad6;
+  --acm-mark-failure:              #dc3f46;
 
   --acm-dur-fast-effects:    90ms;
   --acm-dur-default-effects: 140ms;
@@ -110,6 +113,17 @@ body {
   --s-top:     calc(144 * var(--u));
   --s-bottom:  calc(144 * var(--u));
   --s-gap:     calc(40 * var(--u));
+  /* Stage spacing scale (decision log 2026-10-28). Gaps, padding, and margins
+     between slide parts come from these steps, never from a free number. */
+  --st-1: calc(8 * var(--u));
+  --st-2: calc(16 * var(--u));
+  --st-3: calc(24 * var(--u));
+  --st-4: calc(32 * var(--u));
+  --st-5: calc(40 * var(--u));
+  --st-6: calc(48 * var(--u));
+  --st-7: calc(64 * var(--u));
+  --st-8: calc(96 * var(--u));
+  --st-9: calc(144 * var(--u));
   position: relative;
   margin: 0 auto;
 }
@@ -195,7 +209,22 @@ body {
 
 /* Beats not yet reached. Hidden, not removed. */
 .deck-live.is-presenting [data-beat].is-pending { visibility: hidden; }
+/* deck.js sets a slide's beat state under this class when the slide arrives,
+   so nothing fades on arrival; only a beat revealed in view animates. */
+.slide.is-settling, .slide.is-settling * { transition: none !important; }
+
+/* Before the engine runs, the page would paint its no-script layout (every
+   slide stacked, at rest) and then snap to the stage. On a slow network that
+   showed the finished cover for over a second before its opening ran
+   (2026-10-14). With scripting on, the deck waits hidden until deck.js marks
+   it live; if the engine never arrives, the failsafe shows the stack. */
+@media (scripting: enabled) {
+  html:not(.deck-live) .deck { visibility: hidden; animation: deck-boot-failsafe 0s linear 6s forwards; }
+}
+@keyframes deck-boot-failsafe { to { visibility: visible; } }
 .beats li.is-past, .board li.is-past { color: var(--acm-on-surface-variant); transition: color var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+/* On the filled grounds the variant ink fails contrast, so past items keep the ground's ink and drop weight only. */
+.slide:is([data-ground="orange"], [data-ground="tint"]) :is(.beats, .board) li.is-past { color: inherit; opacity: 0.8; }
 
 /* --- Chrome: ledger, counter, progress. Still across every transition. ---- */
 .chrome { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
@@ -229,12 +258,12 @@ body {
   transform-origin: 50% 0;
 }
 .cover__name { font-size: var(--s-body-sm); font-weight: 500; color: var(--acm-on-surface); margin-block-end: auto; }
-.slide[data-kind="cover"] .eyebrow { margin-block-end: calc(28 * var(--u)); }
+.slide[data-kind="cover"] .eyebrow { margin-block-end: var(--st-3); }
 .slide[data-kind="cover"] h1 { font-size: calc(168 * var(--u)); line-height: 0.96; letter-spacing: -0.04em; max-width: calc(1540 * var(--u)); }
-.slide[data-kind="cover"] .sub { margin-block-start: calc(36 * var(--u)); max-width: 44ch; }
+.slide[data-kind="cover"] .sub { margin-block-start: var(--st-4); max-width: 44ch; }
 .slide[data-kind="cover"] .sub strong { color: var(--acm-on-surface); font-weight: 700; }
-.cover__meta { margin-block-start: calc(40 * var(--u)); }
-.cover__starts { margin-block-end: calc(12 * var(--u)); }
+.cover__meta { margin-block-start: var(--st-5); }
+.cover__starts { margin-block-end: var(--st-2); }
 
 /* --- statement ------------------------------------------------------------ */
 .slide[data-kind="statement"] h2 { max-width: calc(1500 * var(--u)); font-size: calc(104 * var(--u)); }
@@ -243,17 +272,19 @@ body {
 .slide .hl { color: var(--acm-primary); }
 
 /* --- contrast ------------------------------------------------------------- */
-.contrast { display: grid; grid-template-columns: 1fr 1fr; gap: calc(96 * var(--u)); align-items: start; }
-.contrast > div { display: flex; flex-direction: column; gap: calc(24 * var(--u)); }
+.contrast { display: grid; grid-template-columns: 1fr 1fr; gap: var(--st-8); align-items: start; }
+.contrast > div { display: flex; flex-direction: column; gap: var(--st-3); }
 .contrast > div > p:not(.label) { font-size: var(--s-body); line-height: 1.28; }
 /* Both sides the same size, weight, and ink: the words win, not the styling. */
 .contrast .is-strong > .label { color: var(--acm-primary); }
 
 /* --- beats ---------------------------------------------------------------- */
-.beats { list-style: none; padding: 0; display: grid; gap: calc(36 * var(--u)); counter-reset: beat; }
-.beats:has(.detail) { gap: calc(22 * var(--u)); }
+/* List rhythm, shared by beats, board, and lab steps: --st-4 between plain
+   items, --st-3 between items that carry a detail line; marker column 96. */
+.beats { list-style: none; padding: 0; display: grid; gap: var(--st-4); counter-reset: beat; }
+.beats:has(.detail) { gap: var(--st-3); }
 .beats li {
-  display: grid; grid-template-columns: calc(96 * var(--u)) 1fr; gap: calc(28 * var(--u)); align-items: baseline;
+  display: grid; grid-template-columns: var(--st-8) 1fr; gap: var(--st-3); align-items: baseline;
   max-width: calc(1480 * var(--u));
 }
 .beats li::before {
@@ -262,13 +293,13 @@ body {
   font-variant-numeric: tabular-nums; color: var(--acm-primary);
 }
 .beats li > .body { display: block; }
-.beats li .detail { display: block; font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); margin-top: calc(8 * var(--u)); }
+.beats li .detail { display: block; font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); margin-top: var(--st-1); }
 
 /* --- board: every dated thing in the next four weeks, one line each ------- */
 .board { list-style: none; padding: 0; display: grid; max-width: calc(1600 * var(--u)); }
 .board li {
-  display: grid; grid-template-columns: calc(420 * var(--u)) 1fr; gap: calc(40 * var(--u)); align-items: baseline;
-  padding-block: calc(22 * var(--u));
+  display: grid; grid-template-columns: calc(420 * var(--u)) 1fr; gap: var(--st-5); align-items: baseline;
+  padding-block: var(--st-3);
 }
 .board li:not(:last-child) { border-block-end: calc(2 * var(--u)) solid var(--acm-outline-variant); }
 .board time { font-family: var(--acm-font-code); font-size: var(--s-body-sm); font-weight: 500; font-variant-ligatures: none; }
@@ -278,7 +309,7 @@ body {
   font-family: var(--acm-font-code); font-size: var(--s-body-sm); line-height: 1.4;
   font-variant-ligatures: none; font-variant-numeric: tabular-nums;
   color: var(--acm-code-on-surface); background: var(--acm-code-surface);
-  border-radius: calc(12 * var(--u)); padding: calc(40 * var(--u)) calc(48 * var(--u));
+  border-radius: calc(12 * var(--u)); padding: var(--st-5) var(--st-6);
   box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
   white-space: pre; overflow: hidden; max-width: calc(1728 * var(--u));
 }
@@ -286,13 +317,13 @@ body {
 .code .k { color: var(--acm-primary); font-weight: 500; }
 
 /* --- figure --------------------------------------------------------------- */
-.figure { display: flex; align-items: baseline; gap: calc(40 * var(--u)); }
+.figure { display: flex; align-items: baseline; gap: var(--st-5); }
 .figure__num { font-size: calc(320 * var(--u)); line-height: 0.85; font-weight: 700; letter-spacing: -0.05em; color: var(--acm-primary); font-variant-numeric: tabular-nums lining-nums; }
 .figure__unit { font-size: var(--s-head); line-height: 1; font-weight: 700; letter-spacing: -0.02em; }
 .slide[data-kind="figure"] .sub { max-width: 44ch; }
 
 /* --- clock ---------------------------------------------------------------- */
-.clock { display: grid; gap: calc(28 * var(--u)); margin-block-start: calc(24 * var(--u)); }
+.clock { display: grid; gap: var(--st-3); margin-block-start: var(--st-3); }
 .clock__digits { font-size: calc(240 * var(--u)); line-height: 0.9; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums lining-nums; }
 .clock__track { height: calc(12 * var(--u)); background: var(--acm-surface-container-highest); overflow: hidden; }
 .clock__fill { display: block; height: 100%; background: var(--acm-primary); transform-origin: left center; }
@@ -300,13 +331,13 @@ body {
 /* Last ten seconds: the digits take the primary container and hold it. Never blinks. */
 .clock[data-state="ending"] .clock__digits, .clock[data-state="done"] .clock__digits {
   background: var(--acm-primary-container); color: var(--acm-on-primary-container);
-  justify-self: start; padding-inline: calc(24 * var(--u)); border-radius: calc(12 * var(--u));
+  justify-self: start; padding-inline: var(--st-3); border-radius: calc(12 * var(--u));
 }
 
 /* --- callout: Check or Warning, one per slide, short solid Rail ----------- */
 .callout {
   position: relative; overflow: hidden; max-width: calc(1500 * var(--u));
-  padding: calc(28 * var(--u)) calc(40 * var(--u)) calc(28 * var(--u)) calc(88 * var(--u));
+  padding: var(--st-3) var(--st-5) var(--st-3) var(--st-8);
   border-radius: calc(16 * var(--u));
   box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline);
   font-size: var(--s-body-sm); line-height: 1.3;
@@ -317,10 +348,10 @@ body {
 .callout b { font-weight: 700; }
 
 /* --- ask: the last slide, with the club name as text ---------------------- */
-.slide[data-kind="ask"] { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; column-gap: calc(96 * var(--u)); row-gap: calc(40 * var(--u)); align-items: center; }
-.ask__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="ask"] { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; column-gap: var(--st-8); row-gap: var(--st-5); align-items: center; }
+.ask__main { display: flex; flex-direction: column; gap: var(--st-4); }
 .ask__meta { font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); }
-.qr { display: flex; flex-direction: column; align-items: center; gap: calc(16 * var(--u)); color: inherit; text-decoration: none; }
+.qr { display: flex; flex-direction: column; align-items: center; gap: var(--st-2); color: inherit; text-decoration: none; }
 .qr__tile {
   width: calc(320 * var(--u)); height: calc(320 * var(--u)); padding: calc(12 * var(--u)); display: block;
   border-radius: calc(12 * var(--u)); background: #ffffff;
@@ -328,7 +359,7 @@ body {
 }
 .qr__tile svg, .qr__tile img { width: 100%; height: 100%; display: block; }
 .qr .label { text-align: center; text-transform: none; letter-spacing: 0.02em; }
-.ask__foot { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: calc(64 * var(--u)); }
+.ask__foot { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: var(--st-7); }
 .ask__name { font-size: var(--s-body-sm); font-weight: 500; }
 .ask__stamp { font-family: var(--acm-font-code); font-size: var(--s-ledger); color: var(--acm-on-surface-variant); font-variant-numeric: tabular-nums; }
 
@@ -361,14 +392,18 @@ body {
 .slide[data-layout="center"] { align-items: center; text-align: center; }
 .slide[data-layout="center"] :is(h2, .sub) { margin-inline: auto; }
 .slide[data-kind="statement"][data-layout="giant"] { justify-content: flex-end; padding-bottom: calc(176 * var(--u)); }
-.slide[data-kind="statement"][data-layout="giant"] h2 { font-size: calc(184 * var(--u)); line-height: 0.95; letter-spacing: -0.045em; max-width: none; }
+.slide[data-kind="statement"][data-layout="giant"] h2 { font-size: calc(168 * var(--u)); line-height: 0.95; letter-spacing: -0.04em; max-width: none; }
 
 /* --- photo: one photograph and the words beside it, never over it --------- */
 /* Layouts: bleed-right (default) and bleed-left run the photo off the stage
    edge, from the top down to the progress band; framed sits it inside the
    margins. The credit is a link, on the slide, in the ledger face. */
-.slide[data-kind="photo"] { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(96 * var(--u)); align-items: center; }
-.photo__text { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="photo"] { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--st-8); align-items: center; }
+.photo__text { display: flex; flex-direction: column; gap: var(--st-4); }
+/* A sign-up QR beside a photo: smaller tile, label to its right, so the column clears the rail. */
+.photo__text .qr { flex-direction: row; align-self: flex-start; gap: var(--st-3); }
+.photo__text .qr .label { text-align: left; overflow-wrap: anywhere; }
+.photo__text .qr__tile { width: calc(216 * var(--u)); height: calc(216 * var(--u)); flex: none; }
 .photo { margin: 0; }
 .photo img { display: block; object-fit: cover; }
 .credit { font-family: var(--acm-font-code); font-size: var(--s-ledger); line-height: 1.25; color: var(--acm-on-surface-variant); font-variant-ligatures: none; }
@@ -381,7 +416,7 @@ body {
 .slide[data-kind="photo"][data-layout="bleed-left"] .photo__text { grid-column: 2; grid-row: 1; }
 .slide[data-kind="photo"]:not([data-layout="framed"]) .credit { position: absolute; bottom: calc(136 * var(--u)); left: var(--s-margin); max-width: calc(760 * var(--u)); }
 .slide[data-kind="photo"][data-layout="bleed-left"] .credit { left: calc(50% + 48 * var(--u)); }
-.slide[data-kind="photo"][data-layout="framed"] .photo { display: grid; gap: calc(16 * var(--u)); }
+.slide[data-kind="photo"][data-layout="framed"] .photo { display: grid; gap: var(--st-2); }
 .slide[data-kind="photo"][data-layout="framed"] .photo img { width: 100%; height: auto; max-height: calc(640 * var(--u)); border-radius: calc(12 * var(--u)); }
 /* The photo is the only thing that bleeds, so the chrome over its corner steps aside. */
 .deck.on-bleed-right .chrome .counter, .deck.on-bleed-left .chrome .ledger { visibility: hidden; }
@@ -399,12 +434,12 @@ body {
 .deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(4) img { animation-delay: 270ms; }
 
 /* --- grid: two to four things side by side, each with an optional photo --- */
-.grid { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: calc(40 * var(--u)); }
-.grid li { display: flex; flex-direction: column; gap: calc(16 * var(--u)); font-size: var(--s-body-sm); }
+.grid { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--st-5); }
+.grid li { display: flex; flex-direction: column; gap: var(--st-2); font-size: var(--s-body-sm); }
 .grid img { display: block; width: 100%; height: calc(var(--img-h, 420) * var(--u)); object-fit: cover; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-lowest); }
 .grid b { font-size: var(--s-body); font-weight: 700; letter-spacing: -0.01em; }
 .grid p { font-size: var(--s-body-sm); line-height: 1.25; }
-.grid .code { padding: calc(20 * var(--u)) calc(24 * var(--u)); }
+.grid .code { padding: var(--st-3); }
 
 /* --- Ground crossfade ------------------------------------------------------
    Presenting, the ground lives on the stage, not the slide, and fades between
@@ -422,19 +457,19 @@ body {
 .progress__label, .progress__fill, .progress__track { transition: fill calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard); }
 
 /* --- signup: one form, its QR code, and its URL as text ------------------- */
-.slide[data-kind="signup"] { display: grid; grid-template-columns: 1fr auto; column-gap: calc(96 * var(--u)); align-items: center; }
-.signup__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="signup"] { display: grid; grid-template-columns: 1fr auto; column-gap: var(--st-8); align-items: center; }
+.signup__main { display: flex; flex-direction: column; gap: var(--st-4); }
 .slide[data-kind="signup"] .qr__tile { width: calc(420 * var(--u)); height: calc(420 * var(--u)); }
 .slide[data-ground="orange"] .qr .label, .slide[data-ground="tint"] .qr .label { color: var(--acm-on-surface); }
-.qrs { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
-.qrs .qr { flex-direction: row; gap: calc(28 * var(--u)); }
+.qrs { display: flex; flex-direction: column; gap: var(--st-4); }
+.qrs .qr { flex-direction: row; gap: var(--st-3); }
 .qrs .qr .label { text-align: left; }
 .qrs .qr__tile { width: calc(232 * var(--u)); height: calc(232 * var(--u)); }
 .qrs .label { font-size: var(--s-ledger); line-height: 1.25; }
 
 /* --- collage: the club's own photos, up to six ----------------------------- */
 .slide[data-kind="collage"] { justify-content: flex-start; }
-.collage { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(236 * var(--u)); gap: calc(16 * var(--u)); flex: 1; }
+.collage { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(236 * var(--u)); gap: var(--st-2); flex: 1; }
 .collage li { overflow: hidden; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-highest); }
 .collage li:nth-child(1) { grid-column: span 3; grid-row: span 2; }
 .collage li:nth-child(2), .collage li:nth-child(3) { grid-column: span 3; }
@@ -465,7 +500,7 @@ body {
 .collage video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
 /* A row collage: one justified row, each tile as wide as its media's shape
    (--ar = width / height, which ingest-photos.mjs prints), so nothing crops much. */
-.collage.is-row { display: flex; gap: calc(16 * var(--u)); }
+.collage.is-row { display: flex; gap: var(--st-2); }
 .collage.is-row { flex: 1 1 0; min-height: 0; }
 .collage.is-row li { flex: var(--ar, 1) 1 0; min-width: 0; position: relative; }
 .collage.is-row :is(img, video) { position: absolute; inset: 0; }
@@ -481,15 +516,15 @@ body {
    presenting, never under reduced motion; every element has a still pose. */
 .slide[data-layout="split"] {
   display: grid; grid-template-columns: minmax(0, 1fr) calc(760 * var(--u)); grid-template-rows: auto auto;
-  column-gap: calc(96 * var(--u)); row-gap: calc(48 * var(--u)); align-content: center; align-items: center;
+  column-gap: var(--st-8); row-gap: var(--st-6); align-content: center; align-items: center;
 }
-.split__head { grid-column: 1 / -1; display: flex; flex-direction: column; gap: calc(16 * var(--u)); }
-.split__main { min-width: 0; display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
-.slide[data-layout="split"] .clock { margin-block-start: 0; gap: calc(20 * var(--u)); }
+.split__head { grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--st-2); }
+.split__main { min-width: 0; display: flex; flex-direction: column; gap: var(--st-4); }
+.slide[data-layout="split"] .clock { margin-block-start: 0; gap: var(--st-3); }
 .slide[data-layout="split"] .clock__digits { font-size: calc(168 * var(--u)); }
 .slide[data-layout="split"] .sub { max-width: none; }
 .slide[data-layout="split"] .beats { display: grid; }
-.slide[data-layout="split"] .beats li { grid-template-columns: calc(72 * var(--u)) 1fr; gap: calc(20 * var(--u)); }
+.slide[data-layout="split"] .beats li { grid-template-columns: var(--st-7) 1fr; gap: var(--st-2); }
 .viz { margin: 0; color: var(--acm-on-surface); }
 .viz svg { display: block; width: 100%; height: auto; overflow: visible; }
 .viz text { font-family: var(--acm-font-code); font-size: 32px; font-weight: 500; fill: currentColor; font-variant-ligatures: none; font-variant-numeric: tabular-nums; }
@@ -814,3 +849,38 @@ body {
   .w__in, .blk__in, .cover__rail { transform: none !important; }
   .photo :is(img, video), .grid :is(img, video), .collage :is(img, video) { animation: none !important; clip-path: none !important; }
 }
+
+/* --- Partials (lab/partials.py): built on existing kinds through data-layout --
+   tiles: two equal track tiles on a contrast slide, neither styled as the better one.
+   sendoff: a signup slide handing a group to a page; the URL wraps under the tile.
+   rules: beats plus one Warning callout. map: a statement with the round strip.
+   win: the end of a round, usually on orange. Decision log 2026-10-28. */
+.slide[data-layout="tiles"] { gap: var(--st-6); }
+.contrast--even { gap: var(--st-5); align-items: stretch; }
+.contrast--even > div {
+  gap: var(--st-3); padding: var(--st-6); border-radius: calc(16 * var(--u));
+  background: var(--acm-surface-container-lowest); box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
+}
+.contrast--even > div > .label { color: var(--acm-primary); font-size: var(--s-body-sm); }
+.contrast--even > div > p:not(.label) { font-size: var(--s-body); }
+.slide[data-layout="sendoff"] { grid-template-columns: minmax(0, 1fr) calc(420 * var(--u)); }
+.slide[data-layout="sendoff"] .qr .label { max-width: calc(420 * var(--u)); overflow-wrap: anywhere; font-size: var(--s-ledger); }
+.slide[data-layout="sendoff"] .sub { max-width: 30ch; }
+.slide[data-layout="rules"] .callout { margin-block-start: var(--st-1); }
+.slide[data-layout="map"] h2 { font-size: var(--s-head); }
+.roundmap { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--st-2); margin-block-start: var(--st-4); max-width: calc(1728 * var(--u)); }
+.roundmap li {
+  display: grid; gap: var(--st-1); padding-block-start: var(--st-2);
+  border-block-start: calc(8 * var(--u)) solid var(--acm-outline-variant);
+  font-size: var(--s-body-sm); line-height: 1.15; color: var(--acm-on-surface-variant);
+}
+.roundmap b { font-family: var(--acm-font-code); font-size: var(--s-body-sm); font-weight: 500; font-variant-numeric: tabular-nums; }
+.roundmap .is-done { border-color: var(--acm-on-surface); color: var(--acm-on-surface); }
+.roundmap .is-current { border-color: var(--acm-primary); color: var(--acm-primary); font-weight: 700; }
+.slide[data-ground="orange"] .roundmap li, .slide[data-ground="tint"] .roundmap li { color: var(--acm-on-surface); }
+.slide[data-ground="orange"] .roundmap .is-current, .slide[data-ground="tint"] .roundmap .is-current { border-color: var(--acm-on-surface); }
+.slide[data-ground="orange"] .roundmap .is-next, .slide[data-ground="tint"] .roundmap .is-next { border-color: rgb(34 31 30 / 0.25); }
+.slide[data-layout="win"] .sub { max-width: 36ch; color: var(--acm-on-surface); }
+
+/* Long QR URLs break at their slashes into whole lines (partials.qr, 2026-10-28). */
+.qr .label .qr__line { display: block; }

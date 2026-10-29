@@ -1,0 +1,245 @@
+/* ===========================================================================
+   ACM @ RCC page kit. The layer a companion page adds on top of tokens.css.
+   pagekit.py inlines docs/04-brand/design-system/tokens.css first, then
+   viz.css, then this file, so every value here is a token or a token sum.
+   Components the system already defines (.acm-card, .acm-callout,
+   .acm-button, .acm-rail, tables, code, headings) are used as they are.
+   New here: the masthead, the start block, the progress strip, the code block
+   from components.md §7.11, reveals, steps, figures, and the input/output pair.
+   =========================================================================== */
+
+/* Two page-level values the system does not carry. The start block uses the
+   sanctioned raw orange fill with --acm-on-surface (4.92:1, foundations §2.2)
+   in light; dark has no orange fill token, so it falls back to the primary
+   container pair, which clears 4.5:1 in dark. */
+:root { --pk-start-bg: var(--acm-fill-orange); --pk-start-ink: var(--acm-on-surface); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --pk-start-bg: var(--acm-primary-container); --pk-start-ink: var(--acm-on-primary-container); }
+}
+:root[data-theme="dark"] { --pk-start-bg: var(--acm-primary-container); --pk-start-ink: var(--acm-on-primary-container); }
+
+/* --- Shell ---------------------------------------------------------------- */
+.pk-page { padding-block: var(--acm-space-10) var(--acm-space-20); }
+/* One content width: every block (start block, strip, cards, callouts, tables, groups, figures) runs to the
+   doc container's edge. Running text inside them keeps the prose measure, so only ragged text ends short. */
+.pk-page { --pk-width: var(--acm-container-doc); }
+.pk-page > *, .pk-page section > * { max-width: var(--pk-width); }
+.pk-page p, .pk-page li { max-width: var(--acm-measure-prose); }
+.pk-page h2 { max-width: none; }
+.pk-page .acm-callout, .pk-page .acm-table-scroll, .pk-page table, .pk-page .pk-cards, .pk-page .pk-steps,
+.pk-page .pk-group, .pk-page .pk-fig, .pk-page .pk-reveals, .pk-page .pk-code, .pk-page ul.pk-cards, .pk-page ol.pk-cards { max-width: var(--pk-width); }
+.pk-page .pk-steps > li, .pk-page .pk-cards > li { max-width: none; }
+/* Jump targets clear the sticky progress strip (about 56px tall at 600px and up). */
+.pk-page [id] { scroll-margin-top: calc(var(--acm-space-16) + var(--acm-space-4)); }
+
+/* --- Masthead: the Rail at its token width, the club name in the ledger --- */
+.pk-mast { margin-block-end: var(--acm-space-8); }
+.pk-mast .acm-ledger { margin: 0 0 var(--acm-space-2); color: var(--acm-primary); }
+.pk-mast h1 { margin-block-end: var(--acm-space-3); max-width: 24ch; }
+.pk-lede { color: var(--acm-on-surface-variant); margin: 0; }
+.pk-mast__pic { margin-block: var(--acm-space-4) 0; max-width: calc(var(--acm-space-30) * 3); }
+.pk-mast__pic .pk-fig { margin: 0; }
+@media (min-width: 1024px) {
+  .pk-mast:has(.pk-mast__pic) { display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--acm-space-30) * 3); gap: var(--acm-space-8); align-items: center; }
+  .pk-mast__pic { margin: 0; }
+}
+
+/* --- Start block: one action, above the fold ------------------------------ */
+.pk-start {
+  background: var(--pk-start-bg); color: var(--pk-start-ink);
+  border-radius: var(--acm-radius-lg);
+  padding: var(--acm-space-6);
+  margin-block: var(--acm-space-8);
+  display: grid; gap: var(--acm-space-3);
+}
+.pk-start .acm-ledger { color: inherit; margin: 0; }
+.pk-start__do {
+  margin: 0; font-family: var(--acm-font-brand);
+  font-size: var(--acm-size-headline-lg); line-height: var(--acm-lh-headline-lg);
+  letter-spacing: var(--acm-track-headline-lg); font-weight: var(--acm-weight-strong);
+}
+.pk-start p { margin: 0; }
+.pk-start a { color: inherit; font-weight: var(--acm-weight-strong); }
+.pk-start .pk-code { margin: 0; }
+.pk-start .acm-button { justify-self: start; background: var(--pk-start-ink); color: var(--pk-start-bg); text-decoration: none; }
+
+/* --- Progress strip: where you are, in the deck's mono numbers ------------ */
+/* Wraps instead of scrolling, so nothing hides off the edge. Sticky only where there is room for it. */
+.pk-progress {
+  background: var(--acm-surface);
+  box-shadow: 0 var(--acm-hairline) 0 var(--acm-outline-variant);
+  padding-block: var(--acm-space-2);
+}
+@media (min-width: 600px) { .pk-progress { position: sticky; top: 0; z-index: 5; } }
+.pk-progress ol { display: flex; flex-wrap: wrap; gap: var(--acm-space-2); list-style: none; margin: 0; padding: 0; max-width: none; }
+.pk-progress li + li { margin: 0; }
+.pk-progress a {
+  display: inline-flex; align-items: center; gap: var(--acm-space-2);
+  min-block-size: var(--acm-control); padding-inline: var(--acm-space-3);
+  border-radius: var(--acm-radius-full); white-space: nowrap;
+  font-size: var(--acm-size-label-lg); line-height: var(--acm-lh-label-lg);
+  color: var(--acm-on-surface); text-decoration: none;
+  box-shadow: inset 0 0 0 var(--acm-hairline) var(--acm-outline-variant);
+}
+.pk-progress a b {
+  font-family: var(--acm-font-code); color: var(--acm-primary);
+  font-variant-numeric: tabular-nums;
+}
+.pk-progress a:hover { background: var(--acm-surface-container); }
+
+/* --- Section heads: 2:1 from the tokens, no rules ------------------------- */
+.pk-page h2 .acm-ledger { display: block; margin-block-end: var(--acm-space-1); color: var(--acm-primary); }
+.pk-intro { color: var(--acm-on-surface-variant); }
+
+/* --- Cards ---------------------------------------------------------------- */
+.pk-cards { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--acm-space-4); max-width: none; }
+.pk-cards > li + li { margin: 0; }
+.pk-cards .acm-card { min-width: 0; }
+.pk-cards .acm-card:hover { transform: none; box-shadow: var(--acm-elevation-0); }
+.pk-card__head { display: flex; align-items: baseline; gap: var(--acm-space-3); margin-block-end: var(--acm-space-2); }
+.pk-card__n {
+  flex: none; min-inline-size: var(--acm-control-sm); block-size: var(--acm-control-sm);
+  display: inline-grid; place-items: center; border-radius: var(--acm-radius-full);
+  background: var(--acm-primary-container); color: var(--acm-on-primary-container);
+  font-family: var(--acm-font-code); font-size: var(--acm-size-label-lg); font-weight: var(--acm-weight-strong);
+}
+.pk-card__head h3 { margin: 0; max-width: none; }
+.pk-card__meta { margin: 0 0 var(--acm-space-3); color: var(--acm-on-surface-variant); font-size: var(--acm-size-body-md); line-height: var(--acm-lh-body-md); }
+.acm-card p:last-child { margin-block-end: 0; }
+.pk-facts { font-size: var(--acm-size-body-md); line-height: var(--acm-lh-body-md); color: var(--acm-on-surface-variant); }
+.pk-facts b { color: var(--acm-on-surface); }
+
+/* --- Steps: the phase row with a number in the leading column ------------ */
+.pk-steps { list-style: none; padding: 0; margin: 0 0 var(--acm-flow-block); counter-reset: pk-step; }
+.pk-steps > li { counter-increment: pk-step; display: grid; grid-template-columns: var(--acm-control) 1fr; gap: var(--acm-space-4); padding-block: var(--acm-space-3); }
+.pk-steps > li + li { margin: 0; box-shadow: 0 calc(var(--acm-hairline) * -1) 0 var(--acm-outline-variant); }
+.pk-steps > li::before {
+  content: counter(pk-step); inline-size: var(--acm-control); block-size: var(--acm-control);
+  display: grid; place-items: center; border-radius: var(--acm-radius-full);
+  background: var(--acm-primary); color: var(--acm-on-primary);
+  font-family: var(--acm-font-code); font-weight: var(--acm-weight-strong);
+}
+.pk-steps p { margin: 0; }
+
+/* --- Code block, components.md §7.11 -------------------------------------- */
+.pk-code {
+  position: relative; margin-block: var(--acm-space-4); max-width: none;
+  border-radius: var(--acm-radius-sm); background: var(--acm-code-surface); color: var(--acm-code-on-surface);
+  box-shadow: inset 0 0 0 var(--acm-hairline) var(--acm-outline-variant);
+}
+.pk-code__head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--acm-space-3);
+  min-block-size: var(--acm-space-8); padding: var(--acm-space-1) var(--acm-space-1) var(--acm-space-1) var(--acm-space-4);
+  box-shadow: 0 var(--acm-hairline) 0 var(--acm-outline-variant);
+}
+.pk-code__head .acm-ledger { margin: 0; text-transform: none; letter-spacing: var(--acm-track-code-sm); }
+.pk-copy {
+  flex: none; display: inline-flex; align-items: center; gap: var(--acm-space-1);
+  min-block-size: var(--acm-space-8); padding-inline: var(--acm-space-2);
+  border: 0; border-radius: var(--acm-radius-xs); background: transparent; color: var(--acm-primary);
+  font: var(--acm-weight-strong) var(--acm-size-label-lg)/var(--acm-lh-label-lg) var(--acm-font-text);
+  cursor: pointer;
+}
+.pk-copy svg { inline-size: var(--acm-icon-sm); block-size: var(--acm-icon-sm); }
+.pk-copy:hover { background: var(--acm-surface-container-high); }
+.pk-copy .pk-done { display: none; }
+.pk-copy[data-state="done"] .pk-idle { display: none; }
+.pk-copy[data-state="done"] .pk-done { display: inline; }
+.pk-code pre { margin: 0; box-shadow: none; border-radius: 0 0 var(--acm-radius-sm) var(--acm-radius-sm); max-width: none; }
+.pk-code pre code { display: block; }
+/* Line numbers past ten lines, from a counter, so they never reach the clipboard. */
+.pk-code--numbered pre code { counter-reset: pk-line; }
+.pk-code--numbered .pk-l { counter-increment: pk-line; }
+.pk-code--numbered .pk-l::before {
+  content: counter(pk-line); display: inline-block; inline-size: 3ch; margin-inline-end: var(--acm-space-3);
+  text-align: end; color: var(--acm-on-surface-variant); user-select: none;
+}
+/* Long lines scroll inside the block, with a scrollbar that stays visible as the cue. */
+.pk-code pre { scrollbar-width: thin; scrollbar-color: var(--acm-outline) transparent; }
+/* The preview: only the lines you edit, wrapped so nothing is ever cut off. */
+.pk-code--preview pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.pk-code .pk-mark { background: var(--acm-primary-container); color: var(--acm-on-primary-container); border-radius: var(--acm-radius-xs); }
+.pk-code .pk-gap { color: var(--acm-on-surface-variant); }
+.pk-code details { border: 0; padding: 0; margin: 0; }
+.pk-code details > summary { padding: var(--acm-space-2) var(--acm-space-4); box-shadow: 0 calc(var(--acm-hairline) * -1) 0 var(--acm-outline-variant); }
+
+/* --- Reveals: hint, mistake, answer, starter ------------------------------ */
+.pk-reveal { margin: 0; max-width: none; }
+.pk-reveal + .pk-reveal { margin: 0; }
+.pk-reveals { margin-block-start: var(--acm-space-4); box-shadow: 0 calc(var(--acm-hairline) * -1) 0 var(--acm-outline-variant); }
+.pk-reveal > summary, .pk-code details > summary {
+  display: flex; align-items: center; gap: var(--acm-space-2);
+  min-block-size: var(--acm-target-min); cursor: pointer; list-style: none;
+  color: var(--acm-primary); font-weight: var(--acm-weight-strong);
+}
+.pk-reveal > summary { box-shadow: 0 var(--acm-hairline) 0 var(--acm-outline-variant); }
+.pk-reveal > summary { align-items: baseline; padding-block: var(--acm-space-3); }
+.pk-reveal > summary::-webkit-details-marker, .pk-code details > summary::-webkit-details-marker { display: none; }
+.pk-reveal > summary::before, .pk-code details > summary::before {
+  content: "+"; inline-size: var(--acm-icon-sm); font-family: var(--acm-font-code); text-align: center;
+}
+.pk-reveal[open] > summary::before, .pk-code details[open] > summary::before { content: "-"; }
+.pk-reveal > div { padding-block: var(--acm-space-3) var(--acm-space-4); }
+.pk-reveal > div > :last-child { margin-block-end: 0; }
+.pk-reveal--answer > summary { color: var(--acm-on-surface-variant); }
+
+/* --- Figures -------------------------------------------------------------- */
+.pk-fig { margin: var(--acm-space-6) 0; max-width: none; }   /* margin-inline 0: a browser gives <figure> 40px each side */
+.pk-fig .viz { max-width: var(--acm-container-prose); }
+.pk-fig figcaption { margin-block-start: var(--acm-space-2); color: var(--acm-on-surface-variant); font-size: var(--acm-size-body-md); line-height: var(--acm-lh-body-md); max-width: var(--acm-measure-prose); }
+
+/* --- Wiring groups: a table beside its picture on wide screens ------------ */
+.pk-group { display: grid; gap: var(--acm-space-4); margin-block: var(--acm-space-6); max-width: none; }
+.pk-group h3 { margin: 0; }
+@media (min-width: 1024px) {
+  .pk-group { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .pk-group h3 { grid-column: 1 / -1; }
+  .pk-group .pk-fig { margin: 0; }
+}
+.pk-group .acm-table-scroll { margin: 0; }
+.pk-group table { margin: 0; }
+.pk-wire td:first-child { inline-size: 50%; }
+.pk-wire td { vertical-align: top; }
+
+/* --- Input and output side by side --------------------------------------- */
+.pk-io { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--acm-space-3); max-width: none; }
+.pk-io pre { margin: 0; }
+.pk-io .acm-ledger { margin: 0 0 var(--acm-space-1); }
+
+/* --- QR tile -------------------------------------------------------------- */
+.pk-qr { display: inline-grid; gap: var(--acm-space-2); justify-items: center; text-decoration: none; color: var(--acm-on-surface); }
+.pk-qr svg { inline-size: calc(var(--acm-space-30) + var(--acm-space-20)); block-size: auto; border-radius: var(--acm-radius-sm); }
+
+/* --- Footer --------------------------------------------------------------- */
+.pk-foot { margin-block-start: var(--acm-rhythm-section); padding-block-start: var(--acm-space-6); box-shadow: 0 calc(var(--acm-hairline) * -1) 0 var(--acm-outline-variant); color: var(--acm-on-surface-variant); font-size: var(--acm-size-body-md); line-height: var(--acm-lh-body-md); }
+
+/* --- Narrow screens ------------------------------------------------------- */
+@media (max-width: 599px) {
+  /* On a phone a sideways scrollbar only shows while scrolling, so a long line looks cut off. Wrap instead;
+     the Copy button still copies the exact text. (§7.11 prefers scrolling; this is the narrow-screen exception.) */
+  .pk-code pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .pk-start { padding: var(--acm-space-5); }
+  .pk-fig .viz { max-width: none; }
+  .acm-card { padding: var(--acm-card-padding-compact); }
+}
+
+@media print {
+  .pk-progress, .pk-copy { display: none; }
+  .pk-reveal { display: block; }
+  .pk-start { border: 1px solid #999; background: none; color: #000; }
+}
+
+/* A wiring picture whose wire tags would collide at page size: the caption names the parts instead. */
+.pk-group--quiet .viz text.halo { display: none; }
+
+/* Focus. These controls draw their own box-shadow, which would hide tokens.css's :focus-visible ring. */
+.pk-reveal > summary:focus-visible, .pk-code details > summary:focus-visible, .pk-progress a:focus-visible, .pk-copy:focus-visible {
+  outline: 3px solid transparent; outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--acm-focus-gap), 0 0 0 5px var(--acm-focus-ring);
+}
+.pk-clean {
+  display: block; inline-size: 100%; block-size: calc(var(--acm-space-30) + var(--acm-space-10)); margin: 0;
+  border: 0; border-block-start: var(--acm-hairline) solid var(--acm-outline-variant); padding: var(--acm-space-4);
+  background: var(--acm-code-surface); color: var(--acm-code-on-surface);
+  font: var(--acm-weight-body) var(--acm-size-code-md)/var(--acm-lh-code-md) var(--acm-font-code); resize: vertical;
+}

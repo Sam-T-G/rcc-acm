@@ -23,7 +23,7 @@ What changed and why, in a few sentences:
 
 ## Attendance
 
-Counts only. Where the numbers came from is as important as the numbers.
+Counts only. Write where each number came from, so the next team can count the same way and compare.
 
 | Measure | Planned | Actual | Source |
 | --- | --- | --- | --- |
@@ -60,7 +60,7 @@ Things that worked and should be in the playbook next time.
 
 ## What to change
 
-Things that cost time, money, or attendance. Be specific enough that a stranger could act on it.
+Things that cost time, money, or attendance. Write each one so an officer who was not at the event could act on it.
 
 - <!-- fill: -->
 

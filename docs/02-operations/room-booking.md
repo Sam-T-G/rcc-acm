@@ -4,12 +4,12 @@ Rooms at RCC are booked through 25Live, and only the club advisor (or a staff de
 
 Source: Facilities Request Procedures in the [Club Advisor's Guide (PDF)](https://www.rcc.edu/assets/documents/life-at-rcc/asrcc/forms/Club%20Advisor%20Guide.pdf). Also see the ASRCC [Event Form Checklist (PDF)](https://www.rcc.edu/assets/documents/life-at-rcc/asrcc/forms/2025-2026/Event-Checklist.pdf) and the Student Activities Event Form linked from the [ASRCC page](https://www.rcc.edu/life-at-rcc/student-government.html).
 
-## The rules that bite
+## Rules that delay a booking
 
 | Rule | Why it matters |
 |---|---|
 | Advisor submits in 25Live, at least 2 weeks before the date | Students cannot submit. Two weeks is the college minimum; give the advisor a week on top of that. |
-| Tables, chairs, and setup go in the original request | Adding them later means a new request and a new clock. |
+| Tables, chairs, and setup go in the original request | Adding them later means a new request, with its own 2-week minimum. |
 | Two automated emails; only the second is the approval | The first email is a receipt. Do not announce the room until the second arrives. |
 | Print the 25Live confirmation and file it with the Event Form | Student Activities wants both together for anything beyond a regular meeting. |
 | Advisor attends the event | RCC policy for club events. Confirm availability before you pick a date. |

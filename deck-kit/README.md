@@ -1,13 +1,13 @@
 # Deck kit
 
-How the club makes slide decks. The slides are plain HTML with one or two attributes each; the kit supplies the stage, the Rail on the cover, the motion, the timers, room mode, speaker notes, and a check that walks the deck with real key presses.
+How the club makes slide decks. The slides are plain HTML with one or two attributes each; the kit supplies the stage, the Rail on the cover, the motion, the timers, room mode, speaker notes, and a check script that steps through the deck with real key presses.
 
-Ported on 2026-09-24 from the GDG chapter's kit (`rcc-gdg/deck-kit`) onto this repo's design system. The rules it implements are [assets.md §10.5](../docs/04-brand/design-system/assets.md) (the slide spec) and [accessibility.md §2.4](../docs/04-brand/design-system/accessibility.md) (the Rail). Where the kit and those files disagree, the files win and the kit has a bug. Where the kit goes past them on purpose, [the decision log](../docs/01-governance/decision-log.md) has the row.
+Ported on 2026-09-24 from the GDG chapter's kit (`rcc-gdg/deck-kit`) onto this repo's design system. The rules it implements are [assets.md §10.5](../docs/04-brand/design-system/assets.md) (the slide spec) and [accessibility.md §2.4](../docs/04-brand/design-system/accessibility.md) (the Rail). If the kit and those files disagree, follow the files and fix the kit. Where the kit adds something those files don't cover on purpose, the reason is a row in [the decision log](../docs/01-governance/decision-log.md).
 
 | File | What it is |
 |---|---|
 | [example.html](example.html) | A finished deck with one slide of every kind. Copy from it; its copy is about the kit, so it makes no claim about the club |
-| [deck.css](deck.css) | The stylesheet. Tokens copied from `tokens.css` (the check fails if they drift), the stage, and the thirteen kinds |
+| [deck.css](deck.css) | The stylesheet. Tokens copied from `tokens.css` (the check fails if they drift), the stage, the spacing scale, and the fourteen kinds (thirteen below plus the career disk) |
 | [deck.js](deck.js) | The engine. No build step, no dependencies beyond GSAP, which is optional |
 | [check.mjs](check.mjs) | Checks a deck against the slide rules and walks it in five modes. Headless Chrome, no npm install |
 | [bundle.mjs](bundle.mjs) | Makes one self-contained HTML file from a deck |
@@ -15,7 +15,10 @@ Ported on 2026-09-24 from the GDG chapter's kit (`rcc-gdg/deck-kit`) onto this r
 | [ingest-photos.mjs](ingest-photos.mjs) | Brings the club's own photos in: 1600 px, every bit of metadata (GPS included) stripped, collage markup printed |
 | [encode-video.swift](encode-video.swift) | Makes a slide clip: upright H.264 MP4 at a fixed size and bitrate, no audio, no metadata, plus a poster. `swift deck-kit/encode-video.swift <in.mov> <dir> <name>` |
 | [disk.js](disk.js) | The career disk: a plug-in slide kind in Three.js. Loads as a module before `deck.js` and registers `window.DeckKinds.disk` |
-| [CLAUDE.md](CLAUDE.md) | The calls an agent building a deck makes without asking: photos, variety, copy |
+| [CLAUDE.md](CLAUDE.md) | Choices an agent makes without asking Sam when it builds a deck: photos, variety, copy |
+| [lab/partials.py](lab/partials.py) | Whole slides for recurring shapes: track picker, QR send-off, rules, work clock, round map, win. See Partials below |
+| [templates/](templates/) | Deck templates as Python generators: `two-track.py` and `self-guided-lab.py`, each with an example deck that passes the check |
+| [page/](page/README.md) | The companion-page kit: one stylesheet on tokens.css and Python helpers for the pages a deck hands people off to |
 
 ## Make a deck
 
@@ -23,7 +26,9 @@ Put it in the meeting folder, named for the date: `semesters/2026-fall/meetings/
 
 Every slide is a `<section class="slide">` with a `data-kind`. The first slide of each section also carries `data-section="Name"`; the name shows in the progress line along the bottom, and a slide without one belongs to the section before it. The ledger line along the top comes from `data-ledger` on `<main class="deck">`. Speaker notes go in `<aside class="notes">` and show with `N`. Add `data-room` to the slides that stay up in room mode (`5`). Add `data-beat` to any element to reveal it on a press.
 
-## The thirteen kinds
+## The kinds
+
+Thirteen kinds are in the table; the fourteenth, the career disk, has its own section below. `check.mjs` knows all fourteen.
 
 | `data-kind` | Markup the kit reads |
 |---|---|
@@ -41,30 +46,57 @@ Every slide is a `<section class="slide">` with a `data-kind`. The first slide o
 | `collage` | `.eyebrow`, `h2`, `ul.collage` with up to six `li > img` of the club's own photos, each with `data-faces="none"` or `"consented"`, and one `.credit` line |
 | `ask` | `.ask__main` (`.eyebrow`, `h2`, `.ask__meta`, optionally one `.callout callout--check`), an optional `a.qr` with its URL as text, and `.ask__foot` with `.ask__name` reading `ACM @ RCC` and an `.ask__stamp` |
 
+## Partials
+
+[lab/partials.py](lab/partials.py) returns whole slides for the slide shapes we kept rebuilding by hand in recent decks. Each is an existing kind with a `data-layout`, so `check.mjs` needs no changes for them. Import with `sys.path.insert(0, 'deck-kit/lab')`; `qr()` needs segno.
+
+| Call | Kind / layout | What it makes |
+|---|---|---|
+| `pick(left, right, h2='Pick one for today', section=None, ground=None, note='', bridge=None)` | `contrast` / `tiles` | Two equal tiles, each `(label, text)`. Use it to split the room into two groups; `contrast` with weak and strong stays for a real before/after |
+| `sendoff(eyebrow, h2, sub, url, label=None, section=None, ground=None, note='', bridge=None)` | `signup` / `sendoff` | Hand a group to a page: headline and one line, a 420 px QR, the URL wrapped under it at the ledger size |
+| `rules(eyebrow, h2, items, warn=None, section=None, ground=None, note='', bridge=None)` | `beats` / `rules` | Up to three `(rule, detail)` beats and one Warning callout for the rule about not damaging the hardware. Stays up in room mode |
+| `work_clock(h2, sub, ends='14:25', eyebrow=None, section=None, ground='orange', note='', bridge=None)` | `clock` with `data-ends` | Counts down to a wall-clock time today when T is pressed, so a meeting that starts late still ends work time on schedule |
+| `round_map(h2, rounds, current, eyebrow=None, sub=None, section=None, ground=None, note='', bridge=None)` | `statement` / `map` | A strip of numbered rounds: done in ink, current in primary, next in outline |
+| `win(h2, see, fixes=(), eyebrow='It works when', section=None, ground='orange', note='', bridge=None)` | `beats` / `win` | The end of a round: what a working build does, then up to three `(problem, fix)` beats |
+| `qr(url, label=None)`, `qr_svg(url)` | | The QR tile with its URL printed, shared by every generator |
+
+**`data-ends="HH:MM"`** on a `clock` slide replaces `data-timer`: on T the clock counts down to that time today, and R resets to the time left. Any running clock hides its key hint, since everyone in the room can see the screen.
+
+## Templates
+
+`deck-kit/templates/` holds deck generators. Run one with an output path; `--blank` (two-track) puts `fill:` markers where copy goes, which the check refuses until they're gone.
+
+| Template | Slides | Example |
+|---|---|---|
+| [two-track.py](templates/two-track.py) | cover, the hour, coming up, pick, two send-offs, rules, work clock, pack up, wrap | [two-track-example.html](templates/two-track-example.html) |
+| [self-guided-lab.py](templates/self-guided-lab.py) | cover, send-off, rules, a map and a win per round, work clock, pack up, wrap | [self-guided-lab-example.html](templates/self-guided-lab-example.html) |
+
 ## What the kit decides for you
 
 - **The Rail once, on the cover, solid.** It draws down the cover's edge on the opening and retracts to its foot when the deck leaves the cover. No other slide has one; a Check or Warning callout's short Rail is the only repeat.
-- **The progress line is not the Rail.** It is the "On this page" rail laid flat (components.md §7.8): section names in the ledger face, the current one at weight 500 in primary, over a 3 px neutral hairline.
-- **Light theme only.** A-210 is a daylight wall. There is no dark toggle.
-- **Floors.** Titles 72, body 40, ledger 32, at 1920 x 1080 inside 96 px margins. The check measures every text node.
+- **The progress line is not the Rail.** It is the "On this page" rail from components.md §7.8, turned horizontal: section names in the ledger face, the current one at weight 500 in primary, over a 3 px neutral hairline.
+- **Light theme only.** The projector wall in A-210 is in daylight. There is no dark toggle.
+- **Floors.** Titles 72, body 40, ledger 32, at 1920 x 1080 inside 96 px margins. The check measures every text node. The full set of slide type roles is in [assets.md §10.5](../docs/04-brand/design-system/assets.md).
+- **Spacing comes from a scale.** `--st-1` to `--st-9` are 8, 16, 24, 32, 40, 48, 64, 96, 144 stage pixels. Beats, the Board, and lab steps use the same gaps: 32 between plain items, 24 when items carry a detail line. A new rule in deck.css uses a step, not a free number.
 - **Slide-scale motion.** Words rise through masks at 700 ms per beat and 1100 ms per section change, on `--acm-dur-beat`, `--acm-dur-move`, and `--acm-ease-arrive`, which the kit adds to the system's tokens (decision log, 2026-09-24). Reduced motion makes every transition a cut.
+- **Nothing shows before it animates.** The deck stays hidden until deck.js marks it live (a 6 s failsafe shows the plain stack if the engine never loads), so a slow GSAP download can't paint the finished cover first. A slide's beat state lands with transitions off when the slide arrives (`settleBeats`), so a picture stage never fades out over a new slide; only a beat revealed in view animates. Both came from a flash Sam saw on 2026-10-14. Any new CSS transition keyed to beat state is covered by the same rule, because `.is-settling` turns every transition off.
 
 ## Pictures and variety
 
-Any slide that names a thing a person could photograph gets a photo. `fetch-image.mjs` searches Wikimedia Commons and Openverse for CC0, public domain, CC BY, and CC BY-SA only, saves a 1600 px JPEG with its metadata stripped, keeps a `CREDITS.md` beside the photos, and prints the markup with the credit link:
+Every slide gets a visual where it can, and a real photo from the internet comes first. Next best is a diagram, a labkit drawing, a chart, a screenshot, or a QR code. The cover, `giant` and `orange` statements, hero slides, and work clocks can skip it because they already fill the screen with big type or color. Rules for agents: [CLAUDE.md](CLAUDE.md). `fetch-image.mjs` searches Wikimedia Commons and Openverse for CC0, public domain, CC BY, and CC BY-SA only, saves a 1600 px JPEG with its metadata stripped, keeps a `CREDITS.md` beside the photos, and prints the markup with the credit link:
 
 ```sh
 node deck-kit/fetch-image.mjs search "arduino uno r4"
 node deck-kit/fetch-image.mjs get "commons:Arduino UNO R4 WiFi.jpg" semesters/2026-fall/meetings/2026-09-24-deck-images arduino-uno-r4 --alt "An Arduino UNO R4 WiFi board seen from above."
 ```
 
-**Split layout.** A `clock` or `beats` slide with `data-layout="split"` puts `.split__head` (`.eyebrow`, `h2`) across the top, `.split__main` (the clock with its `.sub`, or the `ol.beats`) on the left, and `figure.viz` holding an inline SVG with `viewBox="0 0 760 560"` on the right; one SVG unit is one stage pixel, so write labels at 32. On a beats slide, `data-stage="k"` shows an SVG part from beat k and `data-until="k"` shows it only before beat k. Loops are the deck's own CSS keyframes, scoped to `.is-presenting .slide.is-current`; the attributes are the still pose, which is what reduced motion, the stack, and print show. The 2026-10-01 deck has six examples.
+**Split layout.** A `clock` or `beats` slide with `data-layout="split"` puts `.split__head` (`.eyebrow`, `h2`) across the top, `.split__main` (the clock with its `.sub`, or the `ol.beats`) on the left, and `figure.viz` holding an inline SVG with `viewBox="0 0 760 560"` on the right; one SVG unit is one stage pixel, so write labels at 32. On a beats slide, `data-stage="k"` shows an SVG part from beat k and `data-until="k"` shows it only before beat k. Loops are the deck's own CSS keyframes, scoped to `.is-presenting .slide.is-current`; the attributes are the still pose, which is what reduced motion, the stack, and print show. The 2026-10-01 deck has six examples. Code drawn inside a picture goes in a `<g data-code>`, so the check's no-braces rule treats it as code (a `.code` class would be wrapped as a block and break the SVG).
 
-**Auto beats.** `data-auto="2"` on a beats slide reveals its beats by themselves, one every 2 seconds (empty value: 1.6), when the presenter arrives pressing forward. A forward press while it runs lands every remaining beat at once; the next press moves on. Arriving backward lands on the last beat with nothing running, and a hash jump (how the presenter, mirror, and phone move) never starts it. It runs under reduced motion too, as cuts. Use it on slides you talk over, not ones the room builds along with. `?auto=0` turns it off; `check.mjs` walks with it off, then tests it on the first auto slide.
+**Auto beats.** `data-auto="2"` on a beats slide reveals its beats by themselves, one every 2 seconds (empty value: 1.6), when the presenter arrives pressing forward. A forward press while it runs lands every remaining beat at once; the next press moves on. Arriving backward lands on the last beat with nothing running, and a hash jump (how the presenter, mirror, and phone move) never starts it. It runs under reduced motion too, as cuts. Use it on slides where you talk while the beats appear. Leave it off slides where the room follows along step by step. `?auto=0` turns it off; `check.mjs` walks with it off, then tests it on the first auto slide.
 
 Every slide takes a `data-ground`: `paper` (default), `warm`, `tint` (the primary container), or `orange` (the raw `#ff4d00` fill with ink text). Statements take `data-layout="center"` or `"giant"`. The check measures every text pair against its ground at 4.5:1, fails text over a photo, and fails three slides in a row with the same kind, ground, and layout.
 
-Presenting, the ground lives on the stage and crossfades from slide to slide on the effects track, so it survives reduced motion; the check samples it mid-fade.
+While presenting, the ground color is set on the stage and crossfades from slide to slide on the effects track, so it still changes under reduced motion; the check samples it mid-fade.
 
 ## Video
 
@@ -85,13 +117,13 @@ Every word is DOM (the HUD and the station cards), so the type floors and contra
 
 ## Presenter view, phone remote, run sheet
 
-All of it is `deck-kit/presenter.js`, the same file as in the GDG chapter's kit (where the rules are [its presentation.md §13.13](https://github.com/Sam-T-G/rcc-gdg)); change both copies together. Load it with its own deferred script tag right after `deck.js` (`example.html` shows the line). It drives the deck from outside: it reads `window.__deck`, presses keys the way a keyboard does, and jumps with the URL hash, so `deck.js` knows nothing about it. The deck window is always the source of truth: the presenter view, its two preview frames (`?view=mirror`), and the remote only send key presses and draw what the deck reports.
+All of it is `deck-kit/presenter.js`, the same file as in the GDG chapter's kit (where the rules are [its presentation.md §13.13](https://github.com/Sam-T-G/rcc-gdg)); change both copies together. Load it with its own deferred script tag right after `deck.js` (`example.html` shows the line). It drives the deck from outside: it reads `window.__deck`, presses keys the way a keyboard does, and jumps with the URL hash, so `deck.js` knows nothing about it. The deck window always holds the real slide and beat: the presenter view, its two preview frames (`?view=mirror`), and the remote only send key presses and draw what the deck reports.
 
 - **`S`, presenter view.** A second window: the current slide, a preview of what one more press shows (the next beat, the next station on the career disk, or the next slide), the notes, the bridge line, a timer since it opened (click to reset), the time of day, and the slide's clock. A clicker works with either window focused. It needs the projector to **extend** the laptop; on a mirrored display the room sees it, so use the phone instead.
 - **`M`, phone or tablet remote.** Shows a QR code (in the presenter view if it is open, otherwise on the stage). The device gets the notes, the bridge line, what's next, and big Back and Next buttons, and keeps its screen awake. On a tablet-sized screen (an iPad) it also shows the Now and Next previews, and a keyboard or clicker paired to it works too. Several devices can drive the deck at once and all of them follow every change; press `M` again to show the code for the next one. Presses travel over plain HTTPS through the clubs' own relay (`deck-relay` on Cloud Run, project `rcc-deck-relay`), with ntfy.sh as the automatic fallback, so it works on cellular. The topic is a long random name and only slide numbers and key names cross it. The remote loads the **published** deck, so the deck needs `data-live-url="https://sam-t-g.github.io/rcc-acm/decks/<slug>/"` on `main.deck` (`scripts/publish-deck.sh` adds it on the first publish), and the live copy must be the same version as the one on the projector.
 - **`?view=runsheet`.** Every slide in one printable table: title, kind, presses, clock, bridge line, the slide it leads into, and the notes. Bring it as the backup.
 - **Bridge lines.** End a slide's notes with `<p class="bridge">One sentence into the next slide.</p>`. The presenter lights it on the slide's last press. The check reports the count.
-- **The career disk** builds no 3D scene on the phone or the run sheet, and the presenter's two previews draw it at half resolution a few times a second and cut between stations, so the projector keeps the GPU.
+- **The career disk** builds no 3D scene on the phone or the run sheet, and the presenter's two previews draw it at half resolution a few times a second and cut between stations, so the laptop's GPU stays free for the projector.
 
 `check.mjs` tests the presenter view, the run sheet, and the phone page's no-code message with real key presses. It cannot test the phone itself, which needs the relay and a second device. Before a meeting that will use the phone: press `M` on the live deck, scan, tap Next twice, and watch the deck move.
 
@@ -103,7 +135,7 @@ All of it is `deck-kit/presenter.js`, the same file as in the GDG chapter's kit 
 
 Open the file in Chrome. Arrows, Space, or a clicker move; `T` and `R` run the clock; `5` is room mode; `V` plays or pauses a video; `N` shows notes; `S` opens the presenter view; `M` shows the phone remote's QR code; `A` annotates and `I` opens the review notes inbox; `F` is fullscreen; `?` lists the keys. On a phone, or with `?stack` on the URL, the deck is a scrolling stack. Printing to PDF gives one 1920 x 1080 page per slide with every beat showing.
 
-**Offline:** GSAP and the fonts come from CDNs. Without a network the deck still runs, with CSS-only motion and the fallback face; walk it once offline before relying on that.
+**Offline:** GSAP and the fonts come from CDNs. Without a network the deck still runs, with CSS-only motion and the fallback face; click through it once offline before counting on that.
 
 ## Checking it
 
@@ -112,6 +144,18 @@ node deck-kit/check.mjs semesters/2026-fall/meetings/2026-09-24-deck.html --shot
 ```
 
 It needs Node 22 and Google Chrome. It fails on a fill marker or template token, token drift, a structure or slide-rule violation, type under a floor, anything outside the margins or in the progress band, and console errors. Then it walks the deck with real key presses with motion on, with reduced motion, with GSAP blocked, with no script, and at phone width, and checks that the Rail is full height on the cover after the opening and again after a walk back, that leaving the cover is a move and not a jump, that six fast presses land six steps on, and that `T` starts the clock.
+
+**Every deck and page in Chrome and Safari (Playwright).** One-time setup: `npm install`, then `npx playwright install chromium webkit`. Then:
+
+```sh
+npm run test:browser                              # every deck and built page
+npx playwright test -g 2026-10-29                 # just the ones whose path has 2026-10-29
+npx playwright show-report                        # what failed, with a step-by-step trace
+```
+
+It opens every meeting deck in Chrome and desktop Safari, presses Right until the deck moves, and fails on a script error or a file from this repo that doesn't load. Every built companion page in `site/decks/` also opens on an iPhone-sized Safari and fails if it scrolls sideways. The list of what it opens is `tests/browser/targets.mjs`. Run it in addition to `check.mjs`.
+
+**Python scripts run with uv.** Generators list what they need (segno, markdown) in a `# /// script` block at the top, so `uv run <script.py>` sets up the environment itself. No venv to find or make. A new generator copies that block.
 
 ## Publishing it
 
@@ -123,4 +167,4 @@ This runs the check, bundles the deck into `site/decks/<slug>/index.html` (gitig
 
 ---
 
-**Last updated: 2026-09-24.**
+**Last updated: 2026-10-28.**

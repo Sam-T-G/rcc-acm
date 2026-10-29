@@ -17,7 +17,7 @@ Written by the outgoing team in the last two weeks. Numbers first, opinions seco
 
 ## Goals: what happened
 
-Copy the goals table from [goals.md](goals.md) and add one line per goal on why it landed where it did.
+Copy the goals table from [goals.md](goals.md) and add one line per goal on why it ended where it did.
 
 | # | Goal | Status | One line on why |
 |---|---|---|---|

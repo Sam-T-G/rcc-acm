@@ -8,7 +8,7 @@
 
 ## Facts everyone needs
 
-Fill this once; every version below pulls from it.
+Fill this once, then copy these facts into each version below.
 
 | Field | Value |
 | --- | --- |

@@ -1,6 +1,6 @@
 # Operations
 
-How ACM @ RCC gets things done at Riverside City College: recognition, money, rooms, events, and announcements. Everything here is evergreen RCC procedure. Dated material (this semester's budget, a specific event, this year's officers) lives under `semesters/`.
+How ACM @ RCC gets things done at Riverside City College: recognition, money, rooms, events, and announcements. These are the RCC steps that repeat every year. Dated material (this semester's budget, a specific event, this year's officers) lives under `semesters/`.
 
 | File | Read it when |
 |---|---|
@@ -21,6 +21,6 @@ How ACM @ RCC gets things done at Riverside City College: recognition, money, ro
 | ASRCC Student Government (forms, codes, Senate) | [ASRCC page](https://www.rcc.edu/life-at-rcc/student-government.html) | rcc.edu |
 | Faculty advisor | [TBD: listed in MAINTAINERS.md once consent is on file] | [MAINTAINERS.md](../../MAINTAINERS.md) |
 
-## Rule of thumb
+## When a step says [TBD]
 
 If a step below says [TBD], nobody has confirmed it yet. Ask Student Activities or the advisor, then open a PR that replaces the [TBD] with what they said and the date you asked. See [maintenance-rules.md](../01-governance/maintenance-rules.md).
