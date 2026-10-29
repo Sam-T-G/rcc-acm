@@ -13,7 +13,9 @@
      runsheet   every slide in one printable table
      mirror     a preview frame inside the other views: no keys, no pointer
    The deck window stays the source of truth; every view only sends presses and
-   draws what the deck reports. */
+   draws what the deck reports. With review.js loaded, every view also names who
+   covers the slide and cues the handoff when the next slide changes speaker, and the
+   presenter view and remote list the slide's open review notes. */
 (function () {
   'use strict';
   var deck = document.querySelector('.deck');
@@ -102,13 +104,32 @@
     var V = visible(st.room), pos = V.indexOf(st.i);
     var where = 'Slide ' + (pos + 1) + ' of ' + V.length + (nb ? ' · press ' + st.b + ' of ' + nb : '');
     var upNext = !nx ? 'End of the deck' : nx.press ? 'Next press: ' + (beatText(s, st.b) || 'the next step') : 'Next slide: ' + labelOf(slides[nx.i]);
-    return { next: nx, notes: n, where: where, upNext: upNext, due: st.b >= nb, label: labelOf(s) };
+    var who = whoOf(st.i), nextWho = nx && !nx.press ? whoOf(nx.i) : '';
+    var hand = nextWho && nextWho !== who ? nextWho : '';
+    if (hand) upNext += ' · ' + hand + ' takes over';
+    return { next: nx, notes: n, where: where, upNext: upNext, due: st.b >= nb, label: labelOf(s), who: who, hand: hand };
   }
   function bridgeHtml(c) {
-    if (!c.notes.bridge) return '<p class="pv-muted">No bridge line on this slide.</p>';
-    return '<p class="pv-bridge__text">' + c.notes.bridge + '</p>';
+    var hand = c.hand ? '<p class="pv-hand">Hand to ' + whoHtml(c.hand) + '</p>' : '';
+    if (!c.notes.bridge) return hand || '<p class="pv-muted">No bridge line on this slide.</p>';
+    return '<p class="pv-bridge__text">' + c.notes.bridge + '</p>' + hand;
   }
   function whenReady(fn) { if (api()) fn(); else setTimeout(function () { whenReady(fn); }, 50); }
+  // Who covers a slide (review.js, or data-owner written at publish time), as a chip.
+  function whoOf(i) { var r = window.__review; return r ? r.ownerOf(i) : (slides[i] && slides[i].getAttribute('data-owner')) || ''; }
+  function whoHtml(name) { var r = window.__review; return !name ? '' : r ? r.chip(name, 'is-small') : '<span class="pv-who">' + esc(name) + '</span>'; }
+  function onReview(fn) { window.addEventListener('deck-review', fn); }
+  // Open review notes on a slide (review.js, once signed in). Only the presenter's own views show them.
+  function reviewHtml(i) {
+    var r = window.__review, t = r && r.threadsOf ? r.threadsOf(i) : [];
+    if (!t.length) return '';
+    return '<p class="pv-label">Open review notes · ' + t.length + '</p>' + t.slice(0, 6).map(function (v) {
+      var who = v.author && v.author.name ? whoHtml(v.author.name + (v.author.via === 'agent' ? '’s agent' : '')) + ' ' : '';
+      var quote = v.target && v.target.text ? '<span class="pv-review__quote">“' + esc(v.target.text.slice(0, 80)) + '”</span> ' : '';
+      var body = v.body.length > 220 ? v.body.slice(0, 220) + '…' : v.body;
+      return '<p class="pv-review__item">' + who + quote + esc(body) + (v.suggestion ? ' <span class="pv-muted">(suggests new text)</span>' : '') + '</p>';
+    }).join('') + (t.length > 6 ? '<p class="pv-muted">and ' + (t.length - 6) + ' more on the board</p>' : '');
+  }
 
   /* ---------- The relay --------------------------------------------------- */
   function relayPost(m, fail, k) {
@@ -302,12 +323,14 @@
       '<button type="button" class="pv-btn" data-act="phone">Remote</button><a class="pv-btn" target="_blank" rel="noopener">Run sheet</a></header>' +
       '<section class="pv__now"><p class="pv-label">Now</p><div class="pv__slot"></div><div class="pv__notes"></div></section>' +
       '<section class="pv__next"><p class="pv-label pv__upnext">Next</p><div class="pv__slot"></div>' +
-      '<div class="pv-bridge"><p class="pv-label">Bridge</p><div class="pv-bridge__body"></div></div><div class="pv__qr" hidden></div></section>' +
+      '<div class="pv-bridge"><p class="pv-label">Bridge</p><div class="pv-bridge__body"></div></div><div class="pv-review"></div><div class="pv__qr" hidden></div></section>' +
       '<p class="pv__status" role="status">Waiting for the deck. Open this with S from the deck window.</p>';
     var q = function (sel) { return one(sel, pv); };
     q('.pv__deck').textContent = deck.getAttribute('data-ledger') || document.title;
     q('a.pv-btn').href = base() + '?view=runsheet';
-    var show = frames(all('.pv__slot', pv), 2), st = null, t0 = Date.now(), lastRemotes = 0;
+    var show = frames(all('.pv__slot', pv), 2), st = null, t0 = Date.now(), lastRemotes = 0, lastD = null;
+    // A speaker change made in review redraws the labels.
+    onReview(function () { if (lastD) window.postMessage(lastD, '*'); });
     function hello() { toHost(msg('hello')); }
     hello(); setInterval(hello, 3000);                  // re-register if the deck window reloads
     setInterval(function () {
@@ -319,13 +342,14 @@
     window.addEventListener('message', function (e) {
       var d = e.data; if (!d || d.gdgDeck !== DECK_ID) return;
       if (d.t === 'state') {
-        st = { i: d.i, b: d.b, room: !!d.room };
+        st = { i: d.i, b: d.b, room: !!d.room }; lastD = d;
         var c = cue(st);
         q('.pv__status').textContent = d.remotes > 1 ? d.remotes + ' remotes connected' : d.remotes ? 'Remote connected' : '';
-        q('.pv__where').textContent = c.where + ' · ' + c.label;
+        q('.pv__where').innerHTML = esc(c.where + ' · ' + c.label) + (c.who ? ' ' + whoHtml(c.who) : '');
         var clk = q('.pv__clock'); clk.hidden = !d.clock; clk.textContent = d.clock ? 'Clock ' + d.clock : '';
         q('.pv__upnext').textContent = c.upNext;
         q('.pv__notes').innerHTML = c.notes.html || '<p class="pv-muted">No notes on this slide.</p>';
+        q('.pv-review').innerHTML = reviewHtml(st.i);
         q('.pv-bridge__body').innerHTML = bridgeHtml(c);
         q('.pv-bridge').classList.toggle('is-due', c.due && !!c.notes.bridge);
         if (d.remotes && d.remotes !== lastRemotes) q('.pv__qr').hidden = true;
@@ -358,7 +382,7 @@
       '<div class="rv__main"><header class="rv__bar"><p class="rv__where"></p><p class="rv__count"></p><p class="rv__clock"></p></header>' +
       '<h1 class="rv__title"></h1>' +
       '<div class="pv-bridge"><p class="pv-label">Bridge</p><div class="pv-bridge__body"></div></div>' +
-      '<p class="rv__next"></p><div class="rv__notes"></div></div>' +
+      '<p class="rv__next"></p><div class="rv__notes"></div><div class="pv-review"></div></div>' +
       (wide ? '<div class="rv__previews"><p class="pv-label">Now</p><div class="pv__slot"></div><p class="pv-label rv__upnext">Next</p><div class="pv__slot"></div></div>' : '') +
       '<nav class="rv__pad"><button type="button" data-k="ArrowLeft">Back</button><button type="button" data-k="ArrowRight">Next</button></nav>';
     var q = function (sel) { return one(sel, rv); };
@@ -368,15 +392,17 @@
     function draw(st) {
       var c = cue(st);
       q('.rv__where').textContent = c.where; q('.rv__clock').textContent = st.clock || '';
-      q('.rv__title').textContent = c.label;
+      q('.rv__title').innerHTML = esc(c.label) + (c.who ? ' ' + whoHtml(c.who) : '');
       q('.rv__next').textContent = c.upNext;
       if (wide) q('.rv__upnext').textContent = c.upNext;
       q('.pv-bridge__body').innerHTML = bridgeHtml(c);
       q('.pv-bridge').classList.toggle('is-due', c.due && !!c.notes.bridge);
       q('.rv__notes').innerHTML = c.notes.html || '<p class="pv-muted">No notes on this slide.</p>';
+      q('.pv-review').innerHTML = reviewHtml(st.i);
       show(0, st); show(1, c.next || st);
     }
     if (wide) setInterval(function () { if (cur) { show(0, cur); show(1, nextOf(cur.i, cur.b, cur.room) || cur); } }, 600);
+    onReview(function () { if (cur) draw(cur); });
     function fail(code) { status(code === 429 ? 'Too many taps for the relay. Wait a few seconds.' : 'Can’t reach the relay. Check this device’s connection.'); }
     if (!topic) { status('This link is missing its code. Scan the QR code on the deck again.'); return; }
     relay = { topic: topic };
@@ -417,20 +443,27 @@
   }
 
   function runSheet() {
-    var rs = toolShell('rs', 'Run sheet'), total = 0, rows = '';
-    slides.forEach(function (s, i) {
-      var n = notesOf(s), sec = timerOf(i), nb = beatsOf(i); total += sec;
-      var nx = slides[i + 1];
-      rows += '<tr><td class="rs__n">' + (i + 1) + (s.hasAttribute('data-room') ? '<span class="rs__room" title="In room mode">R</span>' : '') + '</td>' +
-        '<td><p class="rs__slide">' + esc(labelOf(s)) + '</p><p class="rs__meta">' + esc(kindOf(i)) + (nb ? ' · ' + nb + (nb === 1 ? ' press' : ' presses') : '') + (sec ? ' · clock ' + fmtClock(sec * 1000) : '') + '</p></td>' +
-        '<td>' + (n.bridge ? '<p class="rs__bridge">' + n.bridge + '</p>' : '<p class="pv-muted">No bridge</p>') + (nx ? '<p class="rs__into">Into: ' + esc(labelOf(nx)) + '</p>' : '') + '</td>' +
-        '<td class="rs__notes">' + n.html + '</td></tr>';
-    });
-    rs.innerHTML = '<header class="rs__head"><h1>' + esc(deck.getAttribute('data-ledger') || document.title) + '</h1>' +
-      '<p>' + slides.length + ' slides · ' + fmtClock(total * 1000) + ' on the clocks · R = in room mode</p>' +
-      '<button type="button" class="pv-btn" data-act="print">Print</button></header>' +
-      '<table class="rs__table"><thead><tr><th>#</th><th>Slide</th><th>Bridge</th><th>Notes</th></tr></thead><tbody>' + rows + '</tbody></table>';
-    one('[data-act="print"]', rs).addEventListener('click', function () { window.print(); });
+    var rs = toolShell('rs', 'Run sheet');
+    function draw() {
+      var total = 0, rows = '', count = {};
+      slides.forEach(function (s, i) {
+        var n = notesOf(s), sec = timerOf(i), nb = beatsOf(i); total += sec;
+        var nx = slides[i + 1], who = whoOf(i), nextWho = nx ? whoOf(i + 1) : '';
+        if (who) count[who] = (count[who] || 0) + 1;
+        rows += '<tr><td class="rs__n">' + (i + 1) + (s.hasAttribute('data-room') ? '<span class="rs__room" title="In room mode">R</span>' : '') + '</td>' +
+          '<td><p class="rs__slide">' + esc(labelOf(s)) + '</p><p class="rs__meta">' + esc(kindOf(i)) + (nb ? ' · ' + nb + (nb === 1 ? ' press' : ' presses') : '') + (sec ? ' · clock ' + fmtClock(sec * 1000) : '') + '</p>' + (who ? '<p class="rs__who">' + whoHtml(who) + '</p>' : '') + '</td>' +
+          '<td>' + (n.bridge ? '<p class="rs__bridge">' + n.bridge + '</p>' : '<p class="pv-muted">No bridge</p>') + (nx ? '<p class="rs__into">Into: ' + esc(labelOf(nx)) + '</p>' : '') +
+          (nextWho && nextWho !== who ? '<p class="pv-hand">Hand to ' + whoHtml(nextWho) + '</p>' : '') + '</td>' +
+          '<td class="rs__notes">' + n.html + '</td></tr>';
+      });
+      var people = Object.keys(count).map(function (k) { return whoHtml(k) + ' ' + count[k]; }).join(' ');
+      rs.innerHTML = '<header class="rs__head"><h1>' + esc(deck.getAttribute('data-ledger') || document.title) + '</h1>' +
+        '<p>' + slides.length + ' slides · ' + fmtClock(total * 1000) + ' on the clocks · R = in room mode</p>' + (people ? '<p class="rs__people">' + people + '</p>' : '') +
+        '<button type="button" class="pv-btn" data-act="print">Print</button></header>' +
+        '<table class="rs__table"><thead><tr><th>#</th><th>Slide</th><th>Bridge</th><th>Notes</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      one('[data-act="print"]', rs).addEventListener('click', function () { window.print(); });
+    }
+    draw(); onReview(draw);
   }
 
   /* ---------- Styles ----------------------------------------------------- */
@@ -485,6 +518,9 @@
     '.pv-toast{position:fixed;z-index:21;left:50%;top:24px;transform:translate(-50%,-8px);margin:0;background:var(--pv-on);color:var(--pv-surface);padding:10px 18px;border-radius:8px;font:500 15px var(--pv-font);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}',
     '.pv-toast.is-on{opacity:1;transform:translate(-50%,0)}',
     '.pv-mirror .deck{pointer-events:none;cursor:none}.pv-mirror .deck-toast,.pv-mirror .deck-notes,.pv-mirror .deck-help,.pv-mirror .pv-toast{display:none!important}',
+    '.pv-hand{margin:8px 0 0;font:500 15px var(--pv-font);display:flex;align-items:center;gap:8px}.pv-who{font-weight:500}.rs__who{margin:6px 0 0}.rs__people{display:flex;flex-wrap:wrap;gap:8px;align-items:center}',
+    '.pv__where .rvw-who,.rv__title .rvw-who{vertical-align:middle;margin-left:6px}',
+    '.pv-review:not(:empty){margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--pv-box)}.pv-review__item{margin:8px 0 0;font-size:17px;line-height:1.45}.pv-review__item .rvw-who{vertical-align:middle;margin-right:4px}.pv-review__quote{font-style:italic}.pv__next .pv-review{overflow:auto;min-height:0}',
     '.deck-notes .bridge{font-weight:500;border-left:4px solid var(--pv-hl);padding-left:12px}.deck-notes .bridge::before{content:"Bridge: ";font:13px var(--pv-code);letter-spacing:.06em;text-transform:uppercase;opacity:.8}',
     '@media print{.pv-qr-dialog,.pv-toast{display:none!important}}'
   ].join('\n');

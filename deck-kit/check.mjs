@@ -76,7 +76,7 @@ const URL0 = `http://127.0.0.1:${server.address().port}/${relative(ROOT, DECK).s
 
 // ---------- Chrome.
 const port = 9400 + Math.floor(Math.random() * 400);
-const chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'deck-cdp-'))}`,
+const chrome = spawn(CHROME, ['--headless=new', '--use-mock-keychain', '--password-store=basic', `--remote-debugging-port=${port}`, `--user-data-dir=${mkdtempSync(join(tmpdir(), 'deck-cdp-'))}`,
   '--no-first-run', '--hide-scrollbars', '--force-color-profile=srgb',
   // Software WebGL, so a disk slide (Three.js) renders headless.
   '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', 'about:blank'], { stdio: 'ignore' });
@@ -125,13 +125,14 @@ function errors() {
   return events.filter((e) => (e.method === 'Runtime.exceptionThrown') || (e.method === 'Runtime.consoleAPICalled' && e.params.type === 'error'))
     .map((e) => e.params.exceptionDetails?.exception?.description || e.params.args?.map((a) => a.value).join(' ') || 'error');
 }
+// A typed key is one keyDown carrying its text, then keyUp. No nativeVirtualKeyCode: those are platform
+// codes (macOS Space is 49, not 32), and a wrong one can leave a native key held down, repeating.
 async function key(k, code, vk) {
-  const base = { key: k, code, windowsVirtualKeyCode: vk, nativeVirtualKeyCode: vk };
-  await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', ...base });
-  if (k.length === 1) await send('Input.dispatchKeyEvent', { type: 'char', text: k, ...base });
+  const base = { key: k, code, windowsVirtualKeyCode: vk };
+  await send('Input.dispatchKeyEvent', k.length === 1 ? { type: 'keyDown', text: k, unmodifiedText: k, ...base } : { type: 'rawKeyDown', ...base });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', ...base });
 }
-const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84] };
+const KEYS = { right: ['ArrowRight', 'ArrowRight', 39], left: ['ArrowLeft', 'ArrowLeft', 37], home: ['Home', 'Home', 36], end: ['End', 'End', 35], five: ['5', 'Digit5', 53], t: ['t', 'KeyT', 84], c: ['c', 'KeyC', 67], a: ['a', 'KeyA', 65], escape: ['Escape', 'Escape', 27] };
 const press = (name) => key(...KEYS[name]);
 async function settle() { for (let i = 0; i < 140; i++) { if (!(await evaluate('window.__deck && window.__deck.state().busy'))) return; await sleep(50); } }
 async function shot(name) {
@@ -625,6 +626,23 @@ if (dAt2 >= 0) {
 }
 check(!errors().length, 'no console errors with the presenter open' + (errors().length ? ': ' + errors()[0] : ''));
 if (SHOTS) await shot('presenter');
+// Open review notes on the current slide show in the presenter view (stand-in notes; the relay is not needed).
+const rvn = await evaluate(`(async () => { const w = document.getElementById('pv-test').contentWindow, i = __deck.state().i, real = w.__review;
+  w.__review = Object.assign({}, real || {}, { ownerOf: () => '', chip: (n) => '<span class="rvw-who">' + n + '</span>',
+    threadsOf: (k) => k === i ? [{ author: { name: 'Check', via: 'agent' }, target: { text: 'these words' }, body: 'Tighten this line', suggestion: 'x' }] : [] });
+  w.dispatchEvent(new w.CustomEvent('deck-review')); await new Promise((r) => setTimeout(r, 600));
+  const box = w.document.querySelector('.pv-review'), text = box ? box.textContent : '', r = box ? box.getBoundingClientRect() : null;
+  const hit = r && r.height ? w.document.elementFromPoint(r.left + 10, r.top + 10) : null;
+  w.__realReview = real;
+  return { text, seen: !!(hit && box.contains(hit)) }; })()`);
+if (SHOTS) await shot('presenter-review-notes');
+rvn.after = await evaluate(`(async () => { const w = document.getElementById('pv-test').contentWindow, real = w.__realReview;
+  if (real) w.__review = real; else delete w.__review; delete w.__realReview;
+  w.dispatchEvent(new w.CustomEvent('deck-review')); await new Promise((r) => setTimeout(r, 400));
+  return w.document.querySelector('.pv-review').textContent; })()`);
+check(/Open review notes · 1/.test(rvn.text) && /Check’s agent/.test(rvn.text) && /these words/.test(rvn.text) && /Tighten this line/.test(rvn.text) && rvn.seen,
+  `the presenter view lists the slide's open review notes, on screen (${rvn.text.slice(0, 80) || 'nothing'})`);
+check(rvn.after === '', 'and drops them when there are none');
 // The run sheet: one row per slide, the stage hidden.
 events.length = 0;
 await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
@@ -645,6 +663,49 @@ await sleep(600);
 const rv = await evaluate(`({ status: (document.querySelector('.rv__status') || {}).textContent || '', pad: document.querySelectorAll('.rv__pad button').length })`);
 check(/missing its code/.test(rv.status) && rv.pad === 2, `the phone page without a code says so (${rv.status})`);
 check(!errors().length, 'no console errors on the phone page' + (errors().length ? ': ' + errors()[0] : ''));
+
+// ---------- Review (review.js): it loads the relay's annotation client. A, sign-in, and the ?view=review
+// board, as far as they go without signing in. Needs the network; offline, this part is skipped.
+if (await evaluate(`!!document.querySelector('script[src$="review.js"]')`)) {
+  console.log('review');
+  await load();
+  const src = await evaluate(`(document.querySelector('script[src*="/client/v1/annotate.js"]') || {}).src || ''`);
+  check(/^https:\/\/deck-relay-[\w.-]+\/client\/v1\/annotate\.js$/.test(src), `review.js loads the relay's annotation client (${src || 'no script'})`);
+  let v = 0;
+  for (let i = 0; i < 50 && !v; i++) { v = await evaluate('(window.__review && window.__review.v) || 0'); if (!v) await sleep(200); }
+  if (!v) pass('review client did not load (offline?); review checks skipped (informational)');
+  else {
+    await evaluate(`location.hash = '#2'`); await sleep(500); await settle();
+    const at = (await evaluate('__deck.state()')).i;
+    await press('a'); await sleep(500);
+    // The bar lives in an open shadow root; hit-test inside it, as a real click would land.
+    const bar = await evaluate(`(() => { const h = document.querySelector('.rvw2-host'), sr = h && h.shadowRoot, b = sr && sr.querySelector('.bar');
+      if (!b || b.hidden) return null; const btn = b.querySelector('[data-a="signin"]'); if (!btn) return { signin: false };
+      const r = btn.getBoundingClientRect(), hit = sr.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return { signin: true, reach: !!(hit && btn.contains(hit)), y: Math.round(r.top) }; })()`);
+    check(bar && bar.signin && bar.reach, `A opens the review bar and asks a first visitor to sign in, button reachable (${bar ? JSON.stringify(bar) : 'no bar'})`);
+    check((await evaluate('__deck.state()')).i === at, 'A does not move the deck');
+    await press('escape'); await sleep(400);
+    const gone = await evaluate(`(() => { const b = document.querySelector('.rvw2-host').shadowRoot.querySelector('.bar'); return !b || b.hidden; })()`);
+    check(gone, 'Esc closes the review bar');
+    const s0 = await evaluate('JSON.stringify(__deck.state())');
+    await press('right'); await sleep(900); await settle();
+    const s1 = await evaluate('JSON.stringify(__deck.state())');
+    check(s1 !== s0, `the deck keys work again after it closes (${s0} to ${s1})`);
+    check(!errors().length, 'no console errors with the review client' + (errors().length ? ': ' + errors()[0] : ''));
+    if (SHOTS) { await press('a'); await sleep(500); await shot('review-bar'); await press('escape'); }
+    events.length = 0;
+    await send('Page.navigate', { url: URL0 + '?view=review' });
+    let bd = null;
+    for (let i = 0; i < 50 && !(bd && bd.signin); i++) {
+      await sleep(200);
+      try { bd = await evaluate(`(() => { const h = document.querySelector('.rvw2-host'), sr = h && h.shadowRoot; return { signin: !!(sr && sr.querySelector('[data-signin]')), deck: getComputedStyle(document.querySelector('.deck')).display }; })()`); } catch {}
+    }
+    check(bd && bd.signin && bd.deck === 'none', 'the ?view=review board asks for sign-in, with the stage hidden');
+    check(!errors().length, 'no console errors on the review board' + (errors().length ? ': ' + errors()[0] : ''));
+    if (SHOTS) await shot('review-board');
+  }
+}
 
 ws.close(); chrome.kill(); server.close();
 console.log(`\n${passes.length} passed, ${fails.length} failed${SHOTS ? '. Screenshots in ' + SHOTS : ''}`);

@@ -89,7 +89,7 @@ Roles available in an organization repo: Read, Triage, Write, Maintain, Admin. "
 
 Check these after any transfer or admin change. They live under "Settings" for the repo.
 
-- [ ] Branch protection on `main`: pull request required, at least one approving review, review from code owners required, status checks `markdownlint` and `links` required.
+- [ ] Branch protection on `main`: force-pushes and deletion blocked. Pull requests are not required, because collaborators push to `main` through `scripts/sync.sh` ([maintenance rule 8](docs/01-governance/maintenance-rules.md)).
 - [ ] `.github/CODEOWNERS` lists every current admin handle.
 - [ ] Both admins can open "Settings" (if they cannot, they are not admins).
 - [ ] The table above and the decision log are updated in the same PR.

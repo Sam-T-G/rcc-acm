@@ -19,7 +19,7 @@ This repo is the club's memory. Anyone in the club can propose a change. Officer
 | 5 | Decisions are logged | Any binding choice (budget, policy, event go/no-go, template change) gets a one-paragraph entry in the decision log with the date and who decided. |
 | 6 | Semester close is required | A semester is done when `retrospective.md` and `handoff.md` are filled in and the next semester folder exists. Outgoing team opens the PR; incoming team reviews and merges. |
 | 7 | Two admins minimum | [MAINTAINERS.md](MAINTAINERS.md) lists at least two repo admins, one of whom is not graduating this year. The advisor is the fallback contact. |
-| 8 | PRs, not direct pushes, to `main` | Every change to `main` goes through a pull request. One topic per PR. Any officer can review. Lint and link checks must pass. |
+| 8 | Collaborators push to `main` through the sync script; everyone else opens a PR | Collaborators' Claude Code agents commit small changes to `main` and push with `scripts/sync.sh push`, which runs the checks first (see [CLAUDE.md](CLAUDE.md)). Anyone without push access opens a pull request. Force-pushes and deleting `main` are blocked. |
 | 9 | Unknowns are marked `[TBD]` | Write `[TBD]` when you do not know. Never guess a date, a name, a room, or a dollar amount. |
 | 10 | Small files, plain Markdown | No binaries over 1 MB; large media lives in the club's shared drive and is linked from here. |
 
@@ -49,7 +49,7 @@ This repo is the club's memory. Anyone in the club can propose a change. Officer
 ## PR flow
 
 1. Optional: open an issue with one of the forms (event proposal, workshop proposal, task, decision). Use it when other people need to weigh in before you write.
-2. Create a branch from `main`. Direct pushes to `main` are blocked.
+2. Create a branch from `main`. (Collaborators with push access skip this flow and push small commits to `main` with `scripts/sync.sh push`; see rule 8.)
 3. Make one topic of change. A budget update and a playbook rewrite are two PRs.
 4. Run `scripts/check.sh`. Pre-PR check: leftover placeholders and semester literals, personal-data patterns, em dashes, broken relative links, files over 1 MB, leftover template fill markers, and markdownlint if installed. It also counts open `[TBD]` markers without failing on them.
 5. Open the PR. Fill in the template; it is a checklist, not a form letter.

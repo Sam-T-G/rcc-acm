@@ -1,0 +1,77 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(scripts/sync.sh *)",
+      "Bash(./scripts/sync.sh *)",
+      "Bash(scripts/check.sh)",
+      "Bash(./scripts/check.sh)",
+      "Bash(scripts/context.sh*)",
+      "Bash(./scripts/context.sh*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git fetch *)",
+      "Bash(git status*)",
+      "Bash(git log *)",
+      "Bash(git diff*)",
+      "Bash(git show *)",
+      "Bash(node scripts/review.mjs *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/rcc-coworking/run\" ]; then exec \"$HOME/.config/rcc-coworking/run\" \"$CLAUDE_PROJECT_DIR\" hooks/session-start.sh; else echo \"This repo's coworking hooks are not set up on this machine (sync, context check, handoff). In a terminal, run: scripts/install-bridge.sh\"; fi",
+            "timeout": 45
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/rcc-coworking/run\" ]; then exec \"$HOME/.config/rcc-coworking/run\" \"$CLAUDE_PROJECT_DIR\" sync.sh pull --quiet --hook; fi",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/rcc-coworking/run\" ]; then exec \"$HOME/.config/rcc-coworking/run\" \"$CLAUDE_PROJECT_DIR\" hooks/guard-git.sh; fi",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/rcc-coworking/run\" ]; then exec \"$HOME/.config/rcc-coworking/run\" \"$CLAUDE_PROJECT_DIR\" hooks/context-gate.sh edit; fi",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x \"$HOME/.config/rcc-coworking/run\" ]; then exec \"$HOME/.config/rcc-coworking/run\" \"$CLAUDE_PROJECT_DIR\" hooks/stop-check.sh; fi",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
