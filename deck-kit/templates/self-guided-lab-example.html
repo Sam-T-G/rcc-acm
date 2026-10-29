@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACM @ RCC, 2026-10-29</title>
+<!-- Made from deck-kit/templates/self-guided-lab.py. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../deck.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="../deck.js" defer></script>
+<script src="../presenter.js" defer></script>
+</head>
+<body>
+<main class="deck" data-deck="acm-2026-10-29-lab" data-ledger="ACM @ RCC · Deck kit · self-guided lab template">
+
+<section class="slide" data-kind="cover" data-starts="13:30" aria-label="Cover">
+  <div class="cover__rail" aria-hidden="true"></div>
+  <p class="cover__name">ACM @ RCC</p>
+  <p class="eyebrow"><time datetime="2026-10-29">Thursday, October 29</time></p>
+  <h1>Build a small machine, one round at a time</h1>
+  <p class="sub">The page has every step. <strong>Hints and answers are there if you get stuck.</strong></p>
+  <aside class="notes"><p>Say the club name first.</p><p class="bridge">Here is the page.</p></aside>
+</section>
+
+<section class="slide" data-kind="signup" data-layout="sendoff" data-section="Start" data-ground="tint" aria-label="Open the build page">
+  <div class="signup__main">
+    <p class="eyebrow">Every table</p>
+    <h2>Open the build page</h2>
+    <p class="sub">Start with round 1. Each round ends with a check that it works.</p>
+  </div>
+  <a class="qr" href="https://example.com/lab/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h29v29H0z"/><path stroke="#221f1e" d="M2 2.5h7M11 2.5h1M13 2.5h1M15 2.5h3M20 2.5h7M2 3.5h1M8 3.5h1M12 3.5h1M14 3.5h4M20 3.5h1M26 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M11 4.5h1M14 4.5h1M16 4.5h3M20 4.5h1M22 4.5h3M26 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M13 5.5h2M16 5.5h2M20 5.5h1M22 5.5h3M26 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M12 6.5h2M16 6.5h3M20 6.5h1M22 6.5h3M26 6.5h1M2 7.5h1M8 7.5h1M10 7.5h1M12 7.5h1M14 7.5h2M17 7.5h1M20 7.5h1M26 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h7M12 9.5h3M16 9.5h1M2 10.5h1M5 10.5h1M7 10.5h2M10 10.5h1M15 10.5h1M17 10.5h3M21 10.5h1M3 11.5h1M5 11.5h1M10 11.5h5M20 11.5h1M26 11.5h1M2 12.5h4M7 12.5h3M13 12.5h1M18 12.5h1M22 12.5h1M25 12.5h2M2 13.5h2M5 13.5h2M11 13.5h1M14 13.5h2M17 13.5h2M22 13.5h1M5 14.5h1M7 14.5h3M14 14.5h2M18 14.5h3M23 14.5h1M25 14.5h2M3 15.5h4M9 15.5h7M19 15.5h3M23 15.5h2M26 15.5h1M2 16.5h1M4 16.5h2M7 16.5h2M10 16.5h2M14 16.5h1M16 16.5h1M18 16.5h5M24 16.5h1M26 16.5h1M3 17.5h1M7 17.5h1M10 17.5h3M14 17.5h2M17 17.5h2M22 17.5h1M25 17.5h1M2 18.5h2M5 18.5h1M8 18.5h3M12 18.5h3M17 18.5h8M10 19.5h3M15 19.5h4M22 19.5h2M26 19.5h1M2 20.5h7M11 20.5h1M14 20.5h1M16 20.5h3M20 20.5h1M22 20.5h2M25 20.5h2M2 21.5h1M8 21.5h1M10 21.5h1M13 21.5h1M16 21.5h1M18 21.5h1M22 21.5h4M2 22.5h1M4 22.5h3M8 22.5h1M11 22.5h1M13 22.5h4M18 22.5h6M25 22.5h1M2 23.5h1M4 23.5h3M8 23.5h1M10 23.5h2M13 23.5h1M15 23.5h1M17 23.5h1M21 23.5h4M2 24.5h1M4 24.5h3M8 24.5h1M12 24.5h1M16 24.5h1M21 24.5h2M24 24.5h1M26 24.5h1M2 25.5h1M8 25.5h1M12 25.5h5M18 25.5h3M23 25.5h1M2 26.5h7M10 26.5h2M13 26.5h9M25 26.5h2"/></svg></span><span class="label">example.com/lab</span></a>
+  <aside class="notes"><p>Two or three people per kit.</p><p class="bridge">Rules before anyone plugs in.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="rules" data-room aria-label="Before you plug in">
+  <p class="eyebrow">Every table</p>
+  <h2>Before you plug in</h2>
+  <ol class="beats"><li data-beat>Unplug USB before you move a wire<span class="detail">Plug it back in only to test</span></li><li data-beat>Ask before you use a part not on the page</li></ol>
+  <p class="callout callout--warning"><b>Careful.</b> Read the part labels before it goes in. Power on the wrong pin can break it.</p>
+  <aside class="notes"><p>Read these out loud.</p><p class="bridge">Round 1.</p></aside>
+</section>
+
+<section class="slide" data-kind="statement" data-layout="map" data-section="Set up" data-ground="warm" aria-label="Get power to the breadboard">
+  <p class="eyebrow">Round 1 of 3</p>
+  <h2>Get power to the breadboard</h2>
+  <p class="sub">About 6 minutes.</p>
+  <ol class="roundmap" aria-label="Rounds"><li class="is-current"><b>1</b><span>Set up</span></li><li class="is-next"><b>2</b><span>Sensor</span></li><li class="is-next"><b>3</b><span>Output</span></li></ol>
+  <aside class="notes"><p>Leave this up while tables work on the round.</p><p class="bridge">When it works, it looks like this.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="win" data-ground="orange" aria-label="Power is on">
+  <p class="eyebrow">It works when</p>
+  <h2>Power is on</h2>
+  <p class="sub">The board light is on and nothing gets warm.</p>
+  <ol class="beats"><li data-beat>No light?<span class="detail">Check the USB cable is all the way in</span></li></ol>
+  <aside class="notes"><p>Ask one table to show theirs.</p><p class="bridge">Next round.</p></aside>
+</section>
+
+<section class="slide" data-kind="statement" data-layout="map" data-section="Sensor" aria-label="Make the sensor read a distance">
+  <p class="eyebrow">Round 2 of 3</p>
+  <h2>Make the sensor read a distance</h2>
+  <p class="sub">About 8 minutes.</p>
+  <ol class="roundmap" aria-label="Rounds"><li class="is-done"><b>1</b><span>Set up</span></li><li class="is-current"><b>2</b><span>Sensor</span></li><li class="is-next"><b>3</b><span>Output</span></li></ol>
+  <aside class="notes"><p>Leave this up while tables work on the round.</p><p class="bridge">When it works, it looks like this.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="win" data-ground="orange" aria-label="The sensor reads">
+  <p class="eyebrow">It works when</p>
+  <h2>The sensor reads</h2>
+  <p class="sub">The number drops as your hand comes closer.</p>
+  <ol class="beats"><li data-beat>Always 0?<span class="detail">Swap the two signal wires</span></li><li data-beat>Jumps around?<span class="detail">Use a flat object, not your hand</span></li></ol>
+  <aside class="notes"><p>Ask one table to show theirs.</p><p class="bridge">Next round.</p></aside>
+</section>
+
+<section class="slide" data-kind="statement" data-layout="map" data-section="Output" data-ground="warm" aria-label="Make something move">
+  <p class="eyebrow">Round 3 of 3</p>
+  <h2>Make something move</h2>
+  <p class="sub">About 10 minutes.</p>
+  <ol class="roundmap" aria-label="Rounds"><li class="is-done"><b>1</b><span>Set up</span></li><li class="is-done"><b>2</b><span>Sensor</span></li><li class="is-current"><b>3</b><span>Output</span></li></ol>
+  <aside class="notes"><p>Leave this up while tables work on the round.</p><p class="bridge">When it works, it looks like this.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="win" data-ground="orange" aria-label="It moves">
+  <p class="eyebrow">It works when</p>
+  <h2>It moves</h2>
+  <p class="sub">The arm lifts when something is close and drops when it leaves.</p>
+  <ol class="beats"><li data-beat>Nothing moves?<span class="detail">Check the signal wire is on the right pin</span></li></ol>
+  <aside class="notes"><p>Ask one table to show theirs.</p><p class="bridge">Now the challenges.</p></aside>
+</section>
+
+<section class="slide" data-kind="clock" data-ends="14:25" data-section="Challenges" data-ground="tint" data-room aria-label="Work time">
+  <p class="eyebrow">Work time · until 2:25</p>
+  <h2>Go as far as you can</h2>
+  <p class="sub">Finished? Try a challenge from the page.</p>
+  <aside class="notes"><p>Press T.</p><p class="bridge">Pack up.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-ground="warm" aria-label="Pack up">
+  <h2>Pack up</h2>
+  <ol class="beats"><li data-beat>Unplug the USB cable</li><li data-beat>Every part back in the kit box</li></ol>
+  <aside class="notes"><p>Count parts back into each kit.</p><p class="bridge">One last thing.</p></aside>
+</section>
+
+<section class="slide" data-kind="ask" data-room aria-label="Wrap-up">
+  <div class="ask__main">
+    <p class="eyebrow">Before you go</p>
+    <h2>The page stays up after today</h2>
+    <p class="ask__meta">Thursdays, <time datetime="13:30">1:30</time> to <time datetime="14:30">2:30 PM</time>, BLCIS A-210</p>
+  </div>
+  <div class="qrs"><a class="qr" href="https://example.com/lab/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h29v29H0z"/><path stroke="#221f1e" d="M2 2.5h7M11 2.5h1M13 2.5h1M15 2.5h3M20 2.5h7M2 3.5h1M8 3.5h1M12 3.5h1M14 3.5h4M20 3.5h1M26 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M11 4.5h1M14 4.5h1M16 4.5h3M20 4.5h1M22 4.5h3M26 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M13 5.5h2M16 5.5h2M20 5.5h1M22 5.5h3M26 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M12 6.5h2M16 6.5h3M20 6.5h1M22 6.5h3M26 6.5h1M2 7.5h1M8 7.5h1M10 7.5h1M12 7.5h1M14 7.5h2M17 7.5h1M20 7.5h1M26 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h7M12 9.5h3M16 9.5h1M2 10.5h1M5 10.5h1M7 10.5h2M10 10.5h1M15 10.5h1M17 10.5h3M21 10.5h1M3 11.5h1M5 11.5h1M10 11.5h5M20 11.5h1M26 11.5h1M2 12.5h4M7 12.5h3M13 12.5h1M18 12.5h1M22 12.5h1M25 12.5h2M2 13.5h2M5 13.5h2M11 13.5h1M14 13.5h2M17 13.5h2M22 13.5h1M5 14.5h1M7 14.5h3M14 14.5h2M18 14.5h3M23 14.5h1M25 14.5h2M3 15.5h4M9 15.5h7M19 15.5h3M23 15.5h2M26 15.5h1M2 16.5h1M4 16.5h2M7 16.5h2M10 16.5h2M14 16.5h1M16 16.5h1M18 16.5h5M24 16.5h1M26 16.5h1M3 17.5h1M7 17.5h1M10 17.5h3M14 17.5h2M17 17.5h2M22 17.5h1M25 17.5h1M2 18.5h2M5 18.5h1M8 18.5h3M12 18.5h3M17 18.5h8M10 19.5h3M15 19.5h4M22 19.5h2M26 19.5h1M2 20.5h7M11 20.5h1M14 20.5h1M16 20.5h3M20 20.5h1M22 20.5h2M25 20.5h2M2 21.5h1M8 21.5h1M10 21.5h1M13 21.5h1M16 21.5h1M18 21.5h1M22 21.5h4M2 22.5h1M4 22.5h3M8 22.5h1M11 22.5h1M13 22.5h4M18 22.5h6M25 22.5h1M2 23.5h1M4 23.5h3M8 23.5h1M10 23.5h2M13 23.5h1M15 23.5h1M17 23.5h1M21 23.5h4M2 24.5h1M4 24.5h3M8 24.5h1M12 24.5h1M16 24.5h1M21 24.5h2M24 24.5h1M26 24.5h1M2 25.5h1M8 25.5h1M12 25.5h5M18 25.5h3M23 25.5h1M2 26.5h7M10 26.5h2M13 26.5h9M25 26.5h2"/></svg></span><span class="label">example.com/lab</span></a></div>
+  <div class="ask__foot"><p class="ask__name">ACM @ RCC</p><p class="ask__stamp">Updated <time datetime="2026-10-29">2026-10-29</time></p></div>
+  <aside class="notes"><p>Finish at home with the same page.</p></aside>
+</section>
+</main>
+</body>
+</html>
