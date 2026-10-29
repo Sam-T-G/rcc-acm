@@ -52,6 +52,9 @@ button:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 details.ex { margin: 8px 0; }
 .io { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .io__label { margin: 8px 0 4px; font-weight: 600; font-size: 15px; color: var(--ink-2); }
+ol.start { counter-reset: st; list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+ol.start li { counter-increment: st; position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px 14px 60px; }
+ol.start li::before { content: counter(st); position: absolute; left: 16px; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: #fff; font: 700 16px/30px var(--sans); text-align: center; }
 footer { margin-top: 64px; color: var(--ink-2); font-size: 15px; }
 @media print {
   body { font-size: 12px; background: #fff; }
@@ -68,23 +71,33 @@ footer { margin-top: 64px; color: var(--ink-2); font-size: 15px; }
 <header>
   <p class="name">ACM @ RCC</p>
   <h1>ICPC warm-up, October 29</h1>
-  <p>Eight easy problems from real ICPC contests, easiest first. Submit on Kattis. The regional is Saturday, November 7, here at RCC.</p>
+  <p>Eight easy problems from real ICPC contests, easiest first. New to this? Follow "Start here" and do problem 1 first. The regional is Saturday, November 7, here at RCC.</p>
 </header>
 
 <nav aria-label="On this page"><ol>
-  <li><a href="#how">How to run it</a></li>
+  <li><a href="#start">Start here</a></li>
+  <li><a href="#how">Working as a team</a></li>
   <li><a href="#problems">Problems</a></li>
   <li><a href="#cheat">Input and output cheat sheet</a></li>
 </ol></nav>
 
-<h2 id="how">How to run it</h2>
+<h2 id="start">Start here</h2>
+<ol class="start">
+  <li><b>Make a free Kattis account</b> at <a href="https://open.kattis.com">open.kattis.com</a>. Kattis runs your code on hidden tests and tells you if it's right.</li>
+  <li><b>Open problem 1</b> below and read it. It's the one we just solved together.</li>
+  <li><b>Copy its starter code.</b> Open "Starter code" under the problem and click Copy. The input is already read for you.</li>
+  <li><b>Fill in the middle and run it on the sample.</b> The sample is the example input and output on the Kattis page. Your output should match it exactly.</li>
+  <li><b>Submit.</b> On Kattis, click Submit, pick C++, and paste your code. Accepted means it passed every hidden test.</li>
+  <li><b>Next problem.</b> They get a little harder as you go. Each one has a hint and the common mistake if you get stuck.</li>
+</ol>
+
+<h2 id="how">Working as a team</h2>
 <ul class="plan">
-  <li><b>One laptop per team of 3</b>, the same as the real contest. One person types. The other two read problems and plan.</li>
-  <li><b>Split the set.</b> The typer starts on 1. Reader A reads 2 to 5. Reader B reads 6 to 8. When a reader has a plan ready, they take the keyboard.</li>
-  <li><b>Stuck for 10 minutes?</b> Write the code on paper and let the next person type.</li>
-  <li><b>Run the samples before you submit.</b> At the regional, every wrong submit on a problem you later solve adds 20 minutes to your time.</li>
+  <li><b>One laptop per team of 3</b>, like the real contest. One person types. The other two read the next problems and plan.</li>
+  <li><b>Split the reading.</b> Reader A reads 2 to 5. Reader B reads 6 to 8. Whoever has a plan ready takes the keyboard next.</li>
+  <li><b>Stuck for 10 minutes?</b> Write the idea on paper and let the next person type.</li>
+  <li><b>Run the sample before you submit.</b> At the regional, every wrong submit on a problem you later solve adds 20 minutes to your time.</li>
   <li><b>Print the cheat sheet.</b> The SoCal regional lets you bring books and paper notes, but no phones, laptops, or USB drives (<a href="https://scl.na.icpc.global/contest-rules/">SoCal contest rules</a>). The languages are C, C++, Java, Python 3, and Kotlin.</li>
-  <li><b>Submitting:</b> make a free account at <a href="https://open.kattis.com">open.kattis.com</a>, open the problem, click Submit, pick C++, and paste or upload your file. Accepted means it passed every hidden test.</li>
 </ul>
 
 <h2 id="problems">Problems</h2>
