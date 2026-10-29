@@ -64,6 +64,9 @@
   --acm-inverse-on-surface:        #f7f3f1;
   --acm-focus-ring:                #ae3200;
   --acm-fill-orange:               #ff4d00;
+  /* Mark colors, for pictures only (breadboard rail lines): the system's mark set. */
+  --acm-mark-xref:                 #247ad6;
+  --acm-mark-failure:              #dc3f46;
 
   --acm-dur-fast-effects:    90ms;
   --acm-dur-default-effects: 140ms;
@@ -132,6 +135,17 @@ body {
   --s-top:     calc(144 * var(--u));
   --s-bottom:  calc(144 * var(--u));
   --s-gap:     calc(40 * var(--u));
+  /* Stage spacing scale (decision log 2026-10-28). Gaps, padding, and margins
+     between slide parts come from these steps, never from a free number. */
+  --st-1: calc(8 * var(--u));
+  --st-2: calc(16 * var(--u));
+  --st-3: calc(24 * var(--u));
+  --st-4: calc(32 * var(--u));
+  --st-5: calc(40 * var(--u));
+  --st-6: calc(48 * var(--u));
+  --st-7: calc(64 * var(--u));
+  --st-8: calc(96 * var(--u));
+  --st-9: calc(144 * var(--u));
   position: relative;
   margin: 0 auto;
 }
@@ -231,6 +245,8 @@ body {
 }
 @keyframes deck-boot-failsafe { to { visibility: visible; } }
 .beats li.is-past, .board li.is-past { color: var(--acm-on-surface-variant); transition: color var(--acm-dur-slow-effects) var(--acm-ease-standard); }
+/* On the filled grounds the variant ink fails contrast, so past items keep the ground's ink and drop weight only. */
+.slide:is([data-ground="orange"], [data-ground="tint"]) :is(.beats, .board) li.is-past { color: inherit; opacity: 0.8; }
 
 /* --- Chrome: ledger, counter, progress. Still across every transition. ---- */
 .chrome { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
@@ -264,12 +280,12 @@ body {
   transform-origin: 50% 0;
 }
 .cover__name { font-size: var(--s-body-sm); font-weight: 500; color: var(--acm-on-surface); margin-block-end: auto; }
-.slide[data-kind="cover"] .eyebrow { margin-block-end: calc(28 * var(--u)); }
+.slide[data-kind="cover"] .eyebrow { margin-block-end: var(--st-3); }
 .slide[data-kind="cover"] h1 { font-size: calc(168 * var(--u)); line-height: 0.96; letter-spacing: -0.04em; max-width: calc(1540 * var(--u)); }
-.slide[data-kind="cover"] .sub { margin-block-start: calc(36 * var(--u)); max-width: 44ch; }
+.slide[data-kind="cover"] .sub { margin-block-start: var(--st-4); max-width: 44ch; }
 .slide[data-kind="cover"] .sub strong { color: var(--acm-on-surface); font-weight: 700; }
-.cover__meta { margin-block-start: calc(40 * var(--u)); }
-.cover__starts { margin-block-end: calc(12 * var(--u)); }
+.cover__meta { margin-block-start: var(--st-5); }
+.cover__starts { margin-block-end: var(--st-2); }
 
 /* --- statement ------------------------------------------------------------ */
 .slide[data-kind="statement"] h2 { max-width: calc(1500 * var(--u)); font-size: calc(104 * var(--u)); }
@@ -278,17 +294,19 @@ body {
 .slide .hl { color: var(--acm-primary); }
 
 /* --- contrast ------------------------------------------------------------- */
-.contrast { display: grid; grid-template-columns: 1fr 1fr; gap: calc(96 * var(--u)); align-items: start; }
-.contrast > div { display: flex; flex-direction: column; gap: calc(24 * var(--u)); }
+.contrast { display: grid; grid-template-columns: 1fr 1fr; gap: var(--st-8); align-items: start; }
+.contrast > div { display: flex; flex-direction: column; gap: var(--st-3); }
 .contrast > div > p:not(.label) { font-size: var(--s-body); line-height: 1.28; }
 /* Both sides the same size, weight, and ink: the words win, not the styling. */
 .contrast .is-strong > .label { color: var(--acm-primary); }
 
 /* --- beats ---------------------------------------------------------------- */
-.beats { list-style: none; padding: 0; display: grid; gap: calc(36 * var(--u)); counter-reset: beat; }
-.beats:has(.detail) { gap: calc(22 * var(--u)); }
+/* List rhythm, shared by beats, board, and lab steps: --st-4 between plain
+   items, --st-3 between items that carry a detail line; marker column 96. */
+.beats { list-style: none; padding: 0; display: grid; gap: var(--st-4); counter-reset: beat; }
+.beats:has(.detail) { gap: var(--st-3); }
 .beats li {
-  display: grid; grid-template-columns: calc(96 * var(--u)) 1fr; gap: calc(28 * var(--u)); align-items: baseline;
+  display: grid; grid-template-columns: var(--st-8) 1fr; gap: var(--st-3); align-items: baseline;
   max-width: calc(1480 * var(--u));
 }
 .beats li::before {
@@ -297,13 +315,13 @@ body {
   font-variant-numeric: tabular-nums; color: var(--acm-primary);
 }
 .beats li > .body { display: block; }
-.beats li .detail { display: block; font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); margin-top: calc(8 * var(--u)); }
+.beats li .detail { display: block; font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); margin-top: var(--st-1); }
 
 /* --- board: every dated thing in the next four weeks, one line each ------- */
 .board { list-style: none; padding: 0; display: grid; max-width: calc(1600 * var(--u)); }
 .board li {
-  display: grid; grid-template-columns: calc(420 * var(--u)) 1fr; gap: calc(40 * var(--u)); align-items: baseline;
-  padding-block: calc(22 * var(--u));
+  display: grid; grid-template-columns: calc(420 * var(--u)) 1fr; gap: var(--st-5); align-items: baseline;
+  padding-block: var(--st-3);
 }
 .board li:not(:last-child) { border-block-end: calc(2 * var(--u)) solid var(--acm-outline-variant); }
 .board time { font-family: var(--acm-font-code); font-size: var(--s-body-sm); font-weight: 500; font-variant-ligatures: none; }
@@ -313,7 +331,7 @@ body {
   font-family: var(--acm-font-code); font-size: var(--s-body-sm); line-height: 1.4;
   font-variant-ligatures: none; font-variant-numeric: tabular-nums;
   color: var(--acm-code-on-surface); background: var(--acm-code-surface);
-  border-radius: calc(12 * var(--u)); padding: calc(40 * var(--u)) calc(48 * var(--u));
+  border-radius: calc(12 * var(--u)); padding: var(--st-5) var(--st-6);
   box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
   white-space: pre; overflow: hidden; max-width: calc(1728 * var(--u));
 }
@@ -321,13 +339,13 @@ body {
 .code .k { color: var(--acm-primary); font-weight: 500; }
 
 /* --- figure --------------------------------------------------------------- */
-.figure { display: flex; align-items: baseline; gap: calc(40 * var(--u)); }
+.figure { display: flex; align-items: baseline; gap: var(--st-5); }
 .figure__num { font-size: calc(320 * var(--u)); line-height: 0.85; font-weight: 700; letter-spacing: -0.05em; color: var(--acm-primary); font-variant-numeric: tabular-nums lining-nums; }
 .figure__unit { font-size: var(--s-head); line-height: 1; font-weight: 700; letter-spacing: -0.02em; }
 .slide[data-kind="figure"] .sub { max-width: 44ch; }
 
 /* --- clock ---------------------------------------------------------------- */
-.clock { display: grid; gap: calc(28 * var(--u)); margin-block-start: calc(24 * var(--u)); }
+.clock { display: grid; gap: var(--st-3); margin-block-start: var(--st-3); }
 .clock__digits { font-size: calc(240 * var(--u)); line-height: 0.9; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums lining-nums; }
 .clock__track { height: calc(12 * var(--u)); background: var(--acm-surface-container-highest); overflow: hidden; }
 .clock__fill { display: block; height: 100%; background: var(--acm-primary); transform-origin: left center; }
@@ -335,13 +353,13 @@ body {
 /* Last ten seconds: the digits take the primary container and hold it. Never blinks. */
 .clock[data-state="ending"] .clock__digits, .clock[data-state="done"] .clock__digits {
   background: var(--acm-primary-container); color: var(--acm-on-primary-container);
-  justify-self: start; padding-inline: calc(24 * var(--u)); border-radius: calc(12 * var(--u));
+  justify-self: start; padding-inline: var(--st-3); border-radius: calc(12 * var(--u));
 }
 
 /* --- callout: Check or Warning, one per slide, short solid Rail ----------- */
 .callout {
   position: relative; overflow: hidden; max-width: calc(1500 * var(--u));
-  padding: calc(28 * var(--u)) calc(40 * var(--u)) calc(28 * var(--u)) calc(88 * var(--u));
+  padding: var(--st-3) var(--st-5) var(--st-3) var(--st-8);
   border-radius: calc(16 * var(--u));
   box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline);
   font-size: var(--s-body-sm); line-height: 1.3;
@@ -352,10 +370,10 @@ body {
 .callout b { font-weight: 700; }
 
 /* --- ask: the last slide, with the club name as text ---------------------- */
-.slide[data-kind="ask"] { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; column-gap: calc(96 * var(--u)); row-gap: calc(40 * var(--u)); align-items: center; }
-.ask__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="ask"] { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; column-gap: var(--st-8); row-gap: var(--st-5); align-items: center; }
+.ask__main { display: flex; flex-direction: column; gap: var(--st-4); }
 .ask__meta { font-size: var(--s-body-sm); color: var(--acm-on-surface-variant); }
-.qr { display: flex; flex-direction: column; align-items: center; gap: calc(16 * var(--u)); color: inherit; text-decoration: none; }
+.qr { display: flex; flex-direction: column; align-items: center; gap: var(--st-2); color: inherit; text-decoration: none; }
 .qr__tile {
   width: calc(320 * var(--u)); height: calc(320 * var(--u)); padding: calc(12 * var(--u)); display: block;
   border-radius: calc(12 * var(--u)); background: #ffffff;
@@ -363,7 +381,7 @@ body {
 }
 .qr__tile svg, .qr__tile img { width: 100%; height: 100%; display: block; }
 .qr .label { text-align: center; text-transform: none; letter-spacing: 0.02em; }
-.ask__foot { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: calc(64 * var(--u)); }
+.ask__foot { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: var(--st-7); }
 .ask__name { font-size: var(--s-body-sm); font-weight: 500; }
 .ask__stamp { font-family: var(--acm-font-code); font-size: var(--s-ledger); color: var(--acm-on-surface-variant); font-variant-numeric: tabular-nums; }
 
@@ -396,16 +414,16 @@ body {
 .slide[data-layout="center"] { align-items: center; text-align: center; }
 .slide[data-layout="center"] :is(h2, .sub) { margin-inline: auto; }
 .slide[data-kind="statement"][data-layout="giant"] { justify-content: flex-end; padding-bottom: calc(176 * var(--u)); }
-.slide[data-kind="statement"][data-layout="giant"] h2 { font-size: calc(184 * var(--u)); line-height: 0.95; letter-spacing: -0.045em; max-width: none; }
+.slide[data-kind="statement"][data-layout="giant"] h2 { font-size: calc(168 * var(--u)); line-height: 0.95; letter-spacing: -0.04em; max-width: none; }
 
 /* --- photo: one photograph and the words beside it, never over it --------- */
 /* Layouts: bleed-right (default) and bleed-left run the photo off the stage
    edge, from the top down to the progress band; framed sits it inside the
    margins. The credit is a link, on the slide, in the ledger face. */
-.slide[data-kind="photo"] { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(96 * var(--u)); align-items: center; }
-.photo__text { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="photo"] { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--st-8); align-items: center; }
+.photo__text { display: flex; flex-direction: column; gap: var(--st-4); }
 /* A sign-up QR beside a photo: smaller tile, label to its right, so the column clears the rail. */
-.photo__text .qr { flex-direction: row; align-self: flex-start; gap: calc(28 * var(--u)); }
+.photo__text .qr { flex-direction: row; align-self: flex-start; gap: var(--st-3); }
 .photo__text .qr .label { text-align: left; overflow-wrap: anywhere; }
 .photo__text .qr__tile { width: calc(216 * var(--u)); height: calc(216 * var(--u)); flex: none; }
 .photo { margin: 0; }
@@ -420,7 +438,7 @@ body {
 .slide[data-kind="photo"][data-layout="bleed-left"] .photo__text { grid-column: 2; grid-row: 1; }
 .slide[data-kind="photo"]:not([data-layout="framed"]) .credit { position: absolute; bottom: calc(136 * var(--u)); left: var(--s-margin); max-width: calc(760 * var(--u)); }
 .slide[data-kind="photo"][data-layout="bleed-left"] .credit { left: calc(50% + 48 * var(--u)); }
-.slide[data-kind="photo"][data-layout="framed"] .photo { display: grid; gap: calc(16 * var(--u)); }
+.slide[data-kind="photo"][data-layout="framed"] .photo { display: grid; gap: var(--st-2); }
 .slide[data-kind="photo"][data-layout="framed"] .photo img { width: 100%; height: auto; max-height: calc(640 * var(--u)); border-radius: calc(12 * var(--u)); }
 /* The photo is the only thing that bleeds, so the chrome over its corner steps aside. */
 .deck.on-bleed-right .chrome .counter, .deck.on-bleed-left .chrome .ledger { visibility: hidden; }
@@ -438,12 +456,12 @@ body {
 .deck-live.is-presenting .slide.is-current[data-kind="grid"] .grid li:nth-child(4) img { animation-delay: 270ms; }
 
 /* --- grid: two to four things side by side, each with an optional photo --- */
-.grid { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: calc(40 * var(--u)); }
-.grid li { display: flex; flex-direction: column; gap: calc(16 * var(--u)); font-size: var(--s-body-sm); }
+.grid { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--st-5); }
+.grid li { display: flex; flex-direction: column; gap: var(--st-2); font-size: var(--s-body-sm); }
 .grid img { display: block; width: 100%; height: calc(var(--img-h, 420) * var(--u)); object-fit: cover; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-lowest); }
 .grid b { font-size: var(--s-body); font-weight: 700; letter-spacing: -0.01em; }
 .grid p { font-size: var(--s-body-sm); line-height: 1.25; }
-.grid .code { padding: calc(20 * var(--u)) calc(24 * var(--u)); }
+.grid .code { padding: var(--st-3); }
 
 /* --- Ground crossfade ------------------------------------------------------
    Presenting, the ground lives on the stage, not the slide, and fades between
@@ -461,19 +479,19 @@ body {
 .progress__label, .progress__fill, .progress__track { transition: fill calc(3 * var(--acm-dur-slow-effects)) var(--acm-ease-standard); }
 
 /* --- signup: one form, its QR code, and its URL as text ------------------- */
-.slide[data-kind="signup"] { display: grid; grid-template-columns: 1fr auto; column-gap: calc(96 * var(--u)); align-items: center; }
-.signup__main { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
+.slide[data-kind="signup"] { display: grid; grid-template-columns: 1fr auto; column-gap: var(--st-8); align-items: center; }
+.signup__main { display: flex; flex-direction: column; gap: var(--st-4); }
 .slide[data-kind="signup"] .qr__tile { width: calc(420 * var(--u)); height: calc(420 * var(--u)); }
 .slide[data-ground="orange"] .qr .label, .slide[data-ground="tint"] .qr .label { color: var(--acm-on-surface); }
-.qrs { display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
-.qrs .qr { flex-direction: row; gap: calc(28 * var(--u)); }
+.qrs { display: flex; flex-direction: column; gap: var(--st-4); }
+.qrs .qr { flex-direction: row; gap: var(--st-3); }
 .qrs .qr .label { text-align: left; }
 .qrs .qr__tile { width: calc(232 * var(--u)); height: calc(232 * var(--u)); }
 .qrs .label { font-size: var(--s-ledger); line-height: 1.25; }
 
 /* --- collage: the club's own photos, up to six ----------------------------- */
 .slide[data-kind="collage"] { justify-content: flex-start; }
-.collage { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(236 * var(--u)); gap: calc(16 * var(--u)); flex: 1; }
+.collage { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(236 * var(--u)); gap: var(--st-2); flex: 1; }
 .collage li { overflow: hidden; border-radius: calc(12 * var(--u)); background: var(--acm-surface-container-highest); }
 .collage li:nth-child(1) { grid-column: span 3; grid-row: span 2; }
 .collage li:nth-child(2), .collage li:nth-child(3) { grid-column: span 3; }
@@ -504,7 +522,7 @@ body {
 .collage video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
 /* A row collage: one justified row, each tile as wide as its media's shape
    (--ar = width / height, which ingest-photos.mjs prints), so nothing crops much. */
-.collage.is-row { display: flex; gap: calc(16 * var(--u)); }
+.collage.is-row { display: flex; gap: var(--st-2); }
 .collage.is-row { flex: 1 1 0; min-height: 0; }
 .collage.is-row li { flex: var(--ar, 1) 1 0; min-width: 0; position: relative; }
 .collage.is-row :is(img, video) { position: absolute; inset: 0; }
@@ -520,15 +538,15 @@ body {
    presenting, never under reduced motion; every element has a still pose. */
 .slide[data-layout="split"] {
   display: grid; grid-template-columns: minmax(0, 1fr) calc(760 * var(--u)); grid-template-rows: auto auto;
-  column-gap: calc(96 * var(--u)); row-gap: calc(48 * var(--u)); align-content: center; align-items: center;
+  column-gap: var(--st-8); row-gap: var(--st-6); align-content: center; align-items: center;
 }
-.split__head { grid-column: 1 / -1; display: flex; flex-direction: column; gap: calc(16 * var(--u)); }
-.split__main { min-width: 0; display: flex; flex-direction: column; gap: calc(32 * var(--u)); }
-.slide[data-layout="split"] .clock { margin-block-start: 0; gap: calc(20 * var(--u)); }
+.split__head { grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--st-2); }
+.split__main { min-width: 0; display: flex; flex-direction: column; gap: var(--st-4); }
+.slide[data-layout="split"] .clock { margin-block-start: 0; gap: var(--st-3); }
 .slide[data-layout="split"] .clock__digits { font-size: calc(168 * var(--u)); }
 .slide[data-layout="split"] .sub { max-width: none; }
 .slide[data-layout="split"] .beats { display: grid; }
-.slide[data-layout="split"] .beats li { grid-template-columns: calc(72 * var(--u)) 1fr; gap: calc(20 * var(--u)); }
+.slide[data-layout="split"] .beats li { grid-template-columns: var(--st-7) 1fr; gap: var(--st-2); }
 .viz { margin: 0; color: var(--acm-on-surface); }
 .viz svg { display: block; width: 100%; height: auto; overflow: visible; }
 .viz text { font-family: var(--acm-font-code); font-size: 32px; font-weight: 500; fill: currentColor; font-variant-ligatures: none; font-variant-numeric: tabular-nums; }
@@ -854,6 +872,41 @@ body {
   .photo :is(img, video), .grid :is(img, video), .collage :is(img, video) { animation: none !important; clip-path: none !important; }
 }
 
+/* --- Partials (lab/partials.py): built on existing kinds through data-layout --
+   tiles: two equal track tiles on a contrast slide, neither styled as the better one.
+   sendoff: a signup slide handing a group to a page; the URL wraps under the tile.
+   rules: beats plus one Warning callout. map: a statement with the round strip.
+   win: the end of a round, usually on orange. Decision log 2026-10-28. */
+.slide[data-layout="tiles"] { gap: var(--st-6); }
+.contrast--even { gap: var(--st-5); align-items: stretch; }
+.contrast--even > div {
+  gap: var(--st-3); padding: var(--st-6); border-radius: calc(16 * var(--u));
+  background: var(--acm-surface-container-lowest); box-shadow: inset 0 0 0 calc(2 * var(--u)) var(--acm-outline-variant);
+}
+.contrast--even > div > .label { color: var(--acm-primary); font-size: var(--s-body-sm); }
+.contrast--even > div > p:not(.label) { font-size: var(--s-body); }
+.slide[data-layout="sendoff"] { grid-template-columns: minmax(0, 1fr) calc(420 * var(--u)); }
+.slide[data-layout="sendoff"] .qr .label { max-width: calc(420 * var(--u)); overflow-wrap: anywhere; font-size: var(--s-ledger); }
+.slide[data-layout="sendoff"] .sub { max-width: 30ch; }
+.slide[data-layout="rules"] .callout { margin-block-start: var(--st-1); }
+.slide[data-layout="map"] h2 { font-size: var(--s-head); }
+.roundmap { list-style: none; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--st-2); margin-block-start: var(--st-4); max-width: calc(1728 * var(--u)); }
+.roundmap li {
+  display: grid; gap: var(--st-1); padding-block-start: var(--st-2);
+  border-block-start: calc(8 * var(--u)) solid var(--acm-outline-variant);
+  font-size: var(--s-body-sm); line-height: 1.15; color: var(--acm-on-surface-variant);
+}
+.roundmap b { font-family: var(--acm-font-code); font-size: var(--s-body-sm); font-weight: 500; font-variant-numeric: tabular-nums; }
+.roundmap .is-done { border-color: var(--acm-on-surface); color: var(--acm-on-surface); }
+.roundmap .is-current { border-color: var(--acm-primary); color: var(--acm-primary); font-weight: 700; }
+.slide[data-ground="orange"] .roundmap li, .slide[data-ground="tint"] .roundmap li { color: var(--acm-on-surface); }
+.slide[data-ground="orange"] .roundmap .is-current, .slide[data-ground="tint"] .roundmap .is-current { border-color: var(--acm-on-surface); }
+.slide[data-ground="orange"] .roundmap .is-next, .slide[data-ground="tint"] .roundmap .is-next { border-color: rgb(34 31 30 / 0.25); }
+.slide[data-layout="win"] .sub { max-width: 36ch; color: var(--acm-on-surface); }
+
+/* Long QR URLs break at their slashes into whole lines (partials.qr, 2026-10-28). */
+.qr .label .qr__line { display: block; }
+
 </style>
 <style>
 .viz .wire { stroke: currentColor; stroke-width: 5; fill: none; stroke-linejoin: round; stroke-linecap: round; }
@@ -864,74 +917,26 @@ body {
 .viz .soft { opacity: 0.45; }
 .viz .pin1 { fill: var(--acm-surface); }
 .viz .lled { fill: var(--acm-primary); }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } }
-.is-presenting .slide.is-current .viz--bb .bb-pulse { animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { stroke-opacity: 1; } 50% { stroke-opacity: 0.35; } }
-.is-presenting .slide.is-current .viz--pm .pm-spike { animation: blink 1.2s step-end infinite; }
-.is-presenting .slide.is-current .viz--lp .lp-e { animation: lp-e 3.6s linear infinite; animation-delay: calc(var(--n) * -0.6s); }
-@keyframes lp-e { 0.00% { transform: translate(110px, 180px); } 6.02% { transform: translate(110px, 80px); } 37.95% { transform: translate(640px, 80px); } 62.05% { transform: translate(640px, 480px); } 93.98% { transform: translate(110px, 480px); } 100.00% { transform: translate(110px, 380px); } }
-.is-presenting .slide.is-current .viz :is(.lr-e, .bl-e) { animation: lr-e 3.6s linear infinite; animation-delay: calc(var(--n) * -0.6s); }
-@keyframes lr-e { 0.00% { transform: translate(240px, 40px); } 7.87% { transform: translate(240px, 150px); } 22.17% { transform: translate(440px, 150px); } 45.06% { transform: translate(440px, 470px); } 55.08% { transform: translate(580px, 470px); } 71.10% { transform: translate(580px, 246px); } 73.96% { transform: translate(620px, 246px); } 84.98% { transform: translate(620px, 400px); } 90.70% { transform: translate(700px, 400px); } 100.00% { transform: translate(700px, 530px); } }
-.viz--bt .bt-open { opacity: 0; }
-.is-presenting .slide.is-current .viz--bt .bt-open { animation: bt-open 3s step-end infinite; }
-.is-presenting .slide.is-current .viz--bt .bt-on { animation: bt-on 3s step-end infinite; }
-@keyframes bt-open { 0% { opacity: 1; } 50% { opacity: 0; } }
-@keyframes bt-on { 0% { opacity: 0; } 50% { opacity: 1; } }
-.is-presenting .slide.is-current .viz--mr :is(.mr-cw, .mr-ccw) { transform-box: view-box; transform-origin: 380px 280px; animation: spin 0.6s linear infinite; }
-.is-presenting .slide.is-current .viz--mr .mr-ccw { animation-direction: reverse; }
-.is-presenting .slide.is-current .viz--dr :is(.dr-cw, .dr-ccw) { transform-box: fill-box; transform-origin: center; animation: spin 0.8s linear infinite; }
-.is-presenting .slide.is-current .viz--dr .dr-ccw { animation-direction: reverse; }
-.is-presenting .slide.is-current .viz--bp .bp-down { animation: bp-down 3s step-end infinite; }
-.is-presenting .slide.is-current .viz--bp .bp-up { animation: bp-up 3s step-end infinite; }
-@keyframes bp-down { 0% { opacity: 0.15; } 50% { opacity: 1; } }
-@keyframes bp-up { 0% { opacity: 1; } 50% { opacity: 0.15; } }
-.is-presenting .slide.is-current .viz--sv .sv-swing { transform-box: view-box; transform-origin: 540px 250px; animation: sv-swing 3s var(--acm-ease-standard) infinite; }
-@keyframes sv-swing { 0%, 100% { transform: rotate(-70deg); } 50% { transform: rotate(70deg); } }
-.is-presenting .slide.is-current .viz--an .an-sweep { transform-box: view-box; transform-origin: 380px 440px; animation: sv-swing 3.6s linear infinite; }
-.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(14 * var(--u)); counter-reset: step; }
-.steps li { counter-increment: step; display: grid; grid-template-columns: calc(72 * var(--u)) 1fr; column-gap: calc(20 * var(--u)); font-size: calc(40 * var(--u)); line-height: 1.2; }
-.steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--acm-font-code); font-weight: 600; color: var(--acm-primary); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--st-2); counter-reset: step; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: var(--st-7) 1fr; column-gap: var(--st-2); font-size: var(--s-body-sm); line-height: 1.2; }
+.steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--acm-font-code); font-weight: 500; color: var(--acm-primary); }
 .steps code { font-family: var(--acm-font-code); }
 .slide[data-ground="orange"] .steps li::before { color: currentColor; }
 .slide[data-do] .clock__digits { font-size: calc(64 * var(--u)); }
-.slide[data-do] .clock { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: calc(28 * var(--u)); row-gap: calc(10 * var(--u)); }
+.slide[data-do] .clock { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: var(--st-3); row-gap: var(--st-1); }
 .slide[data-do] .clock__digits { grid-column: 1; grid-row: 1; }
 .slide[data-do] .clock__hint { grid-column: 2; grid-row: 1; margin: 0; }
 .slide[data-do] .clock__track { grid-column: 1 / -1; grid-row: 2; }
-.slide[data-do] .split__main { gap: calc(28 * var(--u)); }
+.slide[data-do] .split__main { gap: var(--st-3); }
 .viz .dbody { stroke: currentColor; stroke-width: 20; stroke-linecap: round; }
 .viz .dstripe { stroke: var(--acm-surface); stroke-width: 20; }
 .viz .dstripe-r { fill: var(--acm-surface); }
-.viz .rl-p { stroke: #dc3f46; stroke-width: 3; }
-.viz .rl-n { stroke: #247ad6; stroke-width: 3; }
+.viz .rl-p { stroke: var(--acm-mark-failure); stroke-width: 3; }
+.viz .rl-n { stroke: var(--acm-mark-xref); stroke-width: 3; }
 .viz .chan { fill: var(--acm-outline-variant); opacity: 0.55; }
 .viz .pt { fill: var(--acm-primary); opacity: 0.22; }
 .viz .halo { paint-order: stroke; stroke: var(--acm-surface); stroke-width: 10px; stroke-linejoin: round; }
-.is-presenting .slide.is-current .viz--bd .bd-spin { transform-box: view-box; transform-origin: 586px 196px; animation: spin 0.6s linear infinite; }
-.is-presenting .slide.is-current .viz--bz .bz-spin { transform-box: view-box; transform-origin: 680px 196px; animation: spin 0.6s linear infinite; }
-.is-presenting .slide.is-current .viz--ts .ts-spin { transform-box: view-box; transform-origin: 380px 140px; animation: spin 0.6s linear infinite; }
-.is-presenting .slide.is-current .viz--ts .ts-e { animation: ts-e 2.4s linear infinite; animation-delay: calc(var(--n) * -0.48s); }
-@keyframes ts-e { 0.00% { transform: translate(380px, 40px); } 100.00% { transform: translate(380px, 530px); } }
-.is-presenting .slide.is-current .viz--up .up-e { animation: up-e 2s linear infinite; animation-delay: calc(var(--n) * -0.4s); }
-@keyframes up-e { 0.00% { transform: translate(256px, 300px); } 26.78% { transform: translate(330px, 300px); } 54.34% { transform: translate(400px, 330px); } 81.90% { transform: translate(470px, 300px); } 100.00% { transform: translate(520px, 300px); } }
-.is-presenting .slide.is-current .viz--up .up-l { animation: blink 0.4s step-end infinite; }
-.is-presenting .slide.is-current .viz--tb :is(.tb-tx, .tb-rx) { animation: tb-flick 3s step-end infinite; }
-.is-presenting .slide.is-current .viz--tb .tb-rx { animation-delay: -0.1s; }
-.is-presenting .slide.is-current .viz--tb .tb-l { animation: tb-l 3s step-end infinite; }
-@keyframes tb-flick { 0%, 8%, 16%, 24%, 32% { opacity: 1; } 4%, 12%, 20%, 28%, 36%, 100% { opacity: 0.15; } }
-@keyframes tb-l { 0%, 44%, 52%, 60%, 68%, 76%, 84%, 92% { opacity: 0.15; } 40%, 48%, 56%, 64%, 72%, 80%, 88%, 96% { opacity: 1; } }
-.is-presenting .slide.is-current .viz--ps .ps-arm { transform-box: view-box; transform-origin: 340px 250px; animation: ps-arm 4s var(--acm-ease-standard) infinite; }
-@keyframes ps-arm { 0%, 12% { transform: rotate(-90deg); } 50%, 100% { transform: rotate(0deg); } }
-.is-presenting .slide.is-current .viz--ps .ps-fan { transform-box: view-box; transform-origin: 650px 270px; animation: ps-fan 4s linear infinite; }
-@keyframes ps-fan { 0%, 55% { transform: rotate(0deg); } 100% { transform: rotate(1080deg); } }
-.is-presenting .slide.is-current .viz--s9 .s9-arm { transform-box: view-box; transform-origin: 380px 330px; animation: s9-arm 2.8s linear infinite; }
-@keyframes s9-arm { 0%, 100% { transform: rotate(-90deg); } 50% { transform: rotate(0deg); } }
-.viz--ps .ps-btn { opacity: 0; }
-.is-presenting .slide.is-current .viz--ps .ps-btn { animation: ps-btn 4s step-end infinite; }
-@keyframes ps-btn { 0% { opacity: 1; } 10% { opacity: 0; } }
 
-.sub code, .steps code { font-family: var(--acm-font-code); font-variant-ligatures: none; white-space: nowrap; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 <script>
@@ -1117,9 +1122,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ---------- Clock -------------------------------------------------------- */
   function fmt(ms) { var s = Math.ceil(ms / 1000), m = Math.floor(s / 60); s %= 60; return m + ':' + (s < 10 ? '0' : '') + s; }
+  // data-ends="14:25" makes a work clock: on T it counts down to that wall-clock
+  // time today, so starting late never runs past the end of the meeting.
+  function untilTime(hm) {
+    var p = hm.split(':'), now = new Date(), at = new Date(now); at.setHours(+p[0], +p[1], 0, 0);
+    return Math.max(0, at - now);
+  }
   function makeClock(slide) {
     var secs = parseInt(slide.getAttribute('data-timer'), 10);
-    if (!secs) return null;
+    var ends = slide.getAttribute('data-ends');
+    if (!secs && !ends) return null;
+    if (!secs) secs = Math.ceil(untilTime(ends) / 1000) || 1;
     var el = one('.clock', slide);
     if (!el) {
       el = make('div', 'clock');
@@ -1135,21 +1148,28 @@ document.addEventListener('DOMContentLoaded', function () {
       digits.textContent = state === 'done' ? 'Time' : fmt(c.left);
       fill.style.transform = 'scaleX(' + (c.left / c.total) + ')';
       el.setAttribute('data-state', state);
-      hint.textContent = state === 'done' ? 'R to reset' : state === 'paused' ? 'Paused. T to resume' : state === 'idle' ? hint0 : 'T to pause';
+      // The room reads the screen, so a running clock shows no key hint.
+      hint.textContent = state === 'done' ? 'R to reset' : state === 'paused' ? 'Paused. T to resume' : state === 'idle' ? hint0 : '';
+      hint.style.visibility = hint.textContent ? '' : 'hidden';
     }
     function tick() {
       var now = performance.now();
-      c.left = Math.max(0, c.left - (now - c.last)); c.last = now; paint();
+      // A wall-clock clock reads the time of day each frame, so leaving the slide or a slow frame never makes it drift.
+      c.left = ends ? Math.min(c.total, untilTime(ends)) : Math.max(0, c.left - (now - c.last)); c.last = now; paint();
       if (c.left > 0 && c.running) c.raf = requestAnimationFrame(tick); else c.running = false;
     }
     c.toggle = function () {
+      if (ends && !c.running) { var u = untilTime(ends) || 1; if (c.left === c.total) c.total = u; c.left = Math.min(u, c.total); }
       if (c.left <= 0) return;
       c.running = !c.running;
       if (c.running) { c.last = performance.now(); c.raf = requestAnimationFrame(tick); } else cancelAnimationFrame(c.raf);
       paint();
     };
-    c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); c.left = c.total; paint(); };
-    c.pause = function () { if (c.running) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
+    c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); if (ends) c.total = untilTime(ends) || 1; c.left = c.total; paint(); };
+    // Leaving the slide pauses a plain timer. A data-ends clock keeps counting to its end time.
+    c.pause = function () { if (c.running && !ends) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
+    // Before T, a data-ends clock shows the real time left, not the time left when the deck loaded.
+    if (ends) setInterval(function () { if (!c.running && c.left === c.total) { c.left = c.total = untilTime(ends) || 1; paint(); } }, 1000);
     paint();
     return c;
   }
@@ -2196,7 +2216,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <body>
 <main class="deck" data-deck="acm-2026-10-29" data-ledger="ACM @ RCC · Thu Oct 29 · BLCIS A-210" data-live-url="https://sam-t-g.github.io/rcc-acm/decks/2026-10-29/">
 
-<section class="slide" data-kind="cover" data-starts="13:30" aria-label="Cover">
+<section class="slide" data-kind="cover" data-section="Today" data-starts="13:30" aria-label="Cover">
   <div class="cover__rail" aria-hidden="true"></div>
   <p class="cover__name">ACM @ RCC</p>
   <p class="eyebrow">Fall 2026 · <time datetime="2026-10-29T13:30">Thursday, October 29</time></p>
@@ -2205,74 +2225,59 @@ document.addEventListener('DOMContentLoaded', function () {
   <aside class="notes"><p>Say the club name first. Today is for beginners. Nobody needs to have done ICPC or touched an Arduino before.</p><p>Before the meeting: one kit per Arduino table with the power module already off the breadboard, servo arm on, and the sensor tested with sensor_test. ICPC tables need one laptop per team with a C++ compiler. Full prep list: semesters/2026-fall/meetings/2026-10-29-lab-guide.md.</p><p class="bridge">Here is how the hour goes.</p></aside>
 </section>
 
-<section class="slide" data-kind="beats" data-layout="split" data-section="Today" data-ground="tint" data-auto="2.5" aria-label="How today works">
+<section class="slide" data-kind="beats" data-layout="split" data-ground="tint" data-auto="2.5" aria-label="How today works">
   <div class="split__head"><p class="eyebrow">Today</p><h2>How the hour goes</h2></div>
   <ol class="beats split__main"><li data-beat>Pick ICPC or Arduino<span class="detail">Sit with your team or at a kit</span></li><li data-beat>Open your page<span class="detail">Everything you need is on it</span></li><li data-beat>Work at your own pace<span class="detail">Officers walk around to help</span></li><li data-beat>Pack up at 2:25<span class="detail">Kits go back in the box</span></li></ol>
-  <figure class="viz viz--today"><svg viewBox="0 0 760 560" role="img" aria-label="The hour: 5 minutes together, then ICPC on laptops and Arduino at the tables side by side, then pack up at 2:25."><line class="line" x1="30" y1="270" x2="200" y2="270"/><circle class="acc" cx="30" cy="270" r="14"/><text x="10" y="230">1:30</text><rect class="card" x="20" y="310" width="200" height="104" rx="14"/><text x="40" y="354">Together</text><text class="soft" x="40" y="394">5 min</text><g data-stage="2"><path class="line" d="M200 270 C250 270 250 140 300 140 H560"/><path class="line" d="M200 270 C250 270 250 400 300 400 H560"/><rect class="card" x="290" y="80" width="250" height="104" rx="14"/><text x="310" y="124">ICPC</text><text class="soft" x="310" y="164">laptops</text><rect class="card" x="290" y="340" width="250" height="104" rx="14"/><text x="310" y="384">Arduino</text><text class="soft" x="310" y="424">tables</text></g><g data-stage="4"><path class="line" d="M560 140 C620 140 620 270 680 270"/><path class="line" d="M560 400 C620 400 620 270 680 270"/><circle class="acc" cx="680" cy="270" r="14"/><text x="580" y="500">2:25</text><text class="soft" x="580" y="540">pack up</text></g></svg></figure>
-  <aside class="notes"><p>Fills in on its own. One press shows the rest. The next press moves on.</p><p>Walk the four lines. No lecture today. Each track has its own page with steps, hints, and answers, so people can start right away and go as far as they want.</p><p>Officers: split up. At least one walks the ICPC tables and at least one walks the Arduino tables.</p><p class="bridge">Two dates first.</p></aside>
-</section>
-
-<section class="slide" data-kind="board" data-ground="warm" aria-label="Coming up">
-  <h2>Coming up</h2>
-  <ol class="board">
-    <li><time datetime="2026-10-31">Sat, Oct 31</time><span>Last day to update ICPC teams</span></li>
-    <li><time datetime="2026-11-07">Sat, Nov 7</time><span>ICPC Southern California Regional, here at RCC</span></li>
-  </ol>
-  <aside class="notes"><p>Both dates from the SoCal ICPC Bulletin #1, scl.na.icpc.global/wp-content/uploads/2026/10/Bulletin1_2026.pdf, read 2026-10-28. Registering new teams closed October 24. Until October 31 coaches can still change who is on a team.</p><p>The bulletin lists an online warm-up contest, but gives two dates for it: the heading says November 1 and the date list says to be decided, around October 25. Don't say a date out loud. Tell teams to watch the Announcements in the ICPC CMS.</p><p class="bridge">And the regional is in our building this year.</p></aside>
+  <figure class="viz viz--today"><svg viewBox="0 0 760 560" role="img" aria-label="The hour: 6 minutes together, then ICPC on laptops and Arduino at the tables side by side, then pack up at 2:25."><line class="line" x1="30" y1="270" x2="200" y2="270"/><circle class="acc" cx="30" cy="270" r="14"/><text x="10" y="230">1:30</text><rect class="card" x="20" y="310" width="200" height="104" rx="14"/><text x="40" y="354">Together</text><text x="40" y="394">6 min</text><g data-stage="2"><path class="line" d="M200 270 C250 270 250 140 300 140 H560"/><path class="line" d="M200 270 C250 270 250 400 300 400 H560"/><rect class="card" x="290" y="80" width="250" height="104" rx="14"/><text x="310" y="124">ICPC</text><text x="310" y="164">laptops</text><rect class="card" x="290" y="340" width="250" height="104" rx="14"/><text x="310" y="384">Arduino</text><text x="310" y="424">tables</text></g><g data-stage="4"><path class="line" d="M560 140 C620 140 620 270 680 270"/><path class="line" d="M560 400 C620 400 620 270 680 270"/><circle class="acc" cx="680" cy="270" r="14"/><text x="580" y="500">2:25</text><text x="580" y="540">pack up</text></g></svg></figure>
+  <aside class="notes"><p>Fills in on its own. One press shows the rest. The next press moves on.</p><p>Walk the four lines. No lecture today. Each track has its own page with steps, hints, and answers, so people can start right away and go as far as they want.</p><p>Officers: split up. At least one walks the ICPC tables and at least one walks the Arduino tables.</p><p class="bridge">Two dates: the regional and the team deadline.</p></aside>
 </section>
 
 <section class="slide" data-kind="statement" data-ground="orange" aria-label="ICPC at RCC">
   <p class="eyebrow">Saturday, November 7</p>
   <h2>RCC is hosting the ICPC regional this year</h2>
-  <p class="sub">Check-in is in the MLK building. Problems run in MLK and the new building next door.</p>
-  <aside class="notes"><p>From the Bulletin #1, scl.na.icpc.global/wp-content/uploads/2026/10/Bulletin1_2026.pdf, read 2026-10-28: hosted by Riverside City College, registration in the MLK Building, contest in MLK and the new building next door. Lunch is El Pollo Loco.</p><p>If you're on a team, today is the closest thing to the real contest before November 7.</p><p class="bridge">So pick what you want to do today.</p></aside>
+  <p class="sub">On a team? The last day for team changes is Saturday, October 31. Check-in is in the MLK building.</p>
+  <aside class="notes"><p>From the Bulletin #1, scl.na.icpc.global/wp-content/uploads/2026/10/Bulletin1_2026.pdf, read 2026-10-28: hosted by Riverside City College, registration in the MLK Building, contest in MLK and the new building next door. Until October 31 coaches can still change who is on a team; new team registration closed October 24. Lunch is El Pollo Loco.</p><p>The bulletin gives two dates for the online warm-up contest (heading: November 1; date list: to be decided, around October 25). Don't say a date out loud. Tell teams to watch the Announcements in the ICPC CMS.</p><p class="bridge">So pick what you want to do today.</p></aside>
 </section>
 
-<section class="slide" data-kind="contrast" data-section="Pick" aria-label="Pick a track">
+<section class="slide" data-kind="contrast" data-layout="tiles" data-section="Pick" aria-label="Pick one. Both work if you&#x27;re new">
   <h2>Pick one. Both work if you're new</h2>
-  <div class="contrast">
-    <div class="is-weak"><p class="label">ICPC prep</p><p>Teams of 3 on one laptop. Easy problems from real contests. A little C++ helps.</p></div>
-    <div class="is-strong"><p class="label">Arduino lab</p><p>Build a parking garage gate. Most of the code is given. You add the rules.</p></div>
-  </div>
-  <aside class="notes"><p>Give people thirty seconds to move. ICPC teams sit together, three to a laptop. Arduino people sit at a table with a kit, two or three per kit.</p><p>If someone can't choose: never written C++ before, go Arduino. Took CIS-5 or more, try ICPC.</p><p class="bridge">ICPC teams, here is your page.</p></aside>
+  <div class="contrast contrast--even"><div><p class="label">ICPC prep</p><p>Teams of 3 on one laptop. Real problems from past SoCal regionals, easiest first.</p></div><div><p class="label">Arduino lab</p><p>Build a parking gate. A sensor sees a car, the arm lifts, the light turns green.</p></div></div>
+  <aside class="notes"><p>Thirty seconds to move. ICPC teams sit together, three to a laptop. Arduino people sit at a table with a kit, two or three per kit. If someone can't choose: never written C++ before, go Arduino. Took CIS-5 or more, try ICPC.</p><p class="bridge">ICPC teams, here is your page.</p></aside>
 </section>
 
-<section class="slide" data-kind="signup" data-section="ICPC" data-ground="warm" aria-label="ICPC page">
+<section class="slide" data-kind="signup" data-layout="sendoff" data-section="Go" data-ground="warm" data-room aria-label="Open this page on your team laptop">
   <div class="signup__main">
     <p class="eyebrow">ICPC teams</p>
     <h2>Open this page on your team laptop</h2>
-    <p class="sub">Start with the input and output basics. Then work up from the easiest real ICPC problems.</p>
+    <p class="sub">Start with the 4 input shapes. Then work up from the easiest real ICPC problems.</p>
   </div>
-  <a class="qr" href="https://sam-t-g.github.io/rcc-acm/decks/2026-10-29-icpc/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h37v37H0z"/><path stroke="#221f1e" d="M2 2.5h7M10 2.5h2M14 2.5h1M20 2.5h3M25 2.5h2M28 2.5h7M2 3.5h1M8 3.5h1M10 3.5h3M14 3.5h1M16 3.5h1M18 3.5h1M24 3.5h2M28 3.5h1M34 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M12 4.5h7M20 4.5h3M26 4.5h1M28 4.5h1M30 4.5h3M34 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M10 5.5h2M14 5.5h1M17 5.5h1M19 5.5h1M26 5.5h1M28 5.5h1M30 5.5h3M34 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M14 6.5h2M18 6.5h4M23 6.5h2M28 6.5h1M30 6.5h3M34 6.5h1M2 7.5h1M8 7.5h1M12 7.5h1M14 7.5h6M21 7.5h2M28 7.5h1M34 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h1M22 8.5h1M24 8.5h1M26 8.5h1M28 8.5h7M10 9.5h1M17 9.5h3M22 9.5h1M24 9.5h1M26 9.5h1M2 10.5h1M4 10.5h2M7 10.5h3M12 10.5h2M16 10.5h4M22 10.5h2M26 10.5h1M28 10.5h1M31 10.5h1M33 10.5h2M2 11.5h1M5 11.5h2M9 11.5h1M14 11.5h2M18 11.5h1M20 11.5h4M25 11.5h1M28 11.5h2M31 11.5h2M34 11.5h1M4 12.5h2M8 12.5h2M11 12.5h5M18 12.5h2M22 12.5h1M25 12.5h2M28 12.5h4M34 12.5h1M2 13.5h1M4 13.5h1M6 13.5h1M11 13.5h1M17 13.5h2M21 13.5h1M26 13.5h1M28 13.5h2M31 13.5h1M5 14.5h1M8 14.5h1M10 14.5h1M14 14.5h1M16 14.5h4M21 14.5h1M25 14.5h1M30 14.5h2M33 14.5h2M2 15.5h2M5 15.5h3M12 15.5h1M15 15.5h2M21 15.5h1M24 15.5h1M29 15.5h1M32 15.5h2M2 16.5h2M6 16.5h4M13 16.5h1M15 16.5h2M19 16.5h5M28 16.5h2M31 16.5h2M4 17.5h1M7 17.5h1M14 17.5h2M17 17.5h1M20 17.5h1M22 17.5h11M2 18.5h1M4 18.5h1M7 18.5h10M20 18.5h4M25 18.5h1M27 18.5h2M30 18.5h3M3 19.5h1M5 19.5h2M9 19.5h1M13 19.5h2M17 19.5h1M22 19.5h1M24 19.5h2M28 19.5h1M30 19.5h2M33 19.5h2M2 20.5h2M5 20.5h4M10 20.5h1M12 20.5h2M16 20.5h2M19 20.5h2M23 20.5h1M27 20.5h4M32 20.5h2M2 21.5h1M4 21.5h2M7 21.5h1M13 21.5h5M19 21.5h2M25 21.5h3M30 21.5h1M33 21.5h1M2 22.5h4M7 22.5h3M13 22.5h1M15 22.5h1M18 22.5h2M21 22.5h1M23 22.5h5M31 22.5h3M2 23.5h2M5 23.5h2M10 23.5h2M17 23.5h5M25 23.5h4M31 23.5h2M34 23.5h1M4 24.5h1M6 24.5h4M11 24.5h1M13 24.5h1M17 24.5h1M19 24.5h1M23 24.5h3M28 24.5h4M33 24.5h2M3 25.5h1M12 25.5h1M15 25.5h1M17 25.5h1M20 25.5h2M24 25.5h1M28 25.5h1M30 25.5h2M33 25.5h1M2 26.5h1M4 26.5h1M7 26.5h3M11 26.5h1M18 26.5h2M21 26.5h2M24 26.5h1M26 26.5h5M34 26.5h1M10 27.5h4M16 27.5h3M21 27.5h1M23 27.5h1M25 27.5h2M30 27.5h2M2 28.5h7M10 28.5h1M12 28.5h1M14 28.5h1M16 28.5h1M19 28.5h4M25 28.5h2M28 28.5h1M30 28.5h1M2 29.5h1M8 29.5h1M10 29.5h2M13 29.5h1M16 29.5h1M18 29.5h1M23 29.5h4M30 29.5h4M2 30.5h1M4 30.5h3M8 30.5h1M11 30.5h1M15 30.5h3M19 30.5h1M21 30.5h1M23 30.5h1M25 30.5h6M32 30.5h1M34 30.5h1M2 31.5h1M4 31.5h3M8 31.5h1M10 31.5h1M12 31.5h1M14 31.5h1M16 31.5h1M18 31.5h2M25 31.5h1M29 31.5h1M31 31.5h1M34 31.5h1M2 32.5h1M4 32.5h3M8 32.5h1M10 32.5h1M12 32.5h2M15 32.5h1M17 32.5h1M19 32.5h1M24 32.5h1M26 32.5h1M28 32.5h2M31 32.5h2M2 33.5h1M8 33.5h1M11 33.5h3M19 33.5h4M24 33.5h1M26 33.5h1M28 33.5h3M34 33.5h1M2 34.5h7M10 34.5h2M13 34.5h1M15 34.5h2M18 34.5h2M21 34.5h1M23 34.5h1M27 34.5h2M30 34.5h1M32 34.5h1"/></svg></span><span class="label">sam-t-g.github.io/rcc-acm/decks/2026-10-29-icpc</span></a>
-  <aside class="notes"><p>ICPC teams start now. One laptop per team of 3. The page goes in order: input and output basics first, then problems from past official ICPC contests, easiest first, each with a starter, a hint, and the common mistake.</p><p class="bridge">Arduino tables, here is yours.</p></aside>
+  <a class="qr" href="https://sam-t-g.github.io/rcc-acm/decks/2026-10-29-icpc/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h37v37H0z"/><path stroke="#221f1e" d="M2 2.5h7M10 2.5h2M14 2.5h1M20 2.5h3M25 2.5h2M28 2.5h7M2 3.5h1M8 3.5h1M10 3.5h3M14 3.5h1M16 3.5h1M18 3.5h1M24 3.5h2M28 3.5h1M34 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M12 4.5h7M20 4.5h3M26 4.5h1M28 4.5h1M30 4.5h3M34 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M10 5.5h2M14 5.5h1M17 5.5h1M19 5.5h1M26 5.5h1M28 5.5h1M30 5.5h3M34 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M14 6.5h2M18 6.5h4M23 6.5h2M28 6.5h1M30 6.5h3M34 6.5h1M2 7.5h1M8 7.5h1M12 7.5h1M14 7.5h6M21 7.5h2M28 7.5h1M34 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h1M22 8.5h1M24 8.5h1M26 8.5h1M28 8.5h7M10 9.5h1M17 9.5h3M22 9.5h1M24 9.5h1M26 9.5h1M2 10.5h1M4 10.5h2M7 10.5h3M12 10.5h2M16 10.5h4M22 10.5h2M26 10.5h1M28 10.5h1M31 10.5h1M33 10.5h2M2 11.5h1M5 11.5h2M9 11.5h1M14 11.5h2M18 11.5h1M20 11.5h4M25 11.5h1M28 11.5h2M31 11.5h2M34 11.5h1M4 12.5h2M8 12.5h2M11 12.5h5M18 12.5h2M22 12.5h1M25 12.5h2M28 12.5h4M34 12.5h1M2 13.5h1M4 13.5h1M6 13.5h1M11 13.5h1M17 13.5h2M21 13.5h1M26 13.5h1M28 13.5h2M31 13.5h1M5 14.5h1M8 14.5h1M10 14.5h1M14 14.5h1M16 14.5h4M21 14.5h1M25 14.5h1M30 14.5h2M33 14.5h2M2 15.5h2M5 15.5h3M12 15.5h1M15 15.5h2M21 15.5h1M24 15.5h1M29 15.5h1M32 15.5h2M2 16.5h2M6 16.5h4M13 16.5h1M15 16.5h2M19 16.5h5M28 16.5h2M31 16.5h2M4 17.5h1M7 17.5h1M14 17.5h2M17 17.5h1M20 17.5h1M22 17.5h11M2 18.5h1M4 18.5h1M7 18.5h10M20 18.5h4M25 18.5h1M27 18.5h2M30 18.5h3M3 19.5h1M5 19.5h2M9 19.5h1M13 19.5h2M17 19.5h1M22 19.5h1M24 19.5h2M28 19.5h1M30 19.5h2M33 19.5h2M2 20.5h2M5 20.5h4M10 20.5h1M12 20.5h2M16 20.5h2M19 20.5h2M23 20.5h1M27 20.5h4M32 20.5h2M2 21.5h1M4 21.5h2M7 21.5h1M13 21.5h5M19 21.5h2M25 21.5h3M30 21.5h1M33 21.5h1M2 22.5h4M7 22.5h3M13 22.5h1M15 22.5h1M18 22.5h2M21 22.5h1M23 22.5h5M31 22.5h3M2 23.5h2M5 23.5h2M10 23.5h2M17 23.5h5M25 23.5h4M31 23.5h2M34 23.5h1M4 24.5h1M6 24.5h4M11 24.5h1M13 24.5h1M17 24.5h1M19 24.5h1M23 24.5h3M28 24.5h4M33 24.5h2M3 25.5h1M12 25.5h1M15 25.5h1M17 25.5h1M20 25.5h2M24 25.5h1M28 25.5h1M30 25.5h2M33 25.5h1M2 26.5h1M4 26.5h1M7 26.5h3M11 26.5h1M18 26.5h2M21 26.5h2M24 26.5h1M26 26.5h5M34 26.5h1M10 27.5h4M16 27.5h3M21 27.5h1M23 27.5h1M25 27.5h2M30 27.5h2M2 28.5h7M10 28.5h1M12 28.5h1M14 28.5h1M16 28.5h1M19 28.5h4M25 28.5h2M28 28.5h1M30 28.5h1M2 29.5h1M8 29.5h1M10 29.5h2M13 29.5h1M16 29.5h1M18 29.5h1M23 29.5h4M30 29.5h4M2 30.5h1M4 30.5h3M8 30.5h1M11 30.5h1M15 30.5h3M19 30.5h1M21 30.5h1M23 30.5h1M25 30.5h6M32 30.5h1M34 30.5h1M2 31.5h1M4 31.5h3M8 31.5h1M10 31.5h1M12 31.5h1M14 31.5h1M16 31.5h1M18 31.5h2M25 31.5h1M29 31.5h1M31 31.5h1M34 31.5h1M2 32.5h1M4 32.5h3M8 32.5h1M10 32.5h1M12 32.5h2M15 32.5h1M17 32.5h1M19 32.5h1M24 32.5h1M26 32.5h1M28 32.5h2M31 32.5h2M2 33.5h1M8 33.5h1M11 33.5h3M19 33.5h4M24 33.5h1M26 33.5h1M28 33.5h3M34 33.5h1M2 34.5h7M10 34.5h2M13 34.5h1M15 34.5h2M18 34.5h2M21 34.5h1M23 34.5h1M27 34.5h2M30 34.5h1M32 34.5h1"/></svg></span><span class="label"><span class="qr__line">sam-t-g.github.io/</span><span class="qr__line">rcc-acm/decks/</span><span class="qr__line">2026-10-29-icpc</span></span></a>
+  <aside class="notes"><p>ICPC teams start now. The page goes in order: the four input shapes, then 12 problems from past official SoCal problem sets, easiest first, each with a starter, a hint, the common mistake, and an answer.</p><p class="bridge">Arduino tables, here is yours.</p></aside>
 </section>
 
-<section class="slide" data-kind="signup" data-section="Arduino" data-ground="tint" aria-label="Gate page">
+<section class="slide" data-kind="signup" data-layout="sendoff" data-ground="tint" data-room aria-label="Build a parking gate at your own pace">
   <div class="signup__main">
     <p class="eyebrow">Arduino tables</p>
     <h2>Build a parking gate at your own pace</h2>
-    <p class="sub">The sensor sees a car, the arm lifts, and the light turns green. Hints and answers are on the page if you get stuck.</p>
+    <p class="sub">Wire it, then do step 1. Hints and answers are on the page if you get stuck.</p>
   </div>
-  <a class="qr" href="https://sam-t-g.github.io/rcc-acm/decks/2026-10-29-gate/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h37v37H0z"/><path stroke="#221f1e" d="M2 2.5h7M11 2.5h1M14 2.5h1M20 2.5h3M25 2.5h2M28 2.5h7M2 3.5h1M8 3.5h1M11 3.5h3M17 3.5h2M20 3.5h1M22 3.5h3M26 3.5h1M28 3.5h1M34 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M10 4.5h1M13 4.5h1M16 4.5h1M22 4.5h3M28 4.5h1M30 4.5h3M34 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M10 5.5h1M12 5.5h1M17 5.5h1M19 5.5h1M26 5.5h1M28 5.5h1M30 5.5h3M34 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M10 6.5h2M15 6.5h4M21 6.5h2M24 6.5h3M28 6.5h1M30 6.5h3M34 6.5h1M2 7.5h1M8 7.5h1M10 7.5h2M14 7.5h1M16 7.5h1M19 7.5h2M22 7.5h3M26 7.5h1M28 7.5h1M34 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h1M22 8.5h1M24 8.5h1M26 8.5h1M28 8.5h7M10 9.5h2M14 9.5h1M16 9.5h1M18 9.5h1M20 9.5h6M2 10.5h1M4 10.5h5M11 10.5h1M14 10.5h3M19 10.5h2M22 10.5h1M24 10.5h1M28 10.5h5M2 11.5h1M5 11.5h1M9 11.5h1M14 11.5h2M18 11.5h1M20 11.5h4M25 11.5h1M28 11.5h2M31 11.5h2M34 11.5h1M2 12.5h2M7 12.5h6M15 12.5h4M23 12.5h1M30 12.5h1M32 12.5h1M3 13.5h3M9 13.5h1M11 13.5h2M14 13.5h2M20 13.5h1M23 13.5h2M27 13.5h2M30 13.5h4M3 14.5h1M5 14.5h2M8 14.5h1M10 14.5h3M14 14.5h1M16 14.5h4M21 14.5h1M25 14.5h1M30 14.5h2M33 14.5h2M6 15.5h1M10 15.5h3M14 15.5h2M17 15.5h1M19 15.5h8M28 15.5h1M31 15.5h1M33 15.5h2M5 16.5h1M7 16.5h2M10 16.5h3M16 16.5h4M22 16.5h1M24 16.5h1M26 16.5h3M30 16.5h2M33 16.5h1M4 17.5h1M7 17.5h1M9 17.5h2M13 17.5h3M17 17.5h1M20 17.5h1M22 17.5h11M5 18.5h1M8 18.5h1M12 18.5h1M15 18.5h1M17 18.5h1M19 18.5h1M21 18.5h1M26 18.5h2M29 18.5h2M34 18.5h1M2 19.5h1M6 19.5h1M12 19.5h2M15 19.5h1M18 19.5h1M20 19.5h4M25 19.5h5M31 19.5h2M34 19.5h1M2 20.5h1M5 20.5h4M10 20.5h2M13 20.5h1M15 20.5h1M17 20.5h1M23 20.5h1M27 20.5h4M32 20.5h2M7 21.5h1M10 21.5h3M15 21.5h1M22 21.5h2M27 21.5h8M4 22.5h2M8 22.5h1M13 22.5h1M17 22.5h1M19 22.5h2M25 22.5h1M29 22.5h3M2 23.5h2M6 23.5h2M9 23.5h1M11 23.5h2M17 23.5h5M25 23.5h4M31 23.5h2M34 23.5h1M2 24.5h1M4 24.5h1M6 24.5h1M8 24.5h2M16 24.5h1M20 24.5h1M22 24.5h1M24 24.5h1M26 24.5h1M30 24.5h1M32 24.5h2M2 25.5h1M5 25.5h2M11 25.5h1M14 25.5h1M18 25.5h1M23 25.5h1M26 25.5h4M31 25.5h2M2 26.5h1M4 26.5h1M7 26.5h3M11 26.5h1M13 26.5h1M18 26.5h2M21 26.5h2M24 26.5h1M26 26.5h5M34 26.5h1M10 27.5h3M14 27.5h2M18 27.5h5M26 27.5h1M30 27.5h1M32 27.5h1M34 27.5h1M2 28.5h7M11 28.5h1M15 28.5h1M17 28.5h3M22 28.5h5M28 28.5h1M30 28.5h1M32 28.5h2M2 29.5h1M8 29.5h1M10 29.5h1M12 29.5h2M15 29.5h2M18 29.5h1M23 29.5h4M30 29.5h4M2 30.5h1M4 30.5h3M8 30.5h1M10 30.5h2M13 30.5h2M20 30.5h3M26 30.5h6M2 31.5h1M4 31.5h3M8 31.5h1M10 31.5h6M17 31.5h1M19 31.5h3M23 31.5h5M30 31.5h5M2 32.5h1M4 32.5h3M8 32.5h1M10 32.5h1M12 32.5h4M17 32.5h1M19 32.5h1M24 32.5h1M26 32.5h1M28 32.5h2M31 32.5h2M2 33.5h1M8 33.5h1M12 33.5h2M16 33.5h2M21 33.5h1M23 33.5h3M30 33.5h3M2 34.5h7M10 34.5h1M12 34.5h1M14 34.5h1M16 34.5h2M19 34.5h2M24 34.5h1M26 34.5h1M28 34.5h2M33 34.5h1"/></svg></span><span class="label">sam-t-g.github.io/rcc-acm/decks/2026-10-29-gate</span></a>
-  <aside class="notes"><p>Arduino tables start now, two or three people per kit. The page has the wiring, small steps with hints and answers, and extra challenges for tables that finish.</p><p class="bridge">Three rules before anyone plugs in.</p></aside>
+  <a class="qr" href="https://sam-t-g.github.io/rcc-acm/decks/2026-10-29-gate/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h37v37H0z"/><path stroke="#221f1e" d="M2 2.5h7M11 2.5h1M14 2.5h1M20 2.5h3M25 2.5h2M28 2.5h7M2 3.5h1M8 3.5h1M11 3.5h3M17 3.5h2M20 3.5h1M22 3.5h3M26 3.5h1M28 3.5h1M34 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M10 4.5h1M13 4.5h1M16 4.5h1M22 4.5h3M28 4.5h1M30 4.5h3M34 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M10 5.5h1M12 5.5h1M17 5.5h1M19 5.5h1M26 5.5h1M28 5.5h1M30 5.5h3M34 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M10 6.5h2M15 6.5h4M21 6.5h2M24 6.5h3M28 6.5h1M30 6.5h3M34 6.5h1M2 7.5h1M8 7.5h1M10 7.5h2M14 7.5h1M16 7.5h1M19 7.5h2M22 7.5h3M26 7.5h1M28 7.5h1M34 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h1M22 8.5h1M24 8.5h1M26 8.5h1M28 8.5h7M10 9.5h2M14 9.5h1M16 9.5h1M18 9.5h1M20 9.5h6M2 10.5h1M4 10.5h5M11 10.5h1M14 10.5h3M19 10.5h2M22 10.5h1M24 10.5h1M28 10.5h5M2 11.5h1M5 11.5h1M9 11.5h1M14 11.5h2M18 11.5h1M20 11.5h4M25 11.5h1M28 11.5h2M31 11.5h2M34 11.5h1M2 12.5h2M7 12.5h6M15 12.5h4M23 12.5h1M30 12.5h1M32 12.5h1M3 13.5h3M9 13.5h1M11 13.5h2M14 13.5h2M20 13.5h1M23 13.5h2M27 13.5h2M30 13.5h4M3 14.5h1M5 14.5h2M8 14.5h1M10 14.5h3M14 14.5h1M16 14.5h4M21 14.5h1M25 14.5h1M30 14.5h2M33 14.5h2M6 15.5h1M10 15.5h3M14 15.5h2M17 15.5h1M19 15.5h8M28 15.5h1M31 15.5h1M33 15.5h2M5 16.5h1M7 16.5h2M10 16.5h3M16 16.5h4M22 16.5h1M24 16.5h1M26 16.5h3M30 16.5h2M33 16.5h1M4 17.5h1M7 17.5h1M9 17.5h2M13 17.5h3M17 17.5h1M20 17.5h1M22 17.5h11M5 18.5h1M8 18.5h1M12 18.5h1M15 18.5h1M17 18.5h1M19 18.5h1M21 18.5h1M26 18.5h2M29 18.5h2M34 18.5h1M2 19.5h1M6 19.5h1M12 19.5h2M15 19.5h1M18 19.5h1M20 19.5h4M25 19.5h5M31 19.5h2M34 19.5h1M2 20.5h1M5 20.5h4M10 20.5h2M13 20.5h1M15 20.5h1M17 20.5h1M23 20.5h1M27 20.5h4M32 20.5h2M7 21.5h1M10 21.5h3M15 21.5h1M22 21.5h2M27 21.5h8M4 22.5h2M8 22.5h1M13 22.5h1M17 22.5h1M19 22.5h2M25 22.5h1M29 22.5h3M2 23.5h2M6 23.5h2M9 23.5h1M11 23.5h2M17 23.5h5M25 23.5h4M31 23.5h2M34 23.5h1M2 24.5h1M4 24.5h1M6 24.5h1M8 24.5h2M16 24.5h1M20 24.5h1M22 24.5h1M24 24.5h1M26 24.5h1M30 24.5h1M32 24.5h2M2 25.5h1M5 25.5h2M11 25.5h1M14 25.5h1M18 25.5h1M23 25.5h1M26 25.5h4M31 25.5h2M2 26.5h1M4 26.5h1M7 26.5h3M11 26.5h1M13 26.5h1M18 26.5h2M21 26.5h2M24 26.5h1M26 26.5h5M34 26.5h1M10 27.5h3M14 27.5h2M18 27.5h5M26 27.5h1M30 27.5h1M32 27.5h1M34 27.5h1M2 28.5h7M11 28.5h1M15 28.5h1M17 28.5h3M22 28.5h5M28 28.5h1M30 28.5h1M32 28.5h2M2 29.5h1M8 29.5h1M10 29.5h1M12 29.5h2M15 29.5h2M18 29.5h1M23 29.5h4M30 29.5h4M2 30.5h1M4 30.5h3M8 30.5h1M10 30.5h2M13 30.5h2M20 30.5h3M26 30.5h6M2 31.5h1M4 31.5h3M8 31.5h1M10 31.5h6M17 31.5h1M19 31.5h3M23 31.5h5M30 31.5h5M2 32.5h1M4 32.5h3M8 32.5h1M10 32.5h1M12 32.5h4M17 32.5h1M19 32.5h1M24 32.5h1M26 32.5h1M28 32.5h2M31 32.5h2M2 33.5h1M8 33.5h1M12 33.5h2M16 33.5h2M21 33.5h1M23 33.5h3M30 33.5h3M2 34.5h7M10 34.5h1M12 34.5h1M14 34.5h1M16 34.5h2M19 34.5h2M24 34.5h1M26 34.5h1M28 34.5h2M33 34.5h1"/></svg></span><span class="label"><span class="qr__line">sam-t-g.github.io/</span><span class="qr__line">rcc-acm/decks/</span><span class="qr__line">2026-10-29-gate</span></span></a>
+  <aside class="notes"><p>Arduino tables start now, two or three people per kit. The page has the wiring in five small groups with a picture each, four steps with hints and answers, and seven challenges for tables that finish, including a secret code on the keypad.</p><p class="bridge">Three rules before anyone plugs in.</p></aside>
 </section>
 
-<section class="slide" data-kind="beats" data-room aria-label="Before you plug in">
+<section class="slide" data-kind="beats" data-layout="rules" data-room aria-label="Before you plug in">
   <p class="eyebrow">Arduino tables</p>
   <h2>Before you plug in</h2>
-  <ol class="beats">
-    <li data-beat>Unplug USB before you move a wire<span class="detail">Plug it back in only to test</span></li>
-    <li data-beat>Take the power module off the breadboard<span class="detail">Today the UNO powers the board</span></li>
-    <li data-beat>Read the sensor's labels first<span class="detail">Vcc goes to +, Gnd goes to -</span></li>
-  </ol>
-  <aside class="notes"><p>These three prevent the problems we can't fix in the room. Vcc and Gnd swapped can damage the sensor. With the power module still on the board, the UNO's 5V reaches the module's output.</p><p class="bridge">That's it. Go.</p></aside>
+  <ol class="beats"><li data-beat>Unplug USB before you move a wire<span class="detail">Plug it back in only to test</span></li><li data-beat>Take the power module off the breadboard<span class="detail">Today the UNO powers the board</span></li></ol>
+  <p class="callout callout--warning" data-beat><b>Careful.</b> Read the sensor's labels first. Vcc goes to +, Gnd goes to -. Swapped, it can break.</p>
+  <aside class="notes"><p>These keep the sensor and the board from breaking. With the power module still on the board, the UNO's 5V reaches the module's output.</p><p class="bridge">That's it. Go.</p></aside>
 </section>
 
-<section class="slide" data-kind="clock" data-timer="2940" data-ground="orange" data-room aria-label="Work time">
+<section class="slide" data-kind="clock" data-ends="14:25" data-ground="orange" data-room aria-label="Work time">
   <p class="eyebrow">Work time · until 2:25</p>
   <h2>Go as far as you can</h2>
-  <p class="sub">ICPC: work down the problem list. Arduino: build the gate, then try a challenge.</p>
-  <aside class="notes"><p>Press T to start the 49 minute clock (1:36 to 2:25). Leave this up the whole time. Walk the room.</p><p>ICPC teams that finish the list: try the next problem from a full official set on the same page.</p><p class="bridge">Time to pack up.</p></aside>
+  <p class="sub">ICPC: next problem on the list. Arduino: next step, then a challenge.</p>
+  <aside class="notes"><p>Press T. The clock counts down to 2:25, so starting late is fine. Leave this up the whole time and walk the room. ICPC teams that finish the list: the page links the full official SoCal archive.</p><p class="bridge">Time to pack up.</p></aside>
 </section>
 
 <section class="slide" data-kind="beats" data-section="Wrap" data-ground="warm" aria-label="Pack up">
@@ -2280,24 +2285,24 @@ document.addEventListener('DOMContentLoaded', function () {
   <ol class="beats">
     <li data-beat>Unplug the USB cable</li>
     <li data-beat>Every part and wire back in the kit box</li>
-    <li data-beat>Power module back on the row 1 end</li>
+    <li data-beat>Power module back on the breadboard, at the row 1 end</li>
     <li data-beat>ICPC teams, save your code</li>
   </ol>
-  <aside class="notes"><p>Count parts back into each kit. Servo arms stay on. Note anything broken or missing in semesters/2026-fall/lab-inventory.md.</p><p class="bridge">One last thing.</p></aside>
+  <aside class="notes"><p>Count parts back into each kit. Servo arms stay on. Note anything broken or missing in semesters/2026-fall/lab-inventory.md.</p><p class="bridge">Last slide: thanks, and the meeting time.</p></aside>
 </section>
 
 <section class="slide" data-kind="ask" data-room aria-label="Wrap-up">
   <div class="ask__main">
     <p class="eyebrow">Before you go</p>
-    <h2>ICPC teams, see you November 7</h2>
-    <p class="sub">The regional is here at RCC. Team changes close October 31.</p>
+    <h2>Thanks for coming</h2>
+    <p class="sub">Both pages stay up. ICPC teams, the regional is Saturday, November 7.</p>
     <p class="ask__meta">Thursdays, <time datetime="13:30">1:30</time> to <time datetime="14:30">2:30 PM</time>, BLCIS A-210</p>
   </div>
   <div class="ask__foot">
     <p class="ask__name">ACM @ RCC</p>
     <p class="ask__stamp">Updated <time datetime="2026-10-28">2026-10-28</time></p>
   </div>
-  <aside class="notes"><p>Dates from the SoCal ICPC Bulletin #1, scl.na.icpc.global/wp-content/uploads/2026/10/Bulletin1_2026.pdf, read 2026-10-28. The ICPC page (QR on slide 11) stays up after today, so teams can keep practicing on the same problems before November 7.</p></aside>
+  <aside class="notes"><p>Dates from the SoCal ICPC Bulletin #1, scl.na.icpc.global/wp-content/uploads/2026/10/Bulletin1_2026.pdf, read 2026-10-28. Both pages stay up after today, so teams can keep practicing on the same problems before November 7.</p></aside>
 </section>
 
 </main>
