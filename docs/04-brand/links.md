@@ -6,7 +6,7 @@ Every public link the chapter uses, in one place. Last verified: 2026-08-24, exc
 
 | What | Link | Notes |
 |---|---|---|
-| Discord | <https://discord.gg/fM2HbsJyBG> | The real hub. Invite may expire; check it each semester |
+| Discord | <https://discord.gg/fM2HbsJyBG> | The club's main channel. Invite may expire; check it each semester |
 | Instagram | <https://www.instagram.com/rcc.acm/> | |
 | Website | [TBD: live URL] | Next.js single page |
 | Website source | <https://github.com/ACM-RCC/ACMWebsite> | GitHub org ACM-RCC |

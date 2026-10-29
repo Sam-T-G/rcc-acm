@@ -2,7 +2,7 @@
 
 # Templates
 
-Templates are contracts for ACM @ RCC. Every semester folder is built from them, so a future officer can open any past semester and find the same headings in the same order.
+Every ACM @ RCC semester folder is built from these templates, so a future officer can open any past semester and find the same headings in the same order. That is why changing a template needs a decision record.
 
 ## How to use one
 

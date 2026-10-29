@@ -2,7 +2,7 @@
 
 Every hands-on step in an Arduino lab follows this spec. A person who has never touched a breadboard should be able to do the step from the slide alone, without asking anyone.
 
-If a step can't be written this way, it's two steps.
+If a step can't be written this way, split it into two steps.
 
 ## Anatomy of a step
 

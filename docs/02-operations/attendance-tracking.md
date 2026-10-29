@@ -1,6 +1,6 @@
 # Attendance tracking
 
-Why we count: ASRCC asks for an active member count in every funding request (22 as of Spring 2026), ACM asks for a member census and meetings held in the annual report, and the ICC representative's attendance decides the club's good standing. Counts are the evidence. Names are not, and names never go in this repo.
+Why we count: ASRCC asks for an active member count in every funding request (22 as of Spring 2026), ACM asks for a member census and meetings held in the annual report, and the ICC representative's attendance decides the club's good standing. The repo records counts only. Names never go in this repo.
 
 ## Two systems
 
@@ -15,7 +15,7 @@ Sign-in method: [TBD: paper sheet or a form]. Pick one and write it here. Either
 
 - `Member`: anyone who joined the server and reacted to the rules post [TBD: confirm the server's onboarding flow].
 - `Officer`: current officers only. Remove at handoff.
-- Cohort role per semester, for example `Fall 2026`: assigned to people who signed in at least once that semester. Makes "active this semester" a one-click filter.
+- Cohort role per semester, for example `Fall 2026`: assigned to people who signed in at least once that semester. Filtering Discord by this role shows who was active this semester.
 - `ICPC 2026`, `Cal Hacks 2025`, and similar: per-contest or per-trip roles. Handy for pinging teams and for counting travelers in the retro.
 
 At semester close, count members per role and put the numbers in `semesters/<term>/retrospective.md`. Prune stale roles; do not delete members.

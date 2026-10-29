@@ -2,7 +2,7 @@
 
 ACM @ RCC, first meeting of Fall 2026. Thursday 2026-09-03, 12:50 to 1:50 PM, BLCIS A-210. Single HTML file, 1920 x 1080, light theme, Inter and JetBrains Mono from fonts.googleapis.com only.
 
-Slide type floor from the design system (assets.md §10.5, `design-system` branch): title 72 px, body 40 px, ledger line 32 px, margins 96 px, one idea per slide, at most one callout per slide. Working body area is 1728 x 888 px; after a title and eyebrow, roughly 700 px of body, which is about 11 rows of 40 px table text. That number drives every split below.
+Slide type floor from the design system (assets.md §10.5, `design-system` branch): title 72 px, body 40 px, ledger line 32 px, margins 96 px, one idea per slide, at most one callout per slide. Working body area is 1728 x 888 px; after a title and eyebrow, roughly 700 px of body, which is about 11 rows of 40 px table text. Every slide split below is sized to fit in that 700 px.
 
 ## 1. Source table
 
@@ -69,7 +69,7 @@ Every number, date, and fact used on screen or in notes. "prep" is `semesters/20
 | Expected questions | five, with answers | prep Block 5 | none |
 | ICPC in one line | three people, one computer, five hours, a set of problems; RCC hosts a site | prep Block 5 | none |
 | Close | one ask, Discord; next Thursday is ICPC; lab decision in one sentence with a name; out by 1:50 | prep Block 6 | none |
-| Slide spec | 1920 x 1080, 96 px margins, light theme, title 72, body 40, ledger 32, the Board is one slide, at most one callout per slide | assets.md §10.5 | assets.md also says "The Rail once, on the title slide." The prep scaffold wants the Rail's Break to move per slide by pillar. That is a build question, not a copy question; pillar tags are given per slide below so either reading can be built. |
+| Slide spec | 1920 x 1080, 96 px margins, light theme, title 72, body 40, ledger 32, the Board is one slide, at most one callout per slide | assets.md §10.5 | assets.md also says "The Rail once, on the title slide." The prep scaffold wants the Rail's Break to move per slide by pillar. That gets decided when the deck is built. Pillar tags are given per slide below so either reading can be built. |
 | Callout types | Note (useful, not critical), Warning (money, safety, privacy, room booking), Check (the one ask a meeting ends with) | components.md §7.7 | none |
 | Eyebrow | pillar name, date, or "Fall 2026" | components.md hero anatomy; assets.md ledger line | none |
 | Placeholders not to announce | Club Rush dates; ICPC registration ~Sep 1, rehearsal ~Oct 25, regional ~Nov 15 are 2025 figures; Cal Hacks 13.0 dates; FY 2026-27 ASRCC allocation ($12,000 requested, outcome unrecorded); UC transfer window Oct 1 to Nov 30 `[confirm 2027 dates]` | prep Block 2; plan | none |
@@ -80,7 +80,7 @@ Sixteen slides. The ten-slide scaffold is kept in order. Changes and why:
 
 - Added slide 2, the Board, as the design system requires.
 - Added slide 6, "What you get". The prep doc's Block 1 has this beat and "any major, any level" after the proof, and the scaffold had no slide for it. Cut it first if Block 1 runs long.
-- Split the semester (scaffold 5) into 7 and 8. A 15-row table is 16 rows with the header, about 900 px at 40 px body, and the body area is about 700 px. Slide 7 is the shape (five lines). Slide 8 is a three-column, five-row date grid, one line per cell, 280 px tall, lab days marked. The Board already carries the next four weeks in detail, so slide 8 only has to be legible, not read aloud.
+- Split the semester (scaffold 5) into 7 and 8. A 15-row table is 16 rows with the header, about 900 px at 40 px body, and the body area is about 700 px. Slide 7 is the shape (five lines). Slide 8 is a three-column, five-row date grid, one line per cell, 280 px tall, lab days marked. The Board (slide 2) already lists the next four weeks in detail, so slide 8 only has to be readable; the presenter doesn't read it aloud.
 - Split the lab block (scaffold 6 and 7) into 9, 10, and 11. The order-by dependency and the show of hands are one idea and get their own slide, so the money slide stays at four numbers.
 - Split the seats (scaffold 8) into 12 (the six officer seats, the photographed slide) and 13 (the four non-officer jobs). Ten rows with a callout does not fit at 40 px.
 - Added slide 15 for the ten-minute questions block, which otherwise has nothing on screen.

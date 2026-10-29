@@ -32,7 +32,7 @@ Only when a requisition was not possible. Confirm with Student Activities in adv
 | Itemized, with price and date visible | Hackathon travel stipends (MLH organizer guide) require it, and the treasurer needs it to match the receipt to a line item. Treat it as required for ASRCC too until Student Activities says otherwise: [TBD]. |
 | Photograph or scan the same day | Paper receipts fade and get lost. |
 | Store copies in the club's shared drive, not in this repo | Receipts carry names and card fragments. The repo gets figures only ([privacy policy](../01-governance/privacy-and-public-repo-policy.md)). |
-| One expense, one line in `budget.md` | Date, amount, line item, status. That is the whole ledger. |
+| One expense, one line in `budget.md` | Date, amount, line item, status. `budget.md` needs nothing else. |
 
 ## Travel
 

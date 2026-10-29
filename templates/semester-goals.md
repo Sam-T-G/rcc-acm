@@ -66,7 +66,7 @@ Copy from the [semester lifecycle](../docs/01-governance/semester-lifecycle.md) 
 
 ## What we are not doing this semester
 
-Saying it here stops the question from coming back every meeting.
+Write it here so the team does not have to discuss it again at every meeting.
 
 - <!-- fill: -->
 

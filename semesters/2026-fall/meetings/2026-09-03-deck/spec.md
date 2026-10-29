@@ -4,7 +4,7 @@ This is the single document a builder implements. Exact copy lives in `deck-copy
 
 ## 1. Design plan
 
-**Concept.** Ink on paper, one hue, from the back of a daylit room. Every slide is one block of type between two fixed hairlines, sized by what it is: a sentence at 136 px, a table at 40 px, a numeral at 224 px. Density is solved by adding a slide, never by shrinking. The only marks that are not letters are the Rail on slide 1, two hairlines, and the QR.
+**Concept.** Dark text on a light background with one accent hue, readable from the back of A-210 in daylight. Every slide is one block of type between two fixed hairlines, sized by what it is: a sentence at 136 px, a table at 40 px, a numeral at 224 px. When content doesn't fit, add a slide instead of shrinking the type. The only marks that are not letters are the Rail on slide 1, two hairlines, and the QR.
 
 **Colour** (light theme only; `<div id="stage" data-theme="light">`; no dark block anywhere).
 

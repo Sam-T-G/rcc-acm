@@ -4,7 +4,7 @@ Every breadboard picture in a lab deck is drawn with `board()` in [deck-kit/lab/
 
 ## Why this page exists
 
-The 2026-10-15 lab first shipped a zoomed breadboard (`bbz`) that spaced holes 76 px apart across and 36 px down. It looked tidy, but it wasn't true. Stretching one axis made the board read tall and narrow. The four rails looked like four more rows of holes, so the middle channel seemed to cut across the rails instead of running beside them. And nothing showed which holes are joined, which is the one thing a beginner needs from the picture. Sam caught it in review on 2026-10-14, the day before the lab, and every board picture was redrawn with `board()`.
+The 2026-10-15 lab first shipped a zoomed breadboard (`bbz`) that spaced holes 76 px apart across and 36 px down. It looked neat, but the spacing didn't match the real board. Stretching one axis made the board look tall and narrow. The four rails looked like four more rows of holes, so the middle channel seemed to cut across the rails instead of running beside them. And nothing showed which holes are joined, which is the one thing a beginner needs from the picture. Sam caught it in review on 2026-10-14, the day before the lab, and every board picture was redrawn with `board()`.
 
 ## The real board
 
@@ -23,10 +23,10 @@ The club's kits use an 830-hole board.
 ## Rules for every board picture
 
 1. **Never stretch one axis.** One pitch across and down. If the board won't fit, show fewer rows, never squashed ones.
-2. **The long axis runs across the slide,** in the view the students are told to take. The 2026-10-15 lab says "module on your right, letters upright": line a at the top, row 1 at the right next to the module, rows counting up to the left. Never show a slice so narrow that the board reads tall, and never mix two views (the first `board()` put the module on the left with line a on top, a board no one can hold).
+2. **The long axis runs across the slide,** in the view the students are told to take. The 2026-10-15 lab says "module on your right, letters upright": line a at the top, row 1 at the right next to the module, rows counting up to the left. Never show a slice so narrow that the board reads tall, and never mix two views (the first `board()` put the module on the left with line a on top, a view that matches no way you can hold the real board).
 3. **Draw the joins.** Each 5-hole strip and each rail sits on a light bar, so the picture shows what's connected, not only where the holes are.
-4. **Rails look like rails:** one long bar, its red or blue line, and a + or - at the end. Color never works alone ([foundations.md §2.7](../../04-brand/design-system/foundations.md), diagram colors).
-5. **The newest part is orange, and the strips it touches are tinted.** The tint is the picture of the "you should see" line, like "The left leg now joins the - rail".
+4. **Rails look like rails:** one long bar, its red or blue line, and a + or - at the end. Never use color alone; the + or - sign carries the same meaning ([foundations.md §2.7](../../04-brand/design-system/foundations.md), diagram colors).
+5. **The newest part is orange, and the strips it touches are tinted.** The tint shows what the "you should see" line says, like "The left leg now joins the - rail".
 6. **One view for the whole lab.** The same window every step, with the module at the left end, so parts pile up and nothing jumps. Parts from earlier rounds stay drawn, in ink, because they're still on the board.
 7. **Labels stay off the parts.** The row-number ruler sits above the board. A wire to the UNO leaves the board between holes and ends at the pin's name ("pin 2", "pin ~5", "GND").
 8. **Every hole a step names is in the picture,** at its real place, with the part's leg on it.
@@ -51,5 +51,5 @@ The club's kits use an 830-hole board.
 - **`parts`:** what's on the board, by name (`labkit.BD_ORDER` lists them). The module is always drawn.
 - **`hi`:** the newest parts, drawn in orange with their strips tinted.
 - **`on`:** the module is switched on, so its light is lit. The fan spins only while the test jumper closes the transistor.
-- **Adding a part:** give it an entry in `_bd_parts` with the holes it uses, as (row number, line) pairs, and a drawing placed with `bdx()` and `bdy()`. Never place a part by pixel. The tint and the description come from the hole list, so they can't drift from the drawing.
+- **Adding a part:** give it an entry in `_bd_parts` with the holes it uses, as (row number, line) pairs, and a drawing placed with `bdx()` and `bdy()`. Never place a part by pixel. The tint and the description come from the hole list, so they always match the drawing.
 - **Older pictures:** `bb()`, `bbz()`, `button_uno_steps()`, and `fan_uno_steps()` stretch an axis or skip the holes. Use them only to rebuild an old deck exactly.

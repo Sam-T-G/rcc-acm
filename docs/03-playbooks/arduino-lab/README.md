@@ -2,7 +2,7 @@
 
 ## Purpose
 
-A weekly hands-on Arduino lab where everyone builds something real, step by step, in a meeting slot. The files here are a living spec. Each week's lab is built from them, and anything each lab teaches gets written back here, so the next lab is at least as clear.
+A weekly hands-on Arduino lab where everyone builds something real, step by step, in a meeting slot. The files here hold the rules every lab follows. Officers build each week's lab from them, and after each lab they write what it taught back into these files, so the next lab is at least as clear.
 
 ## When
 
@@ -53,7 +53,7 @@ The workshop lead for that week. The Chair signs off on the date. Anyone who cha
 
 ## Day-of run sheet
 
-Follow the officer guide for that week. Officers walk the room during every step. The presenter moves on when most tables show the "you should see" result, not when the slowest table finishes. Stuck tables get an officer, not a wait.
+Follow the officer guide for that week. Officers walk the room during every step. The presenter moves on when most tables show the "you should see" result, not when the slowest table finishes. An officer goes straight to any stuck table.
 
 ## After
 
@@ -73,7 +73,7 @@ Each rule links to the lab that taught it.
 | No driver chip in a first lab; use a servo | The L293D took a whole slide of pinouts before anything moved. A servo has its driver inside. | 2026-10-08 |
 | Students open built-in examples and edit them | Typing whole sketches from a projector is slow and error-prone | 2026-10-08 |
 | Say which way the power module goes on, every time | Backwards reverses the power (Elegoo warning) | 2026-10-08, Elegoo lesson 29 |
-| Every round ends with a check-in that asks why | Reflection after each build, not one lecture at the end | 2026-10-08 |
-| Show what Arduino hides (`main()` calls `setup()` then `loop()`) | Keeps the lab honest to plain C++ | 2026-10-08 |
+| Every round ends with a check-in that asks why | Students reflect after each build instead of sitting through one lecture at the end | 2026-10-08 |
+| Show what Arduino hides (`main()` calls `setup()` then `loop()`) | Students see that an Arduino sketch is plain C++ | 2026-10-08 |
 | Draw the breadboard true to scale with `board()`: one pitch across and down, rails and channel along the long axis, joined strips shown, the same view every step | A zoom that stretched one axis made the rails read as rows and the channel cut across them, and showed nothing about which holes join | Sam's review of the [2026-10-15 deck](../../../semesters/2026-fall/meetings/2026-10-15-lab-guide.md), [breadboard-drawing.md](breadboard-drawing.md) |
 | Put the round the lab exists for first; keep no-code breadboard rounds short or cut them | The 2026-10-08 lab never reached the Arduino: the breadboard rounds filled the whole lab | 2026-10-08, so the [2026-10-15 guide](../../../semesters/2026-fall/meetings/2026-10-15-lab-guide.md) starts at the board |

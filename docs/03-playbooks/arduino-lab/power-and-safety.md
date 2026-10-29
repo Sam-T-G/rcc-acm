@@ -6,21 +6,21 @@ Say where the power comes from in every lab, in the officer guide and on the sli
 
 | System | Path | Powers | Limit |
 |---|---|---|---|
-| Breadboard rails | 9V battery (or 9V adapter) → power module jack → module → + and - rails | LEDs, buttons in a loop, small motors | 6.5 to 9 V in; 5 V out per side; 700 mA max (Elegoo specs) |
+| Breadboard rails | 9V battery (or 9V adapter) → power module jack → module → + and - rails | LEDs, buttons in a path, small motors | 6.5 to 9 V in; 5 V out per side; 700 mA max (Elegoo specs) |
 | Arduino | Laptop USB → UNO → its 5V and GND pins | The board, a servo (red wire to 5V), button inputs | What the laptop's USB port gives. One micro servo is fine; more needs the rails |
 
-The two systems never need to touch. **The one exception** is a part that's powered from the rails but takes a signal from the board (a servo on the rails, a motor driver, a transistor switch for a fan). Then add one jumper from a UNO GND pin to the - rail. That shared ground is what lets the part read the signal.
+The two systems never need to touch. **The one exception** is a part that's powered from the rails but takes a signal from the board (a servo on the rails, a motor driver, a transistor switch for a fan). Then add one jumper from a UNO GND pin to the - rail. Without that jumper, the part can't read the UNO's signal.
 
 ## The never list
 
 These go on the slides where they apply, and in every officer guide.
 
-1. **Never wire + straight to - with nothing in between.** That's a short. Every loop has a part in it.
+1. **Never wire + straight to - with nothing in between.** That's a short. Every path has a part in it.
 2. **Never put the power module on backwards.** Its + pins go on the red lines and its - pins on the blue lines (Elegoo warning: backwards reverses the power).
 3. **Never connect the UNO's 5V pin to the module's + rail.** Two supplies would be fighting each other.
 4. **Never plug a battery or adapter straight into the breadboard.** It always goes through the module.
 5. **Never feed the module more than 9 V.**
-6. **Never drive a motor straight from a board pin.** A pin is safe at 20 mA, with 40 mA as the absolute limit (Arduino docs). A motor needs more, and it sends a voltage spike back when it stops.
+6. **Never drive a motor straight from a board pin.** A pin is safe at 20 mA, with 40 mA as the absolute limit (Arduino docs). A motor needs more, and it sends a jolt back when it stops.
 7. **Never change wires with power on.** Switch the module off or unplug USB first. Make this the first step of each round.
 
 ## Known traps

@@ -2,7 +2,7 @@
 
 This repo is public and its git history is permanent. Anything committed here can be read by anyone, indexed by search engines, and copied by anyone who clones it. This page says what may go in, what may not, and what to do when something slips through. It is rule 4 in [maintenance-rules.md](maintenance-rules.md).
 
-The short version: the club's institutional memory belongs here; people's personal information does not.
+The short version: how the club runs (decisions, money, counts, procedures) goes here; people's personal information does not.
 
 ## What may be committed
 

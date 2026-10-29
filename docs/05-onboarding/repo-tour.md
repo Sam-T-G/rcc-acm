@@ -1,12 +1,12 @@
 # Repo tour
 
-A walk through <https://github.com/Sam-T-G/rcc-acm> from the top of the tree to the bottom. Ten minutes. The one idea to hold onto: `docs/` is evergreen and `semesters/` is dated. Everything else exists to keep those two honest.
+A walk through <https://github.com/Sam-T-G/rcc-acm> from the top of the tree to the bottom. It takes about ten minutes. The main split: `docs/` holds evergreen material (still true next semester without edits), and `semesters/` holds anything tied to a date. The templates, scripts, and checks below help put each file in the right one of those two folders.
 
 ## Top level
 
 | File | What it is for |
 | --- | --- |
-| [README.md](../../README.md) | The front door. What the club is, where things live, and a start-here list for members, officers, and the advisor. |
+| [README.md](../../README.md) | The first page you see on GitHub. What the club is, where things live, and a start-here list for members, officers, and the advisor. |
 | [CONTRIBUTING.md](../../CONTRIBUTING.md) | How to change anything: naming, PR rules, what never goes in the repo. |
 | [MAINTAINERS.md](../../MAINTAINERS.md) | Who administers the repo, by role. At least two admins at all times, plus the advisor as fallback. |
 | [CODE_OF_CONDUCT.md](../../CODE_OF_CONDUCT.md) | Conduct expectations for meetings, events, and online spaces, and where to report. |
@@ -82,8 +82,8 @@ Four shell scripts. Run them from the repo root.
 
 1. You edit a file on a branch (or use a script to create one).
 2. You run `scripts/check.sh`.
-3. You open a PR. The template asks the questions the rules care about.
+3. You open a PR. The PR template asks you to confirm one topic, green checks, a decision log entry if needed, and no personal data.
 4. CI runs lint and link checks. Any officer reviews. A maintainer reviews if CODEOWNERS says so.
 5. Merge. Nothing goes to `main` any other way.
 
-That is the whole repo. If something here does not match what you see in the tree, the tree is right and this page needs a PR.
+If something on this page does not match the files in the repo, trust the files and open a PR to fix this page.

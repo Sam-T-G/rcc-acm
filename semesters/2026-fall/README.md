@@ -2,11 +2,11 @@
 
 Working checklist for the Fall 2026 officer team of ACM @ RCC. Folder: `semesters/2026-fall/`. The rules behind this checklist are in [semester-lifecycle.md](../../docs/01-governance/semester-lifecycle.md).
 
-Tick boxes in this file as you go and commit it as-is. A half-finished checklist in the repo beats a finished one in someone's head.
+Tick boxes in this file as you go and commit it as-is. Commit it even when it's half done, so the other officers can see what's finished without asking.
 
 ## Current semester
 
-Created 2026-08-24, the first day of classes. This is the first semester the club runs from this repo, so the Open checklist doubles as repo setup. The two backfilled folders before this one, [2025-fall](../2025-fall/README.md) and [2026-spring](../2026-spring/README.md), carry the open threads; they are copied into [goals.md](goals.md).
+Created 2026-08-24, the first day of classes. This is the first semester the club runs from this repo, so the Open checklist doubles as repo setup. The two backfilled folders before this one, [2025-fall](../2025-fall/README.md) and [2026-spring](../2026-spring/README.md), list the open threads from those semesters; they are copied into [goals.md](goals.md).
 
 ## Files in this folder
 

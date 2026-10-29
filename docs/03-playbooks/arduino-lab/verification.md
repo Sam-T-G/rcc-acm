@@ -1,6 +1,6 @@
 # Verification: what passes before a lab ships
 
-A green check is required, but it isn't enough. Every item here has caught a real problem.
+Passing the automated checks (the compiler and `check.mjs`) is required, but it isn't enough. Every item here has caught a real problem.
 
 ## 1. Code compiles on both board types
 

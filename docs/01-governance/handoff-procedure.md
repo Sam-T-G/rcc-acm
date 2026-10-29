@@ -1,6 +1,6 @@
 # Handoff procedure
 
-How an outgoing officer team hands the club to an incoming one at the end of a semester. The filled-in record for a specific handoff lives in `semesters/<YYYY-term>/handoff.md` (blank in [semesters/_template/handoff.md](../../semesters/_template/handoff.md)). This page is the procedure; that file is the evidence.
+How an outgoing officer team hands the club to an incoming one at the end of a semester. The filled-in record for a specific handoff lives in `semesters/<YYYY-term>/handoff.md` (blank in [semesters/_template/handoff.md](../../semesters/_template/handoff.md)). This page lists the steps; that file records what one team actually did.
 
 The rule behind it: a semester is not closed until the handoff PR is merged by the incoming team (rule 6 in [maintenance-rules.md](maintenance-rules.md)).
 

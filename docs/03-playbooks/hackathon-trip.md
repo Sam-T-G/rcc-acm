@@ -1,10 +1,10 @@
 # Playbook: Hackathon trip
 
-Runbook for taking a group of members to an off-campus collegiate hackathon (Cal Hacks and similar collegiate hackathons). Evergreen: the rules and the checklist live here; each actual trip gets its own folder under `semesters/<YYYY-term>/events/` with a plan, run sheet, and retro.
+Steps for taking a group of members to an off-campus collegiate hackathon (Cal Hacks and similar collegiate hackathons). This file holds the rules and the checklist that repeat every trip; each actual trip gets its own folder under `semesters/<YYYY-term>/events/` with a plan, run sheet, and retro.
 
 ## Purpose
 
-- Members compete as teams at a real hackathon, ship a project in 24 to 36 hours, and meet students and sponsors from other schools.
+- Members compete as teams at a real hackathon, build and submit a project in 24 to 36 hours, and meet students and sponsors from other schools.
 - The club covers as much of the cost as ASRCC and club funds allow, so the trip is not limited to members who can pay their own way.
 
 ## When
@@ -25,7 +25,7 @@ Runbook for taking a group of members to an off-campus collegiate hackathon (Cal
 
 One person can hold two roles on a small trip. Nobody holds all of them.
 
-## Hackathon rules the trip has to respect
+## Hackathon rules members on the trip must follow
 
 These come from the Cal Hacks FAQ and the MLH policies. Confirm them against the current event page each year; hosts change details.
 
@@ -58,7 +58,7 @@ These come from the Cal Hacks FAQ and the MLH policies. Confirm them against the
 - [ ] Acceptances arrive. Final headcount = accepted and confirmed members only.
 - [ ] Book lodging for the confirmed headcount. Split into rooms; collect each person's share or confirm the club covers it.
 - [ ] Book flights or lock the carpool list (drivers, seats, departure point). Cars need a driver with insurance and a backup driver.
-- [ ] Publish the per-person cost and what the club covers. No surprises at the airport.
+- [ ] Publish the per-person cost and what the club covers, so every member knows what they owe before they travel.
 
 ### T-2 weeks
 
@@ -161,9 +161,9 @@ Housing was the members' stated first priority for club money. $2,500 of ASRCC a
 ## Funding notes: ASRCC and the trust account
 
 - ASRCC funds come from the Student Services Fee Fund on a July 1 to June 30 fiscal year. The annual funding packet is due late April (April 29 in 2026), with 15-minute hearings in mid May and allocation notice by July 1. A fall trip has to be in the request the previous spring. The FY 2026-27 request asked for $12,000 total for the club; the share for travel is [TBD]. Details: [ASRCC funding](../02-operations/asrcc-funding.md).
-- ASRCC gives funding priority to on-campus student engagement and does not fund fundraisers, personnel, instructional equipment, or things the college must provide. Frame a trip request around what members bring back (workshops, projects, recruiting), and expect travel to be a harder sell than an on-campus event.
+- ASRCC gives funding priority to on-campus student engagement and does not fund fundraisers, personnel, instructional equipment, or things the college must provide. Frame a trip request around what members bring back (workshops, projects, recruiting), and expect ASRCC to fund travel less readily than an on-campus event.
 - ASRCC must be acknowledged at anything it funds. Put "Supported by ASRCC" in the trip announcement and the retro post.
-- The old ACM trust account held about $1,063 as of the Cal Hacks 12.0 planning in Fall 2025. The account is old enough that getting access is its own project. Treasurer's job: find out who the signers of record are, work with the Student Activities office and the advisor to update them, and log the result in the decision log. Never put the account number in this repo.
+- The old ACM trust account held about $1,063 as of the Cal Hacks 12.0 planning in Fall 2025. Because the account is old, getting access to it is a separate task for the Treasurer: find out who the signers of record are, work with the Student Activities office and the advisor to update them, and log the result in the decision log. Never put the account number in this repo.
 - Cal Hacks's own travel stipend is $100, first-year university students only, first-come-first-serve. Point eligible members at it; it does not change the club budget much.
 
 ## Receipts rule

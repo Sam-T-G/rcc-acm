@@ -17,21 +17,21 @@ Brand authority runs: ACM's Visual Identity Standards and chapter policies, then
 
 ## The short version
 
-**Orange leads.** The website's `#ff4d00` is the primary hue. It is the accent the site already runs on, it sits inside ACM's own sanctioned secondary palette (ACM Orange, PANTONE 138C), and it is not ACM Blue. ACM Blue is the parent's logo color, and a chapter page that uses it as an action color reads as ACM headquarters, which is the one thing chapter policy says not to be. The website already chose a color that reads as heat and speed, and the club's four pillars are all verbs.
+**Orange leads.** The website's `#ff4d00` is the primary hue. It is the accent the site already runs on, it sits inside ACM's own sanctioned secondary palette (ACM Orange, PANTONE 138C), and it is not ACM Blue. ACM Blue is the parent's logo color, and a chapter page that uses it as an action color reads as ACM headquarters, which is the one thing chapter policy says not to be.
 
 **One job each.** Orange is links, buttons, active state, focus, and the Rail. Blue is cross-references out, and nothing else. Red is errors and failure paths, semantic only, and always labeled by a word or an icon because orange and red are close enough in hue to be confused. Green is the live-now marker and the Check callout.
 
-**Three checks that keep it the chapter's own**, all verifiable by looking at a page:
+**Three checks** keep chapter pages from being mistaken for ACM's or GDG's. You can verify each one by looking at the page:
 
 1. ACM Blue appears nowhere except inside the unaltered ACM logo.
 2. No single component uses more than two hues.
 3. Orange covers at least 70% of the non-neutral area on any surface.
 
-**The pillars get a form, not a hue.** Build, Compete, Learn, and Connect are carried by the Rail's break position, set once per page as `data-pillar` on the root element. A four-pillar color scheme would break checks two and three at once and would put the Google four one step away.
+**Each pillar gets a Rail position instead of a color.** Build, Compete, Learn, and Connect are shown by where the Rail's break sits, set once per page as `data-pillar` on the root element. A four-pillar color scheme would break checks two and three at once and would come close to the Google four (Google's blue, red, yellow, and green).
 
 ## The Rail
 
-The club's own device, derived from the website's own share card and from nothing ACM or Google owns: a solid vertical bar in the primary color, flush to the inline-start edge of a block, full block height, never a gradient and never rounded. It does real work rather than sitting in a corner. A gap in the bar, the Break, encodes which pillar a page belongs to:
+The club's own device, derived from the website's own share card and from nothing ACM or Google owns: a solid vertical bar in the primary color, flush to the inline-start edge of a block, full block height, never a gradient and never rounded. A gap in the bar, the Break, shows which pillar a page belongs to:
 
 | Page | `data-pillar` | Break sits at |
 |---|---|---|
@@ -64,12 +64,12 @@ The theme script goes before the stylesheet so there is no flash. The page is co
 
 - The club name written as [brand.md](../brand.md) writes it: "ACM Student Chapter at Riverside City College" on forms, the constitution, and ASRCC packets; "ACM @ RCC" on social, slides, and this repo.
 - "Funded by ASRCC" (or the wording Student Activities asks for) on the flyer of any event ASRCC paid for, and said aloud at the event.
-- ACM imposes no disclaimer sentence on chapters. Do not invent one. The chapter policy is that the chapter never presents itself as speaking for ACM, and the club name plus the chapter's own voice satisfy it.
+- ACM imposes no disclaimer sentence on chapters. Do not invent one. The chapter policy is that the chapter never presents itself as speaking for ACM. Writing the club name as brand.md does, and never writing as if ACM is speaking, meets that policy.
 
 Placement rules are in [bright-lines.md](bright-lines.md).
 
 ## Changing this system
 
-Values here are either read from a named source, derived and measured, or judgment calls, and each is labelled. Change a derived value by re-running the contrast audit in [foundations.md](foundations.md) and updating the table. Change a judgment call at an officer meeting and log it in the [decision log](../../01-governance/decision-log.md). Recording the colors and faces in brand.md is the first such decision and the one that turns "provisional" into "adopted".
+Values here are either read from a named source, derived and measured, or judgment calls, and each is labelled. Change a derived value by re-running the contrast audit in [foundations.md](foundations.md) and updating the table. Change a judgment call at an officer meeting and log it in the [decision log](../../01-governance/decision-log.md). Recording the colors and faces in brand.md is the first such decision. Once it is logged, the values count as adopted instead of provisional.
 
 Last updated: 2026-09-01.

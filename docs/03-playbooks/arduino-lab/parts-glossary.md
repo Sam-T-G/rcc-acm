@@ -24,7 +24,7 @@ Add a row the first time a lab uses a new part. Never rename a part between labs
 | servo | Small blue box with a shaft on top and a three-wire plug: brown, red, orange | A motor that turns to an angle from 0 to 180 degrees and holds it. Brown is ground, red is 5 V power, orange is the signal. | Elegoo kit (SG90), plus SG90 and MG90S packs |
 | servo arm | Plastic piece from the bag that comes with the servo | Pushes onto the servo's shaft so you can see it turn | Servo packs |
 | transistor | Small black part with one flat side and three legs, printed PN2222 on the flat side | A switch with no moving parts. A small current into the middle leg lets a big current through the other two. Flat side facing you, the legs are emitter, base, collector (E, B, C, PN2222A datasheet). The kit's S8050s look the same, so read the print. | Elegoo kit (5 PN2222) |
-| diode | Small black tube with a silver stripe at one end, printed 1N4007 | Lets current through one way only. Across a motor, stripe toward +, it catches the spike the motor pushes back when it stops. | Elegoo kit (5) |
+| diode | Small black tube with a silver stripe at one end, printed 1N4007 | Lets current through one way only. Across a motor, stripe toward +, it gives the motor's jolt a safe path when the motor stops. | Elegoo kit (5) |
 
 ## In the kits, not used in a lab yet
 

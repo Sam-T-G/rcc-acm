@@ -1,8 +1,8 @@
 # Maintenance rules
 
-These ten rules are what keep this repo useful after the people who built it graduate. Every one of them exists because a club has lost something without it: a doc nobody could tell was stale, a template edited in five copies, an account with one owner who left, a phone number in a public commit.
+Follow these ten rules so the repo still works after the people who built it graduate. Each rule covers a way clubs have lost things: a doc nobody could tell was stale, a template edited in five copies, an account with one owner who left, a phone number in a public commit.
 
-This file is the canonical statement of the rules. [CONTRIBUTING.md](../../CONTRIBUTING.md), [`scripts/check.sh`](../../scripts/check.sh), and the [docs-check workflow](../../.github/workflows/docs-check.yml) implement them; if they ever disagree with this page, this page wins and the other one gets fixed.
+This file is the canonical statement of the rules. [CONTRIBUTING.md](../../CONTRIBUTING.md), [`scripts/check.sh`](../../scripts/check.sh), and the [docs-check workflow](../../.github/workflows/docs-check.yml) apply them. If one of them disagrees with this page, follow this page and fix the other file.
 
 Quick reference:
 
@@ -93,7 +93,7 @@ Quick reference:
 
 **The rule.** Collaborators with push access work on `main` directly: small commits, each pushed with `scripts/sync.sh push`, which pulls first, runs `scripts/check.sh` on exactly what is being pushed, and retries if someone else pushed first. Anyone without push access opens a pull request, one topic per PR. Since 2026-10-07 (decision log).
 
-**Why.** Several people's Claude Code agents edit this repo the same week. Long-lived branches left `main` weeks behind and hid each person's work from the others. Working on one branch, with a context gate that makes each agent read what the others pushed before it edits, keeps everyone on the same copy. The checks still run on every push, locally before it leaves and in CI after.
+**Why.** Several people's Claude Code agents edit this repo the same week. Long-lived branches left `main` weeks behind and hid each person's work from the others. Working on one branch, with a context gate that makes each agent read what the others pushed before it edits, means everyone works from the same copy. The checks still run on every push, locally before it leaves and in CI after.
 
 **Enforced by.** The repo's Claude Code hooks (`.claude/settings.json`): a raw `git push` is blocked in favor of `scripts/sync.sh push`, as are force-pushes, `reset --hard`, and `clean -f`. Branch protection on `main` blocks force-pushes and deletion. CI runs [docs-check.yml](../../.github/workflows/docs-check.yml) on every push.
 

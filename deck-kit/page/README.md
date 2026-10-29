@@ -1,6 +1,6 @@
 # Page kit
 
-A companion page is the page students open on their own laptop or phone beside a deck: the ICPC practice page and the parking gate lab for 2026-10-29 are the first two. This folder makes every such page look like the same club, from the design system, without copying CSS into each generator.
+A companion page is the page students open on their own laptop or phone beside a deck: the ICPC practice page and the parking gate lab for 2026-10-29 are the first two. The files here give every companion page the same design-system look, so no generator needs its own copy of the CSS.
 
 | File | What it is |
 |---|---|
@@ -12,7 +12,7 @@ A companion page is the page students open on their own laptop or phone beside a
 
 ## How it is built
 
-`page()` inlines, in order: `docs/04-brand/design-system/tokens.css` verbatim (tokens, reset, headings, prose flow, tables, `.acm-card`, `.acm-callout`, `.acm-button`, `.acm-rail`, dark mode, print), `viz.css`, labkit's `lab_css()` when the page draws boards, then `page.css`. Nothing in `page.css` is a raw number: every size, gap, radius and color is a token or a sum of tokens, so the page follows the system when the system changes. Headings stay at weight 500 (`--acm-weight-strong`), as documents.md §6.3 asks. Dark mode comes from tokens.css, through `prefers-color-scheme` and `data-theme`.
+`page()` inlines, in order: `docs/04-brand/design-system/tokens.css` verbatim (tokens, reset, headings, prose flow, tables, `.acm-card`, `.acm-callout`, `.acm-button`, `.acm-rail`, dark mode, print), `viz.css`, labkit's `lab_css()` when the page draws boards, then `page.css`. Nothing in `page.css` is a raw number: every size, gap, radius and color is a token or a sum of tokens, so a change to tokens.css reaches every page the next time it is built. Headings stay at weight 500 (`--acm-weight-strong`), as documents.md §6.3 asks. Dark mode comes from tokens.css, through `prefers-color-scheme` and `data-theme`.
 
 Two page-level values the system does not carry, both in `page.css`: `--pk-start-bg` and `--pk-start-ink`. Light uses the sanctioned orange fill with `--acm-on-surface` (4.92:1, foundations §2.2). Dark has no orange fill token, so the start block falls back to the primary container pair.
 
@@ -39,9 +39,9 @@ Text arguments are plain text; `md()` turns `` `code` `` and `**bold**` into mar
 
 ## Rules learned building the first two pages
 
-- **One Start block with one action.** A beginner should know what to do first within five seconds. Everything else is a step below it.
+- **One Start block with one action.** A beginner should know what to do first within five seconds. Everything else goes in the steps below it.
 - **Basics first, but short.** Show the four things a beginner needs before the first task; put the rest after the tasks, closed.
-- **Show only the lines a student edits.** A 40 to 60 line starter is a wall; `code(..., preview=...)` shows the edit lines and keeps the rest one tap away. Copy still copies everything.
+- **Show only the lines a student edits.** A 40 to 60 line starter is too much to read before the first task; `code(..., preview=...)` shows the edit lines and keeps the rest one tap away. Copy still copies everything.
 - **Never clip code on a phone.** On narrow screens code wraps (a sideways scrollbar on a phone only shows while scrolling, so a long line looks cut off). Wider screens scroll inside the block as §7.11 says.
 - **Split a wiring table by group**, each with a small board picture of only that group. When two neighboring wire tags would collide at page size, add `pk-group--quiet` and name the parts in the caption.
 

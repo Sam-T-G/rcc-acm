@@ -2,7 +2,7 @@
 
 Every contrast ratio below was computed with the WCAG 2.x sRGB relative-luminance formula from the shipped hexes; the full 66-pair audit is in [foundations.md](foundations.md) §2.5 and the derivation script is reproducible. The Rail device was checked for collision against the ACM Diamond, the Google G, the Gemini spark, the four-dot Assistant mark, and the GDG on Campus lockups, and collides with none of them.
 
-The CSS here is the explanation. The shipping copy lives in [tokens.css](tokens.css).
+The CSS in this file is for explanation. The version that ships is in [tokens.css](tokens.css).
 
 ## Part 1: Accessibility
 
@@ -25,9 +25,9 @@ Five rules follow directly from that table, and they are not negotiable:
 2. **Green and the gradient orange never carry text on the light surface and never sit there as a meaningful shape.** At 2.16:1 and 2.27:1 they fail even the 3:1 non-text floor. On light they are fills that take ink, or they are absent. The derived `live` role is a different color and does clear 3:1 as a bare mark, at 6.10:1.
 3. **Filled brand buttons on the raw fills take ink labels, not white ones.** White on `#ff4d00` is 3.33:1 and fails body text. Ink on it is 4.92:1 and passes; ink on green is 7.18:1. The button the system actually ships is white on the derived `primary`, at 6.45:1. The raw fills are for large areas, not controls.
 4. **Error is never told apart from primary by hue alone.** The website ships no red, so the system's error red is derived, and orange and red are 14 degrees apart in OKLCh hue. Every error state carries a word or an icon, and error never sits beside primary in one component.
-5. **All four website colors clear body contrast on the dark theme** (5.46:1 to 7.97:1 against the dark surface). Dark mode is the permissive case. Light mode is where things break, so check light first.
+5. **All four website colors clear body contrast on the dark theme** (5.46:1 to 7.97:1 against the dark surface). Dark mode is the easier case. Most failures happen in light mode, so check light first.
 
-Design-time shortcut, so nobody has to open a tool for every decision: a 40-point gap in CIE L\* gives about 3:1 and a 50-point gap about 4.5:1. The color section is built on tonal roles, so pairing a tone-40 role against a tone-90 role is safe by construction. Treat the shortcut as design-time only and measure before publishing; the 50-point version does not hold in the worst case.
+Design-time shortcut, so nobody has to open a tool for every decision: a 40-point gap in CIE L\* gives about 3:1 and a 50-point gap about 4.5:1. The color section is built on tonal roles, so pairing a tone-40 role against a tone-90 role is safe by design. Treat the shortcut as design-time only and measure before publishing; the 50-point version does not hold in the worst case.
 
 ### 1.2 What has to be measured, and what does not
 
@@ -37,11 +37,11 @@ Design-time shortcut, so nobody has to open a tool for every decision: a 40-poin
 
 The traps specific to this club's page set:
 
-- The club name line and the "Funded by ASRCC" line are **body text** and must measure 4.5:1. Do not set either in a light grey at 11px in the footer. One is what keeps the chapter from reading as ACM and the other is a funding condition; both get the same contrast floor as a paragraph.
+- The club name line and the "Funded by ASRCC" line are **body text** and must measure 4.5:1. Do not set either in a light grey at 11px in the footer. The club name keeps readers from mistaking the chapter for ACM, and the ASRCC line is a funding requirement, so both get the same contrast floor as a paragraph.
 - Station cards, badges, and stat tiles from the components section usually put a label on a tinted container. Measure the label against the container, not against the page.
 - Text over event photography has an unmeasurable background. Never set text directly on a photo. Put it on a solid or near-solid scrim panel and measure against the scrim, or place it below the image entirely. The scrim must be opaque enough that the measurement holds at the lightest pixel in the crop.
 - Code blocks: syntax highlighting is color-only by definition. Every token color in the code-block theme must clear 4.5:1 against the code surface. Comments in particular tend to fail, and the lab's starter files are mostly comments.
-- Dark theme is a second full pass, not an inversion you can assume works.
+- Check the dark theme as a second full pass. Do not assume it works because the light theme does.
 
 ### 1.3 Focus indicators
 
@@ -79,15 +79,15 @@ Club floor, which is stricter than AA on purpose because these pages get used on
 - **44 by 44 CSS px** for anything a person taps on a phone: nav items, the Discord link, the RSVP button, agenda-row links, footer social icons.
 - **24 by 24** absolute minimum for dense desktop-only controls, and only with 24px of clear space.
 - Pad the target, do not grow the icon. A 20px icon inside a 44px hit area is correct.
-- Icon-only buttons need an accessible name: `aria-label="Open menu"` or visually hidden text. An icon-only button with no name is invisible to a screen reader.
+- Icon-only buttons need an accessible name: `aria-label="Open menu"` or visually hidden text. An icon-only button with no name gives a screen reader nothing to announce.
 
 ### 1.5 Semantic structure, headings, landmarks
 
 **One `h1` per page**, and it is the page's actual title. On an event page that is the event name, not the club name. On a lab day page it is the day, not "Microcontroller lab".
 
-**Never skip a heading level.** `h2` to `h4` is a defect. Screen-reader users navigate long meeting and lab pages by heading, and the heading tree is the table of contents. It also has to hold in the markdown docs, where GitHub builds the file's outline from the same tree.
+**Never skip a heading level.** `h2` to `h4` is a defect. Screen-reader users navigate long meeting and lab pages by heading, so the headings work as their table of contents. The rule also applies in the markdown docs, where GitHub builds the file's outline from the same headings.
 
-Heading level is structure, not size. If an `h3` needs to look big, the type section has a role for that. Do not pick the level by how it looks.
+Pick the heading level by where the section sits in the page, never by how big it looks. If an `h3` needs to look big, the type section has a role for that.
 
 **Landmarks on every HTML page:**
 
@@ -129,11 +129,11 @@ Heading level is structure, not size. If an `h3` needs to look big, the type sec
 }
 ```
 
-Do not use `display: none` or `visibility: hidden` to hide the skip link. Both remove it from the tab order, which defeats the point.
+Do not use `display: none` or `visibility: hidden` to hide the skip link. Both remove it from the tab order, so keyboard users can never reach it.
 
 ### 1.7 Alt text policy
 
-The rule that decides every case: **alt text replaces the image for someone who cannot see it.** It is not a caption, not a filename, and not SEO.
+Use this rule for every case: **alt text gives someone who cannot see the image the information the image gives.** Do not use a caption, a filename, or search keywords as alt text.
 
 | Case | Alt |
 | --- | --- |
@@ -141,25 +141,25 @@ The rule that decides every case: **alt text replaces the image for someone who 
 | The same logo sitting next to the club name already in text | `alt=""`. Do not make a screen reader hear the name twice. |
 | The Rail (Part 2) | `aria-hidden="true" focusable="false"` on the inline SVG, or `alt=""` on an image. It is decorative and the pillar name is always in text beside it. |
 | The QR codes in `assets/` (`rcc-acm-qr-code.png`, `rcc-acm-qr-dark.png`) | The URL must appear as real text on the page. The alt says where it goes, which needs brand.md's `[TBD: confirm which URL it encodes]` resolved first; until then `alt="QR code; the link is printed beside it"`. A QR code with no text URL is unusable by half the audience. |
-| A station wiring photo (overhead, hardware only, no people) | Names the station and what is wired: `alt="Overhead photo of station B wired for the T2 cyclone: four LEDs on GP10 to GP13, one button on GP14"`. It doubles as the wiring check. Hands in frame are fine; faces are not, and then the photo falls under event photography below. |
+| A station wiring photo (overhead, hardware only, no people) | Names the station and what is wired: `alt="Overhead photo of station B wired for the T2 cyclone: four LEDs on GP10 to GP13, one button on GP14"`. A facilitator can also use the alt text to check the wiring. Hands in frame are fine; faces are not, and then the photo falls under event photography below. |
 | A card thumbnail that is pure decoration | `alt=""` |
 | A diagram (a state machine, a pin map, the semester map) | Short `alt` naming what it shows, plus the same content in text or a table nearby. A diagram whose information exists nowhere else in text is a defect. Mermaid diagrams in markdown need the same treatment. |
 | A slide screenshot with text on it | The alt carries the slide's text. If it is more than about 150 characters, put it in the page body and use `alt=""`. |
 | Event photography | See 2.2. |
 
-**Alt text for event photography, which is where accessibility and the privacy policy meet.**
+**Alt text for event photography, where the privacy policy also applies.**
 
 The [privacy policy](../../01-governance/privacy-and-public-repo-policy.md) says members who are not officers are never named, and that anything beyond an officer's name and role needs its own consent. That constrains alt text directly:
 
 - **Alt text never names an individual.** Not the speaker, not the members in frame. Write roles and counts: `alt="Two students at a station board in BLCIS A-210, one holding the laminated card"`.
 - **Alt text does not describe race, gender, body, or disability** unless it is the point of the image, which for this club it never is.
-- Describe what is happening, not what is present. "A team pressing the run button on the showcase board while the projector shows the serial report" beats "a group of people in a room".
+- Describe what is happening, not what is present. "A team pressing the run button on the showcase board while the projector shows the serial report" is better than "a group of people in a room".
 - Aim for one sentence. If the photo needs a paragraph, it needs a caption too, and the caption is real text under the image.
-- A caption and an alt should not be identical. If the caption already says it, `alt=""` and let the caption do the work.
+- A caption and an alt should not be identical. If the caption already says it, use `alt=""` and leave the description to the caption.
 
 ### 1.8 The markdown docs, rendered on GitHub
 
-GitHub strips `style` attributes and most inline HTML, so none of the CSS above reaches the repo view. What survives is structure, and structure is where the accessibility lives anyway.
+GitHub strips `style` attributes and most inline HTML, so none of the CSS above reaches the repo view. Only the structure survives (headings, lists, tables, links, alt text), and most of the accessibility rules are about structure.
 
 - One `#` per file, at the top. Never skip a level. `markdownlint` rule **MD001** (heading-increment) catches this.
 - Every image has alt text. `markdownlint` rule **MD045** (no-alt-text).
@@ -177,8 +177,8 @@ Run this before any page goes public, and before the showcase page on 2026-12-10
 
 **Step 1. Automated, in the browser (5 min).**
 
-- **axe DevTools** (Deque, free browser extension). Run "Scan all of my page". Zero critical and zero serious issues is the bar. axe catches roughly a third of WCAG issues, so this is a floor, not a pass.
-- **Lighthouse** accessibility category, built into Chrome DevTools. Same caveat: a 100 score is not a passing grade, it is the absence of the automatable failures.
+- **axe DevTools** (Deque, free browser extension). Run "Scan all of my page". Zero critical and zero serious issues is the bar. axe catches roughly a third of WCAG issues, so a clean axe scan is required but does not mean the page passes.
+- **Lighthouse** accessibility category, built into Chrome DevTools. Same caveat: a score of 100 only means the checks a tool can run found nothing.
 - Optionally **WAVE** (WebAIM extension) as a second opinion; it renders errors in place, which is easier to act on.
 
 **Step 2. Contrast, on the specific pairs (5 min).**
@@ -207,7 +207,7 @@ Run this before any page goes public, and before the showcase page on 2026-12-10
 
 **Step 6. Motion and preferences (1 min).**
 
-- DevTools rendering panel, "Emulate prefers-reduced-motion: reduce". Every transition and animation the motion section defines must stop. Check that nothing becomes unusable because a transition was doing load-bearing work.
+- DevTools rendering panel, "Emulate prefers-reduced-motion: reduce". Every transition and animation the motion section defines must stop. Check that nothing becomes unusable because it depended on a transition.
 - "Emulate CSS forced-colors: active". Text readable, focus ring visible, no content lost.
 
 **Step 7. Screen reader, once per template rather than once per page (10 min).**
@@ -217,7 +217,7 @@ Run this before any page goes public, and before the showcase page on 2026-12-10
 
 **Step 8. CI, so this does not depend on anyone remembering (setup once).**
 
-- `markdownlint-cli2` already runs over every `.md` in CI and in `scripts/check.sh`, with MD001 and MD045 on by default. This protects the repo docs, which is most of what the club actually ships.
+- `markdownlint-cli2` already runs over every `.md` in CI and in `scripts/check.sh`, with MD001 and MD045 on by default. This covers the repo docs, which are most of what the club publishes.
 - `pa11y-ci` or `@axe-core/cli` over the built HTML in the same Action, once a build exists. Fail the PR on serious and critical.
 
 **Step 9. Two things a tool cannot check.** Read the page and confirm: no information is carried by color alone (WCAG 1.4.1), and no instruction refers to a control by shape or position alone ("the round button", "the box on the right").
@@ -230,13 +230,13 @@ Run this before any page goes public, and before the showcase page on 2026-12-10
 
 **Set: Lucide.** Drawn on a 24 grid as strokes. The GDG system's files disagree with each other about the set (its foundations and components name Lucide, its accessibility file names Phosphor); this copy says Lucide everywhere and lists Phosphor as the alternate on the same terms, with Heroicons behind it.
 
-**Stroke: 1.5px, one weight, everywhere.** Two sizes: 24px inside a large control and in prose, 20px inside medium and small controls. Icons on these pages get projected onto the A-210 wall and read on a phone at a lab table. If 1.5px thins out on the projector, the sanctioned change is one system-wide step to 2px, recorded in foundations, never a per-icon adjustment. One weight is also the only rule a rotating officer team can follow correctly.
+**Stroke: 1.5px, one weight, everywhere.** Two sizes: 24px inside a large control and in prose, 20px inside medium and small controls. Icons on these pages get projected onto the A-210 wall and read on a phone at a lab table. If 1.5px thins out on the projector, the sanctioned change is one system-wide step to 2px, recorded in foundations, never a per-icon adjustment. One weight is also the only icon rule simple enough for a changing officer team to follow correctly.
 
-**Why not Material Symbols.** It is openly licensed and technically available, so this is not a legal call. It is that Material Symbols silhouettes are one of the strongest signals of Google authorship in existence, and this club already has two Google-looking files in `assets/` it needs to move away from. Stroke icons on a 24 grid read as not-Material at a glance, and they agree with the diagram stroke ladder, so one drawing logic covers icons and diagrams.
+**Why not Material Symbols.** It is openly licensed and technically available, so this is not a legal call. The reason is that Material Symbols shapes make a page look like Google made it, and this club already has two Google-looking files in `assets/` it needs to stop using. Stroke icons on a 24 grid look different from Material at a glance, and they match the diagram stroke ladder, so icons and diagrams follow the same stroke rules.
 
 **Why not the ACM Diamond.** The standards say not to use it within headlines or text, and an icon slot is text.
 
-**Licensing position, stated plainly:**
+**Licensing:**
 
 - Lucide's license is understood to be ISC. **Unverified in this document.** Read the LICENSE file in the release you vendor and record the result in `brand.md` before committing the dependency.
 - Vendor the SVGs the club actually uses into `assets/icons/`. Do not hotlink a CDN and do not ship a webfont of the whole set.
@@ -247,44 +247,44 @@ Run this before any page goes public, and before the showcase page on 2026-12-10
 **Usage rules:**
 
 - An icon never appears alone as the only label for an action unless it has an `aria-label` and a tooltip.
-- Icons are `currentColor`, always. They inherit the text color and therefore inherit dark mode and forced-colors for free.
-- Meaningful icons need 3:1 against their background. Decorative ones do not, but hold them to 3:1 anyway so they survive a projector and a grayscale print.
-- One icon per row maximum. Icons on both the left and the right of an agenda row is noise.
+- Icons are `currentColor`, always. They inherit the text color and therefore work in dark mode and forced-colors with no extra CSS.
+- Meaningful icons need 3:1 against their background. Decorative ones do not, but hold them to 3:1 anyway so they stay visible on a projector and in a grayscale print.
+- One icon per row maximum. Icons on both the left and the right of an agenda row are too much.
 - Decorative icons are `aria-hidden="true"`; an icon that is the only content of a control carries an accessible name.
 
 ### 2.2 Imagery and photography
 
-The club photographs students at meetings, at lab days, and at the ICPC regional site it hosts. The [privacy policy](../../01-governance/privacy-and-public-repo-policy.md) already forbids photos of people without written consent in the repo, and routes photos of people to the shared drive. This section says how consent is captured and what happens to the rest, so the policy is operable rather than aspirational.
+The club photographs students at meetings, at lab days, and at the ICPC regional site it hosts. The [privacy policy](../../01-governance/privacy-and-public-repo-policy.md) already forbids photos of people without written consent in the repo, and routes photos of people to the shared drive. This section says how consent is captured and what happens to the rest, so officers can actually follow the policy.
 
-**Default shot list, which makes most of the consent problem disappear.** For public pages, shoot so that nobody is identifiable:
+**Default shot list, which avoids most consent questions.** For public pages, shoot so that nobody is identifiable:
 
-- The overhead wiring photo of each station, which the lab's facilitator guide already requires. Hardware only. It is the club's native image and the one no other club has.
+- The overhead wiring photo of each station, which the lab's facilitator guide already requires. Hardware only. No other club takes this kind of photo, so it is the most recognizable image the club has.
 - The room from the back, over shoulders, toward the projector showing the serial report.
 - Hands on a station board, hands on a breadboard, hands holding a laminated card.
 - The whiteboard, the slide, the agenda on the wall, the check-in table, the station box with its lid off.
 - Wide room shots where faces are small and turned away.
 
-These need no consent, go in `assets/` if under 1 MB, and carry the pages perfectly well. Identifiable portraits are the exception, not the default.
+These need no consent, go in `assets/` if under 1 MB, and are enough for every public page. Identifiable portraits are the exception, not the default.
 
 **The ICPC regional site is a special case.** The contest has its own organizers, and the club is a host, not the owner of the room. Confirm with the contest directors listed in [links.md](../links.md) what may be photographed and published before shooting anything there. `[TBD: record what they say in the ICPC playbook.]`
 
-**How consent is captured.** Three layers, all of which produce something the club can point to later:
+**How consent is captured.** Three layers, and each one leaves a record the club can show later:
 
 1. **Door signage.** A printed card at the entrance of BLCIS A-210 on any day photography is happening: what is being photographed, where it may be published (club web pages, the public GitHub repo, Instagram, ASRCC reports), and where to sit or stand to stay out of frame. Signage is notice, not consent. It does not authorize publishing an identifiable face.
 2. **The opt-in slip, which is the actual consent.** A half-page paper slip at check-in, or a separate unticked checkbox on the RSVP form. It must state, in the person's own reading: the club's name, that photos may appear on public web pages and in a public GitHub repository that is permanently archived and indexable, that consent may be withdrawn at any time by messaging an officer, and it must capture a printed name, a signature or a form submission, and a date. It is a separate action from RSVPing. A pre-checked box is not consent, and neither is a Discord post.
-3. **The badge sticker, which is how the photographer knows in the moment.** Anyone who signs the slip gets a colored dot on their name badge. **The photographer's rule: if a face is identifiable and there is no dot, that frame does not leave the drive.** Nobody has to remember names or cross-reference a list mid-event.
+3. **The badge sticker, so the photographer can tell during the event.** Anyone who signs the slip gets a colored dot on their name badge. **The photographer's rule: if a face is identifiable and there is no dot, that frame does not leave the drive.** Nobody has to remember names or check a list during the event.
 
 **Where the paperwork lives.** The signed slips and the form responses go to the club's shared drive, never to the repo, because they carry names and signatures and the policy forbids both. What goes in the repo is what the policy already prescribes for officer names: a line in the semester's `handoff.md` under account and consent records, recording the date and the count. Reference published photos by filename, never by subject name.
 
 **Before publication, check that the college does not already have a media release form.** RCC Student Activities very likely has one, and using the college's existing instrument is better than the club inventing one. Treat this as `[TBD: confirm with Student Activities whether an RCC media release form exists and supersedes the club slip]`. Do not ship the slip until someone asks.
 
-**Minors.** RCC has dual-enrollment high school students. A person under 18 cannot give this consent themselves. Default rule: **if a subject may be under 18, no identifiable photo is published, period**, unless a guardian release has been obtained through the college's process. Do not attempt to assess age visually and do not build a workaround.
+**Minors.** RCC has dual-enrollment high school students. A person under 18 cannot give this consent themselves. Default rule: **if a subject may be under 18, no identifiable photo is published**, unless a guardian release has been obtained through the college's process. Do not attempt to assess age visually and do not build a workaround.
 
 **What happens to photos without consent:**
 
 - They live in a `restricted/` subfolder of the event's drive folder, with sharing set to club officers only.
 - They are used internally: a retro deck shown live, an ASRCC report presented in a meeting. They are never uploaded to the repo, never on a public page, never on Instagram, never in a slide deck that gets a public link.
-- They are deleted at the end of the following semester unless someone has a stated reason to keep them. Retention is a liability, not an asset.
+- They are deleted at the end of the following semester unless someone has a stated reason to keep them. Keeping photos longer only adds risk.
 
 **Before any photo is published:**
 
@@ -293,32 +293,32 @@ These need no consent, go in `assets/` if under 1 MB, and carry the pages perfec
 - Confirm under 1 MB if it is going in the repo, per the policy.
 - Write alt text per 1.7: no names, no demographic description.
 
-**If a photo is published without consent, or consent is withdrawn:** unpublish the page immediately, then follow the removal procedure already written in the privacy policy. Deleting the file in a new commit is not removal; it requires `git filter-repo`, a force push with branch protection temporarily lifted, a GitHub Support cache purge, everyone re-cloning, and a decision-log row that does not describe the data. That procedure is expensive, and its cost is exactly the argument for the badge-dot rule.
+**If a photo is published without consent, or consent is withdrawn:** unpublish the page immediately, then follow the removal procedure already written in the privacy policy. Deleting the file in a new commit is not removal; it requires `git filter-repo`, a force push with branch protection temporarily lifted, a GitHub Support cache purge, everyone re-cloning, and a decision-log row that does not describe the data. That procedure takes a lot of work from several people, which is why the badge-dot rule exists.
 
 **Never used, on any surface:**
 
-- Stock photography of generic people at laptops. It reads as a template and it is a lie about who is in the room.
-- AI-generated images of people. A chapter that teaches evidence and engineering does not fabricate its own audience.
-- ACM's stock "community" and "innovation" photography from the standards deck. It is ACM's, and it would make the page read as ACM's.
-- Any Google product screenshot, Pixel photography treatment, or Google marketing imagery. That is the imitation line the two hackathon files already crossed.
+- Stock photography of generic people at laptops. It looks like a template, and it shows people who are not in the club.
+- AI-generated images of people. The club does not make up pictures of its own members.
+- ACM's stock "community" and "innovation" photography from the standards deck. It belongs to ACM, and it would make the page look like ACM's.
+- Any Google product screenshot, Pixel photography treatment, or Google marketing imagery. The two hackathon files already copy Google's look this way.
 
 ### 2.3 Illustration, with no illustrator on the team
 
-The club has no illustrator and will not have one next semester either. So the answer is not "keep it simple", it is **no freehand illustration exists in this system.** Three sanctioned image types, all of which are made by editing text.
+The club has no illustrator and will not have one next semester either. So **this system has no freehand illustration.** Three sanctioned image types, all of which are made by editing text.
 
-**1. Type as the image.** The default hero for every event page, meeting page, and social card: the title set at the type section's display role on a flat surface role, with the Rail (2.4) at the inline-start edge, and the date and room in the label role. No picture at all. This is the highest-quality output the club can reliably produce, because it is just the type system doing its job.
+**1. Type as the image.** The default hero for every event page, meeting page, and social card: the title set at the type section's display role on a flat surface role, with the Rail (2.4) at the inline-start edge, and the date and room in the label role. No picture at all. This is the best-looking result the club can make every time, because it uses only the type settings in [foundations.md](foundations.md) §3.
 
-**2. Diagrams, not drawings.** Mermaid, in fenced code blocks. GitHub renders it natively in markdown, and the standalone HTML build can render it too. Use it for the semester map, a station's state machine, the pin map, the showcase run of show, the officer handoff chain. It is text, so it diffs in a PR, and it survives an officer transition. Every diagram gets alt text and a text equivalent per 1.7.
+**2. Diagrams, not drawings.** Mermaid, in fenced code blocks. GitHub renders it natively in markdown, and the standalone HTML build can render it too. Use it for the semester map, a station's state machine, the pin map, the showcase run of show, the officer handoff chain. Mermaid is text, so a PR shows each change line by line, and the next officer team can edit it without the person who made it. Every diagram gets alt text and a text equivalent per 1.7.
 
 **3. The Rail field.** A low-contrast background made from the device (2.4): vertical hairlines in `--acm-outline-variant` at the grid's column positions, exactly one of them carrying the page's Break. It is a `repeating-linear-gradient` plus one Rail, nobody draws anything, and it is used only behind a hero or on the showcase page. Judgment call: look at it on the A-210 projector before the showcase, because a lecture-hall projector may flatten the hairlines to nothing.
 
-**Template contract.** Ship one SVG template per export size in `assets/templates/`, one per row of the size table in [assets.md](assets.md), which owns every dimension and safe zone. Each template contains text nodes with placeholder strings, the Rail, and nothing else. An officer opens it in a text editor, changes the strings, and exports. No drawing tool, no design decisions, no way to break the grid. This is the same discipline that makes the club's markdown docs survivable: the author picks meaning, the system picks measurements.
+**Template contract.** Ship one SVG template per export size in `assets/templates/`, one per row of the size table in [assets.md](assets.md), which owns every dimension and safe zone. Each template contains text nodes with placeholder strings, the Rail, and nothing else. An officer opens it in a text editor, changes the strings, and exports. This needs no drawing tool and no design decisions, and the officer cannot break the grid. The markdown docs work the same way: the author writes the words, and the system sets the sizes and spacing.
 
-**Not used:** clip art, 3D blob renders, gradient meshes, watercolor splashes, hand-drawn doodle borders, isometric illustration packs, and anything with the soft rounded optimistic character of Google's AI illustration style. Watercolor is named on purpose: it is what the two hackathon files use.
+**Not used:** clip art, 3D blob renders, gradient meshes, watercolor splashes, hand-drawn doodle borders, isometric illustration packs, and anything with the soft, rounded, cheerful look of Google's AI illustrations. Watercolor is named on purpose: it is what the two hackathon files use.
 
 ### 2.4 The signature device: the Rail
 
-This is the piece that makes the pages the club's own rather than a de-branded template. It is one geometric construction, it costs nothing to produce, and it does actual work in the information architecture instead of just sitting in a corner.
+The Rail is an orange bar on the inline-start (left) edge of a block, and it is what makes a page recognizable as the club's. It is one shape, it costs nothing to make, and a gap in it (the Break) shows which pillar the page belongs to.
 
 **Where it comes from.** The website's own share card (`src/app/opengraph-image.tsx`, read 2026-09-01) is a 1200 x 630 card with a 24px `#ff4d00` left border on a near-black ground, the club name in white, and the four pillars beneath. That left border is the Rail. The system adopts it rather than inventing something new, and adopting it as the system's device is a judgment call that needs a decision-log entry.
 
@@ -372,31 +372,31 @@ This is the piece that makes the pages the club's own rather than a de-branded t
 
 Verify the gap edges in a browser at 1x and at 2x device pixel ratio before shipping; a 12px gap on a percentage position can land on a half pixel.
 
-Someone who has read three meeting pages will recognize which pillar a page belongs to before reading the heading. Nothing else in the system does that, and it costs one line of CSS per page. Which pillar each meeting type maps to is an open item in [checklist.md](checklist.md), not a decision this file makes.
+After reading three meeting pages, a member can tell a page's pillar from the Break before reading the heading. No other part of the system shows the pillar this way, and it takes one line of CSS per page. Which pillar each meeting type maps to is an open item in [checklist.md](checklist.md), not a decision this file makes.
 
-**Why this is derived from nothing ACM or Google owns.**
+**Why the Rail does not copy anything ACM or Google owns.**
 
 - It is not a diamond, a rotated square, or a gradient, so it cannot be mistaken for the ACM Diamond, and it never quotes that geometry.
 - It is not a spark or star of any point count, not a robot head, not a dot, not a chevron, not a bracket, and not the GDG chapter's stepped stroke.
-- It is **monochrome by construction** and uses `currentColor`. It has no color meaning at all, so it can never read as the blue/red/yellow/green sequence, which is the mistake the hackathon files already made.
+- It is **always one color** and uses `currentColor`. It has no color meaning at all, so it can never look like the blue/red/yellow/green sequence, which is the mistake the hackathon files already made.
 - It uses no gradient. The website's orange gradient stays on the website.
 - It is derived from the club's own share card, which the club already publishes.
 
 **Why it is worth having.**
 
-- **One variable does real work.** `--acm-rail-break` turns one drawing into a semester's worth of page-specific structure, which is the one transferable idea from event design systems: parameterize a single construction instead of drawing new assets.
-- **It survives the whole range.** A 4px bar on a 20px chip to a 0.25 in bar on a poster, because the width is set per medium and nothing else changes.
-- **It survives every theme.** `currentColor` means light, dark, forced-colors, and a grayscale print all work without a second asset. Primary on the surface measures 6.13:1 in light and 10.69:1 in dark.
-- **A student can build it.** It is one pseudo-element and one gradient. Nobody has to open a drawing tool, which is the constraint that actually determines whether a design system survives an officer transition.
-- **It is semantically honest.** A chapter whose pillars are four verbs gets a mark that is a track with one stop on it.
+- **One variable marks every page's pillar.** With `--acm-rail-break`, one drawing marks the pillar of every page in the semester. The idea comes from event design systems: change one setting on a single shape instead of drawing new assets.
+- **It works at every size.** It goes from a 4px bar on a 20px chip to a 0.25 in bar on a poster, because the width is set per medium and nothing else changes.
+- **It works in every theme.** `currentColor` means light, dark, forced-colors, and a grayscale print all work without a second asset. Primary on the surface measures 6.13:1 in light and 10.69:1 in dark.
+- **A student can build it.** It is one pseudo-element and one gradient. Nobody has to open a drawing tool, and that matters because the next officer team has to keep using the Rail without a designer.
+- **It matches the pillars.** The four pillars (Build, Compete, Learn, Connect) map to four Break positions on one bar.
 
-**Rules of use, and these matter more than the geometry:**
+**Rules of use (these matter more than the exact sizes):**
 
 - **The Rail is never the club's logo and never becomes the favicon on its own.** It is a page device. The chapter logo and the favicon are `[TBD]` in brand.md. Where the Rail and an ACM mark both appear, they are separated by at least the height of the mark, and they never sit in a shared box, a shared color field, or any arrangement that could read as one combined mark.
 - **Once per screen.** One Rail on the hero or the page's first block. Callouts carry their own short Rail as their left edge, and that is the only repetition allowed. Never both on the same block.
 - **It never carries meaning alone.** The pillar name is always in text next to it. Shape alone cannot convey information (WCAG 1.4.1), and a break at 20% versus 40% is invisible to a lot of people.
 - **It is decorative in the accessibility tree.** `aria-hidden="true" focusable="false"` on any inline SVG instance; the CSS pseudo-element is invisible to assistive tech already.
-- **Contrast:** decorative, so no minimum applies, but hold it to 3:1 against its surface anyway. It should survive a projector in a bright lab and a photocopied flyer.
+- **Contrast:** decorative, so no minimum applies, but hold it to 3:1 against its surface anyway, so it stays visible on a projector in a bright lab and on a photocopied flyer.
 - **Favicon:** `[TBD]`. It follows the chapter logo decision, not this device.
 - **Merchandise:** the Rail alone on a shirt or sticker is fine, because it is the club's own mark. The ACM logo on merchandise follows ACM's chapter policies. Do not put them on the same object.
 

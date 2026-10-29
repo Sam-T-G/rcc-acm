@@ -20,16 +20,16 @@ This is the only table that differs between the ACM and GDG copies of this file.
 | Lead hue | Orange, `--acm-primary` and the two sanctioned fills ([foundations.md §2](foundations.md)) |
 | Tokens | [tokens.css](tokens.css) |
 | Instagram | <https://www.instagram.com/rcc.acm/> |
-| Event platform | None. Discord is the system of record; the ACM chapter page lists events when ACM expects it ([communications.md](../../02-operations/communications.md)) |
+| Event platform | None. Discord is where the club officially posts events; the ACM chapter page lists events when ACM expects it ([communications.md](../../02-operations/communications.md)) |
 | Posting cadence | [communications.md](../../02-operations/communications.md): announcement at T-3 weeks, stories at T-1 week and T-1 day, recap at T+1 day |
 
 ## 10.2 The master file rule
 
-One master per event, and every other size is exported from it. The master is the Instagram feed image at 1080 x 1440 (3:4), because it is the most constrained surface the club publishes to: the smallest type, the tightest safe zone, and a grid thumbnail that shows a third of a phone screen. Anything that reads there reads everywhere.
+One master per event, and every other size is exported from it. The master is the Instagram feed image at 1080 x 1440 (3:4), because it is the most constrained surface the club publishes to: the smallest type, the tightest safe zone, and a grid thumbnail that shows a third of a phone screen. If the text is readable there, it is readable on every other size.
 
-The master is built from the type system, not drawn. Three sanctioned image types exist ([accessibility.md §2.3](accessibility.md)): type as the image, a diagram, and the Rail field. Event assets are type as the image. No photo sits behind text, ever, because the contrast of text over a photo cannot be measured ([accessibility.md §1.2](accessibility.md)).
+Build the master from the type roles and tokens instead of drawing it by hand. Three sanctioned image types exist ([accessibility.md §2.3](accessibility.md)): type as the image, a diagram, and the Rail field. Event assets are type as the image. No photo sits behind text, ever, because the contrast of text over a photo cannot be measured ([accessibility.md §1.2](accessibility.md)).
 
-**Template contract.** One SVG template per export size in `assets/templates/`, each holding text nodes with placeholder strings, the Rail, and nothing else. An officer changes the strings and exports. `[TBD: the templates do not exist yet; the sizes below are their spec.]` Until they exist, build the master in whatever tool is at hand at exactly the pixel sizes here.
+**SVG templates.** One SVG template per export size in `assets/templates/`, each holding text nodes with placeholder strings, the Rail, and nothing else. An officer changes the strings and exports. `[TBD: the templates do not exist yet; the sizes below are their spec.]` Until they exist, build the master in whatever tool is at hand at exactly the pixel sizes here.
 
 ## 10.3 Instagram
 
@@ -49,13 +49,13 @@ Checked 2026-09-01. Instagram's own help pages could not be fetched from tooling
 | Reel cover | 1080 x 1920 | 9:16 | Grid shows the central 1080 x 1440 | Title and date inside that central 3:4 |
 | Profile picture | 320 x 320 | 1:1, shown as a circle | Circle crop everywhere | The mark inside a centered circle 256 px across |
 
-**The story is the master plus two bands.** Center the 1080 x 1440 master on a 1080 x 1920 field of `--acm-surface`, 240 px above and 240 px below. The master's own margins keep every glyph at least 312 px from the top and bottom edges, inside the 250 px story safe zone with room to spare. One export, two surfaces, no relayout.
+**The story is the master plus two bands.** Center the 1080 x 1440 master on a 1080 x 1920 field of `--acm-surface`, 240 px above and 240 px below. The master's own margins keep every glyph at least 312 px from the top and bottom edges, inside the 250 px story safe zone with room to spare. You export the master once and use it for both the feed post and the story without redoing the layout.
 
 **The profile picture.** There is no chapter logo file yet. Until one comes from ACM's chapter logo matrix, the avatar is type only: "ACM @ RCC" set in the brand face on `--acm-surface`, inside the 256 px circle, with no Rail, because the Rail is a page device and never a logo ([accessibility.md §2.4](accessibility.md)). `[TBD: replace with the ACM chapter lockup once brand.md records it.]` The platform's circular crop is not an alteration the club made, but whatever mark sits there must fit inside the circle whole.
 
 ### Type minimums on the master
 
-Derived, not measured on a device yet. A 1080 px image displays across roughly 390 CSS px on a current phone, a 2.77 times reduction. The system's `body-md` role is 15 CSS px, and 15 x 2.77 is 41.5, so 44 px (the next step on the 4 px grid) is the floor for any text on a feed image. The grid thumbnail is a third of the screen, about 129 CSS px for the full 1080, an 8.4 times reduction, so a 44 px line is 5 CSS px there and gone. Only the two largest things survive the thumbnail.
+Derived, not measured on a device yet. A 1080 px image displays across roughly 390 CSS px on a current phone, a 2.77 times reduction. The system's `body-md` role is 15 CSS px, and 15 x 2.77 is 41.5, so 44 px (the next step on the 4 px grid) is the floor for any text on a feed image. The grid thumbnail is a third of the screen, about 129 CSS px for the full 1080, an 8.4 times reduction, so a 44 px line is 5 CSS px there and too small to read. Only the title and the date are readable in the thumbnail.
 
 | Element | Size on the 1080 master | Role it maps to | Survives the thumbnail |
 |---|---|---|---|
@@ -71,15 +71,15 @@ Sizes are a judgment call to be checked on a real phone and marked here when the
 Margins 72 px on every side (one fifteenth of the width), giving a 936 x 1296 content box. The Rail runs down the left edge of the content box at 24 px wide (the same 2% of width the website's share card uses), full content height, with the break at the page's pillar position when the event belongs to one. Top to bottom, inset from the Rail by 48 px:
 
 1. Ledger line: the meeting type (regular, lab day, showcase), or "Fall 2026", or the pillar name. `label-sm` at 44 px, uppercase, `--acm-on-surface-variant`.
-2. Title. `display-lg`, `--acm-on-surface`, capped at three lines. If it needs four, the title is wrong.
+2. Title. `display-lg`, `--acm-on-surface`, capped at three lines. If it needs four, shorten the title.
 3. Date and time, then the room, then one line of who it is for or what to bring. A lab day names the four stations and their tiers here.
 4. Bottom band: the meeting line at 44 px, and the ASRCC line when it applies.
 
-Ground is `--acm-surface`. One of the two sanctioned fills may run as a band behind the title with ink text on it. Never the Google four ([bright-lines.md §1.3](bright-lines.md)). A QR code never goes on an Instagram image: the reader is holding the phone the code would be scanned with. The link goes in the bio.
+Ground is `--acm-surface`. One of the two sanctioned fills may run as a band behind the title with ink text on it. Never use the Google four (Google's blue, red, yellow, and green; [bright-lines.md §1.3](bright-lines.md)). A QR code never goes on an Instagram image: the reader is holding the phone the code would be scanned with. The link goes in the bio.
 
 ### The caption
 
-1. First sentence: what, when, where. The feed shows roughly the first 125 characters before "more" (a widely stated figure, not verified this session), and the fold lands mid-sentence if the facts come second.
+1. First sentence: what, when, where. The feed shows roughly the first 125 characters before "more" (a widely stated figure, not verified this session), so if the facts come second, they get cut off behind "more".
 2. Who should come, what to bring, RSVP, each on its own line, from the Facts table.
 3. The club line: "ACM @ RCC meets Thursdays, 1:30 to 2:30 PM in BLCIS A-210. Everyone is welcome."
 4. The ASRCC line when ASRCC paid.
@@ -89,7 +89,7 @@ Custom alt text goes in the post's advanced settings and says what the image say
 
 ### Post types per event
 
-From the cadence in [communications.md](../../02-operations/communications.md). Each is a slice of the same master.
+From the cadence in [communications.md](../../02-operations/communications.md). Each one reuses the same master.
 
 | When | Surface | What it carries |
 |---|---|---|
@@ -139,7 +139,7 @@ Export at 1920 x 1080. Margins 96 px. A-210 projects onto a wall in daylight, wh
 
 **Stage spacing** comes from nine steps, `--st-1` to `--st-9`: 8, 16, 24, 32, 40, 48, 64, 96, 144. List rhythm is one rule for beats, the Board, and lab steps: 32 between plain items, 24 between items with a detail line.
 
-Judgment call, to be tested on the projector and recorded here. `[TBD: A-210 projector native resolution.]` One idea per slide. The Rail once, on the title slide. At most one callout per slide. A lab day shows no slides after the eight-minute intro; the station cards and the serial monitor on the projector are the material.
+Judgment call, to be tested on the projector and recorded here. `[TBD: A-210 projector native resolution.]` One idea per slide. The Rail once, on the title slide. At most one callout per slide. A lab day shows no slides after the eight-minute intro; students work from the station cards and the serial monitor on the projector.
 
 ## 10.6 Print
 
@@ -184,7 +184,7 @@ Any failure in the first five stops the post.
 4. Every line of text is 44 px or larger on the 1080 master, inside the safe zone for its surface, and the title and the date are the two largest things.
 5. Custom alt text is set and names the date and room.
 6. Exported at exactly the pixel size in the table, sRGB, JPEG at quality 90 for a photo or PNG for a flat graphic, under 1 MB if it is going in the repo.
-7. Contrast of every text pair measured against the tokens, not eyeballed ([accessibility.md §1.9](accessibility.md) step 2). ACM Blue appears nowhere; the Google four appear nowhere.
+7. Contrast of every text pair measured against the tokens, not eyeballed ([accessibility.md §1.9](accessibility.md) step 2). Neither ACM Blue nor the Google four appear anywhere.
 8. One other officer looked at it (the announcement template's rule).
 9. The final caption and the export are saved in the event folder.
 

@@ -1,8 +1,8 @@
 # Inventory and audit
 
-Before a lab is written for good, check every part it uses against what the club owns right now. A lab that needs a part we don't have, or one more than we have, fails in the room.
+Before a lab is final, check every part it uses against what the club owns right now. A lab that needs a part we don't have, or one more than we have, won't work at the tables.
 
-The club's current stock lives in the semester folder, because it changes: `semesters/<term>/lab-inventory.md`. This page is the process.
+The club's current stock lives in the semester folder, because it changes: `semesters/<term>/lab-inventory.md`. This page covers how to check a lab against it.
 
 ## The audit, step by step
 

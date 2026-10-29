@@ -79,7 +79,7 @@ Precedence when two lines disagree: ACM's Visual Identity Standards and chapter 
 
 ## 2. NEVER
 
-### Chrome that makes the deck read as ACM or as Google
+### Colors, marks, and styling that make the deck look like official ACM or Google material
 
 1. ACM Blue, PANTONE Process Blue C, `#0182ac`, anywhere: "ACM Blue appears nowhere except inside the unaltered ACM logo" (bright-lines.md §1.4 line 3; §1.3 Color, Accent; components.md §7.1; checklist.md Brand 3; assets.md §10.9 item 7; brand.md Colors; foundations.md §2.6 as cited). "A blue that is not `--acm-secondary` on a club page is a defect" (components.md §7.1).
 2. A gradient of any kind: "The docs system ships no gradient" (bright-lines.md §1.3 Gradients); the website's `.text-gradient-orange` "in docs, slides, or print" because "gradient text has no single background pair to measure, so it fails contrast by definition, and a banded headline on the A-210 projector reads as a defect" (bright-lines.md §1.3 Gradients); the ACM Diamond's gradient (bright-lines.md §1.3, §1.5); gradient meshes (accessibility.md §2.3 Not used). Reviewer note: the Rail's own `::before` is drawn with a hard-stop `linear-gradient` and the Rail field with a `repeating-linear-gradient`; both are the system's sanctioned construction of a solid bar and hairlines, not a visible gradient (accessibility.md §2.4, §2.3).
@@ -298,7 +298,7 @@ The assigned files set the shape (bright-lines.md §1.3 Motion, Reduced motion; 
 
 ## 9. Things the files leave [TBD] that touch slides
 
-Listed so nobody invents them.
+Listed here so no one makes up a value for them.
 
 1. `[TBD: A-210 projector native resolution.]` (assets.md §10.5). The slide type minimums are a judgment call "to be tested on the projector and recorded here" (assets.md §10.5).
 2. Chapter logo: `[TBD]`. "There is no chapter logo file in `assets/` yet"; "Until then, no artifact carries a logo" (brand.md Files in assets/; bright-lines.md §1.5; assets.md §10.1; checklist.md open item 2). The ACM matrix page `identitystandards.acm.org/matrix3.html` was unreachable from tooling on 2026-09-01 (bright-lines.md §1.5).

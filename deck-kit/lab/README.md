@@ -58,7 +58,7 @@ All are 760 × 560 stage px, with labels at 32 px.
 - Put code inside a picture in `<g data-code="">`. Never use `class="code"` inside an SVG: deck.js wraps `.code` as a block, and that breaks the picture.
 - Add the new parts to `bb()` by hole, never by eye, so the picture always matches the text.
 
-## Gotchas this kit already handles
+## Problems the kit already handles
 
 - deck.js splits text into word spans for animation, so a CSS grid row needs its text wrapped in one `<span>`. `do_slide` does this.
 - A clock needs a `.clock__hint`; deck.js writes "T to start" and "T to pause" into it.

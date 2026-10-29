@@ -1,8 +1,8 @@
 # Playbooks
 
-Runbooks for the things ACM @ RCC does more than once. Every playbook has the same shape: purpose, when it runs, who owns it, a T-minus checklist, a day-of run sheet, and what to do after. A "What went wrong before" section appears only when a real retro exists for that event type.
+Step-by-step guides for the events ACM @ RCC runs more than once. Every playbook has the same shape: purpose, when it runs, who owns it, a T-minus checklist, a day-of run sheet, and what to do after. A "What went wrong before" section appears only when a real retro exists for that event type.
 
-Playbooks are evergreen. Dates, names, and budgets for a specific run live in `semesters/<YYYY-term>/events/`, never here.
+Playbooks hold the steps that repeat every time. Dates, names, and budgets for a specific run live in `semesters/<YYYY-term>/events/`, never here.
 
 ## Index
 
@@ -22,7 +22,7 @@ Playbooks are evergreen. Dates, names, and budgets for a specific run live in `s
 1. Create the event folder with `scripts/new-event.sh` (arguments are documented in [semesters/README.md](../../semesters/README.md)). You get `plan.md`, `run-sheet.md`, and `retro.md` from [templates/](../../templates/).
 2. Copy the playbook's T-minus checklist into `plan.md` and the run sheet into `run-sheet.md`. Fill in real dates.
 3. Work the checklist. Anything that needs money or a go/no-go call gets a line in the [decision log](../01-governance/decision-log.md).
-4. After the event, fill in `retro.md`. If the playbook was wrong or missing a step, open a PR against the playbook. That is how these files stay true.
+4. After the event, fill in `retro.md`. If the playbook was wrong or missing a step, open a PR against the playbook so the next owner gets the fix.
 
 ## Operations docs every playbook depends on
 
@@ -41,4 +41,4 @@ Playbooks are evergreen. Dates, names, and budgets for a specific run live in `s
 - One file per event type, kebab-case name, in this folder.
 - Use the same headings: Purpose, When, Owner, T-minus checklist, Day-of run sheet, After. Add "What went wrong before" only with a link to a real retro in a semester folder.
 - Add a row to the index table above.
-- Keep it evergreen (maintenance rule 1 in [maintenance-rules.md](../01-governance/maintenance-rules.md)). Link into a semester folder for dated examples.
+- Keep dates, names, and budgets out of it (maintenance rule 1 in [maintenance-rules.md](../01-governance/maintenance-rules.md)). Link into a semester folder for dated examples.

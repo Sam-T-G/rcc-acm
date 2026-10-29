@@ -31,4 +31,4 @@ Link:
 
 ## Notes for the reviewer
 
-<!-- Anything you are unsure about. A reviewer who knows where you hesitated reviews better. -->
+<!-- Anything you are unsure about. Tell the reviewer where you hesitated so they check those spots closely. -->
