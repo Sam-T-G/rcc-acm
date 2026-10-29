@@ -17,9 +17,12 @@ Remove a line once it is answered and note the answer in that day's entry.
 - `ff84216`, `b128163`, `4209eaa`: optional Playwright browser checks (`npm run test:browser`, deck-kit/README.md "Checking it"). Every meeting deck opens in Chrome and desktop Safari and must move on a Right press with no script error or missing repo file. Built pages in `site/decks/` also open on an iPhone-sized Safari with no sideways scroll. 21 of 21 passed twice. The deck templates now list their packages in a `# /// script` block, so `uv run` sets up the environment; their output is byte-identical to the old venv run, and the two-track build passes check.mjs 164 of 164. check.mjs and every deck are unchanged. `scripts/check.sh` on a clean tree gives the same result before and after (one markdownlint failure that was already there; the 5,688 "personal info" hits on a local run come from gitignored `scratch/` ICPC numbers).
 - 10-29 audit (uncommitted until Sam's go): deck copy fixes (185 of 185), the officer guide trimmed of the old projected walkthrough, and fixes to the ICPC and gate pages (one-computer team line, gate paste-over-template step and a Stuck entry, debounce in `gate_stretch`, a button-as-car path for R4 tables, `gate_c2_count` prints only on change). Page sources are in gitignored `scratch/`.
 
+- Published at Sam's go (~12:00): deck and guide committed (1629584), deck on gh-pages, both pages pushed by hand (8549c6c). Live matches the builds byte for byte; Playwright live pass 8 of 8; every page link returns 200.
+- `03a75c6`: visuals on the 10-29 deck's words-only slides, published (gh-pages a0bf045). Slide 4 is a two-tile grid (screenshot of the ICPC page; a real parking gate with the arm down, CC BY 4.0). Slide 7 has the kit's HC-SR04 with its pin labels (CC BY-SA 4.0). Slide 9 has the labkit breadboard with the power module back on at row 1. check.mjs 189 of 189; all three pictures render on the live deck in Chrome and Safari. The Openverse API timed out today, so `fetch-image.mjs search` hangs; `get "commons:<File>"` still works.
+
 **Decided:** Sam: a visual on every slide where possible; Playwright and uv in all three club repos.
 
-**Next:** Sam's go to republish the 10-29 deck and both pages, and to commit the deck and guide. The real-kit dry run (`sensor_test`, `keypad_test`) still hasn't been done.
+**Next:** The real-kit dry run (`sensor_test`, `keypad_test`) still hasn't been done.
 
 
 ## 2026-10-08 · Sam (via Claude Code)
