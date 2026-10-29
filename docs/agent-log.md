@@ -9,6 +9,18 @@ Remove a line once it is answered and note the answer in that day's entry.
 - The microcontroller lab kit order (2026-09-20, see `semesters/2026-fall/budget.md`) has no Pico 2 W, but the station cards assume one. Change the cards or the hardware?
 
 <!-- newest entry below: add "## YYYY-MM-DD · Name (via Claude Code)" here and end it with a blank line -->
+## 2026-10-29 · Sam (via Claude Code)
+
+**Changed:**
+
+- `e44df00`: new deck rule, a visual on every slide where possible (deck-kit/CLAUDE.md, README, decision log). A real internet photo comes first. The cover, `giant` and `orange` statements, hero slides, and work clocks are exempt. The same rule went into rcc-gdg.
+- `ff84216`, `b128163`, `4209eaa`: optional Playwright browser checks (`npm run test:browser`, deck-kit/README.md "Checking it"). Every meeting deck opens in Chrome and desktop Safari and must move on a Right press with no script error or missing repo file. Built pages in `site/decks/` also open on an iPhone-sized Safari with no sideways scroll. 21 of 21 passed twice. The deck templates now list their packages in a `# /// script` block, so `uv run` sets up the environment; their output is byte-identical to the old venv run, and the two-track build passes check.mjs 164 of 164. check.mjs and every deck are unchanged. `scripts/check.sh` on a clean tree gives the same result before and after (one markdownlint failure that was already there; the 5,688 "personal info" hits on a local run come from gitignored `scratch/` ICPC numbers).
+- 10-29 audit (uncommitted until Sam's go): deck copy fixes (185 of 185), the officer guide trimmed of the old projected walkthrough, and fixes to the ICPC and gate pages (one-computer team line, gate paste-over-template step and a Stuck entry, debounce in `gate_stretch`, a button-as-car path for R4 tables, `gate_c2_count` prints only on change). Page sources are in gitignored `scratch/`.
+
+**Decided:** Sam: a visual on every slide where possible; Playwright and uv in all three club repos.
+
+**Next:** Sam's go to republish the 10-29 deck and both pages, and to commit the deck and guide. The real-kit dry run (`sensor_test`, `keypad_test`) still hasn't been done.
+
 
 ## 2026-10-08 · Sam (via Claude Code)
 
