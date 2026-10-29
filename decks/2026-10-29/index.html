@@ -1725,7 +1725,9 @@ document.addEventListener('DOMContentLoaded', function () {
      runsheet   every slide in one printable table
      mirror     a preview frame inside the other views: no keys, no pointer
    The deck window stays the source of truth; every view only sends presses and
-   draws what the deck reports. */
+   draws what the deck reports. With review.js loaded, every view also names who
+   covers the slide and cues the handoff when the next slide changes speaker, and the
+   presenter view and remote list the slide's open review notes. */
 (function () {
   'use strict';
   var deck = document.querySelector('.deck');
@@ -1814,13 +1816,32 @@ document.addEventListener('DOMContentLoaded', function () {
     var V = visible(st.room), pos = V.indexOf(st.i);
     var where = 'Slide ' + (pos + 1) + ' of ' + V.length + (nb ? ' · press ' + st.b + ' of ' + nb : '');
     var upNext = !nx ? 'End of the deck' : nx.press ? 'Next press: ' + (beatText(s, st.b) || 'the next step') : 'Next slide: ' + labelOf(slides[nx.i]);
-    return { next: nx, notes: n, where: where, upNext: upNext, due: st.b >= nb, label: labelOf(s) };
+    var who = whoOf(st.i), nextWho = nx && !nx.press ? whoOf(nx.i) : '';
+    var hand = nextWho && nextWho !== who ? nextWho : '';
+    if (hand) upNext += ' · ' + hand + ' takes over';
+    return { next: nx, notes: n, where: where, upNext: upNext, due: st.b >= nb, label: labelOf(s), who: who, hand: hand };
   }
   function bridgeHtml(c) {
-    if (!c.notes.bridge) return '<p class="pv-muted">No bridge line on this slide.</p>';
-    return '<p class="pv-bridge__text">' + c.notes.bridge + '</p>';
+    var hand = c.hand ? '<p class="pv-hand">Hand to ' + whoHtml(c.hand) + '</p>' : '';
+    if (!c.notes.bridge) return hand || '<p class="pv-muted">No bridge line on this slide.</p>';
+    return '<p class="pv-bridge__text">' + c.notes.bridge + '</p>' + hand;
   }
   function whenReady(fn) { if (api()) fn(); else setTimeout(function () { whenReady(fn); }, 50); }
+  // Who covers a slide (review.js, or data-owner written at publish time), as a chip.
+  function whoOf(i) { var r = window.__review; return r ? r.ownerOf(i) : (slides[i] && slides[i].getAttribute('data-owner')) || ''; }
+  function whoHtml(name) { var r = window.__review; return !name ? '' : r ? r.chip(name, 'is-small') : '<span class="pv-who">' + esc(name) + '</span>'; }
+  function onReview(fn) { window.addEventListener('deck-review', fn); }
+  // Open review notes on a slide (review.js, once signed in). Only the presenter's own views show them.
+  function reviewHtml(i) {
+    var r = window.__review, t = r && r.threadsOf ? r.threadsOf(i) : [];
+    if (!t.length) return '';
+    return '<p class="pv-label">Open review notes · ' + t.length + '</p>' + t.slice(0, 6).map(function (v) {
+      var who = v.author && v.author.name ? whoHtml(v.author.name + (v.author.via === 'agent' ? '’s agent' : '')) + ' ' : '';
+      var quote = v.target && v.target.text ? '<span class="pv-review__quote">“' + esc(v.target.text.slice(0, 80)) + '”</span> ' : '';
+      var body = v.body.length > 220 ? v.body.slice(0, 220) + '…' : v.body;
+      return '<p class="pv-review__item">' + who + quote + esc(body) + (v.suggestion ? ' <span class="pv-muted">(suggests new text)</span>' : '') + '</p>';
+    }).join('') + (t.length > 6 ? '<p class="pv-muted">and ' + (t.length - 6) + ' more on the board</p>' : '');
+  }
 
   /* ---------- The relay --------------------------------------------------- */
   function relayPost(m, fail, k) {
@@ -2014,12 +2035,14 @@ document.addEventListener('DOMContentLoaded', function () {
       '<button type="button" class="pv-btn" data-act="phone">Remote</button><a class="pv-btn" target="_blank" rel="noopener">Run sheet</a></header>' +
       '<section class="pv__now"><p class="pv-label">Now</p><div class="pv__slot"></div><div class="pv__notes"></div></section>' +
       '<section class="pv__next"><p class="pv-label pv__upnext">Next</p><div class="pv__slot"></div>' +
-      '<div class="pv-bridge"><p class="pv-label">Bridge</p><div class="pv-bridge__body"></div></div><div class="pv__qr" hidden></div></section>' +
+      '<div class="pv-bridge"><p class="pv-label">Bridge</p><div class="pv-bridge__body"></div></div><div class="pv-review"></div><div class="pv__qr" hidden></div></section>' +
       '<p class="pv__status" role="status">Waiting for the deck. Open this with S from the deck window.</p>';
     var q = function (sel) { return one(sel, pv); };
     q('.pv__deck').textContent = deck.getAttribute('data-ledger') || document.title;
     q('a.pv-btn').href = base() + '?view=runsheet';
-    var show = frames(all('.pv__slot', pv), 2), st = null, t0 = Date.now(), lastRemotes = 0;
+    var show = frames(all('.pv__slot', pv), 2), st = null, t0 = Date.now(), lastRemotes = 0, lastD = null;
+    // A speaker change made in review redraws the labels.
+    onReview(function () { if (lastD) window.postMessage(lastD, '*'); });
     function hello() { toHost(msg('hello')); }
     hello(); setInterval(hello, 3000);                  // re-register if the deck window reloads
     setInterval(function () {
@@ -2031,13 +2054,14 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('message', function (e) {
       var d = e.data; if (!d || d.gdgDeck !== DECK_ID) return;
       if (d.t === 'state') {
-        st = { i: d.i, b: d.b, room: !!d.room };
+        st = { i: d.i, b: d.b, room: !!d.room }; lastD = d;
         var c = cue(st);
         q('.pv__status').textContent = d.remotes > 1 ? d.remotes + ' remotes connected' : d.remotes ? 'Remote connected' : '';
-        q('.pv__where').textContent = c.where + ' · ' + c.label;
+        q('.pv__where').innerHTML = esc(c.where + ' · ' + c.label) + (c.who ? ' ' + whoHtml(c.who) : '');
         var clk = q('.pv__clock'); clk.hidden = !d.clock; clk.textContent = d.clock ? 'Clock ' + d.clock : '';
         q('.pv__upnext').textContent = c.upNext;
         q('.pv__notes').innerHTML = c.notes.html || '<p class="pv-muted">No notes on this slide.</p>';
+        q('.pv-review').innerHTML = reviewHtml(st.i);
         q('.pv-bridge__body').innerHTML = bridgeHtml(c);
         q('.pv-bridge').classList.toggle('is-due', c.due && !!c.notes.bridge);
         if (d.remotes && d.remotes !== lastRemotes) q('.pv__qr').hidden = true;
@@ -2070,7 +2094,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '<div class="rv__main"><header class="rv__bar"><p class="rv__where"></p><p class="rv__count"></p><p class="rv__clock"></p></header>' +
       '<h1 class="rv__title"></h1>' +
       '<div class="pv-bridge"><p class="pv-label">Bridge</p><div class="pv-bridge__body"></div></div>' +
-      '<p class="rv__next"></p><div class="rv__notes"></div></div>' +
+      '<p class="rv__next"></p><div class="rv__notes"></div><div class="pv-review"></div></div>' +
       (wide ? '<div class="rv__previews"><p class="pv-label">Now</p><div class="pv__slot"></div><p class="pv-label rv__upnext">Next</p><div class="pv__slot"></div></div>' : '') +
       '<nav class="rv__pad"><button type="button" data-k="ArrowLeft">Back</button><button type="button" data-k="ArrowRight">Next</button></nav>';
     var q = function (sel) { return one(sel, rv); };
@@ -2080,15 +2104,17 @@ document.addEventListener('DOMContentLoaded', function () {
     function draw(st) {
       var c = cue(st);
       q('.rv__where').textContent = c.where; q('.rv__clock').textContent = st.clock || '';
-      q('.rv__title').textContent = c.label;
+      q('.rv__title').innerHTML = esc(c.label) + (c.who ? ' ' + whoHtml(c.who) : '');
       q('.rv__next').textContent = c.upNext;
       if (wide) q('.rv__upnext').textContent = c.upNext;
       q('.pv-bridge__body').innerHTML = bridgeHtml(c);
       q('.pv-bridge').classList.toggle('is-due', c.due && !!c.notes.bridge);
       q('.rv__notes').innerHTML = c.notes.html || '<p class="pv-muted">No notes on this slide.</p>';
+      q('.pv-review').innerHTML = reviewHtml(st.i);
       show(0, st); show(1, c.next || st);
     }
     if (wide) setInterval(function () { if (cur) { show(0, cur); show(1, nextOf(cur.i, cur.b, cur.room) || cur); } }, 600);
+    onReview(function () { if (cur) draw(cur); });
     function fail(code) { status(code === 429 ? 'Too many taps for the relay. Wait a few seconds.' : 'Can’t reach the relay. Check this device’s connection.'); }
     if (!topic) { status('This link is missing its code. Scan the QR code on the deck again.'); return; }
     relay = { topic: topic };
@@ -2129,20 +2155,27 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function runSheet() {
-    var rs = toolShell('rs', 'Run sheet'), total = 0, rows = '';
-    slides.forEach(function (s, i) {
-      var n = notesOf(s), sec = timerOf(i), nb = beatsOf(i); total += sec;
-      var nx = slides[i + 1];
-      rows += '<tr><td class="rs__n">' + (i + 1) + (s.hasAttribute('data-room') ? '<span class="rs__room" title="In room mode">R</span>' : '') + '</td>' +
-        '<td><p class="rs__slide">' + esc(labelOf(s)) + '</p><p class="rs__meta">' + esc(kindOf(i)) + (nb ? ' · ' + nb + (nb === 1 ? ' press' : ' presses') : '') + (sec ? ' · clock ' + fmtClock(sec * 1000) : '') + '</p></td>' +
-        '<td>' + (n.bridge ? '<p class="rs__bridge">' + n.bridge + '</p>' : '<p class="pv-muted">No bridge</p>') + (nx ? '<p class="rs__into">Into: ' + esc(labelOf(nx)) + '</p>' : '') + '</td>' +
-        '<td class="rs__notes">' + n.html + '</td></tr>';
-    });
-    rs.innerHTML = '<header class="rs__head"><h1>' + esc(deck.getAttribute('data-ledger') || document.title) + '</h1>' +
-      '<p>' + slides.length + ' slides · ' + fmtClock(total * 1000) + ' on the clocks · R = in room mode</p>' +
-      '<button type="button" class="pv-btn" data-act="print">Print</button></header>' +
-      '<table class="rs__table"><thead><tr><th>#</th><th>Slide</th><th>Bridge</th><th>Notes</th></tr></thead><tbody>' + rows + '</tbody></table>';
-    one('[data-act="print"]', rs).addEventListener('click', function () { window.print(); });
+    var rs = toolShell('rs', 'Run sheet');
+    function draw() {
+      var total = 0, rows = '', count = {};
+      slides.forEach(function (s, i) {
+        var n = notesOf(s), sec = timerOf(i), nb = beatsOf(i); total += sec;
+        var nx = slides[i + 1], who = whoOf(i), nextWho = nx ? whoOf(i + 1) : '';
+        if (who) count[who] = (count[who] || 0) + 1;
+        rows += '<tr><td class="rs__n">' + (i + 1) + (s.hasAttribute('data-room') ? '<span class="rs__room" title="In room mode">R</span>' : '') + '</td>' +
+          '<td><p class="rs__slide">' + esc(labelOf(s)) + '</p><p class="rs__meta">' + esc(kindOf(i)) + (nb ? ' · ' + nb + (nb === 1 ? ' press' : ' presses') : '') + (sec ? ' · clock ' + fmtClock(sec * 1000) : '') + '</p>' + (who ? '<p class="rs__who">' + whoHtml(who) + '</p>' : '') + '</td>' +
+          '<td>' + (n.bridge ? '<p class="rs__bridge">' + n.bridge + '</p>' : '<p class="pv-muted">No bridge</p>') + (nx ? '<p class="rs__into">Into: ' + esc(labelOf(nx)) + '</p>' : '') +
+          (nextWho && nextWho !== who ? '<p class="pv-hand">Hand to ' + whoHtml(nextWho) + '</p>' : '') + '</td>' +
+          '<td class="rs__notes">' + n.html + '</td></tr>';
+      });
+      var people = Object.keys(count).map(function (k) { return whoHtml(k) + ' ' + count[k]; }).join(' ');
+      rs.innerHTML = '<header class="rs__head"><h1>' + esc(deck.getAttribute('data-ledger') || document.title) + '</h1>' +
+        '<p>' + slides.length + ' slides · ' + fmtClock(total * 1000) + ' on the clocks · R = in room mode</p>' + (people ? '<p class="rs__people">' + people + '</p>' : '') +
+        '<button type="button" class="pv-btn" data-act="print">Print</button></header>' +
+        '<table class="rs__table"><thead><tr><th>#</th><th>Slide</th><th>Bridge</th><th>Notes</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      one('[data-act="print"]', rs).addEventListener('click', function () { window.print(); });
+    }
+    draw(); onReview(draw);
   }
 
   /* ---------- Styles ----------------------------------------------------- */
@@ -2197,6 +2230,9 @@ document.addEventListener('DOMContentLoaded', function () {
     '.pv-toast{position:fixed;z-index:21;left:50%;top:24px;transform:translate(-50%,-8px);margin:0;background:var(--pv-on);color:var(--pv-surface);padding:10px 18px;border-radius:8px;font:500 15px var(--pv-font);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}',
     '.pv-toast.is-on{opacity:1;transform:translate(-50%,0)}',
     '.pv-mirror .deck{pointer-events:none;cursor:none}.pv-mirror .deck-toast,.pv-mirror .deck-notes,.pv-mirror .deck-help,.pv-mirror .pv-toast{display:none!important}',
+    '.pv-hand{margin:8px 0 0;font:500 15px var(--pv-font);display:flex;align-items:center;gap:8px}.pv-who{font-weight:500}.rs__who{margin:6px 0 0}.rs__people{display:flex;flex-wrap:wrap;gap:8px;align-items:center}',
+    '.pv__where .rvw-who,.rv__title .rvw-who{vertical-align:middle;margin-left:6px}',
+    '.pv-review:not(:empty){margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--pv-box)}.pv-review__item{margin:8px 0 0;font-size:17px;line-height:1.45}.pv-review__item .rvw-who{vertical-align:middle;margin-right:4px}.pv-review__quote{font-style:italic}.pv__next .pv-review{overflow:auto;min-height:0}',
     '.deck-notes .bridge{font-weight:500;border-left:4px solid var(--pv-hl);padding-left:12px}.deck-notes .bridge::before{content:"Bridge: ";font:13px var(--pv-code);letter-spacing:.06em;text-transform:uppercase;opacity:.8}',
     '@media print{.pv-qr-dialog,.pv-toast{display:none!important}}'
   ].join('\n');
@@ -2239,8 +2275,8 @@ document.addEventListener('DOMContentLoaded', function () {
   <aside class="notes"><p>From the Bulletin #1, scl.na.icpc.global/wp-content/uploads/2026/10/Bulletin1_2026.pdf, read 2026-10-28: hosted by Riverside City College, registration in the MLK Building, contest in MLK and the new building next door. Until October 31 coaches can still change who is on a team; new team registration closed October 24. Lunch is El Pollo Loco.</p><p>The bulletin gives two dates for the online warm-up contest (heading: November 1; date list: to be decided, around October 25). Don't say a date out loud. Tell teams to watch the Announcements in the ICPC CMS.</p><p class="bridge">So pick what you want to do today.</p></aside>
 </section>
 
-<section class="slide" data-kind="contrast" data-layout="tiles" data-section="Pick" aria-label="Pick one. Both work if you&#x27;re new">
-  <h2>Pick one. Both work if you're new</h2>
+<section class="slide" data-kind="contrast" data-layout="tiles" data-section="Pick" aria-label="Pick one. Both are fine if you&#x27;re new">
+  <h2>Pick one. Both are fine if you're new</h2>
   <div class="contrast contrast--even"><div><p class="label">ICPC prep</p><p>Teams of 3 on one laptop. Real problems from past SoCal regionals, easiest first.</p></div><div><p class="label">Arduino lab</p><p>Build a parking gate. A sensor sees a car, the arm lifts, the light turns green.</p></div></div>
   <aside class="notes"><p>Thirty seconds to move. ICPC teams sit together, three to a laptop. Arduino people sit at a table with a kit, two or three per kit. If someone can't choose: never written C++ before, go Arduino. Took CIS-5 or more, try ICPC.</p><p class="bridge">ICPC teams, here is your page.</p></aside>
 </section>
@@ -2249,16 +2285,16 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="signup__main">
     <p class="eyebrow">ICPC teams</p>
     <h2>Open this page on your team laptop</h2>
-    <p class="sub">Start with the 4 input shapes. Then work up from the easiest real ICPC problems.</p>
+    <p class="sub">Start with the 4 ways problems give you input. Then solve real ICPC problems, easiest first.</p>
   </div>
   <a class="qr" href="https://sam-t-g.github.io/rcc-acm/decks/2026-10-29-icpc/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h37v37H0z"/><path stroke="#221f1e" d="M2 2.5h7M10 2.5h2M14 2.5h1M20 2.5h3M25 2.5h2M28 2.5h7M2 3.5h1M8 3.5h1M10 3.5h3M14 3.5h1M16 3.5h1M18 3.5h1M24 3.5h2M28 3.5h1M34 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M12 4.5h7M20 4.5h3M26 4.5h1M28 4.5h1M30 4.5h3M34 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M10 5.5h2M14 5.5h1M17 5.5h1M19 5.5h1M26 5.5h1M28 5.5h1M30 5.5h3M34 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M14 6.5h2M18 6.5h4M23 6.5h2M28 6.5h1M30 6.5h3M34 6.5h1M2 7.5h1M8 7.5h1M12 7.5h1M14 7.5h6M21 7.5h2M28 7.5h1M34 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h1M22 8.5h1M24 8.5h1M26 8.5h1M28 8.5h7M10 9.5h1M17 9.5h3M22 9.5h1M24 9.5h1M26 9.5h1M2 10.5h1M4 10.5h2M7 10.5h3M12 10.5h2M16 10.5h4M22 10.5h2M26 10.5h1M28 10.5h1M31 10.5h1M33 10.5h2M2 11.5h1M5 11.5h2M9 11.5h1M14 11.5h2M18 11.5h1M20 11.5h4M25 11.5h1M28 11.5h2M31 11.5h2M34 11.5h1M4 12.5h2M8 12.5h2M11 12.5h5M18 12.5h2M22 12.5h1M25 12.5h2M28 12.5h4M34 12.5h1M2 13.5h1M4 13.5h1M6 13.5h1M11 13.5h1M17 13.5h2M21 13.5h1M26 13.5h1M28 13.5h2M31 13.5h1M5 14.5h1M8 14.5h1M10 14.5h1M14 14.5h1M16 14.5h4M21 14.5h1M25 14.5h1M30 14.5h2M33 14.5h2M2 15.5h2M5 15.5h3M12 15.5h1M15 15.5h2M21 15.5h1M24 15.5h1M29 15.5h1M32 15.5h2M2 16.5h2M6 16.5h4M13 16.5h1M15 16.5h2M19 16.5h5M28 16.5h2M31 16.5h2M4 17.5h1M7 17.5h1M14 17.5h2M17 17.5h1M20 17.5h1M22 17.5h11M2 18.5h1M4 18.5h1M7 18.5h10M20 18.5h4M25 18.5h1M27 18.5h2M30 18.5h3M3 19.5h1M5 19.5h2M9 19.5h1M13 19.5h2M17 19.5h1M22 19.5h1M24 19.5h2M28 19.5h1M30 19.5h2M33 19.5h2M2 20.5h2M5 20.5h4M10 20.5h1M12 20.5h2M16 20.5h2M19 20.5h2M23 20.5h1M27 20.5h4M32 20.5h2M2 21.5h1M4 21.5h2M7 21.5h1M13 21.5h5M19 21.5h2M25 21.5h3M30 21.5h1M33 21.5h1M2 22.5h4M7 22.5h3M13 22.5h1M15 22.5h1M18 22.5h2M21 22.5h1M23 22.5h5M31 22.5h3M2 23.5h2M5 23.5h2M10 23.5h2M17 23.5h5M25 23.5h4M31 23.5h2M34 23.5h1M4 24.5h1M6 24.5h4M11 24.5h1M13 24.5h1M17 24.5h1M19 24.5h1M23 24.5h3M28 24.5h4M33 24.5h2M3 25.5h1M12 25.5h1M15 25.5h1M17 25.5h1M20 25.5h2M24 25.5h1M28 25.5h1M30 25.5h2M33 25.5h1M2 26.5h1M4 26.5h1M7 26.5h3M11 26.5h1M18 26.5h2M21 26.5h2M24 26.5h1M26 26.5h5M34 26.5h1M10 27.5h4M16 27.5h3M21 27.5h1M23 27.5h1M25 27.5h2M30 27.5h2M2 28.5h7M10 28.5h1M12 28.5h1M14 28.5h1M16 28.5h1M19 28.5h4M25 28.5h2M28 28.5h1M30 28.5h1M2 29.5h1M8 29.5h1M10 29.5h2M13 29.5h1M16 29.5h1M18 29.5h1M23 29.5h4M30 29.5h4M2 30.5h1M4 30.5h3M8 30.5h1M11 30.5h1M15 30.5h3M19 30.5h1M21 30.5h1M23 30.5h1M25 30.5h6M32 30.5h1M34 30.5h1M2 31.5h1M4 31.5h3M8 31.5h1M10 31.5h1M12 31.5h1M14 31.5h1M16 31.5h1M18 31.5h2M25 31.5h1M29 31.5h1M31 31.5h1M34 31.5h1M2 32.5h1M4 32.5h3M8 32.5h1M10 32.5h1M12 32.5h2M15 32.5h1M17 32.5h1M19 32.5h1M24 32.5h1M26 32.5h1M28 32.5h2M31 32.5h2M2 33.5h1M8 33.5h1M11 33.5h3M19 33.5h4M24 33.5h1M26 33.5h1M28 33.5h3M34 33.5h1M2 34.5h7M10 34.5h2M13 34.5h1M15 34.5h2M18 34.5h2M21 34.5h1M23 34.5h1M27 34.5h2M30 34.5h1M32 34.5h1"/></svg></span><span class="label"><span class="qr__line">sam-t-g.github.io/</span><span class="qr__line">rcc-acm/decks/</span><span class="qr__line">2026-10-29-icpc</span></span></a>
-  <aside class="notes"><p>ICPC teams start now. The page goes in order: the four input shapes, then 12 problems from past official SoCal problem sets, easiest first, each with a starter, a hint, the common mistake, and an answer.</p><p class="bridge">Arduino tables, here is yours.</p></aside>
+  <aside class="notes"><p>ICPC teams start now. The page goes in order: the four ways problems give input, then 12 problems from past official SoCal problem sets, easiest first, each with a starter, a hint, the common mistake, and an answer.</p><p class="bridge">Arduino tables, here is yours.</p></aside>
 </section>
 
-<section class="slide" data-kind="signup" data-layout="sendoff" data-ground="tint" data-room aria-label="Build a parking gate at your own pace">
+<section class="slide" data-kind="signup" data-layout="sendoff" data-ground="tint" data-room aria-label="Open the gate page on your laptop">
   <div class="signup__main">
     <p class="eyebrow">Arduino tables</p>
-    <h2>Build a parking gate at your own pace</h2>
+    <h2>Open the gate page on your laptop</h2>
     <p class="sub">Wire it, then do step 1. Hints and answers are on the page if you get stuck.</p>
   </div>
   <a class="qr" href="https://sam-t-g.github.io/rcc-acm/decks/2026-10-29-gate/"><span class="qr__tile"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h37v37H0z"/><path stroke="#221f1e" d="M2 2.5h7M11 2.5h1M14 2.5h1M20 2.5h3M25 2.5h2M28 2.5h7M2 3.5h1M8 3.5h1M11 3.5h3M17 3.5h2M20 3.5h1M22 3.5h3M26 3.5h1M28 3.5h1M34 3.5h1M2 4.5h1M4 4.5h3M8 4.5h1M10 4.5h1M13 4.5h1M16 4.5h1M22 4.5h3M28 4.5h1M30 4.5h3M34 4.5h1M2 5.5h1M4 5.5h3M8 5.5h1M10 5.5h1M12 5.5h1M17 5.5h1M19 5.5h1M26 5.5h1M28 5.5h1M30 5.5h3M34 5.5h1M2 6.5h1M4 6.5h3M8 6.5h1M10 6.5h2M15 6.5h4M21 6.5h2M24 6.5h3M28 6.5h1M30 6.5h3M34 6.5h1M2 7.5h1M8 7.5h1M10 7.5h2M14 7.5h1M16 7.5h1M19 7.5h2M22 7.5h3M26 7.5h1M28 7.5h1M34 7.5h1M2 8.5h7M10 8.5h1M12 8.5h1M14 8.5h1M16 8.5h1M18 8.5h1M20 8.5h1M22 8.5h1M24 8.5h1M26 8.5h1M28 8.5h7M10 9.5h2M14 9.5h1M16 9.5h1M18 9.5h1M20 9.5h6M2 10.5h1M4 10.5h5M11 10.5h1M14 10.5h3M19 10.5h2M22 10.5h1M24 10.5h1M28 10.5h5M2 11.5h1M5 11.5h1M9 11.5h1M14 11.5h2M18 11.5h1M20 11.5h4M25 11.5h1M28 11.5h2M31 11.5h2M34 11.5h1M2 12.5h2M7 12.5h6M15 12.5h4M23 12.5h1M30 12.5h1M32 12.5h1M3 13.5h3M9 13.5h1M11 13.5h2M14 13.5h2M20 13.5h1M23 13.5h2M27 13.5h2M30 13.5h4M3 14.5h1M5 14.5h2M8 14.5h1M10 14.5h3M14 14.5h1M16 14.5h4M21 14.5h1M25 14.5h1M30 14.5h2M33 14.5h2M6 15.5h1M10 15.5h3M14 15.5h2M17 15.5h1M19 15.5h8M28 15.5h1M31 15.5h1M33 15.5h2M5 16.5h1M7 16.5h2M10 16.5h3M16 16.5h4M22 16.5h1M24 16.5h1M26 16.5h3M30 16.5h2M33 16.5h1M4 17.5h1M7 17.5h1M9 17.5h2M13 17.5h3M17 17.5h1M20 17.5h1M22 17.5h11M5 18.5h1M8 18.5h1M12 18.5h1M15 18.5h1M17 18.5h1M19 18.5h1M21 18.5h1M26 18.5h2M29 18.5h2M34 18.5h1M2 19.5h1M6 19.5h1M12 19.5h2M15 19.5h1M18 19.5h1M20 19.5h4M25 19.5h5M31 19.5h2M34 19.5h1M2 20.5h1M5 20.5h4M10 20.5h2M13 20.5h1M15 20.5h1M17 20.5h1M23 20.5h1M27 20.5h4M32 20.5h2M7 21.5h1M10 21.5h3M15 21.5h1M22 21.5h2M27 21.5h8M4 22.5h2M8 22.5h1M13 22.5h1M17 22.5h1M19 22.5h2M25 22.5h1M29 22.5h3M2 23.5h2M6 23.5h2M9 23.5h1M11 23.5h2M17 23.5h5M25 23.5h4M31 23.5h2M34 23.5h1M2 24.5h1M4 24.5h1M6 24.5h1M8 24.5h2M16 24.5h1M20 24.5h1M22 24.5h1M24 24.5h1M26 24.5h1M30 24.5h1M32 24.5h2M2 25.5h1M5 25.5h2M11 25.5h1M14 25.5h1M18 25.5h1M23 25.5h1M26 25.5h4M31 25.5h2M2 26.5h1M4 26.5h1M7 26.5h3M11 26.5h1M13 26.5h1M18 26.5h2M21 26.5h2M24 26.5h1M26 26.5h5M34 26.5h1M10 27.5h3M14 27.5h2M18 27.5h5M26 27.5h1M30 27.5h1M32 27.5h1M34 27.5h1M2 28.5h7M11 28.5h1M15 28.5h1M17 28.5h3M22 28.5h5M28 28.5h1M30 28.5h1M32 28.5h2M2 29.5h1M8 29.5h1M10 29.5h1M12 29.5h2M15 29.5h2M18 29.5h1M23 29.5h4M30 29.5h4M2 30.5h1M4 30.5h3M8 30.5h1M10 30.5h2M13 30.5h2M20 30.5h3M26 30.5h6M2 31.5h1M4 31.5h3M8 31.5h1M10 31.5h6M17 31.5h1M19 31.5h3M23 31.5h5M30 31.5h5M2 32.5h1M4 32.5h3M8 32.5h1M10 32.5h1M12 32.5h4M17 32.5h1M19 32.5h1M24 32.5h1M26 32.5h1M28 32.5h2M31 32.5h2M2 33.5h1M8 33.5h1M12 33.5h2M16 33.5h2M21 33.5h1M23 33.5h3M30 33.5h3M2 34.5h7M10 34.5h1M12 34.5h1M14 34.5h1M16 34.5h2M19 34.5h2M24 34.5h1M26 34.5h1M28 34.5h2M33 34.5h1"/></svg></span><span class="label"><span class="qr__line">sam-t-g.github.io/</span><span class="qr__line">rcc-acm/decks/</span><span class="qr__line">2026-10-29-gate</span></span></a>
@@ -2268,8 +2304,8 @@ document.addEventListener('DOMContentLoaded', function () {
 <section class="slide" data-kind="beats" data-layout="rules" data-room aria-label="Before you plug in">
   <p class="eyebrow">Arduino tables</p>
   <h2>Before you plug in</h2>
-  <ol class="beats"><li data-beat>Unplug USB before you move a wire<span class="detail">Plug it back in only to test</span></li><li data-beat>Take the power module off the breadboard<span class="detail">Today the UNO powers the board</span></li></ol>
-  <p class="callout callout--warning" data-beat><b>Careful.</b> Read the sensor's labels first. Vcc goes to +, Gnd goes to -. Swapped, it can break.</p>
+  <ol class="beats"><li data-beat>Unplug USB before you move a wire<span class="detail">Plug it back in only to test</span></li><li data-beat>Take the power module off the breadboard<span class="detail">The UNO powers the breadboard today</span></li></ol>
+  <p class="callout callout--warning" data-beat><b>Careful.</b> Read the labels on the sensor first. Vcc goes to +, Gnd goes to -. If you swap them, the sensor can break.</p>
   <aside class="notes"><p>These keep the sensor and the board from breaking. With the power module still on the board, the UNO's 5V reaches the module's output.</p><p class="bridge">That's it. Go.</p></aside>
 </section>
 
@@ -2295,12 +2331,12 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="ask__main">
     <p class="eyebrow">Before you go</p>
     <h2>Thanks for coming</h2>
-    <p class="sub">Both pages stay up. ICPC teams, the regional is Saturday, November 7.</p>
+    <p class="sub">Both pages stay online, so you can keep practicing. ICPC teams, the regional is Saturday, November 7.</p>
     <p class="ask__meta">Thursdays, <time datetime="13:30">1:30</time> to <time datetime="14:30">2:30 PM</time>, BLCIS A-210</p>
   </div>
   <div class="ask__foot">
     <p class="ask__name">ACM @ RCC</p>
-    <p class="ask__stamp">Updated <time datetime="2026-10-28">2026-10-28</time></p>
+    <p class="ask__stamp">Updated <time datetime="2026-10-29">2026-10-29</time></p>
   </div>
   <aside class="notes"><p>Dates from the SoCal ICPC Bulletin #1, scl.na.icpc.global/wp-content/uploads/2026/10/Bulletin1_2026.pdf, read 2026-10-28. Both pages stay up after today, so teams can keep practicing on the same problems before November 7.</p></aside>
 </section>
