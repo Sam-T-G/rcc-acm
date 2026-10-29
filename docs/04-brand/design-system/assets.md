@@ -11,7 +11,7 @@ This is the only table that differs between the ACM and GDG copies of this file.
 | Parameter | ACM @ RCC |
 |---|---|
 | Club name on artifacts | Per [brand.md](../brand.md): "ACM Student Chapter at Riverside City College" on forms and anything ACM or RCC sees, "ACM @ RCC" on social, slides, and this repo |
-| Meeting line | Thursdays, 12:50 to 1:50 PM, BLCIS A-210 |
+| Meeting line | Thursdays, 1:30 to 2:30 PM, BLCIS A-210 |
 | Required text when the logo appears | None imposed by ACM. The requirements are the club name as above and, if a club-made logo is ever adopted, the words "ACM Chapter" legible on it ([bright-lines.md §1.4](bright-lines.md)). The chapter never presents itself as speaking for ACM |
 | Required text when ASRCC paid | "This event is funded by ASRCC (Associated Students of Riverside City College)." On the piece and in the caption |
 | Hashtag | None required. A program's hashtag only when the post is that program's event |
@@ -81,7 +81,7 @@ Ground is `--acm-surface`. One of the two sanctioned fills may run as a band beh
 
 1. First sentence: what, when, where. The feed shows roughly the first 125 characters before "more" (a widely stated figure, not verified this session), and the fold lands mid-sentence if the facts come second.
 2. Who should come, what to bring, RSVP, each on its own line, from the Facts table.
-3. The club line: "ACM @ RCC meets Thursdays, 12:50 to 1:50 PM in BLCIS A-210. Everyone is welcome."
+3. The club line: "ACM @ RCC meets Thursdays, 1:30 to 2:30 PM in BLCIS A-210. Everyone is welcome."
 4. The ASRCC line when ASRCC paid.
 5. A program hashtag only when the post is that program's event.
 
@@ -123,6 +123,21 @@ Export at 1920 x 1080. Margins 96 px. A-210 projects onto a wall in daylight, wh
 | Body | 40 px |
 | Ledger line, footers, sources, code line numbers | 32 px |
 | Code on a slide | 40 px in the code face, twelve lines at most |
+
+**Slide type roles** (deck-kit/deck.css, stage pixels at 1920 x 1080; decision log 2026-10-28). Headings are 700 on slides, tracking tightens as size grows, and nothing on a slide is set outside this table.
+
+| Role | Size | Weight | Tracking | Where |
+|---|---|---|---|---|
+| Numerals | 320 / 240 | 700 | -0.05em / -0.04em | `figure` number, `clock` digits |
+| Display | 168 | 700 | -0.04em | Cover h1, a giant statement, split-layout clock digits |
+| Title | 128 | 700 | -0.03em | `--s-title`, an h1 off the cover |
+| Statement | 104 | 700 | -0.025em | A `statement` slide's h2 |
+| Head | 88 | 700 | -0.025em | Every other slide's h2 (`--s-head`) |
+| Body | 48 | 400 | 0 | Lines, beats, contrast text (`--s-body`) |
+| Body small | 40 | 400 / 500 | 0 | Details, steps, code, callouts (`--s-body-sm`) |
+| Ledger | 32 | 400 / 500 | 0.06em, caps | Eyebrows, labels, ledger, progress, credits, QR URLs (`--s-ledger`) |
+
+**Stage spacing** comes from nine steps, `--st-1` to `--st-9`: 8, 16, 24, 32, 40, 48, 64, 96, 144. List rhythm is one rule for beats, the Board, and lab steps: 32 between plain items, 24 between items with a detail line.
 
 Judgment call, to be tested on the projector and recorded here. `[TBD: A-210 projector native resolution.]` One idea per slide. The Rail once, on the title slide. At most one callout per slide. A lab day shows no slides after the eight-minute intro; the station cards and the serial monitor on the projector are the material.
 

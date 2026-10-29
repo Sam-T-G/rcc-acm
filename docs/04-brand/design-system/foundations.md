@@ -303,7 +303,7 @@ Keep prose between 45ch and 75ch. Above 75ch the eye loses the line return; belo
 
 **Tabular figures.** Inter documents `tnum`. Default figures are proportional. Turn on `font-variant-numeric: tabular-nums` for anything in a column or anything that changes: the budget, the kit order, attendance counts, the sixteen-row meeting plan, the phase clock on the showcase page, the serial readings on a station card. `[TBD: confirm the served latin subset carries tnum before relying on it in a build; read the GSUB list of the delivered WOFF2.]`
 
-**No time colon feature.** Inter has no stylistic set for a raised time colon, so "12:50 to 1:50 PM" renders with the default colon. Nothing to verify and nothing to design around.
+**No time colon feature.** Inter has no stylistic set for a raised time colon, so "1:30 to 2:30 PM" renders with the default colon. Nothing to verify and nothing to design around.
 
 **Small caps.** Inter ships no true small caps. Do not design anything that depends on them; `label-sm` in uppercase with +0.06em tracking is the ledger voice instead.
 

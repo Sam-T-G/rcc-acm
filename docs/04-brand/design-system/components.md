@@ -50,7 +50,7 @@ The Secondary ring is `box-shadow`, not `border`, so a Primary and a Secondary o
 
 **Raw-fill variant, for posters and share cards only.** A button drawn in `--acm-fill-orange` takes an ink label (`--acm-on-surface`), never a white one; white on the raw orange measures below the body floor (§2.1). On a web page the Primary treatment above is the only filled button.
 
-**GitHub form.** A link. Button labels are written to survive being a plain link: verb-first, naming the action. "Come Thursday at 12:50", not "Learn more".
+**GitHub form.** A link. Button labels are written to survive being a plain link: verb-first, naming the action. "Come Thursday at 1:30", not "Learn more".
 
 ## 7.3 Card
 
@@ -219,7 +219,7 @@ Check is the club's own type. Every station card ends with a 60-second question 
 
 **The announcement pill** takes the slot where a third button would go and is styled as a message: pale tinted field, full radius, `label-md`, bolded lead-in, plain-weight explainer, small filled arrow at the end. It gives the page one "what's new" hook without a competing action.
 
-**Sizing.** H1 at `display-sm` on mobile reaching `display-lg` at the widest breakpoint. The subhead does not scale. The subhead bolds its last clause only, and that clause carries the date or the ask: "Thursdays at 12:50 in A-210. **Lab day 1 is September 24.**"
+**Sizing.** H1 at `display-sm` on mobile reaching `display-lg` at the widest breakpoint. The subhead does not scale. The subhead bolds its last clause only, and that clause carries the date or the ask: "Thursdays at 1:30 in A-210. **Lab day 1 is September 24.**"
 
 **Media is optional and the default hero has none.** Type, the Rail, and two buttons on `--acm-surface` is a finished hero. When there is a photo, the scrim is two-ended: dark at the top where the headline sits, clear across the middle two-thirds so the image reads, dark again at the bottom. A flat overlay protects the text by destroying the photograph.
 
@@ -238,7 +238,7 @@ Check is the club's own type. Every station card ends with a 60-second question 
 3. ASRCC credit, where ASRCC funded the page's event
 4. Freshness stamp
 
-**End every long page with the same three doors** rather than one CTA: **Come Thursday at 12:50 in A-210**, **Join the Discord**, **Read the playbooks**. One CTA loses whichever half of the audience is not in that posture right now.
+**End every long page with the same three doors** rather than one CTA: **Come Thursday at 1:30 in A-210**, **Join the Discord**, **Read the playbooks**. One CTA loses whichever half of the audience is not in that posture right now.
 
 **There is no disclaimer block.** ACM's chapter policy requires that the chapter not present itself as speaking for ACM; it does not prescribe a sentence. The requirement on a public page is the club name written as [brand.md](../brand.md) writes it, and the ASRCC line wherever ASRCC paid. Do not invent a disclaimer sentence; a made-up compliance line reads as one and teaches the next officer team to trust it.
 
@@ -280,7 +280,7 @@ The spine of every meeting page, every station card's Steps section, and the sho
 
 **Rows are separated by `:not(:last-child)::after`**, so the last row has no trailing line and there is no negative-margin hack to remove one.
 
-**The clock is derived.** Every row's start equals the previous row's start plus its duration. In HTML the times are computed; in markdown they are written by hand, so **`scripts/check.sh` should verify that the default agenda, each meeting page's agenda, and the showcase run of show are consistent with their durations and end at 1:50 PM.** A table whose clock does not add up is a bug and nothing currently catches it.
+**The clock is derived.** Every row's start equals the previous row's start plus its duration. In HTML the times are computed; in markdown they are written by hand, so **`scripts/check.sh` should verify that the default agenda, each meeting page's agenda, and the showcase run of show are consistent with their durations and end at the meeting's end time (2:30 PM in Fall 2026).** A table whose clock does not add up is a bug and nothing currently catches it.
 
 **States.** Past, current, next, over-running. Current is marked by the emphasized type tier and by the `--acm-outline` hairline, never by a badge. The emphasized tier changes weight at identical size, so it cannot reflow the agenda while someone is reading it.
 

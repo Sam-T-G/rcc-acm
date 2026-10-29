@@ -163,7 +163,8 @@ const info = await evaluate(`(() => {
     beats: s.querySelectorAll('.beats > li').length,
     auto: s.hasAttribute('data-auto') ? (parseFloat(s.getAttribute('data-auto')) || 1.6) : 0,
     words: s.getAttribute('data-kind') === 'statement' ? (s.querySelector('h2')?.textContent.trim().split(/\\s+/).length || 0) : 0,
-    timer: +s.getAttribute('data-timer') || 0,
+    timer: +s.getAttribute('data-timer') || (s.hasAttribute('data-ends') ? -1 : 0),
+    ends: s.getAttribute('data-ends') || '',
     h1: s.querySelectorAll('h1').length, h2: s.querySelectorAll('h2').length,
     rails: s.querySelectorAll('.cover__rail').length,
     callouts: s.querySelectorAll('.callout').length,
@@ -193,7 +194,8 @@ check(info.reduce((a, s) => a + s.rails, 0) === 1 && info[0].rails === 1, 'the R
 check(info.every((s) => s.callouts <= 1), 'at most one callout per slide');
 check(info.every((s) => s.kind !== 'beats' || s.beats <= 4), 'every beats slide has four items or fewer');
 check(info.every((s) => s.kind !== 'statement' || s.words <= 14), 'every statement is fourteen words or fewer');
-check(info.every((s) => s.kind !== 'clock' || s.timer > 0), 'every clock slide has a data-timer');
+check(info.every((s) => s.kind !== 'clock' || s.timer > 0 || s.ends), 'every clock slide has a data-timer or a data-ends');
+check(info.every((s) => !s.ends || /^([01]?\d|2[0-3]):[0-5]\d$/.test(s.ends)), 'every data-ends is a 24-hour HH:MM time');
 check(info.every((s) => s.codeLines <= 12), 'code is twelve lines or fewer');
 const same = info.findIndex((s, k) => k >= 2 && s.look === info[k - 1].look && s.look === info[k - 2].look);
 check(same < 0, `no three slides in a row look the same (kind, ground, layout)${same >= 0 ? ': slides ' + (same - 1) + ' to ' + (same + 1) + ' are all ' + info[same].look : ''}`);
@@ -547,7 +549,7 @@ if (autoAt >= 0) {
 }
 
 // ---------- Timer: T starts it, a transition during a run is a cut.
-const clockAt = info.findIndex((s) => s.timer > 0);
+const clockAt = info.findIndex((s) => s.timer > 0 && !s.ends);
 if (clockAt >= 0) {
   console.log('clock');
   await load();
@@ -558,6 +560,22 @@ if (clockAt >= 0) {
   check(state === 'running' && txt !== fmt(info[clockAt].timer), `T starts the clock (${state}, ${txt})`);
   await press('right'); await settle();
   check((await evaluate('__deck.state()')).last.startsWith('cut'), 'leaving a slide with a running clock is a cut');
+}
+// A data-ends clock counts down to its wall-clock end, whenever T is pressed.
+const endsAt = info.findIndex((s) => s.ends);
+if (endsAt >= 0) {
+  console.log('work clock (data-ends)');
+  await load();
+  await evaluate(`location.hash = '#${endsAt + 1}'`); await sleep(300);
+  await press('t'); await sleep(1300);
+  const r = await evaluate(`(() => { const sl = document.querySelectorAll('.deck > .slide')[${endsAt}], c = sl.querySelector('.clock');
+    const [h, m] = sl.dataset.ends.split(':'), now = new Date(), at = new Date(now); at.setHours(+h, +m, 0, 0);
+    return { txt: c.querySelector('.clock__digits').textContent, state: c.dataset.state, left: Math.max(0, at - now), hint: getComputedStyle(c.querySelector('.clock__hint')).visibility }; })()`);
+  const want = r.left > 0 ? Math.ceil(r.left / 1000) : 0;
+  const got = r.txt === 'Time' ? 0 : r.txt.split(':').reduce((a, b) => a * 60 + +b, 0);
+  check(Math.abs(got - want) <= 3, `T counts down to ${info[endsAt].ends} (${r.txt}, ${r.state})`);
+  check(r.left <= 0 || r.hint === 'hidden', 'a running clock hides its key hint');
+  await press('t');
 }
 function fmt(s) { return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
 

@@ -104,7 +104,7 @@ Heading level is structure, not size. If an `h3` needs to look big, the type sec
 - If there are two `<nav>` elements on a page, each needs a distinct `aria-label` ("Main", "Stations", "Footer").
 - Use `<ul>` for lists of things. The agenda is a list. The station grid is a list. Screen readers announce "list, 4 items", which is real information.
 - Tables get `<th scope="col">` or `scope="row"`, and a `<caption>`. Never use a table for layout.
-- `<time datetime="2026-12-10T12:50">` for every date and time on event pages.
+- `<time datetime="2026-12-10T13:30">` for every date and time on event pages.
 - The club name and the ASRCC line are real text in the footer. Not an image, not a background, not `title` attribute text.
 
 ### 1.6 Keyboard

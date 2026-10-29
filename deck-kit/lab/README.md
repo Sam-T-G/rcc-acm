@@ -22,6 +22,8 @@ The example builds `deck-kit/lab/example-lab.html`, one full round, and passes t
 | `code(label, h2, src, notes)` | A full code slide. 10 lines at most. |
 | `notes(*paragraphs, bridge=None)` | Speaker notes, with the bridge line last |
 | `lab_css()` | Every style the pictures and lab slides need. Put it in the deck's `<style>`. |
+| `lab_css_base()`, `lab_css_pictures()` | The same CSS split in two: list and Do-slide styles with the static picture classes, and only the picture animations. A deck with no animated pictures inlines `lab_css_base()` alone. |
+| [partials.py](partials.py) | Whole slides for recurring shapes (pick, sendoff, rules, work_clock, round_map, win, qr). Documented in [../README.md](../README.md#partials). |
 
 ## Pictures
 

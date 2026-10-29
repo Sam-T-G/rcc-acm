@@ -1248,22 +1248,22 @@ LR_KEYFRAMES
 .is-presenting .slide.is-current .viz--sv .sv-swing { transform-box: view-box; transform-origin: 540px 250px; animation: sv-swing 3s var(--acm-ease-standard) infinite; }
 @keyframes sv-swing { 0%, 100% { transform: rotate(-70deg); } 50% { transform: rotate(70deg); } }
 .is-presenting .slide.is-current .viz--an .an-sweep { transform-box: view-box; transform-origin: 380px 440px; animation: sv-swing 3.6s linear infinite; }
-.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(14 * var(--u)); counter-reset: step; }
-.steps li { counter-increment: step; display: grid; grid-template-columns: calc(72 * var(--u)) 1fr; column-gap: calc(20 * var(--u)); font-size: calc(40 * var(--u)); line-height: 1.2; }
-.steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--acm-font-code); font-weight: 600; color: var(--acm-primary); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--st-2); counter-reset: step; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: var(--st-7) 1fr; column-gap: var(--st-2); font-size: var(--s-body-sm); line-height: 1.2; }
+.steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--acm-font-code); font-weight: 500; color: var(--acm-primary); }
 .steps code { font-family: var(--acm-font-code); }
 .slide[data-ground="orange"] .steps li::before { color: currentColor; }
 .slide[data-do] .clock__digits { font-size: calc(64 * var(--u)); }
-.slide[data-do] .clock { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: calc(28 * var(--u)); row-gap: calc(10 * var(--u)); }
+.slide[data-do] .clock { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: var(--st-3); row-gap: var(--st-1); }
 .slide[data-do] .clock__digits { grid-column: 1; grid-row: 1; }
 .slide[data-do] .clock__hint { grid-column: 2; grid-row: 1; margin: 0; }
 .slide[data-do] .clock__track { grid-column: 1 / -1; grid-row: 2; }
-.slide[data-do] .split__main { gap: calc(28 * var(--u)); }
+.slide[data-do] .split__main { gap: var(--st-3); }
 .viz .dbody { stroke: currentColor; stroke-width: 20; stroke-linecap: round; }
 .viz .dstripe { stroke: var(--acm-surface); stroke-width: 20; }
 .viz .dstripe-r { fill: var(--acm-surface); }
-.viz .rl-p { stroke: #dc3f46; stroke-width: 3; }
-.viz .rl-n { stroke: #247ad6; stroke-width: 3; }
+.viz .rl-p { stroke: var(--acm-mark-failure); stroke-width: 3; }
+.viz .rl-n { stroke: var(--acm-mark-xref); stroke-width: 3; }
 .viz .chan { fill: var(--acm-outline-variant); opacity: 0.55; }
 .viz .pt { fill: var(--acm-primary); opacity: 0.22; }
 .viz .halo { paint-order: stroke; stroke: var(--acm-surface); stroke-width: 10px; stroke-linejoin: round; }
@@ -1292,8 +1292,26 @@ UP_KEYFRAMES
 '''
 
 
+def _is_picture_motion(line):
+    return '@keyframes' in line or '.is-presenting' in line or 'KEYFRAMES' in line or line.startswith('.viz--')
+
+
+def lab_css_base():
+    """The lab slides' list and Do-slide styles plus the static picture classes. No animation."""
+    return '\n'.join(l for l in LAB_CSS.split('\n') if not _is_picture_motion(l))
+
+
+def lab_css_pictures():
+    """Only the picture animations (wires, current dots, spinning parts), with their keyframes filled in."""
+    motion = '\n'.join(l for l in LAB_CSS.split('\n') if _is_picture_motion(l))
+    return (motion.replace('LP_KEYFRAMES', path_keyframes('lp-e', LOOP))
+                  .replace('LR_KEYFRAMES', path_keyframes('lr-e', LED_RAILS))
+                  .replace('TS_KEYFRAMES', path_keyframes('ts-e', TS_PATH))
+                  .replace('UP_KEYFRAMES', path_keyframes('up-e', UP_CABLE)))
+
+
 def lab_css():
-    """CSS the pictures and lab slides need, with the current-flow keyframes filled in."""
+    """Everything: lab_css_base() and lab_css_pictures() in the original order. Older decks call this."""
     return (LAB_CSS.replace('LP_KEYFRAMES', path_keyframes('lp-e', LOOP))
                    .replace('LR_KEYFRAMES', path_keyframes('lr-e', LED_RAILS))
                    .replace('TS_KEYFRAMES', path_keyframes('ts-e', TS_PATH))

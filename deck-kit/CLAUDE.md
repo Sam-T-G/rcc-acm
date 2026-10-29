@@ -23,6 +23,10 @@ Never fetch: people or faces, stock people at laptops, AI images of people, the 
 - Keep `orange` for the loud moments, about one slide in four, and at most one `giant` statement per section.
 - Branding is the name `ACM @ RCC` as text, the Rail (cover only), and orange. There is no logo to add.
 
+## Partials and templates first
+
+Before hand-writing a slide, check [lab/partials.py](lab/partials.py) (pick, sendoff, rules, work_clock, round_map, win, qr) and [templates/](templates/). Don't bend `contrast` into a track picker or `signup` into a page handoff; use `pick` and `sendoff`. New spacing uses the `--st-*` steps, never a free number.
+
 ## The career disk
 
 Stations are real roles only: every card names a current posting and a sourced reason, or leaves the reason off. Majors weights are judgment; say so in the deck header. Look at the disk in screenshots (overview, a few stations, the finale) before publishing.

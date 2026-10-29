@@ -7,7 +7,7 @@ Ported on 2026-09-24 from the GDG chapter's kit (`rcc-gdg/deck-kit`) onto this r
 | File | What it is |
 |---|---|
 | [example.html](example.html) | A finished deck with one slide of every kind. Copy from it; its copy is about the kit, so it makes no claim about the club |
-| [deck.css](deck.css) | The stylesheet. Tokens copied from `tokens.css` (the check fails if they drift), the stage, and the thirteen kinds |
+| [deck.css](deck.css) | The stylesheet. Tokens copied from `tokens.css` (the check fails if they drift), the stage, the spacing scale, and the fourteen kinds (thirteen below plus the career disk) |
 | [deck.js](deck.js) | The engine. No build step, no dependencies beyond GSAP, which is optional |
 | [check.mjs](check.mjs) | Checks a deck against the slide rules and walks it in five modes. Headless Chrome, no npm install |
 | [bundle.mjs](bundle.mjs) | Makes one self-contained HTML file from a deck |
@@ -16,6 +16,9 @@ Ported on 2026-09-24 from the GDG chapter's kit (`rcc-gdg/deck-kit`) onto this r
 | [encode-video.swift](encode-video.swift) | Makes a slide clip: upright H.264 MP4 at a fixed size and bitrate, no audio, no metadata, plus a poster. `swift deck-kit/encode-video.swift <in.mov> <dir> <name>` |
 | [disk.js](disk.js) | The career disk: a plug-in slide kind in Three.js. Loads as a module before `deck.js` and registers `window.DeckKinds.disk` |
 | [CLAUDE.md](CLAUDE.md) | The calls an agent building a deck makes without asking: photos, variety, copy |
+| [lab/partials.py](lab/partials.py) | Whole slides for recurring shapes: track picker, QR send-off, rules, work clock, round map, win. See Partials below |
+| [templates/](templates/) | Deck templates as Python generators: `two-track.py` and `self-guided-lab.py`, each with an example deck that passes the check |
+| [page/](page/README.md) | The companion-page kit: one stylesheet on tokens.css and Python helpers for the pages a deck hands people off to |
 
 ## Make a deck
 
@@ -23,7 +26,9 @@ Put it in the meeting folder, named for the date: `semesters/2026-fall/meetings/
 
 Every slide is a `<section class="slide">` with a `data-kind`. The first slide of each section also carries `data-section="Name"`; the name shows in the progress line along the bottom, and a slide without one belongs to the section before it. The ledger line along the top comes from `data-ledger` on `<main class="deck">`. Speaker notes go in `<aside class="notes">` and show with `N`. Add `data-room` to the slides that stay up in room mode (`5`). Add `data-beat` to any element to reveal it on a press.
 
-## The thirteen kinds
+## The kinds
+
+Thirteen kinds are in the table; the fourteenth, the career disk, has its own section below. `check.mjs` knows all fourteen.
 
 | `data-kind` | Markup the kit reads |
 |---|---|
@@ -41,12 +46,38 @@ Every slide is a `<section class="slide">` with a `data-kind`. The first slide o
 | `collage` | `.eyebrow`, `h2`, `ul.collage` with up to six `li > img` of the club's own photos, each with `data-faces="none"` or `"consented"`, and one `.credit` line |
 | `ask` | `.ask__main` (`.eyebrow`, `h2`, `.ask__meta`, optionally one `.callout callout--check`), an optional `a.qr` with its URL as text, and `.ask__foot` with `.ask__name` reading `ACM @ RCC` and an `.ask__stamp` |
 
+## Partials
+
+[lab/partials.py](lab/partials.py) returns whole slides for shapes recent decks kept rebuilding. Each is an existing kind with a `data-layout`, so the check needs nothing new. Import with `sys.path.insert(0, 'deck-kit/lab')`; `qr()` needs segno.
+
+| Call | Kind / layout | What it makes |
+|---|---|---|
+| `pick(left, right, h2='Pick one for today', section=None, ground=None, note='', bridge=None)` | `contrast` / `tiles` | Two equal tiles, each `(label, text)`. Use it to split the room; `contrast` with weak and strong stays for a real before/after |
+| `sendoff(eyebrow, h2, sub, url, label=None, section=None, ground=None, note='', bridge=None)` | `signup` / `sendoff` | Hand a group to a page: headline and one line, a 420 px QR, the URL wrapped under it at the ledger size |
+| `rules(eyebrow, h2, items, warn=None, section=None, ground=None, note='', bridge=None)` | `beats` / `rules` | Up to three `(rule, detail)` beats and one Warning callout for the rule that protects hardware. Stays up in room mode |
+| `work_clock(h2, sub, ends='14:25', eyebrow=None, section=None, ground='orange', note='', bridge=None)` | `clock` with `data-ends` | Counts down to a wall-clock time today when T is pressed, so a late start never runs past the end |
+| `round_map(h2, rounds, current, eyebrow=None, sub=None, section=None, ground=None, note='', bridge=None)` | `statement` / `map` | A strip of numbered rounds: done in ink, current in primary, next in outline |
+| `win(h2, see, fixes=(), eyebrow='It works when', section=None, ground='orange', note='', bridge=None)` | `beats` / `win` | The end of a round: what a working build does, then up to three `(problem, fix)` beats |
+| `qr(url, label=None)`, `qr_svg(url)` | | The QR tile with its URL printed, shared by every generator |
+
+**`data-ends="HH:MM"`** on a `clock` slide replaces `data-timer`: on T the clock counts down to that time today, and R resets to the time left. Any running clock hides its key hint, since the room reads the screen.
+
+## Templates
+
+`deck-kit/templates/` holds deck generators. Run one with an output path; `--blank` (two-track) puts `fill:` markers where copy goes, which the check refuses until they're gone.
+
+| Template | Slides | Example |
+|---|---|---|
+| [two-track.py](templates/two-track.py) | cover, the hour, coming up, pick, two send-offs, rules, work clock, pack up, wrap | [two-track-example.html](templates/two-track-example.html) |
+| [self-guided-lab.py](templates/self-guided-lab.py) | cover, send-off, rules, a map and a win per round, work clock, pack up, wrap | [self-guided-lab-example.html](templates/self-guided-lab-example.html) |
+
 ## What the kit decides for you
 
 - **The Rail once, on the cover, solid.** It draws down the cover's edge on the opening and retracts to its foot when the deck leaves the cover. No other slide has one; a Check or Warning callout's short Rail is the only repeat.
 - **The progress line is not the Rail.** It is the "On this page" rail laid flat (components.md §7.8): section names in the ledger face, the current one at weight 500 in primary, over a 3 px neutral hairline.
 - **Light theme only.** A-210 is a daylight wall. There is no dark toggle.
-- **Floors.** Titles 72, body 40, ledger 32, at 1920 x 1080 inside 96 px margins. The check measures every text node.
+- **Floors.** Titles 72, body 40, ledger 32, at 1920 x 1080 inside 96 px margins. The check measures every text node. The full set of slide type roles is in [assets.md §10.5](../docs/04-brand/design-system/assets.md).
+- **Spacing comes from a scale.** `--st-1` to `--st-9` are 8, 16, 24, 32, 40, 48, 64, 96, 144 stage pixels. Beats, the Board, and lab steps share one rhythm: 32 between plain items, 24 when items carry a detail line. A new rule in deck.css uses a step, not a free number.
 - **Slide-scale motion.** Words rise through masks at 700 ms per beat and 1100 ms per section change, on `--acm-dur-beat`, `--acm-dur-move`, and `--acm-ease-arrive`, which the kit adds to the system's tokens (decision log, 2026-09-24). Reduced motion makes every transition a cut.
 - **Nothing shows before it animates.** The deck stays hidden until deck.js marks it live (a 6 s failsafe shows the plain stack if the engine never loads), so a slow GSAP download can't paint the finished cover first. A slide's beat state lands with transitions off when the slide arrives (`settleBeats`), so a picture stage never fades out over a new slide; only a beat revealed in view animates. Both came from a flash Sam saw on 2026-10-14. Any new CSS transition keyed to beat state is covered by the same rule, because `.is-settling` turns every transition off.
 
@@ -120,4 +151,4 @@ This runs the check, bundles the deck into `site/decks/<slug>/index.html` (gitig
 
 ---
 
-**Last updated: 2026-09-24.**
+**Last updated: 2026-10-28.**

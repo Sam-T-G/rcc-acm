@@ -30,6 +30,13 @@ If a template is wrong or missing a field, change it here, add a [decision recor
 | [arduino-lab-guide.md](arduino-lab-guide.md) | The officer guide for an Arduino lab week | `semesters/<YYYY-term>/meetings/YYYY-MM-DD-lab-guide.md` |
 | [announcement.md](announcement.md) | Anything posted to members or the campus | Draft in `semesters/<YYYY-term>/events/YYYY-MM-DD-slug/announcement.md`, then post |
 
+Deck and page templates are Python generators, not markdown, and live with the kit:
+
+| Template | Use it when | Run |
+| --- | --- | --- |
+| [deck-kit/templates/two-track.py](../deck-kit/templates/two-track.py) | The room splits into two groups that each work from their own page | `python deck-kit/templates/two-track.py semesters/<YYYY-term>/meetings/YYYY-MM-DD-deck.html --blank` |
+| [deck-kit/templates/self-guided-lab.py](../deck-kit/templates/self-guided-lab.py) | A lab where tables build from a page and the projector only frames the rounds | `python deck-kit/templates/self-guided-lab.py semesters/<YYYY-term>/meetings/YYYY-MM-DD-deck.html` |
+
 ## Conventions shared by every template
 
 - Dates are ISO `YYYY-MM-DD`. Times include AM or PM.

@@ -179,9 +179,17 @@
 
   /* ---------- Clock -------------------------------------------------------- */
   function fmt(ms) { var s = Math.ceil(ms / 1000), m = Math.floor(s / 60); s %= 60; return m + ':' + (s < 10 ? '0' : '') + s; }
+  // data-ends="14:25" makes a work clock: on T it counts down to that wall-clock
+  // time today, so starting late never runs past the end of the meeting.
+  function untilTime(hm) {
+    var p = hm.split(':'), now = new Date(), at = new Date(now); at.setHours(+p[0], +p[1], 0, 0);
+    return Math.max(0, at - now);
+  }
   function makeClock(slide) {
     var secs = parseInt(slide.getAttribute('data-timer'), 10);
-    if (!secs) return null;
+    var ends = slide.getAttribute('data-ends');
+    if (!secs && !ends) return null;
+    if (!secs) secs = Math.ceil(untilTime(ends) / 1000) || 1;
     var el = one('.clock', slide);
     if (!el) {
       el = make('div', 'clock');
@@ -197,7 +205,9 @@
       digits.textContent = state === 'done' ? 'Time' : fmt(c.left);
       fill.style.transform = 'scaleX(' + (c.left / c.total) + ')';
       el.setAttribute('data-state', state);
-      hint.textContent = state === 'done' ? 'R to reset' : state === 'paused' ? 'Paused. T to resume' : state === 'idle' ? hint0 : 'T to pause';
+      // The room reads the screen, so a running clock shows no key hint.
+      hint.textContent = state === 'done' ? 'R to reset' : state === 'paused' ? 'Paused. T to resume' : state === 'idle' ? hint0 : '';
+      hint.style.visibility = hint.textContent ? '' : 'hidden';
     }
     function tick() {
       var now = performance.now();
@@ -205,12 +215,13 @@
       if (c.left > 0 && c.running) c.raf = requestAnimationFrame(tick); else c.running = false;
     }
     c.toggle = function () {
+      if (ends && !c.running && c.left === c.total) { c.left = c.total = untilTime(ends) || 1; }
       if (c.left <= 0) return;
       c.running = !c.running;
       if (c.running) { c.last = performance.now(); c.raf = requestAnimationFrame(tick); } else cancelAnimationFrame(c.raf);
       paint();
     };
-    c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); c.left = c.total; paint(); };
+    c.reset = function () { c.running = false; cancelAnimationFrame(c.raf); if (ends) c.total = untilTime(ends) || 1; c.left = c.total; paint(); };
     c.pause = function () { if (c.running) { c.running = false; cancelAnimationFrame(c.raf); paint(); } };
     paint();
     return c;

@@ -647,7 +647,7 @@ thead th { background: var(--acm-surface-container-high);
 /* ============================ TIMELINE ================================== */
 .acm-phase {
   display: grid;
-  grid-template-columns: 5.5ch 1fr;      /* fits "12:50" with no reflow */
+  grid-template-columns: 5.5ch 1fr;      /* fits "12:30" with no reflow */
   gap: var(--acm-space-4);
   padding-block: var(--acm-space-4);
 }
@@ -693,7 +693,7 @@ thead th { background: var(--acm-surface-container-high);
 @media print {
   :root { color-scheme: light; }
   body { background: #fff; color: #000; font-size: 11pt; }
-  nav, .acm-skip, .acm-theme-toggle, .acm-copy { display: none; }
+  nav, .acm-skip, .acm-theme-toggle, .pk-copy { display: none; }
   a { color: #000; }
   a[href^="http"]::after { content: " (" attr(href) ")";
                            font-size: 9pt; word-break: break-all; }
