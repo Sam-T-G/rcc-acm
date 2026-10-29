@@ -1,3 +1,7 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = ["segno"]
+# ///
 """Template: a two-track work session deck (decision log 2026-10-28).
 
 The room splits into two groups that each work from their own page. The deck only opens the
@@ -5,9 +9,9 @@ meeting, has people pick, hands each group its page, and keeps a work clock up:
 
     cover, the hour, coming up, pick, send-off A, send-off B, rules, work clock, pack up, wrap
 
-Usage (from the repo root, with a Python that has segno):
-    python deck-kit/templates/two-track.py <out.html>            # example copy, passes the check
-    python deck-kit/templates/two-track.py <out.html> --blank    # fill: markers where copy goes
+Usage (from the repo root; uv installs segno from the block above):
+    uv run deck-kit/templates/two-track.py <out.html>            # example copy, passes the check
+    uv run deck-kit/templates/two-track.py <out.html> --blank    # fill: markers where copy goes
 
 Edit the TRACKS and DATES blocks, or copy this file next to the meeting and change it there
 (scratch/<date>-deck/gen.py is the usual place). Every slide comes from deck-kit/lab/partials.py

@@ -1,6 +1,10 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = ["segno", "markdown"]
+# ///
 """Companion page template. Copy this file next to your deck's generator, fill in every fill: line, then
 
-    <venv with segno and markdown>/bin/python build.py
+    uv run build.py
     node deck-kit/page/check-page.mjs site/decks/<slug>/index.html --shots /tmp/page-shots --click
 
 Read deck-kit/page/README.md first. Publish the page to its own folder (decks/<slug>-<name>/), because

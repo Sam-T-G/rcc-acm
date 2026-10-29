@@ -1,3 +1,7 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = ["segno"]
+# ///
 """Template: a self-guided lab deck (decision log 2026-10-28).
 
 Tables build from a companion page at their own pace; the projector only frames the rounds:
@@ -5,8 +9,8 @@ Tables build from a companion page at their own pace; the projector only frames 
     cover, the build, rules, then for each round: its map slide, then its win slide, then a work
     clock, pack up, wrap
 
-Usage (from the repo root, with a Python that has segno):
-    python deck-kit/templates/self-guided-lab.py <out.html>
+Usage (from the repo root; uv installs segno from the block above):
+    uv run deck-kit/templates/self-guided-lab.py <out.html>
 
 Edit BUILD and ROUNDS. Step-by-step projected rounds (one slide per wire) live in
 deck-kit/lab/labkit.py instead; this template is for labs where the page carries the steps.
