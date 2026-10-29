@@ -83,7 +83,7 @@ Thirteen kinds are in the table; the fourteenth, the career disk, has its own se
 
 ## Pictures and variety
 
-Any slide that names a thing a person could photograph gets a photo. `fetch-image.mjs` searches Wikimedia Commons and Openverse for CC0, public domain, CC BY, and CC BY-SA only, saves a 1600 px JPEG with its metadata stripped, keeps a `CREDITS.md` beside the photos, and prints the markup with the credit link:
+Every slide gets a visual where it can, and a real photo from the internet comes first. Next best is a diagram, a labkit drawing, a chart, a screenshot, or a QR code. The cover, `giant` and `orange` statements, hero slides, and work clocks are exempt because they already draw the eye. Rules for agents: [CLAUDE.md](CLAUDE.md). `fetch-image.mjs` searches Wikimedia Commons and Openverse for CC0, public domain, CC BY, and CC BY-SA only, saves a 1600 px JPEG with its metadata stripped, keeps a `CREDITS.md` beside the photos, and prints the markup with the credit link:
 
 ```sh
 node deck-kit/fetch-image.mjs search "arduino uno r4"

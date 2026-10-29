@@ -17,6 +17,15 @@ Club video: `swift deck-kit/encode-video.swift <clip> <images-folder> <name>`, t
 
 Never fetch: people or faces, stock people at laptops, AI images of people, the ACM Diamond or any ACM mark (none until the chapter lockup exists), Google product imagery, anything NC or ND. Never put text over a photo. Vendor logos printed on hardware in a photo are fine; a vendor logo as a label is not.
 
+## A visual on every slide
+
+Every slide gets something to look at besides words, whenever it can. Pick in this order:
+
+1. A real photo of the thing the slide is about, fetched from the internet with the steps above.
+2. A picture of the idea: a diagram, a true-to-object drawing from `lab/labkit.py`, a chart, a screenshot of the real page or tool, or a QR code.
+
+The picture shows what the slide names. Never use one as decoration. Slides that already pull the eye on their own can go without: the cover, a `giant` or `orange` statement, a hero or marquee slide, and a work clock. Any other slide that ships with only words says why in its notes.
+
 ## Variety: no two slides in a row alike
 
 - Mix kinds, grounds (`paper`, `warm`, `tint`, `orange`), and layouts (`center`, `giant`, `bleed-right`, `bleed-left`, `framed`). The check fails three slides in a row with the same kind, ground, and layout.
