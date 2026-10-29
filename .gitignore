@@ -11,6 +11,9 @@ desktop.ini
 
 # Tool output
 node_modules/
+test-results/
+playwright-report/
+.venv/
 __pycache__/
 lychee/
 .lycheecache
