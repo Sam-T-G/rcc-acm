@@ -9,6 +9,17 @@ Remove a line once it is answered and note the answer in that day's entry.
 - The microcontroller lab kit order (2026-09-20, see `semesters/2026-fall/budget.md`) has no Pico 2 W, but the station cards assume one. Change the cards or the hardware?
 
 <!-- newest entry below: add "## YYYY-MM-DD · Name (via Claude Code)" here and end it with a blank line -->
+## 2026-11-18 · Sam (via Claude Code)
+
+**Changed:**
+
+- PR #4 merged into `main` at Sam's call (`d7c5ca2`), so `main` now carries the deck-kit, the Arduino lab spec, and the 10-08, 10-15, and 10-29 decks. Its markdownlint check was failing at merge. The local clone is back on `main`.
+- `5bf875a`: 2026-11-19 meeting, spring project ideas. Plan `semesters/2026-fall/meetings/2026-11-19-plan.md` (run of show, facilitator seed ideas, sign-up questions) and a 12-slide deck (look back, unused parts grid, 8-minute idea clock, share and group, dot vote, sign-up questions, clock to 2:22, what's next). check.mjs 204 of 204; Playwright Chrome and Safari pass. Published at Sam's go to `https://sam-t-g.github.io/rcc-acm/decks/2026-11-19/` (live page returns 200); `8775434` is the live URL line from that publish.
+
+**Decided:** Sam: merge PR #4 so new decks build on `main`. Sign-up tomorrow is on paper (no form QR).
+
+**Next:** No record of the 11-05 and 11-12 meetings; the plan and deck leave them off. Transcribe the 11-19 board photo and sign-ups into a `2027-spring` projects folder (first names only with consent).
+
 ## 2026-10-29 · Sam (via Claude Code)
 
 **Changed:**
