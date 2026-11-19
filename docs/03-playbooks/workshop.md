@@ -2,7 +2,7 @@
 
 ## Purpose
 
-A workshop is a hands-on session where everyone leaves having built or run something. It is the Build and Learn pillars in one block. Use this playbook instead of the [weekly meeting](weekly-meeting.md) one when the session needs setup ahead of time, runs longer than an hour, is open to non-members, needs food, or needs a room other than A-210.
+A workshop is a hands-on session where everyone leaves having built or run something. It covers the Build and Learn pillars in one session. Use this playbook instead of the [weekly meeting](weekly-meeting.md) one when the session needs setup ahead of time, runs longer than an hour, is open to non-members, needs food, or needs a room other than A-210.
 
 ## When
 
@@ -26,7 +26,7 @@ The workshop lead is whoever proposed it (officer or member). The Chair signs of
 - Prerequisites are posted a week ahead: accounts to create, software to install, hardware to bring. Assume the campus wifi is slow and plan for it.
 - Test the setup steps on a laptop that is not yours, on at least one Windows and one macOS machine.
 - Nothing requires a paid account or a credit card.
-- Hands-on time is at least half the session. Talking for 40 minutes then "now try it" in the last 10 is a lecture.
+- Hands-on time is at least half the session. Don't talk for 40 minutes and leave only the last 10 for "now try it".
 - Have a fallback: a repo with the finished state at each checkpoint so someone who gets stuck can jump ahead.
 
 ## T-minus checklist
@@ -75,7 +75,7 @@ The workshop lead is whoever proposed it (officer or member). The Chair signs of
 | -0:20 | Lead | Tech check; pin links in Discord |
 | 0:00 | Helper | Sign in, seat people near a helper if they are new |
 | 0:05 | Lead | Why this topic, what everyone will have at the end, where the links are |
-| 0:10 | Lead | Setup check: hands up if step 0 works; helpers fix stragglers |
+| 0:10 | Lead | Setup check: hands up if step 0 works; helpers go to anyone whose step 0 failed |
 | 0:15 | Lead | Checkpoint 1: demo 5 minutes, build 15 |
 | 0:35 | Lead | Checkpoint 2: demo 5, build 15 |
 | 0:55 | Lead | Checkpoint 3 or stretch task |

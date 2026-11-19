@@ -1,6 +1,6 @@
 # Event checklist
 
-One page to run any club event at RCC, from a workshop to a trip. Create the event folder first with `scripts/new-event.sh`, which drops in the plan, run sheet, and retro from `templates/`. Then work down this list.
+This checklist covers any club event at RCC, from a workshop to a trip. Create the event folder first with `scripts/new-event.sh`, which drops in the plan, run sheet, and retro from `templates/`. Then work down this list.
 
 Playbooks for specific event types are in [docs/03-playbooks/](../03-playbooks/README.md).
 
@@ -82,6 +82,6 @@ Playbooks for specific event types are in [docs/03-playbooks/](../03-playbooks/R
 - [ ] Anything that surprised you turned into a fix: a line in a playbook, a template change (with a decision record), or a [TBD] replaced in these docs
 - [ ] PR opened with the retro, budget update, and any doc fixes
 
-## Minimum viable event
+## The smallest event
 
 A one-hour on-campus workshop in the regular room during the regular slot (Thursdays, 12:50 to 1:50 PM, BLCIS A-210) needs only: the plan, an announcement, sign-in, and the retro. Everything else on this list is for events that need a different room, money, food, or travel.

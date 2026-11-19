@@ -1,6 +1,6 @@
 # Semester lifecycle
 
-Every semester runs the same three phases: open, run, close. The folder for the semester (`semesters/<YYYY-term>/`) is the working record for all three. This page is the evergreen shape; the actual dates for a given term live in that term's `calendar.md`.
+Every semester runs the same three phases: open, run, close. The folder for the semester (`semesters/<YYYY-term>/`) is the working record for all three. This page lists the phases and weeks that repeat every term; the actual dates for a given term live in that term's `calendar.md`.
 
 RCC terms and folder names: Fall (late August to mid December, `YYYY-fall`), Spring (mid February to early June, `YYYY-spring`), Summer (`YYYY-summer`). RCC also runs a short Winter session in January; the club has not used a `YYYY-winter` folder yet, and whether to is a decision for [decision-log.md](decision-log.md) when it comes up.
 

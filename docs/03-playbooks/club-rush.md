@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Club Rush is the campus tabling event run by Student Activities where clubs recruit. It is where most of the semester's new members first hear of ACM @ RCC. The goal is simple: get people into Discord and to the first meeting after Rush.
+Club Rush is the campus tabling event run by Student Activities where clubs recruit. It is where most of the semester's new members first hear of ACM @ RCC. The goal: get people into Discord and to the first meeting after Rush.
 
 ## When
 
 Early each semester. Student Activities sets the dates and the location. The RCC Club Rush page (https://www.rcc.edu/life-at-rcc/events/club-rush.html) last showed 2021 dates: three days in mid September on Terracina Drive next to the Quad. Fall 2026 dates: [TBD: confirm with Student Activities, studentactivities@rcc.edu]. Record the confirmed dates in the semester `calendar.md`.
 
-The club has to be rechartered for the semester to table. The Club Packet is due to Student Activities within the first six weeks of the Fall semester per the RCC clubs page; see [club-recognition-and-icc.md](../02-operations/club-recognition-and-icc.md) and get it in before Rush, not after.
+The club has to be rechartered for the semester to table. The Club Packet is due to Student Activities within the first six weeks of the Fall semester per the RCC clubs page; see [club-recognition-and-icc.md](../02-operations/club-recognition-and-icc.md) and submit it before Rush.
 
 ## Owner
 

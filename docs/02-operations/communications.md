@@ -6,7 +6,7 @@ Where ACM @ RCC talks to members and the campus, who is allowed to post, and how
 
 | Channel | Address | Audience | Used for |
 |---|---|---|---|
-| Discord | https://discord.gg/fM2HbsJyBG | Members | The hub. Meeting reminders, event announcements, questions, project chatter. |
+| Discord | https://discord.gg/fM2HbsJyBG | Members | Main member channel. Meeting reminders, event announcements, questions, project chatter. |
 | Instagram | https://www.instagram.com/rcc.acm/ | Campus and prospective members | Event flyers, recaps, Club Rush. |
 | Parent org platform | ACM (Association for Computing Machinery) chapter page (see [links.md](../04-brand/links.md)) | Members and the wider network | Official event listings and anything the parent org expects to see. |
 | Classroom announcements | Through faculty, coordinated by the advisor | Students in CIS and related classes | Two-line pitch for upcoming events and Club Rush. |
@@ -15,7 +15,7 @@ Where ACM @ RCC talks to members and the campus, who is allowed to post, and how
 | Email to Student Activities | studentactivities@rcc.edu | RCC staff | Forms, funding, questions. Officers and advisor only. |
 | GitHub Issues | https://github.com/Sam-T-G/rcc-acm/issues | Officers | Proposals, tasks, decisions. Not a member-facing channel. |
 
-Discord is the system of record for member-facing announcements. If it was not posted in Discord, it was not announced.
+Every member announcement goes on Discord first. An announcement counts as made only once it is posted in Discord.
 
 ## Who posts
 
@@ -28,7 +28,7 @@ Discord is the system of record for member-facing announcements. If it was not p
 | Advisor | Faculty and Student Activities channels |
 | Any member | Discord general channels |
 
-Two people should hold admin on Discord and Instagram at all times, one of whom is not graduating this year. Same rule as the repo. Account ownership moves at handoff ([handoff-procedure.md](../01-governance/handoff-procedure.md)).
+Two people should hold admin on Discord and Instagram at all times, one of whom is not graduating this year. The repo follows the same two-admin rule. Account ownership moves at handoff ([handoff-procedure.md](../01-governance/handoff-procedure.md)).
 
 ## Cadence
 

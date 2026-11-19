@@ -1,6 +1,6 @@
 # Retrospective - Fall 2026
 
-Written by the outgoing team in the last two weeks. Numbers first, opinions second. The next team reads this before they write their `goals.md`.
+Written by the outgoing team in the last two weeks. Put the numbers first, then opinions. The next team reads this before they write their `goals.md`.
 
 ## Numbers
 

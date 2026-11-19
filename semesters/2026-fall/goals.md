@@ -22,7 +22,7 @@ Goals 2 to 4 each need a go/no-go entry in the [decision log](../../docs/01-gove
 
 Open threads from the previous `retrospective.md` and `handoff.md`. Write `none` if there are none.
 
-- FY 2026-27 ASRCC allocation: $12,000 was requested; what was approved is [TBD]. The notice was due by July 1, 2026. If the club is not in the budget, the Senate route opens in August. Owner: Treasurer. See [budget.md](budget.md).
+- FY 2026-27 ASRCC allocation: $12,000 was requested; what was approved is [TBD]. The notice was due by July 1, 2026. If the club is not in the budget, the club can ask the ASRCC Senate for funding starting in August. Owner: Treasurer. See [budget.md](budget.md).
 - The FY 2026-27 request's line items are not in the repo yet. Copy them from the packet into [2026-spring/budget.md](../2026-spring/budget.md). Owner: Treasurer.
 - Old ACM trust account: about $1,063 last known (Fall 2025), access problems. Confirm signers and balance. Owner: Treasurer, Advisor.
 - ACM chapter annual report for the fiscal year ending June 30, 2026: filed or not [TBD]. Owner: Treasurer.

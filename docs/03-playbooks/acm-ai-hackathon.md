@@ -1,12 +1,12 @@
 # Playbook: ACM AI Hackathon
 
-Runbook for the club's own on-campus hackathon. The brand assets exist (banner, icon, QR code in `assets/`). The first run's date and outcome are [TBD]; when they are known, they go in a semester event folder, not here.
+Steps for running the club's own on-campus hackathon. The brand assets exist (banner, icon, QR code in `assets/`). The first run's date and outcome are [TBD]; when they are known, they go in a semester event folder, not here.
 
 ## Purpose
 
 - Give RCC students a hackathon they can reach without a flight: one building, one weekend or one long day, AI-themed projects.
 - Produce projects and demos the club can show at Club Rush and in the ASRCC funding request.
-- On-campus student engagement is ASRCC's top funding priority, so this event is the club's strongest funding case.
+- On-campus student engagement is ASRCC's top funding priority, so this event gives the club its strongest case in the funding request.
 
 ## When
 
@@ -86,7 +86,7 @@ Write these decisions into the event plan and the decision log before booking an
 
 ## Day-of run sheet
 
-One-day version. Stretch the middle block for an overnight run.
+One-day version. For an overnight run, make the hacking time between 0:20 and "End minus 2 h" longer.
 
 | Time | Item | Owner |
 | --- | --- | --- |

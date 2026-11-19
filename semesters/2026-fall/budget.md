@@ -25,7 +25,7 @@ The ASRCC fiscal year runs July 1 to June 30. A fall semester spends from the al
 | Allocation notice | due by 2026-07-01; amount approved [TBD] |
 | Status | [TBD] |
 
-First job for the Treasurer this semester: find the allocation notice, copy the approved amount per line into the table below, and log it in the [decision log](../../docs/01-governance/decision-log.md). If the club is not in the FY 2026-27 budget, the Senate route opens in August; one specific ask, one amount.
+First job for the Treasurer this semester: find the allocation notice, copy the approved amount per line into the table below, and log it in the [decision log](../../docs/01-governance/decision-log.md). If the club is not in the FY 2026-27 budget, the club can ask the ASRCC Senate for funding starting in August. Make it one specific request for one amount.
 
 ## Planned spending
 
@@ -86,7 +86,7 @@ Status: `submitted`, `approved`, `paid`, `rejected`.
 ## Rules that bite
 
 - ASRCC does not fund fundraisers, personnel, instructional equipment, or things the college must provide.
-- Funding priority goes to on-campus student engagement. Travel is a harder sell than a workshop in BLCIS.
+- Funding priority goes to on-campus student engagement. ASRCC is less likely to fund travel than a workshop in BLCIS.
 - Acknowledge ASRCC at every funded event: say it out loud and put it on the flyer.
 - Keep every receipt. The receipt has to show the price and the purchase date.
 - Any budget decision (new line item, moving money, dropping an event) gets a [decision-log](../../docs/01-governance/decision-log.md) entry the same week.
@@ -94,7 +94,7 @@ Status: `submitted`, `approved`, `paid`, `rejected`.
 
 ## Next year's request (spring semesters only)
 
-Not applicable in a fall semester. The FY 2027-28 request gets written in Spring 2027 (packet early February 2027, due late April 2027). Start the retro numbers now: attendance per event and spend per line are what the packet asks for.
+Not applicable in a fall semester. The FY 2027-28 request gets written in Spring 2027 (packet early February 2027, due late April 2027). Start recording the numbers now, because the packet asks for attendance per event and spend per line item.
 
 | Step | Date | Status |
 |---|---|---|

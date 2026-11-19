@@ -1,36 +1,36 @@
 # Design docs
 
-The system for the club's written artifacts: playbooks, meeting pages, station cards, semester plans, event plans, and the HTML pages built from them. It covers what a document is made of, how it is structured, what markdown constructs are legal, and how a `.md` file becomes a styled page.
+How the club writes its documents: playbooks, meeting pages, station cards, semester plans, event plans, and the HTML pages built from them. This file covers what goes in a document, what order it goes in, which markdown you can use, and how a `.md` file is built into a styled page.
 
-**Scope.** This section owns document structure and markdown legality. [components.md](components.md) owns what a callout, table, and code block *look like*; this section owns which ones exist and when an author is allowed to use one. [foundations.md](foundations.md) owns every value. Nothing here restates a token value.
+**Scope.** This file sets document structure and which markdown is allowed. [components.md](components.md) sets what a callout, table, and code block *look like*; this file sets which ones exist and when you can use one. [foundations.md](foundations.md) holds every value. This file never repeats a token value.
 
-**Governing principle, and everything below follows from it:** *an author writes structure, never appearance.* GitHub strips `class`, `style`, `id`, and all CSS from markdown. Any convention that depends on an attribute an author types works in exactly one of the two renderers. So the converter derives styling from structure the author already had to write, and the author has no styling controls at all.
+**The main rule, which everything below follows:** *you write the structure (headings, tables, callouts) and never the styling.* GitHub strips `class`, `style`, `id`, and all CSS from markdown. Any convention that depends on an attribute you type works in only one of the two renderers (GitHub and the standalone HTML build). So the converter styles the page from the structure you already had to write, and authors get no styling controls at all.
 
 ---
 
 ## 1. Anatomy of a club document
 
-The anatomy comes from Google's technical-writing guidance by way of the sibling GDG chapter's system, which is the precedent this file ports: one h1, sentence case, heading grammar that encodes section type, a closed callout set with an admission test, and a list-versus-table decision rule. That is method, and method is free to learn from. What it deliberately does **not** take is any corporate design-doc review structure (security, privacy, i18n, storage sign-off sections). A student club that ships a sign-off matrix it never fills in has built theater.
+The anatomy comes from Google's technical-writing guidance by way of the GDG on Campus @ RCC design system, which this file copies its method from: one h1, sentence case, heading wording that tells you the section type, a closed set of callouts with an admission test, and a rule for when to use a list and when to use a table. Learning a writing method from Google's guidance is fine. This file **leaves out** the review sections corporate design docs carry (security, privacy, i18n, storage sign-off), because a student club would never fill in a sign-off table like that.
 
 The blocks, in order. Blocks 1, 2, and 9 are required in every document. The rest appear when the document has that job.
 
 | # | Block | What it is for | How it fails |
 |---|---|---|---|
 | 1 | **Title** (single h1) | Names the artifact. Sentence case. Matches the filename slug. | It is a category ("Playbook"), it is Title Case for no reason, or a second h1 appears further down |
-| 2 | **Job line** (1 to 2 sentences, no heading, directly under the h1) | Tells a reader in one breath what this file does and who holds it. The weekly meeting playbook's Purpose opens correctly: "The weekly meeting is the club." The meeting plan does too: "Every Thursday this term, what it is, and who owns it." | It becomes a preamble, it restates the title in longer words, or it pre-announces what the document will cover. The rule is blunt: do not pre-announce anything |
-| 3 | **Facts table** (two-column, empty header row) | The constants a reader needs before acting: owner role, room, inputs, status. The weekly meeting playbook's When table and every station card's header table already do this, and it is the house signature. Keep it. | It carries prose instead of values, it duplicates something the body says again, or a value is guessed instead of marked `[TBD]` |
+| 2 | **Job line** (1 to 2 sentences, no heading, directly under the h1) | Tells a reader in one or two sentences what this file does and which role owns it. The weekly meeting playbook's Purpose opens this way: "The weekly meeting is the club." The meeting plan does too: "Every Thursday this term, what it is, and who owns it." | It turns into an introduction, it restates the title in longer words, or it announces what the document will cover. Never announce what's coming |
+| 3 | **Facts table** (two-column, empty header row) | The constants a reader needs before acting: owner role, room, inputs, status. The weekly meeting playbook's When table and every station card's header table already do this, and every club doc keeps doing it. | It carries prose instead of values, it duplicates something the body says again, or a value is guessed instead of marked `[TBD]` |
 | 4 | **The shape** (h2, noun phrase) | The thing itself, laid out as a table or a short list. "Meeting formats" and its four-row table. "The term" and its sixteen Thursdays. A reader who stops here knows what they are looking at. | It is written as narrative when it is really a table of three or more facts per row |
-| 5 | **The rules that bind it** (h2, noun phrase) | The constraints that do not bend. "Standing rules." "Design rules." Short, numbered, each with its consequence stated. | More than about six, or a rule that is really a preference. A rule nobody would enforce weakens the ones you would |
-| 6 | **The procedure** (h2, infinitive verb) | Ordered steps a person executes. "To file a lab day:" The station card's Steps section is the model: each step names the TODO, gives one hint, and says what should happen when it works. | Conditions land after the instruction instead of before it. Put conditions before instructions, not after; that one sentence-level rule has an outsized effect on whether a step gets executed correctly |
-| 7 | **Failure modes** (h2, noun phrase) | Named ways this goes wrong and the specific correction. The station card's Common bugs table is the model: symptom, real cause, fix in one line. | Vague symptoms ("the board acts weird"). A failure mode a facilitator cannot recognize at the bench is a paragraph, not a tool |
-| 8 | **Boundary** (h2, noun phrase) | What this document does not cover, and where that lives. The lab-day playbook's table of what lives in the lab repo is the model. | Missing. Without it every reader who wants the adjacent thing either asks or duplicates it |
-| 9 | **Maintenance footer** | `Last reviewed: YYYY-MM-DD. Owner: ROLE.` A stale date is a bug, not a cosmetic issue. Put a review date on anything the club publishes | Missing, or updated by a bot so it means nothing |
+| 5 | **The rules that bind it** (h2, noun phrase) | The constraints with no exceptions. "Standing rules." "Design rules." Short, numbered, each with its consequence stated. | More than about six, or a rule that is really a preference. If one rule goes unenforced, readers start ignoring the rest |
+| 6 | **The procedure** (h2, infinitive verb) | Ordered steps a person does. "To file a lab day:" The station card's Steps section is the model: each step names the TODO, gives one hint, and says what should happen when it works. | Conditions land after the instruction instead of before it. Put the condition first; that one rule makes a big difference in whether people do the step right |
+| 7 | **Failure modes** (h2, noun phrase) | Named ways this goes wrong and the specific correction. The station card's Common bugs table is the model: symptom, real cause, fix in one line. | Vague symptoms ("the board acts weird"). If a facilitator at the bench can't recognize the symptom, the row doesn't help them fix anything |
+| 8 | **Boundary** (h2, noun phrase) | What this document does not cover, and where that lives. The lab-day playbook's table of what lives in the lab repo is the model. | Missing. Without it every reader who wants the related material either asks or copies it into a second file |
+| 9 | **Maintenance footer** | `Last reviewed: YYYY-MM-DD. Owner: ROLE.` Treat a stale date as a bug and fix it. Put a review date on anything the club publishes | Missing, or updated by a bot so the date says nothing about whether a person checked the file |
 
-Two anatomy rules that are worth stating as rules:
+Two more rules apply to every document:
 
-**Single source.** A fact lives in exactly one file. Every other file links to it. The meeting plan says so out loud: "The repeatable structure lives in the weekly meeting playbook; this file is only the semester's assignments." That sentence is the pattern. Copy it into any new document family.
+**Single source.** A fact lives in exactly one file. Every other file links to it. The meeting plan states this directly: "The repeatable structure lives in the weekly meeting playbook; this file is only the semester's assignments." Write the same kind of sentence into any new set of related documents.
 
-**Roles, not names.** Documents name a role (Chair, Lab lead, Advisor); one table per semester maps roles to people, with consent. This is already the club's convention, it keeps the repo inside its own [privacy policy](../../01-governance/privacy-and-public-repo-policy.md), and it makes documents reusable next year. Design docs inherit it without exception.
+**Roles instead of names.** Documents name a role (Chair, Lab lead, Advisor); one table per semester maps roles to people, with consent. This is already the club's convention, it keeps the repo inside its own [privacy policy](../../01-governance/privacy-and-public-repo-policy.md), and it lets next year's officers reuse the documents. Design docs follow it with no exceptions.
 
 ---
 
@@ -45,22 +45,22 @@ Two anatomy rules that are worth stating as rules:
 | h3 | Subsections inside a long h2 | Allowed. Never skip from h2 to h4 |
 | h4 | Nothing | If you need one, the h2 above it is a document. Split |
 
-The h4 ban has a structural reason, not a taste reason. In this type scale the heading roles run out at h3 (`headline-sm`); h4 drops to `title-lg`, which is body-sized type at a heavier weight. Below the section level a heading stops being a section and becomes a bold sentence, and at h4 the reader has already lost the outline.
+The h4 ban comes from the type scale. In this type scale the heading roles run out at h3 (`headline-sm`); h4 drops to `title-lg`, which is body-sized type at a heavier weight. So an h4 looks like a bold sentence instead of a heading, and readers can't follow the outline at that depth.
 
 ### Grammar
 
-Heading grammar encodes section type, so a reader knows what kind of section they are in from the first word.
+The first word of a heading tells the reader what kind of section it is.
 
 - **Task section: bare infinitive.** "Run one." "Flash the boards."
 - **Concept section: noun phrase.** "The pin map." "Meeting formats."
 - **No `-ing` openers.** "Running a lab day" becomes "Run a lab day".
-- **Sentence case everywhere,** including the h1. This is the single highest-yield change to how a document reads, and it costs nothing. Enforce it in review.
+- **Sentence case everywhere,** including the h1. It is the easiest change that most improves how a document reads. Check it in review.
 - **No numbers, links, or inline code inside a heading text.** Headings are also anchors and link labels.
 
-Three sanctioned exceptions, all already live in the repos. Keeping the exception list closed and written down is what keeps the rule alive.
+There are three exceptions, all already in use in the repos. The list is closed: any heading not covered here follows the rules above.
 
 1. **Playbook titles carry the prefix.** `# Playbook: Weekly meeting` stays. The prefix is how a reader tells a playbook from a policy in a search result, and every playbook in `docs/03-playbooks/` already uses it.
-2. **Station card facts tables and timings stay in the heading.** `## Check for understanding (60 seconds)` keeps its parenthetical. The number is the promise the section makes, and the lab repo's template writes it that way.
+2. **Station card facts tables and timings stay in the heading.** `## Check for understanding (60 seconds)` keeps its parenthetical. The number tells the facilitator how long the section takes, and the lab repo's template writes it that way.
 3. **Role and tier names in table cells stay in backticks.** That is a cell, not a heading, and it is fine.
 
 ### Ordering
@@ -78,7 +78,7 @@ The test: a reader who stops after the facts table can still show up and do the 
 
 ### When to split
 
-Split when any one of these is true. They are triggers, not a scoring system.
+Split when any one of these is true. One is enough; you don't add them up.
 
 | Trigger | Split into |
 |---|---|
@@ -86,14 +86,14 @@ Split when any one of these is true. They are triggers, not a scoring system.
 | More than seven h2 sections | Two documents, or an index plus children |
 | Two blocks change on different cadences | Evergreen part to `docs/`, dated part to `semesters/<term>/`. This is the repo's existing rule 1 and it is the primary split axis |
 | Two different roles own two halves | Two files, one owner each |
-| A section is linked to from three or more documents | It was always a document |
-| The document holds both a machine and its instances | Machine to the playbook or the lab repo's `docs/program.md`; instances to the semester folder or `challenges/`. The lab program plus its 24 station cards is the worked example, and so is the weekly meeting playbook plus the meeting plan |
+| A section is linked to from three or more documents | Its own document |
+| The document holds both a reusable process and the dated or numbered copies of it | The process to the playbook or the lab repo's `docs/program.md`; the copies to the semester folder or `challenges/`. The lab program plus its 24 station cards is the worked example, and so is the weekly meeting playbook plus the meeting plan |
 
 ---
 
 ## 3. Constructs that render correctly on GitHub and as HTML
 
-**Provenance note before the rules:** none of the GitHub renderer behavior below has been verified against today's github.com. It is carried over from the sibling system and from general knowledge of GitHub Flavored Markdown, and it should be treated as accurate but unverified. Section 3.5 gives the canary that turns it into verified fact, and the club should run that once before trusting any line of it.
+**Provenance note before the rules:** none of the GitHub renderer behavior below has been verified against today's github.com. It is carried over from the sibling system and from general knowledge of GitHub Flavored Markdown, and it should be treated as accurate but unverified. Section 3.5 describes the canary, a test file that uses every construct once, and the club should render it once before trusting any line of this section.
 
 ### 3.1 The two hard constraints
 
@@ -104,7 +104,7 @@ Split when any one of these is true. They are triggers, not a scoring system.
 
 Use GitHub alert syntax. It is the only native callout on GitHub, and it is plain blockquote structure, so a converter can detect it with no author-supplied attribute.
 
-The club's set is closed at three. GitHub offers five (`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`); `TIP` and `CAUTION` are banned so the remaining three keep their distinctiveness. The mapping is the same one [components.md](components.md) §7.7 renders, so a doc that passes review here renders correctly there without a second decision.
+The club's set is closed at three. GitHub offers five (`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`); `TIP` and `CAUTION` are banned so the remaining three stay easy to tell apart. The mapping is the same one [components.md](components.md) §7.7 renders, so a doc that passes review here renders correctly there without a second decision.
 
 | Syntax | Means | Example use |
 |---|---|---|
@@ -118,9 +118,9 @@ Admission test, applied before anything becomes a callout. All three conditions 
 2. The interruption does not obstruct the reader's progress.
 3. The content does not flow from the sentence before it.
 
-Explicit non-uses: cross-references, prerequisites, a step of a procedure, anything critical to success, and anything the preceding paragraph already leads into. Most callout systems specify what a callout looks like. This one specifies what is allowed to become one, which is the half that actually holds.
+Explicit non-uses: cross-references, prerequisites, a step of a procedure, anything critical to success, and anything the preceding paragraph already leads into.
 
-Scarcity rule, and it is what lets the styling stay quiet: **at most two callouts per document, never two adjacent, never immediately after a heading.** When multiple notices share a page they begin to lose their visual distinctiveness. (The three-per-page ceiling in components.md is the same rule for a built page that may render more than one source file.)
+Scarcity rule: **at most two callouts per document, never two adjacent, never immediately after a heading.** When a page has several callouts, readers stop noticing them. (The three-per-page ceiling in components.md is the same rule for a built page that may render more than one source file.)
 
 Banned callout forms: `!!! note` (MkDocs), `:::note` (Docusaurus), a bolded `> **Note:**` blockquote, and an emoji-prefixed line. The first two render as literal text on GitHub. The third is superseded by alerts. The fourth depends on emoji shortcodes that only GitHub expands.
 
@@ -134,7 +134,7 @@ Banned callout forms: `!!! note` (MkDocs), `:::note` (Docusaurus), a bolded `> *
 - A line break inside a cell is `<br>`. A literal pipe is `\|`.
 - The header row is required by the parser. A key/value facts table uses an empty header (`| | |`), which is exactly what the weekly meeting playbook and every station card already write, and the converter detects that shape and styles it as a facts block.
 - Column heads are sentence case, concise, no end punctuation of any kind.
-- Every table gets a complete introducing sentence above it. The complete sentence is the part that matters.
+- Every table gets a complete introducing sentence above it. A fragment like "Sizes:" does not count.
 - Six columns is the practical ceiling. GitHub wraps cell text rather than scrolling, so a wide table gets very tall on a phone instead of scrolling. The event plan template's budget table runs six and the kit inventory in the lab repo is the known exception; the standalone page wraps every table in a horizontal scroll container, and GitHub gets the tall version.
 - Styling, owned by components.md: horizontal rules only, tinted header row, body text one step below running prose. No vertical rules, no zebra stripes.
 
@@ -171,11 +171,11 @@ Banned callout forms: `!!! note` (MkDocs), `:::note` (Docusaurus), a bolded `> *
 
 ### 3.4 The parity traps, in one place
 
-These are the constructs that pass CI, look right on GitHub, and quietly break the published page if the converter is not configured for them: **tables, task lists, strikethrough, autolinked bare URLs, footnotes, GitHub alerts, mermaid fences, heading anchor slugs, and `.md` link rewriting.** Nine items. Every one of them is a converter configuration, not an authoring decision.
+These are the constructs that pass CI, look right on GitHub, and break the published page with no error if the converter is not configured for them: **tables, task lists, strikethrough, autolinked bare URLs, footnotes, GitHub alerts, mermaid fences, heading anchor slugs, and `.md` link rewriting.** All nine are fixed in the converter's settings; authors write them the same way either way.
 
 ### 3.5 The canary
 
-Add `docs/04-brand/render-canary.md`: one file that uses every legal construct once, including all three callouts, a facts table, a six-column table, a `cpp` block with a header, a `diff` block, a mermaid fence, a footnote, a task list, a bare URL, a relative link, an absolute link into the lab repo, and an anchor link into itself. Render it both ways and compare, once per semester and on any converter change. A construct that is not in the canary is not supported, and that is the rule that keeps this section from rotting. The file does not exist yet (§12).
+Add `docs/04-brand/render-canary.md`: one file that uses every legal construct once, including all three callouts, a facts table, a six-column table, a `cpp` block with a header, a `diff` block, a mermaid fence, a footnote, a task list, a bare URL, a relative link, an absolute link into the lab repo, and an anchor link into itself. Render it both ways and compare, once per semester and on any converter change. A construct that is not in the canary is not supported. That rule keeps section 3 accurate when GitHub or the converter changes. The file does not exist yet (§12).
 
 ---
 
@@ -247,11 +247,11 @@ Unknowns are marked `[TBD]`. Never guess a date, a room, a name, or an amount.
 
 ## 5. Length and density
 
-Every line loads every time someone reads the file, and instruction files load every turn for the tooling that reads them. A line that is not load-bearing costs something on every read.
+Every reader reads every line, and tools that load instruction files read every line on every turn. Cut any line that doesn't change what a reader does.
 
 ### Budgets
 
-Set by this system, not measured from anything. Treat them as review triggers, not hard failures.
+These numbers are this system's own picks; nothing was measured. Going past one means a reviewer takes a second look. It does not fail the build.
 
 | Document type | Target | Hard ceiling |
 |---|---|---|
@@ -271,8 +271,8 @@ Apply these in review, in this order.
 1. **The paragraph test.** For each paragraph: what are you telling the reader, why does it matter to them, and how do they use it? A paragraph that cannot answer all three is cut.
 2. **The single-source test.** Does this fact exist in another file? Then link, and delete this copy. The weekly meeting playbook holds the spine. Meeting pages do not restate it. The lab repo's `docs/program.md` holds the design rules. Cards do not restate them.
 3. **The pre-announcement test.** Delete every sentence that describes what the document is about to do. "In this section we will cover" is always deletable.
-4. **The three-facts test.** Three or more related facts per item is a table. Prose carrying five parallel facts is a table that has not been written yet.
-5. **The load-bearing test.** Delete the line. Would a facilitator at 11 PM the night before, or at the bench at 12:49, do anything differently? If not, it stays deleted.
+4. **The three-facts test.** Three or more related facts per item is a table. If a paragraph lists five parallel facts, turn it into a table.
+5. **The delete test.** Delete the line. Would a facilitator at 11 PM the night before, or at the bench at 12:49, do anything differently? If not, it stays deleted.
 
 ### Density conventions
 
@@ -281,7 +281,7 @@ Apply these in review, in this order.
 - Fixed prescriptive vocabulary: **must** or a bare imperative for required, "we recommend" for recommended, **can** for optional, **might** for a possible outcome. Generally avoid "should"; it reads as either of the first two and commits to neither.
 - No em dashes inside sentences. Periods, colons, semicolons, parens, or "and". `check.sh` fails the build on U+2014.
 - Register, calibrated by example rather than adjective. Too informal: "This lab day is going to be SO good." Right: "Steps 1 and 2 are reachable in the first ten minutes." Too formal: "Initial task completion is anticipated within the opening segment of the session."
-- The escape hatch is part of the system: break any of these rules sooner than say anything outright barbarous. Consistency is the default, not the goal.
+- The exception: break any of these rules if following it would make a sentence awkward or unclear. Consistency is the default, and a clear sentence comes first.
 
 ---
 
@@ -294,7 +294,7 @@ The `.md` file in the repo stays the source of truth. HTML is build output, neve
 CI already runs Node for `markdownlint-cli2`, so the converter runs there too and adds no new runtime.
 
 - **Parser: `markdown-it`,** GFM-configured, with `linkify` on, plus `markdown-it-footnote` and a task-list plugin. Two custom rules carry the club's conventions: alert blockquotes to callout markup, and empty-header two-column tables to facts blocks.
-- **Anchors: `github-slugger`.** This is load-bearing. It implements GitHub's own slug algorithm, and using anything else means anchor links pass `lychee --offline` and land on nothing in the published page.
+- **Anchors: `github-slugger`.** Do not swap this one out. It implements GitHub's own slug algorithm, and using anything else means anchor links pass `lychee --offline` and land on nothing in the published page.
 - **Mermaid:** pre-render fences to inline SVG at build time so the page carries no runtime dependency, or ship the mermaid runtime. Pre-rendering is preferred; it keeps the page self-contained and works with a strict content policy.
 - **Syntax highlighting:** a build-time highlighter over the `cpp`, `python`, and `sh` fences, with a theme whose every token color is measured against `--acm-code-surface` in both themes (components.md §7.11). No client-side highlighter.
 - **Parity oracle (optional, and worth doing once):** GitHub's REST `POST /markdown` endpoint in `gfm` mode returns GitHub's own HTML for a given source. Run the canary from 3.5 through it and diff the structure against the local converter's output. It is rate-limited, so use it as a periodic check rather than a build step. Confirm current endpoint parameters before wiring it up.
@@ -313,37 +313,37 @@ CI already runs Node for `markdownlint-cli2`, so the converter runs there too an
 | 7 | Rewrite `.md` link targets to `.html`, preserving relative depth; leave absolute links to the lab repo alone and mark them `data-xref` | Relative links keep working in both places; cross-repo links take the secondary color |
 | 8 | Slug every heading with `github-slugger`; build the on-page section list from h2 and h3 | Anchor parity, and the reader sees the outline before reading |
 | 9 | Pre-render mermaid; highlight code at build time; add `loading="lazy"` and require `alt` on every image | Alt text is required, including on images inside tables |
-| 10 | Read the meeting format from the facts table and set `data-pillar` on the root | The Rail's Break follows the page with no author markup |
-| 11 | Emit the maintenance footer's review date into the page footer | A stale date is visible, which is what makes it a bug |
+| 10 | Read the meeting format from the facts table and set `data-pillar` on the root | The page's Rail gets its Break position with no author markup |
+| 11 | Emit the maintenance footer's review date into the page footer | Readers can see an out-of-date review date, so it gets fixed |
 
-Build fails on: a second h1, an h4, a callout without one of the three legal labels, more than two callouts in a file, an image without `alt`, or a `.md` link that resolves to nothing. Those are the rules from sections 2 and 3 with teeth.
+Build fails on: a second h1, an h4, a callout without one of the three legal labels, more than two callouts in a file, an image without `alt`, or a `.md` link that resolves to nothing. These are the rules from sections 2 and 3 that the build enforces.
 
 ### 6.3 The page shell
 
 One HTML shell, one stylesheet, tokens only. Referenced by role name; if the sibling sections use different role names, rename here and nowhere else.
 
-- **Type.** h1 takes the `display-sm` role, h2 `headline-lg`, h3 `headline-sm`, prose `body-lg`. Table and callout text sit one step below prose, and code takes the `code` roles. Hierarchy is carried by size and space; weight stays at `strong` for every heading. That restraint is most of why a page reads as calm rather than promotional.
-- **Rhythm.** Space above a heading is exactly twice the space below it, at every level, in units from the space scale. That one ratio does all the sectioning work, with no rules, boxes, or background changes needed to mark a boundary. It is also why documents do not need `---` separators, and why adding them fights GitHub, which already draws its own hairline under h1 and h2.
-- **Callouts.** Tinted ground plus a darker same-hue foreground plus the bold label, an `outline` hairline, the short Rail as the inline-start edge, and an asymmetric left inset so the block reads as an interruption. Colors come from the role tokens in foundations.md. No icon column; the label and the tint carry the meaning.
+- **Type.** h1 takes the `display-sm` role, h2 `headline-lg`, h3 `headline-sm`, prose `body-lg`. Table and callout text sit one step below prose, and code takes the `code` roles. Hierarchy is carried by size and space; weight stays at `strong` for every heading. One heading weight keeps the page plain instead of looking like an ad.
+- **Rhythm.** Space above a heading is exactly twice the space below it, at every level, in units from the space scale. That spacing alone separates the sections, so no rules, boxes, or background changes are needed between them. It is also why documents do not need `---` separators: GitHub already draws its own hairline under h1 and h2, and a separator adds a second line.
+- **Callouts.** Tinted ground plus a darker same-hue foreground plus the bold label, an `outline` hairline, the short Rail as the inline-start edge, and an asymmetric left inset so the block stands apart from the running text. Colors come from the role tokens in foundations.md. No icon column; the label and the tint show which callout it is.
 - **Tables.** Horizontal rules only, tinted header row, denser than surrounding prose.
 - **Code blocks.** The most interior padding of any element on the page, a header row with the filename on multi-line blocks, and the copy control's top padding computed as `max(normal padding, button size)` so it can never collide with the first line.
-- **Theme.** Tokens defined on `:root`, redefined under `prefers-color-scheme: dark` and again under an explicit `data-theme` attribute so a three-state control (light / dark / system) wins in both directions. Values only; no component knows which theme it is in.
+- **Theme.** Tokens defined on `:root`, redefined under `prefers-color-scheme: dark` and again under an explicit `data-theme` attribute so a three-state control (light / dark / system) can override the system setting either way. Only the token values change between themes; components have no theme-specific code.
 - **Motion.** Whatever foundations.md §5 specifies, inside `prefers-reduced-motion: no-preference`. Documentation pages need almost none.
 
 ### 6.4 Compliance on published pages
 
 Every public page carries the club name as [brand.md](../brand.md) writes it, and "Funded by ASRCC" wherever ASRCC paid for the thing the page records. ACM prescribes no disclaimer sentence for chapters; what it prescribes is that the chapter never presents itself as speaking for ACM, and that the ACM logo, when it appears, is the authorized artwork unaltered. A page that implies ACM reviewed, endorsed, or funded it fails review whether or not any sentence says so.
 
-And the line this whole section sits on: the page takes the documentation **method** (sentence case, the heading grammar, the 2:1 heading rhythm, the closed callout set with an admission test, the list-versus-table rule, tone-carried hierarchy) and nobody's **chrome**. No parent-organization header, no ACM Blue as an identity accent, no framing that makes a club doc look like an ACM publication, and none of the Google four that the old hackathon assets carry (§1.3).
+The page uses the documentation **method** (sentence case, the heading grammar, the 2:1 heading rhythm, the closed callout set with an admission test, the list-versus-table rule, hierarchy shown by size and spacing) and no other organization's **chrome** (its logos, headers, and identity colors; [bright-lines.md](bright-lines.md) §1.2). That rules out a parent-organization header, ACM Blue as an identity accent, any framing that makes a club doc look like an ACM publication, and the Google four (Google's blue, red, yellow, and green) that the old hackathon assets carry (§1.3).
 
 ---
 
 ## Provenance
 
-- **Sourced, by way of the sibling GDG chapter's system, from Google's technical-writing method:** sentence case for all headings and titles; the heading grammar rule and the `-ing` ban; one h1, no skipped levels, no numbers or links or code in headings; the closed callout set, its three-condition admission test, its non-uses, and the scarcity rule; the list-versus-table decision rule; table column-head rules and the introducing-sentence rule; the 2:1 heading space ratio; flat heading weights; callouts as tint plus same-hue text; tables at one step below prose with horizontal rules only; code blocks holding the most padding; second person, active voice, conditions before instructions, the prescriptive vocabulary set, "don't pre-announce", the paragraph test, and the escape hatch; last-updated dates on published documents; the brand-versus-plain typeface split behind the h4 argument. Method is public practice and free to learn from; none of it is anyone's chrome.
+- **Sourced, by way of the sibling GDG chapter's system, from Google's technical-writing method:** sentence case for all headings and titles; the heading grammar rule and the `-ing` ban; one h1, no skipped levels, no numbers or links or code in headings; the closed callout set, its three-condition admission test, its non-uses, and the scarcity rule; the list-versus-table decision rule; table column-head rules and the introducing-sentence rule; the 2:1 heading space ratio; flat heading weights; callouts as tint plus same-hue text; tables at one step below prose with horizontal rules only; code blocks holding the most padding; second person, active voice, conditions before instructions, the prescriptive vocabulary set, "don't pre-announce", the paragraph test, and the exception for breaking a rule instead of writing an awkward sentence; last-updated dates on published documents; the brand-versus-plain typeface split behind the h4 argument. These are public writing practices anyone can use, and none of them is another organization's branding.
 - **Derived here, not sourced:** every word budget in section 5, including the new meeting-page row; the split triggers in section 2; the six-column table ceiling; the mapping of the club's three callouts onto GitHub's five labels (`IMPORTANT` for Check, matching components.md); the three heading exceptions; the anatomy block order; the lab-repo exception to the absolute-link ban; the `data-pillar` transform in 6.2.
-- **Unverified, and not from any source read this session:** all GitHub renderer behavior in section 3, including the sanitizer's tag and attribute whitelist, alert label set and coloring, front-matter rendering, and info-string handling. The canary in 3.5 is how the club converts it into fact, and it should be run before this section is relied on.
-- **Also provisional:** the whole system rests on brand.md, which still marks the club's colors and typography `[TBD]` and names the website as the reference until a decision is logged. If that decision lands on different values, the role names in this file survive the swap without a single change here.
+- **Unverified, and not from any source read this session:** all GitHub renderer behavior in section 3, including the sanitizer's tag and attribute whitelist, alert label set and coloring, front-matter rendering, and info-string handling. The canary in 3.5 is how the club checks it, and it should be run before anyone relies on section 3.
+- **Also provisional:** the whole system depends on brand.md, which still marks the club's colors and typography `[TBD]` and names the website as the reference until a decision is logged. If that decision picks different values, the role names in this file stay the same and nothing here needs to change.
 
 Source files read: `docs/03-playbooks/weekly-meeting.md`, `docs/03-playbooks/club-rush.md`, `docs/03-playbooks/microcontroller-lab-day.md`, `docs/00-charter/officer-roles.md`, `semesters/2026-fall/meeting-plan.md`, `templates/event-plan.md`, `templates/announcement.md`, `CONTRIBUTING.md`, `.markdownlint.yml`, `scripts/check.sh`, and in the lab repo `templates/challenge-card.md`, `docs/facilitator-guide.md`, `docs/showcase.md`.
 

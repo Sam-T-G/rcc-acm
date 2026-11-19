@@ -1,6 +1,6 @@
 # ASRCC funding
 
-ASRCC (Associated Students of Riverside City College) is the student government. It funds recognized clubs from the Student Services Fee Fund on a yearly cycle. This page is the evergreen procedure. The numbers for a given year live in that semester's `budget.md`.
+ASRCC (Associated Students of Riverside City College) is the student government. It funds recognized clubs from the Student Services Fee Fund on a yearly cycle. This page covers the steps that repeat every year. The numbers for a given year live in that semester's `budget.md`.
 
 - Current semester budget: [semesters/2026-fall/budget.md](../../semesters/2026-fall/budget.md)
 - The FY 2026-27 request as submitted: [semesters/2026-spring/budget.md](../../semesters/2026-spring/budget.md)
@@ -8,7 +8,7 @@ ASRCC (Associated Students of Riverside City College) is the student government.
 
 ## Who can apply
 
-Only clubs that are ASRCC-recognized and in good standing. That means the recharter packet is on file this semester, the constitution is Senate-approved, meetings happen on a schedule, and the ICC representative is attending ICC. Details in [club-recognition-and-icc.md](./club-recognition-and-icc.md). Fix standing first; a funding request from a club that is not in good standing goes nowhere.
+Only clubs that are ASRCC-recognized and in good standing. That means the recharter packet is on file this semester, the constitution is Senate-approved, meetings happen on a schedule, and the ICC representative is attending ICC. Details in [club-recognition-and-icc.md](./club-recognition-and-icc.md). Fix standing before you write the request; ASRCC only funds clubs in good standing.
 
 ## The annual cycle
 
@@ -23,11 +23,11 @@ The fiscal year runs July 1 to June 30. The request you write in spring pays for
 | Allocation notice | by July 1 | by July 1, 2026 | ASRCC tells the club what was approved, line by line. Record it in the fall `budget.md`. |
 | Not in the budget? Go to the Senate | starting in August | August 2026 onward | Clubs that were not funded can bring a request to the ASRCC Senate once the new year starts. Senate meets Tuesdays 12:50 to 2:00 PM in the Heritage Room (per the ASRCC page; confirm each year). |
 
-Confirm each year's exact dates from the packet itself. The packet is the authority; this table is the pattern.
+Confirm each year's exact dates from the packet itself. If the packet and this table disagree, follow the packet.
 
 ## What ASRCC will and will not fund
 
-Funding priority goes to on-campus student engagement. If two line items compete, the one that gets more RCC students into a room on campus wins.
+Funding priority goes to on-campus student engagement. If two line items compete, ASRCC favors the one that gets more RCC students into a room on campus.
 
 ASRCC does not fund:
 
@@ -64,7 +64,7 @@ Membership counts, past attendance, and photos of events (with consent) make the
 - Copy the approved amounts into the fall `budget.md`. Mark each line approved, reduced, or denied.
 - Spending an approved line goes through a requisition, never a personal purchase first if you can avoid it. See [reimbursements.md](./reimbursements.md).
 - Acknowledgement is required. Every event that ASRCC money touches must acknowledge ASRCC: on the flyer, in the announcement, and out loud at the event. Add "Funded by ASRCC" to the [announcement template](../../templates/announcement.md) fields when it applies. Follow the parent org's own rules on how its name sits next to a funder (see [brand.md](../04-brand/brand.md)).
-- Track actual spend against the allocation in `budget.md` as you go. The next request will ask what you did with this one.
+- Track actual spend against the allocation in `budget.md` as you go. Next year's request asks what the club did with this year's money.
 
 ## If the club was not funded
 

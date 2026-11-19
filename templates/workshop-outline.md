@@ -36,7 +36,7 @@ By the end, participants can:
 
 ## Agenda
 
-Blocks under 15 minutes keep people awake. Every block after the first has something participants type or build.
+Keep each block under 15 minutes so people stay focused. Every block after the first has something participants type or build.
 
 | Min | Block | What participants do | Facilitator notes |
 | --- | --- | --- | --- |

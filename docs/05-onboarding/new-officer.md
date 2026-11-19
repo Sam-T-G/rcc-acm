@@ -6,8 +6,8 @@ RCC requires every chartered club to have a President, a Treasurer, and an ICC R
 
 ## Every officer, week one
 
-- [ ] Read [maintenance-rules.md](../01-governance/maintenance-rules.md). It is the one page that explains how this repo stays trustworthy.
-- [ ] Read the previous semester's `retrospective.md` and `handoff.md` under `semesters/`. That is your inheritance.
+- [ ] Read [maintenance-rules.md](../01-governance/maintenance-rules.md). It lists the ten rules every change to this repo follows.
+- [ ] Read the previous semester's `retrospective.md` and `handoff.md` under `semesters/`. They list what the last team left open for you.
 - [ ] Read this semester's `goals.md` and `calendar.md`. If they are empty, opening them is your first job (see [semester-lifecycle.md](../01-governance/semester-lifecycle.md)).
 - [ ] Get a GitHub account if you do not have one, and ask a maintainer in [MAINTAINERS.md](../../MAINTAINERS.md) to add you as a collaborator.
 - [ ] Take the [repo tour](repo-tour.md) (ten minutes).
@@ -24,12 +24,12 @@ RCC requires every chartered club to have a President, a Treasurer, and an ICC R
 
 ## President
 
-- [ ] You own the semester lifecycle. Run `scripts/new-semester.sh` if nobody has, and fill `goals.md` with the team.
+- [ ] You run the semester's open, run, and close phases ([semester-lifecycle.md](../01-governance/semester-lifecycle.md)). Run `scripts/new-semester.sh` if nobody has, and fill `goals.md` with the team.
 - [ ] Confirm the advisor is still the advisor and knows the meeting time and room.
 - [ ] Confirm [MAINTAINERS.md](../../MAINTAINERS.md) lists two admins, one not graduating this year. If not, fix it this week.
 - [ ] Hold Discord server ownership, or know who does.
 - [ ] Know the recharter deadline (RCC publishes it as the first six weeks of the semester; confirm each term) and who is submitting the packet.
-- [ ] Skim every playbook in [03-playbooks](../03-playbooks/README.md) so you know what the club already knows how to run.
+- [ ] Skim every playbook in [03-playbooks](../03-playbooks/README.md) so you know which events already have a step-by-step guide.
 
 ## Treasurer
 

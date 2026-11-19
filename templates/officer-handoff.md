@@ -61,7 +61,7 @@ Anything promised to someone that is not finished. Money owed, reimbursements pe
 
 ## Lessons
 
-What the outgoing team wishes it had known on day one. Specific beats polite.
+What the outgoing team wishes it had known on day one. Be specific, even when it is blunt.
 
 ### Keep doing
 

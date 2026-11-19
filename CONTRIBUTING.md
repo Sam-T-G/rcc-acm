@@ -1,6 +1,6 @@
 # Contributing to ACM @ RCC docs
 
-This repo is the club's memory. Anyone in the club can propose a change. Officers review and merge. Nothing here is code; it is Markdown, and the bar for a good change is "the next officer team can find it and trust it."
+This repo holds the club's written records. Anyone in the club can propose a change. Officers review and merge. Everything here is Markdown, not code. A good change is one the next officer team can find and rely on.
 
 ## Before you start
 
@@ -52,7 +52,7 @@ This repo is the club's memory. Anyone in the club can propose a change. Officer
 2. Create a branch from `main`. (Collaborators with push access skip this flow and push small commits to `main` with `scripts/sync.sh push`; see rule 8.)
 3. Make one topic of change. A budget update and a playbook rewrite are two PRs.
 4. Run `scripts/check.sh`. Pre-PR check: leftover placeholders and semester literals, personal-data patterns, em dashes, broken relative links, files over 1 MB, leftover template fill markers, and markdownlint if installed. It also counts open `[TBD]` markers without failing on them.
-5. Open the PR. Fill in the template; it is a checklist, not a form letter.
+5. Open the PR. Fill in the template and check each box that is true for your change.
 6. Any officer reviews. CI runs `markdownlint` and `links` and both must be green.
 7. The reviewer merges (squash) and deletes the branch. You do not merge your own PR.
 
@@ -73,14 +73,14 @@ This repo is public. Assume every commit is visible to everyone forever, includi
 - Bank, trust account, or card numbers; passwords; API keys; shared-account logins
 - Files over 1 MB (link to the shared drive instead)
 
-If something slipped in, do not just delete it in a new commit. Open an issue tagged `privacy` and ping a repo admin; the history needs rewriting.
+If private data got committed, deleting it in a new commit is not enough, because it stays in the history. Open an issue tagged `privacy` and ping a repo admin so they can rewrite the history.
 
 ## Writing style
 
 - Short sections, checklists, tables. Write for a member reading this at 11 PM before a meeting.
 - No em dashes inside sentences. Use periods, colons, semicolons, parens, or "and".
 - Plain words. Say "use", not "utilize".
-- Mark unknowns `[TBD]`. A `[TBD]` is honest; a guess is a trap for the next team.
+- Mark unknowns `[TBD]`. The next team can see a `[TBD]` and go find the answer; a guess looks like a fact and gets copied forward.
 
 ## Local tools (optional)
 

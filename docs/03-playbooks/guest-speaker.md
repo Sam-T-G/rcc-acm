@@ -2,7 +2,7 @@
 
 ## Purpose
 
-A guest speaker session is the Connect pillar in practice: an alum, a faculty member, or someone from industry talks to members about real work and takes questions. The FY 2026-27 funding request ([2026-spring/budget.md](../../semesters/2026-spring/budget.md)) describes an alumni network at Google, Amazon, and other tech companies; this playbook is how that network turns into a session in A-210.
+A guest speaker session is how the club runs the Connect pillar: an alum, a faculty member, or someone from industry talks to members about real work and takes questions. The FY 2026-27 funding request ([2026-spring/budget.md](../../semesters/2026-spring/budget.md)) describes an alumni network at Google, Amazon, and other tech companies; this playbook covers inviting one of those alumni to speak in A-210.
 
 ## When
 
@@ -10,7 +10,7 @@ A guest speaker session is the Connect pillar in practice: an alum, a faculty me
 
 ## Owner
 
-The Chair, or an officer the Chair assigns as host. The host is the speaker's single point of contact from invite to thank-you.
+The Chair, or an officer the Chair assigns as host. The host is the only officer who contacts the speaker, from the invite to the thank-you.
 
 ## Choosing a speaker
 
@@ -102,4 +102,4 @@ Recording: only if the speaker said yes in writing. Announce at the start that i
 - [ ] Recording link (if any) and slides (if the speaker shares them) linked from the event folder
 - [ ] `retro.md`: what the talk covered, what questions came up, would we invite them back
 - [ ] Speaker's contact details go in the club's private contact list, never in this repo
-- [ ] Ask the speaker if they know one other person who might come; that is next semester's shortlist
+- [ ] Ask the speaker if they know one other person who might come, and add them to next semester's shortlist

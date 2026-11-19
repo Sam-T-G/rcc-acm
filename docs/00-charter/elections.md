@@ -33,7 +33,7 @@ Active members present at the election meeting. Definition of active: [membershi
 
 ## The week after (checklist)
 
-This is the part that gets skipped, and it is the part that keeps the chapter alive.
+Outgoing officers often skip this week. If they do, the new officers can't get into the club's accounts, and ACM can't accept the annual report.
 
 - [ ] Log the result in [../01-governance/decision-log.md](../01-governance/decision-log.md): date, offices, "decided by member vote." Names only with each officer's consent.
 - [ ] Update `semesters/<term>/roster.md` roles.

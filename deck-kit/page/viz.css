@@ -1,0 +1,25 @@
+/* ===========================================================================
+   ACM @ RCC pictures on a page. The same .viz classes deck.css gives a slide
+   (deck.css, the split block), minus the slide motion, so a labkit drawing
+   renders the same on a page as on a slide. Drawing-specific classes (holes,
+   wires, rail lines) come from labkit's lab_css(), which pagekit adds after
+   this file. Colors are tokens, so pictures follow the page into dark mode.
+   =========================================================================== */
+.viz { margin: 0; color: var(--acm-on-surface); }
+.viz svg { display: block; width: 100%; height: auto; overflow: visible; }
+.viz text { font-family: var(--acm-font-code); font-size: 32px; font-weight: var(--acm-weight-strong); fill: currentColor; font-variant-ligatures: none; font-variant-numeric: tabular-nums; }
+.viz .ink { fill: currentColor; }
+.viz .acc, .viz .t-acc { fill: var(--acm-primary); }
+.viz .hot { fill: var(--acm-fill-orange); }
+.viz .box { fill: var(--acm-surface); stroke: currentColor; stroke-width: 4; }
+.viz .card { fill: var(--acm-surface); stroke: var(--acm-outline); stroke-width: 2; }
+.viz .ph { fill: var(--acm-surface-container-highest); }
+.viz .chip { fill: var(--acm-on-surface); }
+.viz .chip-t { fill: var(--acm-surface); }
+.viz .line, .viz .ring, .viz .hand, .viz .tick { stroke: currentColor; fill: none; stroke-width: 4; stroke-linecap: round; }
+.viz .ring { stroke-width: 6; }
+.viz .hand { stroke: var(--acm-primary); stroke-width: 8; }
+.viz .acc-stroke { stroke: var(--acm-primary); }
+.viz .dash { stroke: currentColor; fill: none; stroke-width: 3; stroke-dasharray: 6 12; opacity: 0.45; }
+/* A page shows a picture at its last beat, the same as the deck's stack view. */
+.viz [data-until] { display: none; }

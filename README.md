@@ -4,7 +4,7 @@
 
 The ACM Student Chapter at Riverside City College is a student-run community around computing education, problem solving, and competitive programming. We meet every week, host a site for the Southern California ICPC Regional Contest, travel to collegiate hackathons, and run our own ACM AI Hackathon. Four words cover what we do: Build, Compete, Learn, Connect.
 
-This repo is the chapter's institutional memory. It holds the rules, the playbooks, and one folder per semester that every officer team copies and works through. It is not a code project. The website source lives in [ACM-RCC/ACMWebsite](https://github.com/ACM-RCC/ACMWebsite).
+This repo holds the chapter's written records: the rules, the playbooks, and one folder per semester that each officer team copies and fills in. It holds no code. The website source lives in [ACM-RCC/ACMWebsite](https://github.com/ACM-RCC/ACMWebsite).
 
 ## Meet us
 
@@ -51,20 +51,20 @@ This repo is the chapter's institutional memory. It holds the rules, the playboo
 2. Find your role in [docs/00-charter/officer-roles.md](docs/00-charter/officer-roles.md). It lists what you own, including which folders here.
 3. Read the ten [maintenance rules](docs/01-governance/maintenance-rules.md). They are short. CI checks lint, links, and file size; reviewers check the rest.
 4. Read the [handoff procedure](docs/01-governance/handoff-procedure.md) and the previous semester's `handoff.md`.
-5. Know the money calendar: [docs/02-operations/asrcc-funding.md](docs/02-operations/asrcc-funding.md). Requests are due in late April; miss it and the club runs on nothing.
+5. Know the money calendar: [docs/02-operations/asrcc-funding.md](docs/02-operations/asrcc-funding.md). Requests are due in late April. What happens to a late request is [TBD], so send it on time.
 6. Get added to [MAINTAINERS.md](MAINTAINERS.md) if you are one of the two required repo admins.
 
 ### Advisor
 
 1. [docs/02-operations/club-recognition-and-icc.md](docs/02-operations/club-recognition-and-icc.md): what RCC requires of the club and of you each semester.
 2. [docs/02-operations/room-booking.md](docs/02-operations/room-booking.md): 25Live requests go through you, not students.
-3. [docs/01-governance/handoff-procedure.md](docs/01-governance/handoff-procedure.md): you are the continuity when officers graduate.
+3. [docs/01-governance/handoff-procedure.md](docs/01-governance/handoff-procedure.md): when officers graduate, you are the person who stays and can walk the next team through the handoff.
 4. [MAINTAINERS.md](MAINTAINERS.md): you are listed as the fallback contact for this repo.
 5. The ACM side: the chapter's Faculty Sponsor holds financial supervision and must have an ACM Professional Membership. See [officer-roles.md](docs/00-charter/officer-roles.md).
 
 ## How this repo stays maintained
 
-Evergreen material lives in `docs/`. Anything with a date, a person, or a semester lives in `semesters/<YYYY-term>/`. Templates are contracts. Unknowns are written as `[TBD]`, never guessed. Changes go through pull requests that pass lint and link checks. A semester is not closed until its retrospective and handoff are filled in and the next folder exists.
+Evergreen material lives in `docs/`. Anything with a date, a person, or a semester lives in `semesters/<YYYY-term>/`. Change a template only with a decision record, so every semester folder keeps the same headings. Unknowns are written as `[TBD]`, never guessed. Changes go through pull requests that pass lint and link checks. A semester is not closed until its retrospective and handoff are filled in and the next folder exists.
 
 The full list, with the reasons behind each rule, is in [docs/01-governance/maintenance-rules.md](docs/01-governance/maintenance-rules.md). Run `scripts/check.sh` before opening a PR.
 

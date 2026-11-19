@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The weekly meeting is the club. It is where members show up, where new people decide whether to come back, and where the pillars (Build, Compete, Learn, Connect) turn into something you actually do for an hour. A regularly scheduled meeting is also a good-standing requirement with Student Activities (see [club-recognition-and-icc.md](../02-operations/club-recognition-and-icc.md)).
+The weekly meeting is where members show up each week and where new people decide whether to come back. Each meeting runs one of the four pillars (Build, Compete, Learn, Connect) as an hour of activity; see Meeting formats. A regularly scheduled meeting is also a good-standing requirement with Student Activities (see [club-recognition-and-icc.md](../02-operations/club-recognition-and-icc.md)).
 
 ## When
 
@@ -90,7 +90,7 @@ If the projector fails: run from a laptop screen for a problem session, or switc
 - [ ] Action items pinged in Discord with an owner
 - [ ] New members pointed at [new-member.md](../05-onboarding/new-member.md)
 
-## Rules of thumb
+## Meeting rules
 
 - Announcements are 5 minutes. If they run long, the meeting has become a status update and people stop coming.
 - Every meeting ends with one concrete ask.

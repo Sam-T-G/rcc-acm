@@ -36,7 +36,7 @@ Status: `submitted`, `approved`, `paid`, `rejected`.
 ## Rules that bite
 
 - ASRCC does not fund fundraisers, personnel, instructional equipment, or things the college must provide.
-- Funding priority goes to on-campus student engagement. Travel is a harder sell than a workshop in BLCIS.
+- Funding priority goes to on-campus student engagement. ASRCC is less likely to fund travel than a workshop in BLCIS.
 - Acknowledge ASRCC at every funded event: say it out loud and put it on the flyer.
 - Keep every receipt. The receipt has to show the price and the purchase date.
 - Any budget decision (new line item, moving money, dropping an event) gets a [decision-log](../../docs/01-governance/decision-log.md) entry the same week.
