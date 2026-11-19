@@ -2,7 +2,7 @@
 
 Where everything stands right now. `/handoff` rewrites this file in place (it is a snapshot, not a log). History and reasons go in [agent-log.md](agent-log.md). Slide counts, last changes, and open review comments are computed by `scripts/context.sh`, so they are not repeated here.
 
-Last updated: 2026-10-07 by Sam.
+Last updated: 2026-11-19 by Sam.
 
 ## Decks
 
@@ -11,7 +11,10 @@ Last updated: 2026-10-07 by Sam.
 | 2026-09-03 | First meeting (`semesters/2026-fall/meetings/2026-09-03-deck.html`) | Presented | None. Single-file deck from before the kit; no review panel. |
 | 2026-09-24 | `2026-09-24-deck.html` | Presented | None. |
 | 2026-10-01 | `2026-10-01-deck.html` (career disk) | Presented | None. Live at `/decks/2026-10-01/`. |
-| 2026-10-08 | `2026-10-08-deck.html` (feed warm-up, Arduino fan and strobe) | Drafting | Another session was still editing it on 2026-10-07 in the main clone (branch `2026-10-01-deck`). The committed copy fails 15 layout checks on its clock slides; that session's newer working copy should replace it. Live at `/decks/2026-10-08/` from an earlier publish. |
+| 2026-10-08 | `2026-10-08-deck.html` (breadboard rounds, servo and button) | Presented | None. Live at `/decks/2026-10-08/`. |
+| 2026-10-15 | `2026-10-15-deck.html` (upload crash course, transistor fan) | Presented | None. Live at `/decks/2026-10-15/`. |
+| 2026-10-29 | `2026-10-29-deck.html` (ICPC or parking gate) | Presented | None. Live at `/decks/2026-10-29/` with its ICPC and gate pages. |
+| 2026-11-19 | `2026-11-19-deck.html` (spring project ideas; plan `2026-11-19-plan.md`) | Live at `/decks/2026-11-19/` (republished after the copy pass, `2a027f6`) | 12 slides, 202 of 202 checks. Sign-up on paper. After the meeting: transcribe the board photo and sign-ups into a `2027-spring` projects folder. No record of the 11-05 and 11-12 meetings. |
 
 ## Standing facts
 
