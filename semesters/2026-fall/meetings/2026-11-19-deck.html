@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACM @ RCC, 2026-11-19</title>
+<!--
+  ACM @ RCC meeting deck, Thursday 2026-11-19, 1:30 to 2:30 PM, BLCIS A-210.
+  Spring 2027 project ideas: look back at the fall, write ideas on sticky notes, group, vote with dots,
+  sign up in groups. Run of show and facilitator seed ideas: 2026-11-19-plan.md.
+  Hand-written (no generator). Photos in 2026-11-19-deck-images/ with CREDITS.md.
+  Publish: scripts/publish-deck.sh semesters/2026-fall/meetings/2026-11-19-deck.html 2026-11-19 --push
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap">
+<link rel="stylesheet" href="../../../deck-kit/deck.css">
+<style>
+.viz .note { fill: var(--acm-primary); opacity: 0.85; }
+.viz .note-b { fill: var(--acm-outline-variant); }
+.viz .ring { fill: none; stroke: currentColor; stroke-width: 4; stroke-dasharray: 10 8; }
+.viz .rule { stroke: currentColor; stroke-width: 3; opacity: 0.35; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="../../../deck-kit/deck.js" defer></script>
+<script src="../../../deck-kit/presenter.js" defer></script>
+<script src="../../../deck-kit/review.js" defer></script>
+</head>
+<body>
+<main class="deck" data-deck="acm-2026-11-19" data-ledger="ACM @ RCC · Thu Nov 19 · BLCIS A-210">
+
+<section class="slide" data-kind="cover" data-section="Today" data-starts="13:30" aria-label="Cover">
+  <div class="cover__rail" aria-hidden="true"></div>
+  <p class="cover__name">ACM @ RCC</p>
+  <p class="eyebrow">Fall 2026 · <time datetime="2026-11-19T13:30">Thursday, November 19</time></p>
+  <h1>What should we build next semester?</h1>
+  <p class="sub">Today we pick projects for spring, built by people in this room. <strong>You leave with a group and a first step.</strong></p>
+  <aside class="notes"><p>Nobody commits to anything final today. December 3 is for scoping the picks, and December 10 is for locking teams.</p><p>Before the meeting: sticky notes in two colors, markers, 3 dot stickers per person, and a clear whiteboard. Full plan: semesters/2026-fall/meetings/2026-11-19-plan.md.</p><p class="bridge">Here's how the hour goes.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="split" data-ground="tint" data-auto="2.5" aria-label="How the hour goes">
+  <div class="split__head"><p class="eyebrow">Today</p><h2>How the hour goes</h2></div>
+  <ol class="beats split__main">
+    <li data-beat>Look back at what we did this fall<span class="detail">Pick out what you'd keep building</span></li>
+    <li data-beat>Write your ideas on sticky notes<span class="detail">One idea per note</span></li>
+    <li data-beat>Group the notes, then vote<span class="detail">3 dots each</span></li>
+    <li data-beat>Sign up with a group<span class="detail">Answer 4 questions together</span></li>
+  </ol>
+  <figure class="viz"><svg viewBox="0 0 760 560" role="img" aria-label="The hour from 1:30 to 2:30 as a bar split by time: open at 1:30, look back at 1:35, write at 1:45, group at 1:53, vote at 2:05, sign up at 2:10, wrap at 2:22."><rect class="card" x="40" y="40" width="64" height="40" rx="6"/><rect class="card" x="40" y="80" width="64" height="80" rx="6"/><rect class="card" x="40" y="160" width="64" height="64" rx="6"/><rect class="card" x="40" y="224" width="64" height="96" rx="6"/><rect class="card" x="40" y="320" width="64" height="40" rx="6"/><rect class="card" x="40" y="360" width="64" height="96" rx="6"/><rect class="card" x="40" y="456" width="64" height="64" rx="6"/><g data-stage="1"><rect class="acc" x="40" y="80" width="64" height="80" rx="6"/></g><g data-stage="2"><rect class="acc" x="40" y="160" width="64" height="64" rx="6"/></g><g data-stage="3"><rect class="acc" x="40" y="224" width="64" height="136" rx="6"/></g><g data-stage="4"><rect class="acc" x="40" y="360" width="64" height="96" rx="6"/></g><text x="136" y="72">1:30 open</text><text x="136" y="112">1:35 look back</text><text x="136" y="192">1:45 write</text><text x="136" y="256">1:53 group</text><text x="136" y="352">2:05 vote</text><text x="136" y="392">2:10 sign up</text><text x="136" y="488">2:22 wrap</text></svg></figure>
+  <aside class="notes"><p>Fills in on its own. One press shows the rest. The next press moves on.</p><p>The bar on the right is the hour to scale. Sign-up gets the most time because that's where groups actually form.</p><p class="bridge">First, what we did this fall.</p></aside>
+</section>
+
+<section class="slide" data-kind="board" data-section="Look back" data-ground="warm" aria-label="What we did this fall">
+  <h2>What we did this fall</h2>
+  <ol class="board">
+    <li><time>Oct 1</time><span>Instagram's feed, Reels ranking, and who to follow</span></li>
+    <li><time>Oct 8 and 15</time><span>Arduino servo, button, and transistor fan</span></li>
+    <li><time>Oct 29</time><span>ICPC practice, or the parking garage gate</span></li>
+    <li><time>Nov 7</time><span>ICPC regional, hosted at RCC</span></li>
+  </ol>
+  <aside class="notes"><p>Words only on purpose: this is a dated list, and every line is a meeting people sat through. For each line, ask the room who wanted to keep going on it, and write those topics on the whiteboard.</p><p>Seeds if the room is quiet. Oct 1: build a small feed or follow-suggestion engine on made-up users. Oct 8 and 15: bigger builds with the same parts. Oct 29: a full garage that counts cars in and out and shows open spots. Nov 7: a spring practice league for the next regional.</p><p>Not on the slide: Sep 24 (tech roles activity and sample ICPC problems), Nov 5 and Nov 12 [TBD: add if worth mentioning], and Cal Hacks [TBD: add only if the club went as ACM].</p><p class="bridge">So which one do you want to keep building?</p></aside>
+</section>
+
+<section class="slide" data-kind="statement" data-ground="orange" aria-label="Which one would you keep building">
+  <p class="eyebrow">Hands up</p>
+  <h2>Which of these would you keep building?</h2>
+  <p class="sub">Say it out loud. It goes on the board as a starting point for your notes.</p>
+  <aside class="notes"><p>Two or three minutes. Write each answer on the whiteboard in a few words. These are seeds; people can still write anything on their sticky notes.</p><p class="bridge">Here's hardware we own that nobody has used yet.</p></aside>
+</section>
+
+<section class="slide" data-kind="grid" aria-label="Parts nobody has used yet">
+  <h2>Parts nobody has used yet</h2>
+  <ul class="grid" style="--img-h: 320">
+    <li><img src="2026-11-19-deck-images/esp32.jpg" width="1200" height="1600" alt="An ESP32 development board with a metal-shielded module at the top."><b>6 ESP-32 boards</b><p>Wi-Fi, so a build can put data on a web page</p><span class="credit"><a href="https://commons.wikimedia.org/wiki/File:ESP32.jpg">Photo: Edwiyanto, CC BY-SA 4.0</a></span></li>
+    <li><img src="2026-11-19-deck-images/arduino-mega-2560.jpg" width="1600" height="1067" alt="A black Mega 2560 board with rows of pin headers along its edges."><b>2 Mega 2560 boards</b><p>Lots more pins than the UNO</p><span class="credit"><a href="https://commons.wikimedia.org/wiki/File:Arduino_Mega_2560_(HW-888)_front.jpg">Photo: Goga504, CC BY-SA 4.0</a></span></li>
+    <li><img src="2026-11-19-deck-images/stepper.jpg" width="1600" height="1200" alt="A small round 28BYJ-48 stepper motor wired to a green ULN2003 driver board."><b>Stepper motors</b><p>Turn an exact amount, to move a part to a set spot</p><span class="credit"><a href="https://commons.wikimedia.org/wiki/File:28BYJ-48_unipolar_stepper_motor_with_ULN2003_driver.jpg">Photo: Kushagra Keshari, CC BY-SA 4.0</a></span></li>
+  </ul>
+  <aside class="notes"><p>From semesters/2026-fall/lab-inventory.md: 6 ESP-32 boards, 2 Mega 2560 boards, 3 UNO R4 WiFi, 1 L298N motor driver, and 5 extra stepper sets plus one in each Elegoo kit. None of these have been in a lab yet. A project that uses them needs no new purchase.</p><p>Example: the elevator challenge in the microcontroller lab repo could run on steppers.</p><p class="bridge">Now write your own ideas.</p></aside>
+</section>
+
+<section class="slide" data-kind="clock" data-section="Ideas" data-timer="480" data-ground="tint" data-room aria-label="Write your ideas">
+  <p class="eyebrow">On your own · 8 minutes</p>
+  <h2>Write your ideas</h2>
+  <p class="sub">One idea per sticky note, as many as you want. Ideas from today's board count.</p>
+  <aside class="notes"><p>Press T. Quiet writing, no discussion yet. An idea can be one line, like "a garage that shows open spots".</p><p class="bridge">Time's up. Now we share them.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="split" aria-label="Share and group">
+  <div class="split__head"><p class="eyebrow">Together · 12 minutes</p><h2>Share and group</h2></div>
+  <ol class="beats split__main">
+    <li data-beat>Read your notes out loud<span class="detail">One person at a time</span></li>
+    <li data-beat>Stick each one on the board</li>
+    <li data-beat>Same idea? Put them together</li>
+    <li data-beat>Name each group<span class="detail">One sentence about what gets built</span></li>
+  </ol>
+  <figure class="viz"><svg viewBox="0 0 760 560" role="img" aria-label="Sticky notes scattered on a board, then moved into three groups, each circled with a dashed line."><rect class="card" x="20" y="20" width="720" height="520" rx="14"/><g data-until="3"><rect class="note" x="80" y="80" width="90" height="90" rx="4"/><rect class="note-b" x="420" y="70" width="90" height="90" rx="4"/><rect class="note" x="250" y="210" width="90" height="90" rx="4"/><rect class="note-b" x="580" y="230" width="90" height="90" rx="4"/><rect class="note" x="120" y="380" width="90" height="90" rx="4"/><rect class="note-b" x="380" y="390" width="90" height="90" rx="4"/><rect class="note" x="560" y="400" width="90" height="90" rx="4"/></g><g data-stage="3"><rect class="note" x="70" y="80" width="90" height="90" rx="4"/><rect class="note-b" x="180" y="80" width="90" height="90" rx="4"/><rect class="note" x="125" y="185" width="90" height="90" rx="4"/><ellipse class="ring" cx="170" cy="178" rx="150" ry="140"/><rect class="note-b" x="470" y="80" width="90" height="90" rx="4"/><rect class="note" x="580" y="80" width="90" height="90" rx="4"/><ellipse class="ring" cx="570" cy="125" rx="150" ry="85"/><rect class="note" x="360" y="370" width="90" height="90" rx="4"/><rect class="note-b" x="470" y="370" width="90" height="90" rx="4"/><ellipse class="ring" cx="460" cy="415" rx="150" ry="85"/></g><g data-stage="4"><rect class="acc" x="90" y="336" width="160" height="12" rx="6"/><rect class="acc" x="490" y="224" width="160" height="12" rx="6"/><rect class="acc" x="380" y="512" width="160" height="12" rx="6"/></g></svg></figure>
+  <aside class="notes"><p>Run it at the whiteboard. When two notes are the same idea, stack them. A group's name says what gets built, like "a garage sign that shows open spots", not a topic like "hardware".</p><p class="bridge">Now everyone votes.</p></aside>
+</section>
+
+<section class="slide" data-kind="statement" data-ground="orange" data-room aria-label="Vote with 3 dots">
+  <p class="eyebrow">Vote · 5 minutes</p>
+  <h2>You get 3 dots. Put them on what you'd actually work on</h2>
+  <p class="sub">You can put more than one dot on the same group.</p>
+  <aside class="notes"><p>Hand out 3 dot stickers per person. The point is to find which groups have people behind them, so ask people to vote for what they would spend spring on, not what sounds cool.</p><p class="bridge">The groups with the most dots sign up next.</p></aside>
+</section>
+
+<section class="slide" data-kind="beats" data-layout="split" data-section="Sign up" data-ground="warm" data-room aria-label="Sign up with a group">
+  <div class="split__head"><p class="eyebrow">Each group answers</p><h2>Sign up with a group</h2></div>
+  <ol class="beats split__main">
+    <li data-beat>What do you want to build?<span class="detail">One sentence</span></li>
+    <li data-beat>Who's in?<span class="detail">First names</span></li>
+    <li data-beat>What would you try first?<span class="detail">Something you could do before February</span></li>
+    <li data-beat>What would you need?<span class="detail">Parts, a skill, a person, or time</span></li>
+  </ol>
+  <figure class="viz"><svg viewBox="0 0 760 560" role="img" aria-label="A sign-up sheet with four numbered lines, one for each question."><rect class="card" x="120" y="30" width="520" height="500" rx="14"/><text x="170" y="120">1</text><line class="rule" x1="220" y1="120" x2="590" y2="120"/><text x="170" y="230">2</text><line class="rule" x1="220" y1="230" x2="590" y2="230"/><text x="170" y="340">3</text><line class="rule" x1="220" y1="340" x2="590" y2="340"/><text x="170" y="450">4</text><line class="rule" x1="220" y1="450" x2="590" y2="450"/><g data-stage="1"><rect class="acc" x="220" y="104" width="300" height="10" rx="5"/></g><g data-stage="2"><rect class="acc" x="220" y="214" width="200" height="10" rx="5"/></g><g data-stage="3"><rect class="acc" x="220" y="324" width="340" height="10" rx="5"/></g><g data-stage="4"><rect class="acc" x="220" y="434" width="260" height="10" rx="5"/></g></svg></figure>
+  <aside class="notes"><p>Every group with 2 or more dots-and-people stands together. One person per group writes the answers on a sheet. Nobody needs to know question 4 yet.</p><p>"Before February" because spring classes start February 16, 2027.</p><p class="bridge">You have until 2:22.</p></aside>
+</section>
+
+<section class="slide" data-kind="clock" data-ends="14:22" data-ground="tint" data-room aria-label="Group time">
+  <p class="eyebrow">Group time · until 2:22</p>
+  <h2>Answer the 4 questions</h2>
+  <p class="sub">One person writes. Then each group reads its answers to the room.</p>
+  <aside class="notes"><p>Press T. The clock counts down to 2:22, so starting late is fine. Walk between groups. Then each group gets 30 seconds to read its answers.</p><p class="bridge">Here's what happens next.</p></aside>
+</section>
+
+<section class="slide" data-kind="board" data-section="Wrap" aria-label="What's next">
+  <h2>What's next</h2>
+  <ol class="board">
+    <li><time>Nov 26</time><span>No meeting, Thanksgiving week</span></li>
+    <li><time>Dec 3</time><span>Each group brings a short plan and a parts list</span></li>
+    <li><time>Dec 10</time><span>Last meeting. Groups lock in for spring</span></li>
+    <li><time>Feb 16</time><span>Spring classes start</span></li>
+  </ol>
+  <aside class="notes"><p>Words only on purpose: this slide is the dates. Dates from semesters/2026-fall/calendar.md (no classes Nov 23 to 29; last Thursday before finals Dec 10; spring begins Feb 16, 2027).</p><p>Dec 3: a one-paragraph plan for what the group builds and a list of parts. Projects that need money go into the club's next ASRCC funding request, written in spring.</p><p>Take a photo of the board before anyone leaves.</p><p class="bridge">Thanks for coming.</p></aside>
+</section>
+
+<section class="slide" data-kind="ask" data-room aria-label="Wrap-up">
+  <div class="ask__main">
+    <p class="eyebrow">Before you go</p>
+    <h2>Thanks for coming</h2>
+    <p class="sub">Bring your group's plan and parts list on December 3.</p>
+    <p class="ask__meta">Thursdays, <time datetime="13:30">1:30</time> to <time datetime="14:30">2:30 PM</time>, BLCIS A-210</p>
+  </div>
+  <div class="ask__foot">
+    <p class="ask__name">ACM @ RCC</p>
+    <p class="ask__stamp">Updated <time datetime="2026-11-18">2026-11-18</time></p>
+  </div>
+  <aside class="notes"><p>Remind people there's no meeting next week.</p></aside>
+</section>
+
+</main>
+</body>
+</html>
