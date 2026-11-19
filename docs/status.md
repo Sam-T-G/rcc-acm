@@ -14,12 +14,12 @@ Last updated: 2026-11-19 by Sam.
 | 2026-10-08 | `2026-10-08-deck.html` (breadboard rounds, servo and button) | Presented | None. Live at `/decks/2026-10-08/`. |
 | 2026-10-15 | `2026-10-15-deck.html` (upload crash course, transistor fan) | Presented | None. Live at `/decks/2026-10-15/`. |
 | 2026-10-29 | `2026-10-29-deck.html` (ICPC or parking gate) | Presented | None. Live at `/decks/2026-10-29/` with its ICPC and gate pages. |
-| 2026-11-19 | `2026-11-19-deck.html` (spring project ideas; plan `2026-11-19-plan.md`) | Live at `/decks/2026-11-19/` (republished after the copy pass, `2a027f6`) | 12 slides, 202 of 202 checks. Sign-up on paper. After the meeting: transcribe the board photo and sign-ups into a `2027-spring` projects folder. No record of the 11-05 and 11-12 meetings. |
+| 2026-11-19 | `2026-11-19-deck.html` (spring project ideas; plan `2026-11-19-plan.md`) | Live at `/decks/2026-11-19/` (rebuilt and republished 2026-11-19, `73d8338`) | 14 slides, 194 of 194 checks. Whole room, no small groups (Sam): boards, kit parts, extras; five projects (parking garage, elevator on steppers, robot car, sensor stations, RFID check-in), each with a diagram that builds one stage per press; two parts-to-buy slides (prices `[TBD]`); hands-up pick. After the meeting: photo of the board with the hand counts and names into a `2027-spring` projects folder (first names only if members agree). Count the MG90S servos before promising them. No record of the 11-05 and 11-12 meetings. |
 
 ## Standing facts
 
 - Meetings: Thursdays in BLCIS A-210 (the time is on each deck's ledger line).
-- Live decks: `https://sam-t-g.github.io/rcc-acm/decks/<slug>/`, published from `main` with `scripts/publish-deck.sh` (the `gh-pages` branch).
+- Live decks: `https://sam-t-g.github.io/rcc-acm/decks/<slug>/`, published from `main` with `scripts/publish-deck.sh` (the `gh-pages` branch). The slides menu (this week plus every earlier deck) is `https://sam-t-g.github.io/rcc-acm/slides/`: add the new deck as the first row of `DECKS` in `semesters/slides-menu.py`, run it, check `site/slides/index.html` with `deck-kit/page/check-page.mjs`, and push it to gh-pages `slides/index.html` from a fresh gh-pages clone.
 - Collaborators push to `main` through `scripts/sync.sh push` (since 2026-10-07; see the decision log). Branch protection blocks force-pushes and deletion only. PR #1 (the microcontroller lab proposal) is still open.
 - Review: `A` in a deck to annotate, `I` for the notes inbox, `?view=review` for the board, `node scripts/review.mjs` for agents. Google sign-in, limited to each club's member list on the relay. Decks published before 2026-10-08 still run the older passcode panel (`C`) until they are republished.
 - Presenter tools: `S` presenter view, `M` phone or tablet remote, `?view=runsheet` (`deck-kit/README.md`).

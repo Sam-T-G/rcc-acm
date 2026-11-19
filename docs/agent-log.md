@@ -9,6 +9,19 @@ Remove a line once it is answered and note the answer in that day's entry.
 - The microcontroller lab kit order (2026-09-20, see `semesters/2026-fall/budget.md`) has no Pico 2 W, but the station cards assume one. Change the cards or the hardware?
 
 <!-- newest entry below: add "## YYYY-MM-DD · Name (via Claude Code)" here and end it with a blank line -->
+## 2026-11-19 · Sam (via Claude Code)
+
+**Changed:**
+
+- `73d8338`: 11-19 deck rebuilt and republished. First Sam ruled out small groups, then asked for a much simpler deck: the parts we own, five project ideas with hardware and software growth, and parts to buy. Each project slide is a split slide with an SVG diagram that builds one stage per press. New photos (UNO R3, UNO R4 WiFi, ESP32-CAM, NEMA 17, Raspberry Pi, soldering iron) with credits. Plan run of show updated. check.mjs 194 of 194; the live copy matches the build byte for byte.
+- `f3d93aa`: `semesters/slides-menu.py` builds the slides menu, live at `https://sam-t-g.github.io/rcc-acm/slides/` (gh-pages `ef854e4`). Every link checked 200. GDG got the same menu at `rcc-gdg/slides/`.
+
+**Decided:** Sam: no small groups at the 11-19 meeting; the whole room stays together.
+
+**Issues:** prices for the parts-to-buy slides are `[TBD]`. The MG90S servos had their own delivery window and are not counted. The 09-03 kickoff deck is not on Pages, so the menu leaves it off.
+
+**Next:** after the meeting, file the board photo with hand counts in a `2027-spring` projects folder. Dec 3: plan the top project and price its parts.
+
 ## 2026-11-18 · Sam (via Claude Code)
 
 **Changed:**
